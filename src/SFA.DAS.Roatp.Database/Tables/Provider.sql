@@ -1,0 +1,5 @@
+﻿CREATE TABLE [dbo].[Provider]
+(
+    [Id] UNIQUEIDENTIFIER NOT NULL CONSTRAINT PK_Provider PRIMARY KEY, 
+    [Ukprn] INT NOT NULL
+)
