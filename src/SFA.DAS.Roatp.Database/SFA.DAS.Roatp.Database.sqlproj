@@ -57,7 +57,7 @@
   <ItemGroup>
     <Folder Include="Properties" />
     <Folder Include="Tables" />
-    <Folder Include="SeedScripts" />
+    <Folder Include="PostDeploymentScripts" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
@@ -68,7 +68,7 @@
     <Build Include="Tables\ProviderCourseDetails.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="SeedScripts\ProviderSeed.sql">
+    <None Include="PostDeploymentScripts\AddPilotProviders.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
