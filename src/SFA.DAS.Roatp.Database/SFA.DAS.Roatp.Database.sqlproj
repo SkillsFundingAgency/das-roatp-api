@@ -68,7 +68,7 @@
     <Build Include="Tables\ProviderCourseDetails.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="PostDeploymentScripts\AddPilotProviders.sql">
+    <None Include="PostDeploymentScripts\InsertPilotProvidersData.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>

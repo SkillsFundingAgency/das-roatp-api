@@ -10,4 +10,4 @@ Post-Deployment Script Template
 --------------------------------------------------------------------------------------
 */
 
-:r .\SeedScripts\ProviderSeed.sql
+:r .\PostDeploymentScripts\InsertPilotProvidersData.sql
