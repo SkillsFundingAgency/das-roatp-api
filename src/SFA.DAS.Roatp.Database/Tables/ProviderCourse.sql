@@ -12,5 +12,5 @@
     CONSTRAINT PK_ProviderCourse PRIMARY KEY (Id),
     CONSTRAINT UK_ProviderCourse_Id UNIQUE ([ExternalId]),
     CONSTRAINT UK_ProviderCourse_ProviderIdLarsCode UNIQUE (ProviderId, LarsCode),
-    CONSTRAINT FK_Provider_ProviderCourse FOREIGN KEY (ProviderId) REFERENCES [Provider] (Id) 
+    CONSTRAINT FK_Provider_ProviderCourse FOREIGN KEY (ProviderId) REFERENCES [Provider] (Id)
 )
