@@ -1,7 +1,8 @@
 ﻿CREATE TABLE [dbo].[ProviderLocation]
 (
-    [Id] UNIQUEIDENTIFIER NOT NULL,
-    [ProviderId] UNIQUEIDENTIFIER NOT NULL,
+    [Id] INT NOT NULL,
+    [ExternalId] UNIQUEIDENTIFIER NOT NULL,
+    [ProviderId] INT NOT NULL,
     [Name] VARCHAR(250) NULL,
     [Email] VARCHAR(256) NULL,
     [Website] VARCHAR(256) NULL,
@@ -15,5 +16,6 @@
     [Longitude] FLOAT NULL,
     [Radius] INT NULL,
     CONSTRAINT PK_ProviderLocation PRIMARY KEY (Id),
+    CONSTRAINT UK_ProviderLocation_Id UNIQUE ([ExternalId]),
     CONSTRAINT FK_Provider_ProviderLocation FOREIGN KEY (ProviderId) REFERENCES [Provider] (Id)
 )

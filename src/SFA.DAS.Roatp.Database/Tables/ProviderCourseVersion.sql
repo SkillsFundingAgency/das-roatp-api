@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[ProviderCourseVersion]
 (
-    [ProviderCourseId] UNIQUEIDENTIFIER NOT NULL,
+    [ProviderCourseId] INT NOT NULL,
     [StandardUId] VARCHAR(20) NOT NULL,
     [Version] VARCHAR(20) NOT NULL,
     CONSTRAINT PK_ProviderCourseVersion PRIMARY KEY (ProviderCourseId, StandardUId),
