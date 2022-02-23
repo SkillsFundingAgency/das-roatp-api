@@ -9,7 +9,6 @@
     [ContactUsPageUrl] VARCHAR(500) NULL,
     [ContactEmail] VARCHAR(500) NULL,
     [ContactPhoneNumber] VARCHAR(20) NULL,
-    [DataSource] VARCHAR(20) NOT NULL,
     CONSTRAINT PK_ProviderCourse PRIMARY KEY (Id),
     CONSTRAINT UK_ProviderCourse_Id UNIQUE ([ExternalId]),
     CONSTRAINT UK_ProviderCourse_ProviderIdLarsCode UNIQUE (ProviderId, LarsCode),
