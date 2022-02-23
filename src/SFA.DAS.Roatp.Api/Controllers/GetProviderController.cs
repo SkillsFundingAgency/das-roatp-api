@@ -1,7 +1,5 @@
-﻿using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -17,9 +15,6 @@ namespace SFA.DAS.Roatp.Api.Controllers
         }
 
         [HttpGet]
-        public Task<Provider> Get()
-        {
-            return Task.FromResult(new Provider());
-        }
+        public IActionResult Get() => Ok();
     }
 }
