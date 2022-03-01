@@ -4,6 +4,8 @@ using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using SFA.DAS.Roatp.Data.Repositories;
+using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Extensions
 {
@@ -25,7 +27,15 @@ namespace SFA.DAS.Roatp.Data.Extensions
                     connection,
                     o => o.CommandTimeout((int)TimeSpan.FromMinutes(5).TotalSeconds));
             });
+            RegisterServices(services);
             return services;
+        }
+
+        private static void RegisterServices(IServiceCollection services)
+        {
+            services.AddTransient<IProviderReadRepository, ProviderReadRepository>();
+            services.AddTransient<IGetProviderCourseRepository, GetProviderCourseRepository>();
+            services.AddTransient<ICreateProviderRepository, CreateProviderRepository>();
         }
 
         public static async Task<string> GenerateTokenAsync()
