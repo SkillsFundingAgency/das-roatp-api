@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Roatp.Api.Models
 {
-    public class CourseDeliveryModels
+    public class ProviderCourseModel
     {
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }

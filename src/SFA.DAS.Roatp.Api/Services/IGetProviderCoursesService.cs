@@ -6,7 +6,7 @@ namespace SFA.DAS.Roatp.Api.Services
 {
     public interface IGetProviderCoursesService
     {
-        Task<List<CourseDeliveryModels>> GetAll(int ukprn);
-        Task<CourseDeliveryModels> Get(int ukprn, int larsCode);
+        Task<List<ProviderCourseModel>> GetAll(int ukprn);
+        Task<ProviderCourseModel> Get(int ukprn, int larsCode);
     }
 }
