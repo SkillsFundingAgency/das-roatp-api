@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[ProviderLocation]
 (
-    [Id] INT NOT NULL,
+    [Id] INT IDENTITY(1,1) NOT NULL,
     [ExternalId] UNIQUEIDENTIFIER NOT NULL,
     [ProviderId] INT NOT NULL,
     [Name] VARCHAR(250) NULL,
