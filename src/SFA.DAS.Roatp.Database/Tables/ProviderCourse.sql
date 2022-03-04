@@ -7,7 +7,7 @@
     [IfateReferenceNumber] VARCHAR(10) NOT NULL,
     [StandardInfoUrl] VARCHAR(500) NOT NULL,
     [ContactUsPageUrl] VARCHAR(500) NULL,
-    [ContactEmail] VARCHAR(500) NULL,
+    [ContactEmail] VARCHAR(300) NULL,
     [ContactPhoneNumber] VARCHAR(20) NULL,
     CONSTRAINT PK_ProviderCourse PRIMARY KEY (Id),
     CONSTRAINT UK_ProviderCourse_Id UNIQUE ([ExternalId]),
