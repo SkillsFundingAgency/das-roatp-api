@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public int Id { get; set; }
         public Guid ExternalId { get; set; }
         public int ProviderId { get; set; }
-        public string ContactName { get; set; }
+        public string LocationName { get; set; }
         public string Email { get; set; }
         public string Website { get; set; }
         public string Phone { get; set; }
