@@ -5,7 +5,7 @@
     [Ukprn] INT NOT NULL,
     [LegalName] VARCHAR(1000) NOT NULL,
     [TradingName] VARCHAR(1000) NULL,
-    [Email] VARCHAR(256) NULL,
+    [Email] VARCHAR(300) NULL,
     [Phone] VARCHAR(50) NULL,
     [Website] VARCHAR(500) NULL,
     [MarketingInfo] VARCHAR(MAX) NULL,
