@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.Property(p => p.ExternalId).IsRequired();
             builder.Property(p => p.Ukprn).IsRequired();
             builder.Property(p => p.LegalName).IsRequired().HasMaxLength(1000);
-            builder.Property(p => p.TradingName).IsRequired().HasMaxLength(1000);
+            builder.Property(p => p.TradingName).HasMaxLength(1000);
             builder.Property(p => p.Email).HasMaxLength(300);
             builder.Property(p => p.Phone).HasMaxLength(50);
             builder.Property(p => p.Website).HasMaxLength(500);

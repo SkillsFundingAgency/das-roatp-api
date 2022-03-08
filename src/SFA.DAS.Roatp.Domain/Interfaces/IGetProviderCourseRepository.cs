@@ -5,6 +5,7 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
 {
     public interface IGetProviderCourseRepository
     {
-        Task<ProviderCourse> GetProviderCourseDeliveryModels(int ukprn, int larsCode);
+        Task<ProviderCourse> GetProviderCourse(int ukprn, int larsCode);
+        Task<Provider> GetAllProviderCourse(int ukprn);
     }
 }

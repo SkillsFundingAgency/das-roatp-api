@@ -14,8 +14,8 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string Phone { get; set; }
         public string Website { get; set; }
         public string MarketingInfo { get; set; }
-        public decimal EmployerSatisfaction { get; set; }
-        public decimal LearnerSatisfaction { get; set; }
+        public decimal? EmployerSatisfaction { get; set; }
+        public decimal? LearnerSatisfaction { get; set; }
 
         public List<ProviderLocation> Locations { get; set; } = new();
 

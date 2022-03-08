@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.Property(p => p.StandardInfoUrl).IsRequired().HasMaxLength(500);
             builder.Property(p => p.ContactUsPageUrl).HasMaxLength(500);
             builder.Property(p => p.ContactUsEmail).HasMaxLength(500);
-            builder.Property(p => p.ContactUsPhone).HasMaxLength(20);
+            builder.Property(p => p.ContactUsPhoneNumber).HasMaxLength(20);
         }
     }
 

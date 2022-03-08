@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -15,15 +15,24 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = roatpDataContext;
         }
 
-        public Task<ProviderCourse> GetProviderCourseDeliveryModels(int ukprn, int larsCode)
+        public async Task<ProviderCourse> GetProviderCourse(int ukprn, int larsCode)
         {
-            return _roatpDataContext
+            return await _roatpDataContext
                 .ProviderCourses
                 .Include(c => c.Provider)
                 .Include(c => c.Locations)
                 .Include(c => c.Versions)
                 .SingleOrDefaultAsync(c => c.Provider.Ukprn == ukprn && c.LarsCode == larsCode);
-            throw new NotImplementedException();
+        }
+
+        public async Task<Provider> GetAllProviderCourse(int ukprn)
+        {
+            return await _roatpDataContext
+                .Providers
+                .Where(p => p.Ukprn == ukprn)
+                .Include(p => p.Courses)
+                .ThenInclude(c => c.Locations)
+                .SingleOrDefaultAsync();
         }
     }
 }
