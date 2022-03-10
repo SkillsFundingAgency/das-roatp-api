@@ -17,8 +17,8 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public decimal? EmployerSatisfaction { get; set; }
         public decimal? LearnerSatisfaction { get; set; }
 
-        public List<ProviderLocation> Locations { get; set; } = new();
+        public virtual List<ProviderLocation> Locations { get; set; } = new List<ProviderLocation>();
 
-        public List<ProviderCourse> Courses { get; set; } = new();
+        public virtual List<ProviderCourse> Courses { get; set; } = new List<ProviderCourse>();
     }
 }

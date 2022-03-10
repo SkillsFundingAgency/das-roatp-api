@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string ContactUsPageUrl { get; set; }
 
         public Provider Provider { get; set; }
-        public List<ProviderCourseLocation> Locations { get; set; } = new();
-        public List<ProviderCourseVersion> Versions { get; set; } = new();
+        public virtual List<ProviderCourseLocation> Locations { get; set; } = new List<ProviderCourseLocation>();
+        public virtual List<ProviderCourseVersion> Versions { get; set; } = new List<ProviderCourseVersion>();
     }
 }
