@@ -34,6 +34,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
         public async Task<ActionResult<List<ProviderCourseModel>>> GetAllCourses(int ukprn)
         {
             if (ukprn <= 0) return new BadRequestObjectResult("Invalid ukprn");
@@ -56,6 +57,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProviderCourseModel), 200)]
         public async Task<ActionResult<ProviderCourseModel>> GetCourse(int ukprn, int larsCode)
         {
             if (ukprn <= 0 || larsCode <= 0) return new BadRequestObjectResult("Invalid ukprn or larscode.");

@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.Api.Models
     {
         public int LarsCode { get; set; }
         public string IfateReferenceNumber { get; set; }
-        public List<string> DeliveryModels { get; set; } = new List<string>();
+        public List<DeliveryModel> DeliveryModels { get; set; } = new List<DeliveryModel>();
 
         public static implicit operator ProviderCourseModel(ProviderCourse providerCourse)
         {
@@ -18,23 +18,20 @@ namespace SFA.DAS.Roatp.Api.Models
                 IfateReferenceNumber = providerCourse.IfateReferenceNumber,
             };
 
-            model.DeliveryModels.Add("Regular");
+            model.DeliveryModels.Add(DeliveryModel.Regular);
 
             if (providerCourse.Locations.Any(l => l.OffersPortableFlexiJob.GetValueOrDefault()))
             {
-                model.DeliveryModels.Add("PortableFlexiJob");
+                model.DeliveryModels.Add(DeliveryModel.PortableFlexiJob);
             }
 
             return model;
         }
     }
 
-    public static class Constants
+    public enum DeliveryModel
     {
-        public static class DeliveryModels
-        {
-            public const string Regular = "Regular";
-            public const string PortableFlexiJob = "PortableFlexiJob";
-        }
+        Regular,
+        PortableFlexiJob
     }
 }

@@ -6,6 +6,6 @@
         public int ProviderCourseId { get; set; }
         public string StandardUId { get; set; }
         public string Version { get; set; }
-        public ProviderCourse ProviderCourse { get; set; }
+        public virtual ProviderCourse ProviderCourse { get; set; }
     }
 }

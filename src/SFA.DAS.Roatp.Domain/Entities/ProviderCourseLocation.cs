@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public bool? HasBlockReleaseDeliveryOption { get; set; }
         public bool? HasNationalDeliveryOption { get; set; }
         public bool? OffersPortableFlexiJob { get; set; }
-        public ProviderCourse Course { get; set; }
-        public ProviderLocation Location { get; set; }
+        public virtual ProviderCourse Course { get; set; }
+        public virtual ProviderLocation Location { get; set; }
     }
 }
