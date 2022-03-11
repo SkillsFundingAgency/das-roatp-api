@@ -14,6 +14,7 @@ using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.Roatp.Api.Services;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
 
@@ -60,8 +61,9 @@ namespace SFA.DAS.Roatp.Api
                 services
                     .AddHealthChecks()
                     .AddDbContextCheck<RoatpDataContext>();
-                services.AddRoatpDataContext(Configuration["SqlDatabaseConnectionString"], _initialEnvironment);
             }
+
+            services.AddRoatpDataContext(Configuration["SqlDatabaseConnectionString"], _initialEnvironment);
 
             services.AddApiVersioning(opt =>
             {
@@ -86,6 +88,8 @@ namespace SFA.DAS.Roatp.Api
                 options.SwaggerDoc("v1", new OpenApiInfo { Title = "RoatpAPI", Version = "v1" });
                 options.OperationFilter<SwaggerVersionHeaderFilter>();
             });
+
+            services.AddTransient<IGetProviderCoursesService, GetProviderCoursesService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
