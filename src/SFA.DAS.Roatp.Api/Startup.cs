@@ -57,11 +57,12 @@ namespace SFA.DAS.Roatp.Api
                 };
 
                 services.AddAuthentication(azureAdConfiguration, policies);
-
-                services
-                    .AddHealthChecks()
-                    .AddDbContextCheck<RoatpDataContext>();
             }
+
+            services
+                .AddHealthChecks()
+                .AddDbContextCheck<RoatpDataContext>();
+
 
             services.AddRoatpDataContext(Configuration["SqlDatabaseConnectionString"], _initialEnvironment);
 
@@ -112,12 +113,13 @@ namespace SFA.DAS.Roatp.Api
 
             app.UseRouting();
 
+            app.UseHealthChecks("/health", new HealthCheckOptions
+            {
+                ResponseWriter = HealthCheckResponseWriter.WriteJsonResponse
+            });
+
             if (!IsEnvironmentLocalOrDev)
             {
-                app.UseHealthChecks("/health", new HealthCheckOptions
-                {
-                    ResponseWriter = HealthCheckResponseWriter.WriteJsonResponse
-                });
 
                 app.UseHealthChecks("/ping", new HealthCheckOptions
                 {

@@ -32,8 +32,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpGet]
         [Route("/providers/{ukprn}/courses")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
         public async Task<ActionResult<List<ProviderCourseModel>>> GetAllCourses(int ukprn)
         {
@@ -55,8 +55,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpGet]
         [Route("/providers/{ukprn}/courses/{larscode}")]
         [Produces("application/json")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProviderCourseModel), 200)]
         public async Task<ActionResult<ProviderCourseModel>> GetCourse(int ukprn, int larsCode)
         {
