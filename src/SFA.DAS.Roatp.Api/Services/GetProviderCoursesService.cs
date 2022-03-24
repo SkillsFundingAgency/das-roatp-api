@@ -8,24 +8,33 @@ namespace SFA.DAS.Roatp.Api.Services
 {
     public class GetProviderCoursesService : IGetProviderCoursesService
     {
-        private readonly IGetProviderCourseRepository _getProviderCourseRepository;
+        private readonly IProviderCourseReadRepository _providerCourseReadRepository;
+        private readonly IProviderReadRepository _providerReadRepository;
 
-        public GetProviderCoursesService(IGetProviderCourseRepository getProviderCourseRepository)
+        public GetProviderCoursesService(IProviderCourseReadRepository providerCourseReadRepository, IProviderReadRepository providerReadRepository)
         {
-            _getProviderCourseRepository = getProviderCourseRepository;
+            _providerCourseReadRepository = providerCourseReadRepository;
+            _providerReadRepository = providerReadRepository;
         }
 
-        public async Task<ProviderCourseModel> Get(int ukprn, int larsCode)
+        public async Task<ProviderCourseModel> GetCourse(int ukprn, int larsCode)
         {
-            ProviderCourseModel providerCourse = await _getProviderCourseRepository.GetProviderCourse(ukprn, larsCode);
+            var provider = await _providerReadRepository.GetByUkprn(ukprn);
+            if (provider == null) return null;
+
+            ProviderCourseModel providerCourse = await _providerCourseReadRepository.GetProviderCourse(provider.Id, larsCode);
             return providerCourse;
         }
 
-        public async Task<List<ProviderCourseModel>> GetAll(int ukprn)
+        public async Task<List<ProviderCourseModel>> GetAllCourses(int ukprn)
         {
-            var provider = await _getProviderCourseRepository.GetAllProviderCourse(ukprn);
+            var provider = await _providerReadRepository.GetByUkprn(ukprn);
+            if (provider == null) return new List<ProviderCourseModel>();
 
-            List<ProviderCourseModel> providerCourseModels = provider.Courses?.Select(p => (ProviderCourseModel)p).ToList();
+            var courses = await _providerCourseReadRepository.GetAllProviderCourses(provider.Id);
+
+            var providerCourseModels = courses?.Select(p => (ProviderCourseModel)p).ToList();
+
             return providerCourseModels;
         }
     }
