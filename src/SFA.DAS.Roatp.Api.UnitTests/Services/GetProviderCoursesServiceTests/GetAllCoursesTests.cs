@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
 
             var sut = new GetProviderCoursesService(_mockCourseRepository.Object, _mockProviderReadRepository.Object);
 
-            var courses = await sut.GetAllCourses(1);
+            var courses = await sut.GetAllCourses(ukprn: 1);
 
             Assert.AreEqual(2, courses.Count);
         }
@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
         {
             var sut = new GetProviderCoursesService(_mockCourseRepository.Object, _mockProviderReadRepository.Object);
 
-            var courses = await sut.GetAllCourses(1);
+            var courses = await sut.GetAllCourses(ukprn: 1);
 
             Assert.AreEqual(0, courses.Count);
         }

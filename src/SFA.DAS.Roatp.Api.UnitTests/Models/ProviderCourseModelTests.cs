@@ -10,11 +10,12 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
         [Test]
         public void ProviderCourseOperator_ReturnsProviderCourseModel()
         {
-            var model = (ProviderCourseModel) new ProviderCourse() { LarsCode = 1, IfateReferenceNumber = "ST1001" };
+            var course = new ProviderCourse() { LarsCode = 1, IfateReferenceNumber = "ST1001" };
+            var model = (ProviderCourseModel) course;
 
             Assert.That(model, Is.Not.Null);
-            Assert.That(model.LarsCode, Is.EqualTo(1));
-            Assert.That(model.IfateReferenceNumber, Is.EqualTo("ST1001"));
+            Assert.That(model.LarsCode, Is.EqualTo(course.LarsCode));
+            Assert.That(model.IfateReferenceNumber, Is.EqualTo(course.IfateReferenceNumber));
             Assert.That(model.DeliveryModels, Contains.Item(DeliveryModel.Regular));
             Assert.That(model.DeliveryModels, Contains.Item(DeliveryModel.PortableFlexiJob));
         }

@@ -25,7 +25,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
         [Test]
         public async Task GetCourse_ProviderFound_ReturnsCourseModel()
         {
-            _mockProviderReadRepository.Setup(p => p.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
+            var provider = new Provider() { Id = 123, Ukprn = 10012002 };
+            _mockProviderReadRepository.Setup(p => p.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
 
             var course = new ProviderCourse
             {
@@ -33,11 +34,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
                 IfateReferenceNumber = "ST1001"
             };
 
-            _mockCoursesRepo.Setup(m => m.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(course);
+            _mockCoursesRepo.Setup(m => m.GetProviderCourse(provider.Id, course.LarsCode)).ReturnsAsync(course);
 
             var sut = new GetProviderCoursesService(_mockCoursesRepo.Object, _mockProviderReadRepository.Object);
 
-            var model = await sut.GetCourse(1, 2);
+            var model = await sut.GetCourse(provider.Ukprn, course.LarsCode);
 
             Assert.IsNotNull(model);
         }
@@ -47,7 +48,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
         {
             var sut = new GetProviderCoursesService(_mockCoursesRepo.Object, _mockProviderReadRepository.Object);
 
-            var model = await sut.GetCourse(1, 2);
+            var model = await sut.GetCourse(ukprn: 1, larsCode: 2);
 
             Assert.IsNull(model);
         }
