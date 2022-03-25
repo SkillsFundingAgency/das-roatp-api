@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         {
             if (ukprn <= 0) return new BadRequestObjectResult("Invalid ukprn");
 
-            var result = await _getProviderCoursesService.GetAll(ukprn);
+            var result = await _getProviderCoursesService.GetAllCourses(ukprn);
 
             if (!result.Any()) return new NotFoundObjectResult($"No data found for {ukprn}");
 
@@ -62,7 +62,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         {
             if (ukprn <= 0 || larsCode <= 0) return new BadRequestObjectResult("Invalid ukprn or larscode.");
 
-            var result = await _getProviderCoursesService.Get(ukprn, larsCode);
+            var result = await _getProviderCoursesService.GetCourse(ukprn, larsCode);
 
             if (result == null) return new NotFoundObjectResult($"No data found for {ukprn} and {larsCode}");
 
