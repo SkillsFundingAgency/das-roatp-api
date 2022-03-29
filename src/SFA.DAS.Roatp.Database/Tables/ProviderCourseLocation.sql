@@ -3,7 +3,7 @@
     [Id] INT IDENTITY(1,1) NOT NULL,
     [ExternalId] UNIQUEIDENTIFIER NOT NULL,
     [ProviderCourseId] INT NOT NULL,
-    [ProviderLocationId] INT NOT NULL,
+    [ProviderLocationId] INT  NULL,
     [HasDayReleaseDeliveryOption] BIT NULL,
     [HasBlockReleaseDeliveryOption] BIT NULL,
     [HasNationalDeliveryOption] BIT NULL,
