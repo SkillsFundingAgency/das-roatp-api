@@ -17,5 +17,6 @@
     [Radius] INT NULL,
     CONSTRAINT PK_ProviderLocation PRIMARY KEY (Id),
     CONSTRAINT UK_ProviderLocation_Id UNIQUE ([ExternalId]),
-    CONSTRAINT FK_Provider_ProviderLocation FOREIGN KEY (ProviderId) REFERENCES [Provider] (Id)
+    CONSTRAINT FK_Provider_ProviderLocation FOREIGN KEY (ProviderId) REFERENCES [Provider] (Id),
+    CONSTRAINT UK_ProviderLocation_ProviderId_LocationName UNIQUE (ProviderId, LocationName)
 )
