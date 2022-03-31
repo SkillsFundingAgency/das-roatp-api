@@ -1,0 +1,80 @@
+{
+	"info": {
+		"_postman_id": "f4dd1ef8-3f4f-44fc-a0e5-20d6e7244d3c",
+		"name": "Roatp V2 Inner API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Courses",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Version",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{Environment}}-roatp-api.apprenticeships.education.gov.uk/providers/10063272/courses",
+					"protocol": "https",
+					"host": [
+						"{{Environment}}-roatp-api",
+						"apprenticeships",
+						"education",
+						"gov",
+						"uk"
+					],
+					"path": [
+						"providers",
+						"10063272",
+						"courses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Course",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Version",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{Environment}}-roatp-api.apprenticeships.education.gov.uk/providers/10063272/courses/240",
+					"protocol": "https",
+					"host": [
+						"{{Environment}}-roatp-api",
+						"apprenticeships",
+						"education",
+						"gov",
+						"uk"
+					],
+					"path": [
+						"providers",
+						"10063272",
+						"courses",
+						"240"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
