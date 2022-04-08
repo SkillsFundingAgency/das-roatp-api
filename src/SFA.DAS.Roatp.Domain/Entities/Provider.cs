@@ -16,6 +16,8 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string MarketingInfo { get; set; }
         public decimal? EmployerSatisfaction { get; set; }
         public decimal? LearnerSatisfaction { get; set; }
+        public bool? HasConfirmedDetails { get; set; }
+        public DateTime? ConfirmedDetailsOn { get; set; }
 
         public virtual List<ProviderLocation> Locations { get; set; } = new List<ProviderLocation>();
 
