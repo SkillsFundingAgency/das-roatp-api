@@ -9,6 +9,8 @@
     [Website] VARCHAR(500) NULL,
     [MarketingInfo] VARCHAR(MAX) NULL,
     [EmployerSatisfaction] DECIMAL NULL,
+    [HasConfirmedDetails] BIT NULL,
+    [ConfirmedDetailsOn] datetime2(7) NULL,
     [LearnerSatisfaction] DECIMAL NULL,
     [IsImported] BIT NOT NULL DEFAULT 0,
     [HasConfirmedLocations] BIT NULL,
