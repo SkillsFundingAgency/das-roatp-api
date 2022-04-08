@@ -10,6 +10,8 @@
     [Website] VARCHAR(500) NULL,
     [MarketingInfo] VARCHAR(MAX) NULL,
     [EmployerSatisfaction] DECIMAL NULL,
+    [HasConfirmedDetails] BIT NULL,
+    [ConfirmedDetailsOn] datetime2(7) NULL,
     [LearnerSatisfaction] DECIMAL NULL,
     CONSTRAINT PK_Provider PRIMARY KEY (Id),
     CONSTRAINT UK_Provider_Id UNIQUE (ExternalId),
