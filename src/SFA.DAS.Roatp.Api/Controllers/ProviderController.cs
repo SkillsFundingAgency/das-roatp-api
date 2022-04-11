@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -61,7 +58,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProviderCourseModel), 200)]
-        public async Task<ActionResult<Provider>> GetCourse(int ukprn, bool hasConfirmedDetails)
+        public async Task<ActionResult<Provider>> UpdateProvider(int ukprn, bool hasConfirmedDetails)
         {
             if (ukprn <= 0) return new BadRequestObjectResult("Invalid ukprn.");
 
