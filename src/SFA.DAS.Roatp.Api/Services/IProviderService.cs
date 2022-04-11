@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using SFA.DAS.Roatp.Api.Models;
+﻿using System.Threading.Tasks;
 using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Api.Services
