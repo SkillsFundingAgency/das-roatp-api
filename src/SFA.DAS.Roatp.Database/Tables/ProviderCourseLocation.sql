@@ -4,7 +4,7 @@
     [NavigationId] UNIQUEIDENTIFIER NOT NULL,
     [ProviderCourseId] INT NOT NULL,
     [ProviderLocationId] INT  NULL,
-    [Radius] DECIMAL NOT NULL DEFAULT 0,
+    [Radius] DECIMAL(18,0) NOT NULL DEFAULT 0,
     [HasDayReleaseDeliveryOption] BIT NULL,
     [HasBlockReleaseDeliveryOption] BIT NULL,
     [OffersPortableFlexiJob] BIT NULL,
