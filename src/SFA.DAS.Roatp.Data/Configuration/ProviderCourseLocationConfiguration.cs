@@ -10,11 +10,12 @@ namespace SFA.DAS.Roatp.Data.Configuration
         {
             builder.ToTable(nameof(ProviderCourseLocation));
             builder.HasKey(p => p.Id);
-            builder.HasIndex(p => p.ExternalId).IsUnique();
-            builder.Property(p => p.ExternalId).IsRequired();
+            builder.HasIndex(p => p.NavigationId).IsUnique();
+            builder.Property(p => p.NavigationId).IsRequired();
             builder.Property(p => p.ProviderCourseId).IsRequired();
             builder.Property(p => p.ProviderLocationId).IsRequired();
+            builder.Property(p => p.IsImported).IsRequired();
+            builder.Property(p => p.Radius).HasColumnType("decimal").IsRequired();
         }
     }
-
 }

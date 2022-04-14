@@ -10,14 +10,26 @@ namespace SFA.DAS.Roatp.Data.Configuration
         {
             builder.ToTable(nameof(Provider));
             builder.HasKey(p => p.Id);
-            builder.HasIndex(p => p.ExternalId).IsUnique();
-            builder.Property(p => p.ExternalId).IsRequired();
             builder.Property(p => p.Ukprn).IsRequired();
             builder.Property(p => p.LegalName).IsRequired().HasMaxLength(1000);
             builder.Property(p => p.TradingName).HasMaxLength(1000);
             builder.Property(p => p.Email).HasMaxLength(300);
             builder.Property(p => p.Phone).HasMaxLength(50);
             builder.Property(p => p.Website).HasMaxLength(500);
+            builder.Property(p => p.EmployerSatisfaction).HasColumnType("decimal");
+            builder.Property(p => p.LearnerSatisfaction).HasColumnType("decimal");
+            builder.Property(p => p.IsImported).IsRequired();
+
+            builder.HasMany(p => p.Locations)
+                .WithOne(p => p.Provider)
+                .HasPrincipalKey(p => p.Id)
+                .HasForeignKey(p => p.ProviderId);
+
+            builder.HasMany(p => p.Courses)
+                .WithOne(c => c.Provider)
+                .HasPrincipalKey(p => p.Id)
+                .HasForeignKey(p => p.ProviderId);
+
         }
     }
 }

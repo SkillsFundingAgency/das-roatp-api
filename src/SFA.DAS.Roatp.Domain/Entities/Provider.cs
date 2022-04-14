@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Domain.Entities
 {
     public class Provider
     {
         public int Id { get; set; }
-        public Guid ExternalId { get; set; }
         public int Ukprn { get; set; }
         public string LegalName { get; set; }
         public string TradingName { get; set; }
@@ -16,6 +14,10 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string MarketingInfo { get; set; }
         public decimal? EmployerSatisfaction { get; set; }
         public decimal? LearnerSatisfaction { get; set; }
+        public bool IsImported { get; set; } = false; 
+        public bool? HasConfirmedLocations { get; set; } //Required if imported
+        public bool? HasConfirmedDetails { get; set; } //Required if imported
+
 
         public virtual List<ProviderLocation> Locations { get; set; } = new List<ProviderLocation>();
 

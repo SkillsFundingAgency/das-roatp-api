@@ -1,16 +1,17 @@
 ﻿CREATE TABLE [dbo].[ProviderCourseLocation]
 (
     [Id] INT IDENTITY(1,1) NOT NULL,
-    [ExternalId] UNIQUEIDENTIFIER NOT NULL,
+    [NavigationId] UNIQUEIDENTIFIER NOT NULL,
     [ProviderCourseId] INT NOT NULL,
     [ProviderLocationId] INT  NULL,
+    [Radius] DECIMAL NOT NULL DEFAULT 0,
     [HasDayReleaseDeliveryOption] BIT NULL,
     [HasBlockReleaseDeliveryOption] BIT NULL,
-    [HasNationalDeliveryOption] BIT NULL,
     [OffersPortableFlexiJob] BIT NULL,
+    [IsImported] BIT NOT NULL DEFAULT 0,
     CONSTRAINT PK_ProviderCourseLocation PRIMARY KEY (Id),
-    CONSTRAINT UK_ProviderCourseLocation_Id UNIQUE ([ExternalId]),
-    CONSTRAINT UK_ProviderCourseLocation_CourseLocation UNIQUE (ProviderCourseId, ProviderLocationId),
-    CONSTRAINT FK_ProviderCourse_ProviderCourseLocation FOREIGN KEY (ProviderCourseId) REFERENCES ProviderCourse (Id),
-    CONSTRAINT FK_ProviderLocation_ProviderCourseLocation FOREIGN KEY (ProviderLocationId) REFERENCES ProviderLocation (Id)
+    CONSTRAINT UK_ProviderCourseLocation_NavigationId UNIQUE ([NavigationId]),
+    CONSTRAINT UK_ProviderCourseLocation_Course_Location UNIQUE (ProviderCourseId, [ProviderLocationId]),
+    CONSTRAINT FK_ProviderCourseLocation_ProviderCourse FOREIGN KEY (ProviderCourseId) REFERENCES ProviderCourse (Id),
+    CONSTRAINT FK_ProviderCourseLocation_ProviderLocation FOREIGN KEY ([ProviderLocationId]) REFERENCES ProviderLocation (Id)
 )

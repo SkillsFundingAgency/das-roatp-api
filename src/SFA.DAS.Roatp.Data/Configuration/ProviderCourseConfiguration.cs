@@ -10,8 +10,6 @@ namespace SFA.DAS.Roatp.Data.Configuration
         {
             builder.ToTable(nameof(ProviderCourse));
             builder.HasKey(p => p.Id);
-            builder.HasIndex(p => p.ExternalId).IsUnique();
-            builder.Property(p => p.ExternalId).IsRequired();
             builder.Property(p => p.ProviderId).IsRequired();
             builder.Property(p => p.LarsCode).IsRequired();
             builder.Property(p => p.IfateReferenceNumber).IsRequired().HasMaxLength(10);
@@ -19,7 +17,7 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.Property(p => p.ContactUsPageUrl).HasMaxLength(500);
             builder.Property(p => p.ContactUsEmail).HasMaxLength(500);
             builder.Property(p => p.ContactUsPhoneNumber).HasMaxLength(20);
+            builder.Property(p => p.IsImported).IsRequired();
         }
     }
-
 }
