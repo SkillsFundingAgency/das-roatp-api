@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Api.Services;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
