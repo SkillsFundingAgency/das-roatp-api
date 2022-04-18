@@ -31,12 +31,13 @@ namespace SFA.DAS.Roatp.Data.Extensions
             return services;
         }
 
+#pragma warning disable S1172 // Unused method parameters should be removed
         private static void RegisterServices(IServiceCollection services)
+#pragma warning restore S1172 // Unused method parameters should be removed
         {
             services.AddTransient<IProviderReadRepository, ProviderReadRepository>();
             services.AddTransient<IProviderCourseReadRepository, ProviderCourseReadRepository>();
             services.AddTransient<ICreateProviderRepository, CreateProviderRepository>();
-            services.AddTransient<IProviderRepository, ProviderRepository>();
         }
 
         public static async Task<string> GenerateTokenAsync()

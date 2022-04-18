@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Api.Services
 
         public async Task<ProviderCourseModel> GetCourse(int ukprn, int larsCode)
         {
-            var provider = await _providerReadRepository.GetByUkprn(ukprn);
+            var provider = await _providerReadRepository.GetProvider(ukprn);
             if (provider == null) return null;
 
             ProviderCourseModel providerCourse = await _providerCourseReadRepository.GetProviderCourse(provider.Id, larsCode);
@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Api.Services
 
         public async Task<List<ProviderCourseModel>> GetAllCourses(int ukprn)
         {
-            var provider = await _providerReadRepository.GetByUkprn(ukprn);
+            var provider = await _providerReadRepository.GetProvider(ukprn);
             if (provider == null) return new List<ProviderCourseModel>();
 
             var courses = await _providerCourseReadRepository.GetAllProviderCourses(provider.Id);

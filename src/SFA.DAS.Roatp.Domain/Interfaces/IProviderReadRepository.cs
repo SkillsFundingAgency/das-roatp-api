@@ -5,6 +5,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
 {
     public interface IProviderReadRepository
     {
-        Task<Provider> GetByUkprn(int ukprn);
+        Task<Provider> GetProvider(int ukprn);
     }
 }

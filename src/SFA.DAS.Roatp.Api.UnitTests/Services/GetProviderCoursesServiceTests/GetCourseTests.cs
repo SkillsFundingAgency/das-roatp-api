@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
         public async Task GetCourse_ProviderFound_ReturnsCourseModel()
         {
             var provider = new Provider() { Id = 123, Ukprn = 10012002 };
-            _mockProviderReadRepository.Setup(p => p.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
+            _mockProviderReadRepository.Setup(p => p.GetProvider(It.IsAny<int>())).ReturnsAsync(provider);
 
             var course = new ProviderCourse
             {

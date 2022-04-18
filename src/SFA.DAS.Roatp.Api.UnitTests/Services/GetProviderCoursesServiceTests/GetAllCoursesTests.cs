@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
         [Test]
         public async Task GetAllCourses_ProviderFound_ReturnsListOfCourseModel()
         {
-            _mockProviderReadRepository.Setup(p => p.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
+            _mockProviderReadRepository.Setup(p => p.GetProvider(It.IsAny<int>())).ReturnsAsync(new Provider());
 
             _mockCourseRepository.Setup(m => m.GetAllProviderCourses(It.IsAny<int>())).ReturnsAsync(_courses);
 
