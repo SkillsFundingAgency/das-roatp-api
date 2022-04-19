@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public Guid NavigationId { get; set; }
         public int ProviderId { get; set; }
         public string LocationName { get; set; }
-        public string RegionName { get; set; }
+        public string SubregionName { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string Town { get; set; }
