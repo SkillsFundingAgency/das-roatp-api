@@ -10,11 +10,13 @@ namespace SFA.DAS.Roatp.Api.Services
     {
         private readonly IProviderCourseReadRepository _providerCourseReadRepository;
         private readonly IProviderReadRepository _providerReadRepository;
+        private readonly ICourseReadRepository _courseReadRepository;
 
-        public GetProviderCoursesService(IProviderCourseReadRepository providerCourseReadRepository, IProviderReadRepository providerReadRepository)
+        public GetProviderCoursesService(IProviderCourseReadRepository providerCourseReadRepository, IProviderReadRepository providerReadRepository, ICourseReadRepository courseReadRepository)
         {
             _providerCourseReadRepository = providerCourseReadRepository;
             _providerReadRepository = providerReadRepository;
+            _courseReadRepository = courseReadRepository;
         }
 
         public async Task<ProviderCourseModel> GetCourse(int ukprn, int larsCode)
@@ -23,6 +25,12 @@ namespace SFA.DAS.Roatp.Api.Services
             if (provider == null) return null;
 
             ProviderCourseModel providerCourse = await _providerCourseReadRepository.GetProviderCourse(provider.Id, larsCode);
+            var courses = await _courseReadRepository.GetAllCourses();
+            var course = courses?.FirstOrDefault(c => c.LarsCode == larsCode);
+            providerCourse.IfateReferenceNumber = course?.IfateReferenceNumber;
+            providerCourse.CourseName = course?.Title;
+            providerCourse.Level = course != null ? course.Level : 0;
+
             return providerCourse;
         }
 
@@ -31,10 +39,17 @@ namespace SFA.DAS.Roatp.Api.Services
             var provider = await _providerReadRepository.GetByUkprn(ukprn);
             if (provider == null) return new List<ProviderCourseModel>();
 
-            var courses = await _providerCourseReadRepository.GetAllProviderCourses(provider.Id);
+            var providerCourses = await _providerCourseReadRepository.GetAllProviderCourses(provider.Id);
 
-            var providerCourseModels = courses?.Select(p => (ProviderCourseModel)p).ToList();
-
+            var providerCourseModels = providerCourses?.Select(p => (ProviderCourseModel)p).ToList();
+            var courses = await _courseReadRepository.GetAllCourses();
+            foreach (var p in providerCourseModels)
+            {
+                var course = courses?.FirstOrDefault(c => c.LarsCode == p.LarsCode);
+                p.IfateReferenceNumber = course?.IfateReferenceNumber;
+                p.CourseName = course?.Title;
+                p.Level = course != null ? course.Level : 0;
+            }
             return providerCourseModels;
         }
     }

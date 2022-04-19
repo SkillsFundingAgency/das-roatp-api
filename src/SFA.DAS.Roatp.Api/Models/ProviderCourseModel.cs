@@ -5,7 +5,10 @@ namespace SFA.DAS.Roatp.Api.Models
 {
     public class ProviderCourseModel
     {
+        public int Id { get; set; }
+        public string CourseName { get; set; }
         public int LarsCode { get; set; }
+        public int Level { get; set; }
         public string IfateReferenceNumber { get; set; }
         public List<DeliveryModel> DeliveryModels { get; set; } = new List<DeliveryModel>();
 
@@ -15,6 +18,7 @@ namespace SFA.DAS.Roatp.Api.Models
 
             var model = new ProviderCourseModel
             {
+                Id = providerCourse.Id,
                 LarsCode = providerCourse.LarsCode,
                 IfateReferenceNumber = providerCourse.IfateReferenceNumber,
             };

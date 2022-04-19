@@ -25,15 +25,17 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
             }
         };
 
-        private Mock<IProviderCourseReadRepository> _mockCourseRepository;
+        private Mock<IProviderCourseReadRepository> _mockProviderCourseRepository;
         private Mock<IProviderReadRepository> _mockProviderReadRepository;
+        private Mock<ICourseReadRepository> _mockCourseRepository;
 
 
         [SetUp]
         public void Setup()
         {
-            _mockCourseRepository = new Mock<IProviderCourseReadRepository>();
+            _mockProviderCourseRepository = new Mock<IProviderCourseReadRepository>();
             _mockProviderReadRepository = new Mock<IProviderReadRepository>();
+            _mockCourseRepository = new Mock<ICourseReadRepository>();
         }
 
         [Test]
@@ -41,9 +43,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
         {
             _mockProviderReadRepository.Setup(p => p.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
 
-            _mockCourseRepository.Setup(m => m.GetAllProviderCourses(It.IsAny<int>())).ReturnsAsync(_courses);
+            _mockProviderCourseRepository.Setup(m => m.GetAllProviderCourses(It.IsAny<int>())).ReturnsAsync(_courses);
 
-            var sut = new GetProviderCoursesService(_mockCourseRepository.Object, _mockProviderReadRepository.Object);
+            var sut = new GetProviderCoursesService(_mockProviderCourseRepository.Object, _mockProviderReadRepository.Object, _mockCourseRepository.Object);
 
             var courses = await sut.GetAllCourses(ukprn: 1);
 
@@ -53,7 +55,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
         [Test]
         public async Task GetAllCourses_ProviderNotFound_ReturnsEmptyList()
         {
-            var sut = new GetProviderCoursesService(_mockCourseRepository.Object, _mockProviderReadRepository.Object);
+            var sut = new GetProviderCoursesService(_mockProviderCourseRepository.Object, _mockProviderReadRepository.Object, _mockCourseRepository.Object);
 
             var courses = await sut.GetAllCourses(ukprn: 1);
 

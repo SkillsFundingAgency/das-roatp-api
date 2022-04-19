@@ -12,14 +12,16 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
     [TestFixture]
     public class GetCourseTests
     {
-        private Mock<IProviderCourseReadRepository> _mockCoursesRepo;
+        private Mock<IProviderCourseReadRepository> _mockProviderCourseRepository;
         private Mock<IProviderReadRepository> _mockProviderReadRepository;
+        private Mock<ICourseReadRepository> _mockCourseRepository;
 
         [SetUp]
         public void Setup()
         {
-            _mockCoursesRepo = new Mock<IProviderCourseReadRepository>();
+            _mockProviderCourseRepository = new Mock<IProviderCourseReadRepository>();
             _mockProviderReadRepository = new Mock<IProviderReadRepository>();
+            _mockCourseRepository = new Mock<ICourseReadRepository>();
         }
 
         [Test]
@@ -34,9 +36,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
                 IfateReferenceNumber = "ST1001"
             };
 
-            _mockCoursesRepo.Setup(m => m.GetProviderCourse(provider.Id, course.LarsCode)).ReturnsAsync(course);
+            _mockProviderCourseRepository.Setup(m => m.GetProviderCourse(provider.Id, course.LarsCode)).ReturnsAsync(course);
 
-            var sut = new GetProviderCoursesService(_mockCoursesRepo.Object, _mockProviderReadRepository.Object);
+            var sut = new GetProviderCoursesService(_mockProviderCourseRepository.Object, _mockProviderReadRepository.Object, _mockCourseRepository.Object);
 
             var model = await sut.GetCourse(provider.Ukprn, course.LarsCode);
 
@@ -46,7 +48,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
         [Test]
         public async Task GetCourse_ProviderNotFound_ReturnsNull()
         {
-            var sut = new GetProviderCoursesService(_mockCoursesRepo.Object, _mockProviderReadRepository.Object);
+            var sut = new GetProviderCoursesService(_mockProviderCourseRepository.Object, _mockProviderReadRepository.Object, _mockCourseRepository.Object);
 
             var model = await sut.GetCourse(ukprn: 1, larsCode: 2);
 
