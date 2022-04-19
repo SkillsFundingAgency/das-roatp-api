@@ -13,6 +13,7 @@ namespace SFA.DAS.Roatp.Api.Services
         public GetProviderService(IProviderReadRepository providerReadRepository, ILogger<GetProviderService> logger)
         {
             _providerReadRepository = providerReadRepository;
+            _logger = logger;
         }
 
         public async Task<Provider> GetProvider(int ukprn)

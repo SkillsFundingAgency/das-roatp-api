@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Services;
@@ -24,7 +25,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services
             var provider = new Provider() { Id = 123, Ukprn = 10012002, LegalName ="Test" };
             _mockproviderRepo.Setup(m => m.GetProvider(provider.Ukprn)).ReturnsAsync(provider);
 
-            var sut = new GetProviderService(_mockproviderRepo.Object);
+            var sut = new GetProviderService(_mockproviderRepo.Object, Mock.Of<ILogger<GetProviderService>>());
 
             var model = await sut.GetProvider(provider.Ukprn);
 
@@ -34,7 +35,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services
         [Test]
         public async Task GetProvider_ProviderNotFound_ReturnsNull()
         {
-            var sut = new GetProviderService(_mockproviderRepo.Object);
+            var sut = new GetProviderService(_mockproviderRepo.Object, Mock.Of<ILogger<GetProviderService>>());
 
             var model = await sut.GetProvider(ukprn: 1);
 
