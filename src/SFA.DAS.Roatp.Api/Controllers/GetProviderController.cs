@@ -36,11 +36,12 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(Provider), 200)]
         public async Task<ActionResult<Provider>> GetProvider(int ukprn)
         {
+            _logger.LogInformation("Get provider request received for UKPRN: {ukprn}", ukprn);
             if (ukprn <= 0 ) return new BadRequestObjectResult("Invalid ukprn.");
 
             var result = await _providerService.GetProvider(ukprn);
 
-            if (result == null) return new NotFoundObjectResult($"No data found for {ukprn}");
+            if (result == null) return new NotFoundObjectResult($"No data found for UKPRN: {ukprn}");
 
             return new OkObjectResult(result);
         }
