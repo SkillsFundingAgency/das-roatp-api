@@ -10,7 +10,6 @@
     [MarketingInfo] VARCHAR(MAX) NULL,
     [EmployerSatisfaction] DECIMAL NULL,
     [LearnerSatisfaction] DECIMAL NULL,
-    [ConfirmedDetailsOn] datetime2(7) NULL,
     [IsImported] BIT NOT NULL DEFAULT 0,
     [HasConfirmedLocations] BIT NULL,
     [HasConfirmedDetails] BIT NULL,
