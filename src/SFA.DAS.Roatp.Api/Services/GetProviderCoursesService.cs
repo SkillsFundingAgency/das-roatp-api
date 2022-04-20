@@ -43,12 +43,15 @@ namespace SFA.DAS.Roatp.Api.Services
 
             var providerCourseModels = providerCourses?.Select(p => (ProviderCourseModel)p).ToList();
             var courses = await _courseReadRepository.GetAllCourses();
-            foreach (var p in providerCourseModels)
+            if(providerCourseModels != null)
             {
-                var course = courses?.FirstOrDefault(c => c.LarsCode == p.LarsCode);
-                p.IfateReferenceNumber = course?.IfateReferenceNumber;
-                p.CourseName = course?.Title;
-                p.Level = course != null ? course.Level : 0;
+                foreach (var p in providerCourseModels)
+                {
+                    var course = courses?.FirstOrDefault(c => c.LarsCode == p.LarsCode);
+                    p.IfateReferenceNumber = course?.IfateReferenceNumber;
+                    p.CourseName = course?.Title;
+                    p.Level = course != null ? course.Level : 0;
+                }
             }
             return providerCourseModels;
         }
