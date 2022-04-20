@@ -53,7 +53,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         /// <param name="larsCode"></param>
         /// <returns></returns>
         [HttpGet]
-        [Route("/providers/{ukprn}/courses/{larscode}")]
+        [Route("/providers/{ukprn}/courses/{larsCode}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
