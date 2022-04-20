@@ -68,6 +68,7 @@
     <Build Include="Tables\ProviderCourseLocation.sql" />
     <Build Include="Tables\Course.sql" />
     <Build Include="Tables\Region.sql" />
+    <Build Include="PostDeploymentScripts\CSP-78.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PostDeploymentScripts\InsertPilotProvidersData.sql">
