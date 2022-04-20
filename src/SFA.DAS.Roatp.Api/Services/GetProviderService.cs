@@ -22,7 +22,6 @@ namespace SFA.DAS.Roatp.Api.Services
             if (provider == null)
             {
                 _logger.LogWarning("Provider with UKPRN {ukprn} was not found.", ukprn);
-                return null;
             }
             return provider;
         }

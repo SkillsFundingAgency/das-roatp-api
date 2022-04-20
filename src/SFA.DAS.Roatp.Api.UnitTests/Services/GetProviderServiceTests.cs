@@ -9,7 +9,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Api.UnitTests.Services
 {
     [TestFixture]
-    public class ProviderServiceTests
+    public class GetProviderServiceTests
     {
         private Mock<IProviderReadRepository> _mockproviderRepo;
 
