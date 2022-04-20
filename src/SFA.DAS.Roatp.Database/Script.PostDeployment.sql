@@ -11,5 +11,4 @@ Post-Deployment Script Template
 */
 
 :r .\PostDeploymentScripts\InsertPilotProvidersData.sql
-
-/*:r .\PostDeploymentScripts\CSP-78.sql*/
+:r .\PostDeploymentScripts\CSP-78.sql

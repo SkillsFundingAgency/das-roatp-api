@@ -1,4 +1,6 @@
-﻿Delete From Region
+﻿IF 151 > (SELECT COUNT(*) FROM Region)
+BEGIN
+DELETE FROM [Region]
 
 --- East Midlands 9
 INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude]) 
@@ -143,7 +145,7 @@ INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude])
 		('Torbay','South West',50.4619,-3.5253),
 		('Wiltshire','South West',51.3492,-1.9927)
 
--- West Midlands
+-- West Midlands 14
 INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude])
 		VALUES ('Birmingham','West Midlands',52.4829,-1.89346),
 		('Coventry','West Midlands',52.40631,-1.50852),
@@ -160,7 +162,7 @@ INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude])
 		('Wolverhampton','West Midlands',52.58533,-2.13192),
 		('Worcestershire','West Midlands',52.19204,-2.22353)
 
--- Yorkshire and The Humber
+-- Yorkshire and The Humber 15
 INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude])
 		VALUES ('Barnsley','Yorkshire and The Humber',53.55293,-1.48127),
 		('Bradford','Yorkshire and The Humber',53.79385,-1.75244),
@@ -177,4 +179,4 @@ INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude])
 		('Sheffield','Yorkshire and The Humber',53.38306,-1.46479),
 		('Wakefield','Yorkshire and The Humber',53.68297,-1.4991),
 		('York','Yorkshire and The Humber',53.96,-1.0873)
-
+END
