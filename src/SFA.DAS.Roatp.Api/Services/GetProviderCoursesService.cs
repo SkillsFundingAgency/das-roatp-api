@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
+using System.Web.Http;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -65,7 +67,7 @@ namespace SFA.DAS.Roatp.Api.Services
             if (!coursesLookup.Any())
             {
                 _logger.LogError("Courses Lookup data not found for {ukprn}", ukprn);
-                return null;
+                throw new HttpResponseException(HttpStatusCode.NotFound);
             }
             foreach (var p in providerCourseModels)
             {
