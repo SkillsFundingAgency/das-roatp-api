@@ -40,18 +40,18 @@ namespace SFA.DAS.Roatp.Api.Services
             if (provider == null) return new List<ProviderCourseModel>();
 
             var providerCourses = await _providerCourseReadRepository.GetAllProviderCourses(provider.Id);
+            if (providerCourses == null) return new List<ProviderCourseModel>();
 
-            var providerCourseModels = providerCourses?.Select(p => (ProviderCourseModel)p).ToList();
+            var providerCourseModels = providerCourses.Select(p => (ProviderCourseModel)p).ToList();
+            if (providerCourseModels == null) return new List<ProviderCourseModel>();
             var courses = await _courseReadRepository.GetAllCourses();
-            if(providerCourseModels != null)
+            if (courses == null) return providerCourseModels;
+            foreach (var p in providerCourseModels)
             {
-                foreach (var p in providerCourseModels)
-                {
-                    var course = courses?.FirstOrDefault(c => c.LarsCode == p.LarsCode);
-                    p.IfateReferenceNumber = course?.IfateReferenceNumber;
-                    p.CourseName = course?.Title;
-                    p.Level = course != null ? course.Level : 0;
-                }
+                var course = courses.FirstOrDefault(c => c.LarsCode == p.LarsCode);
+                p.IfateReferenceNumber = course?.IfateReferenceNumber;
+                p.CourseName = course?.Title;
+                p.Level = course != null ? course.Level : 0;
             }
             return providerCourseModels;
         }
