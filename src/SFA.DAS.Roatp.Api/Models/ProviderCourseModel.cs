@@ -7,9 +7,18 @@ namespace SFA.DAS.Roatp.Api.Models
     {
         public int ProviderCourseId { get; set; }
         public string CourseName { get; set; }
-        public int LarsCode { get; set; }
         public int Level { get; set; }
+        public int LarsCode { get; set; }
         public string IfateReferenceNumber { get; set; }
+        public string StandardInfoUrl { get; set; }
+        public string ContactUsPhoneNumber { get; set; }
+        public string ContactUsEmail { get; set; }
+        public string ContactUsPageUrl { get; set; }
+        public bool? IsApprovedByRegulator { get; set; }
+        public bool IsImported { get; set; } = false;
+        public bool? IsConfirmed { get; set; } //required if imported
+        public bool? HasNationalDeliveryOption { get; set; }
+        public bool? HasHundredPercentEmployerDeliveryOption { get; set; }
         public List<DeliveryModel> DeliveryModels { get; set; } = new List<DeliveryModel>();
 
         public static implicit operator ProviderCourseModel(ProviderCourse providerCourse)
@@ -21,6 +30,15 @@ namespace SFA.DAS.Roatp.Api.Models
                 ProviderCourseId = providerCourse.Id,
                 LarsCode = providerCourse.LarsCode,
                 IfateReferenceNumber = providerCourse.IfateReferenceNumber,
+                StandardInfoUrl = providerCourse.StandardInfoUrl,
+                ContactUsPhoneNumber = providerCourse.ContactUsPhoneNumber,
+                ContactUsEmail = providerCourse.ContactUsEmail,
+                ContactUsPageUrl = providerCourse.ContactUsPageUrl,
+                IsApprovedByRegulator = providerCourse.IsApprovedByRegulator,
+                IsImported = providerCourse.IsImported,
+                IsConfirmed = providerCourse.IsConfirmed,
+                HasNationalDeliveryOption = providerCourse.HasNationalDeliveryOption,
+                HasHundredPercentEmployerDeliveryOption =providerCourse.HasHundredPercentEmployerDeliveryOption
             };
 
             //Regular is assumed by default
@@ -31,6 +49,12 @@ namespace SFA.DAS.Roatp.Api.Models
             model.DeliveryModels.Add(DeliveryModel.PortableFlexiJob);
 
             return model;
+        }
+        public void UpdateCourseDetails(string ifateRefNum, int level, string title)
+        {
+            IfateReferenceNumber = ifateRefNum;
+            Level = level;
+            CourseName = title;
         }
     }
 

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
@@ -11,25 +12,34 @@ namespace SFA.DAS.Roatp.Api.Services
         private readonly IProviderCourseReadRepository _providerCourseReadRepository;
         private readonly IProviderReadRepository _providerReadRepository;
         private readonly ICourseReadRepository _courseReadRepository;
+        private readonly ILogger<GetProviderCoursesService> _logger;
 
-        public GetProviderCoursesService(IProviderCourseReadRepository providerCourseReadRepository, IProviderReadRepository providerReadRepository, ICourseReadRepository courseReadRepository)
+        public GetProviderCoursesService(IProviderCourseReadRepository providerCourseReadRepository, IProviderReadRepository providerReadRepository, ICourseReadRepository courseReadRepository, ILogger<GetProviderCoursesService> logger)
         {
             _providerCourseReadRepository = providerCourseReadRepository;
             _providerReadRepository = providerReadRepository;
             _courseReadRepository = courseReadRepository;
+            _logger = logger;
         }
 
         public async Task<ProviderCourseModel> GetCourse(int ukprn, int larsCode)
         {
             var provider = await _providerReadRepository.GetByUkprn(ukprn);
-            if (provider == null) return null;
+            if (provider == null)
+            {
+                _logger.LogInformation("Provider data not found for {ukprn} and {larsCode}", ukprn, larsCode);
+                return null;
+            }
 
             ProviderCourseModel providerCourse = await _providerCourseReadRepository.GetProviderCourse(provider.Id, larsCode);
-            var courses = await _courseReadRepository.GetAllCourses();
-            var course = courses?.FirstOrDefault(c => c.LarsCode == larsCode);
-            providerCourse.IfateReferenceNumber = course?.IfateReferenceNumber;
-            providerCourse.CourseName = course?.Title;
-            providerCourse.Level = course != null ? course.Level : 0;
+            var coursesLookup = await _courseReadRepository.GetAllCourses();
+            if (!coursesLookup.Any())
+            {
+                _logger.LogError("Courses Lookup data not found for {ukprn} and {larsCode}", ukprn, larsCode);
+                return null;
+            }
+            var course = coursesLookup.Single(c => c.LarsCode == larsCode);
+            providerCourse.UpdateCourseDetails(course.IfateReferenceNumber, course.Level, course.Title);
 
             return providerCourse;
         }
@@ -37,21 +47,30 @@ namespace SFA.DAS.Roatp.Api.Services
         public async Task<List<ProviderCourseModel>> GetAllCourses(int ukprn)
         {
             var provider = await _providerReadRepository.GetByUkprn(ukprn);
-            if (provider == null) return new List<ProviderCourseModel>();
+            if (provider == null)
+            {
+                _logger.LogInformation("Provider data not found for {ukprn}", ukprn);
+                return new List<ProviderCourseModel>();
+            }
 
             var providerCourses = await _providerCourseReadRepository.GetAllProviderCourses(provider.Id);
-            if (providerCourses == null) return new List<ProviderCourseModel>();
+            if (!providerCourses.Any())
+            {
+                _logger.LogInformation("ProviderCourses data not found for {ukprn}", ukprn);
+                return new List<ProviderCourseModel>();
+            }
 
             var providerCourseModels = providerCourses.Select(p => (ProviderCourseModel)p).ToList();
-            if (providerCourseModels == null) return new List<ProviderCourseModel>();
-            var courses = await _courseReadRepository.GetAllCourses();
-            if (courses == null) return providerCourseModels;
+            var coursesLookup = await _courseReadRepository.GetAllCourses();
+            if (!coursesLookup.Any())
+            {
+                _logger.LogError("Courses Lookup data not found for {ukprn}", ukprn);
+                return null;
+            }
             foreach (var p in providerCourseModels)
             {
-                var course = courses.FirstOrDefault(c => c.LarsCode == p.LarsCode);
-                p.IfateReferenceNumber = course?.IfateReferenceNumber;
-                p.CourseName = course?.Title;
-                p.Level = course != null ? course.Level : 0;
+                var course = coursesLookup.Single(c => c.LarsCode == p.LarsCode);
+                p.UpdateCourseDetails(course.IfateReferenceNumber, course.Level, course.Title);
             }
             return providerCourseModels;
         }

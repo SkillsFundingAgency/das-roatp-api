@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.Data.Configuration
         public void Configure(EntityTypeBuilder<Course> builder)
         {
             builder.ToTable(nameof(Course));
-            builder.HasNoKey();
+            builder.HasKey(c => c.StandardUId);
         }
     }
 }

@@ -37,12 +37,21 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
         public async Task<ActionResult<List<ProviderCourseModel>>> GetAllCourses(int ukprn)
         {
-            if (ukprn <= 0) return new BadRequestObjectResult("Invalid ukprn");
+            if (ukprn <= 0)
+            {
+                _logger.LogInformation("Invalid ukprn {ukprn}", ukprn);
+                return new BadRequestObjectResult("Invalid ukprn");
+            }
 
             var result = await _getProviderCoursesService.GetAllCourses(ukprn);
 
-            if (!result.Any()) return new NotFoundObjectResult($"No data found for {ukprn}");
+            if (!result.Any())
+            {
+                _logger.LogInformation("Courses data not found for {ukprn}", ukprn);
+                return new NotFoundObjectResult($"No data found for {ukprn}");
+            }
 
+            _logger.LogInformation("Courses data found for {ukprn}", ukprn);
             return new OkObjectResult(result);
         }
 
@@ -60,12 +69,22 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(ProviderCourseModel), 200)]
         public async Task<ActionResult<ProviderCourseModel>> GetCourse(int ukprn, int larsCode)
         {
-            if (ukprn <= 0 || larsCode <= 0) return new BadRequestObjectResult("Invalid ukprn or larscode.");
+            if (ukprn <= 0 || larsCode <= 0)
+            {
+                _logger.LogInformation("Invalid ukprn or larscode {ukprn}, {larsCode}", ukprn, larsCode);
+                return new BadRequestObjectResult("Invalid ukprn or larscode.");
+            }
+
 
             var result = await _getProviderCoursesService.GetCourse(ukprn, larsCode);
 
-            if (result == null) return new NotFoundObjectResult($"No data found for {ukprn} and {larsCode}");
+            if (result == null)
+            {
+                _logger.LogInformation("Courses data not found for {ukprn} and {larsCode}", ukprn, larsCode);
+                return new NotFoundObjectResult($"No data found for {ukprn} and {larsCode}");
+            }
 
+            _logger.LogInformation("Courses data found for {ukprn} and {larsCode}", ukprn, larsCode);
             return new OkObjectResult(result);
         }
     }
