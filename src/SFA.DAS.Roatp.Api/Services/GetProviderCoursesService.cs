@@ -68,7 +68,7 @@ namespace SFA.DAS.Roatp.Api.Services
             if (!coursesLookup.Any())
             {
                 _logger.LogError("Courses Lookup data not found for {ukprn}", ukprn);
-                throw new Exception($"Courses Lookup data not found for {ukprn}");
+                throw new InvalidOperationException($"Courses Lookup data not found for {ukprn}");
             }
             foreach (var p in providerCourseModels)
             {
