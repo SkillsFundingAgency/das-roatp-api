@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -12,16 +11,13 @@ namespace SFA.DAS.Roatp.Api.Controllers
     public class CoursesController : ControllerBase
     {
         private readonly ILogger<CoursesController> _logger;
-
-
         [HttpPost]
-        [Route("/UpdateCourses")]
-        //[Produces("application/json")]
+        [Route("/ReloadCoursesData")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
-        public async Task<ActionResult<bool>> UpdateCourses(CoursesRequest courseRequest)
-        {
+        [ProducesResponseType(typeof(bool), 200)]
+        public async Task<ActionResult<bool>> ReloadCoursesData(CoursesRequest courseRequest)
+        { 
             var coursesToProcess = courseRequest.Courses;
             return true;
         }
