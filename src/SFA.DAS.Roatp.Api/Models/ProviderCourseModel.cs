@@ -29,7 +29,6 @@ namespace SFA.DAS.Roatp.Api.Models
             {
                 ProviderCourseId = providerCourse.Id,
                 LarsCode = providerCourse.LarsCode,
-                IfateReferenceNumber = providerCourse.IfateReferenceNumber,
                 StandardInfoUrl = providerCourse.StandardInfoUrl,
                 ContactUsPhoneNumber = providerCourse.ContactUsPhoneNumber,
                 ContactUsEmail = providerCourse.ContactUsEmail,
