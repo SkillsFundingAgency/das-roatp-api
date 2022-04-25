@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Roatp.Api.Models
 {
-    public class Course
+    public class Standard
     {
         public string StandardUid { get; set; }
         public int LarsCode { get; set; }
