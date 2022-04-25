@@ -67,7 +67,7 @@
     <Build Include="Tables\ProviderCourse.sql" />
     <Build Include="Tables\ProviderCourseVersion.sql" />
     <Build Include="Tables\ProviderCourseLocation.sql" />
-    <Build Include="Tables\Course.sql" />
+    <Build Include="Tables\Standard.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="PostDeploymentScripts\InsertPilotProvidersData.sql">

@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.HasIndex(p => p.NavigationId).IsUnique();
             builder.Property(p => p.NavigationId).IsRequired();
             builder.Property(p => p.LocationName).HasMaxLength(250).IsRequired();
-            builder.Property(p => p.RegionName).HasMaxLength(250);
+            builder.Property(p => p.SubregionName).HasMaxLength(250);
             builder.Property(p => p.AddressLine1).HasMaxLength(250);
             builder.Property(p => p.AddressLine2).HasMaxLength(250);
             builder.Property(p => p.Town).HasMaxLength(250);
