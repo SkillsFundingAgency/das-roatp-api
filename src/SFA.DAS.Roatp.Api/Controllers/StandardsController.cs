@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Models;
+using SFA.DAS.Roatp.Api.Services;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -16,14 +17,14 @@ namespace SFA.DAS.Roatp.Api.Controllers
     [ApiController]
     public class StandardsController : ControllerBase
     {
-        private readonly IStandardsReloadRepository _standardsReloadReloadRepository;
+        private readonly IReloadStandardsService _reloadStandardsService;
 
 
         private readonly ILogger<StandardsController> _logger;
 
-        public StandardsController(IStandardsReloadRepository standardsReloadReloadRepository)
+        public StandardsController(IReloadStandardsService reloadStandardsService)
         {
-            _standardsReloadReloadRepository = standardsReloadReloadRepository;
+            _reloadStandardsService = reloadStandardsService;
         }
 
         [HttpPost]
@@ -32,20 +33,9 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(bool), 200)]
         public async Task<ActionResult<bool>> ReloadStandardsData(StandardsRequest standardRequest)
-        { 
-            var standardsToProcess = standardRequest.Standards;
-            var standardsToReload = standardsToProcess.Select(standard => new Domain.Entities.Standard
-                {
-                    StandardUId = standard.StandardUid,
-                    IfateReferenceNumber = standard.IfateReferenceNumber,
-                    LarsCode = standard.LarsCode,
-                    Title = standard.Title,
-                    Version = standard.Version,
-                    Level = Convert.ToInt32(standard.Level)
-                })
-                .ToList();
-
-            return await _standardsReloadReloadRepository.ReloadStandards(standardsToReload);
+        {
+            var standards = standardRequest.Standards;
+            return await _reloadStandardsService.ReloadStandards(standards);
         }
     }
 }
