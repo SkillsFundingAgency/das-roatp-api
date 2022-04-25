@@ -14,14 +14,14 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
     {
         private Mock<IProviderCourseReadRepository> _mockProviderCourseRepository;
         private Mock<IProviderReadRepository> _mockProviderReadRepository;
-        private Mock<ICourseReadRepository> _mockCourseRepository;
+        private Mock<IStandardReadRepository> _mockCourseRepository;
 
         [SetUp]
         public void Setup()
         {
             _mockProviderCourseRepository = new Mock<IProviderCourseReadRepository>();
             _mockProviderReadRepository = new Mock<IProviderReadRepository>();
-            _mockCourseRepository = new Mock<ICourseReadRepository>();
+            _mockCourseRepository = new Mock<IStandardReadRepository>();
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
                 IfateReferenceNumber = "ST1001",
                 IsImported = true
             };
-            var courseLookUp = new Course
+            var standardLookUp = new Standard
             {
                 LarsCode = 1,
                 Level = 1,
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
 
             _mockProviderCourseRepository.Setup(m => m.GetProviderCourse(provider.Id, providerCourses.LarsCode)).ReturnsAsync(providerCourses);
 
-            _mockCourseRepository.Setup(c => c.GetCourse(providerCourses.LarsCode)).ReturnsAsync(courseLookUp);
+            _mockCourseRepository.Setup(c => c.GetCourse(providerCourses.LarsCode)).ReturnsAsync(standardLookUp);
 
             var sut = new GetProviderCoursesService(_mockProviderCourseRepository.Object, _mockProviderReadRepository.Object, _mockCourseRepository.Object, Mock.Of<ILogger<GetProviderCoursesService>>());
 

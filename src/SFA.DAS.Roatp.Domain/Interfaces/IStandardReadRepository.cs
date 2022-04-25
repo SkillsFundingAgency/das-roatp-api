@@ -4,9 +4,9 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface ICourseReadRepository
+    public interface IStandardReadRepository
     {
-        Task<List<Course>> GetAllCourses();
-        Task<Course> GetCourse(int larsCode);
+        Task<List<Standard>> GetAllCourses();
+        Task<Standard> GetCourse(int larsCode);
     }
 }

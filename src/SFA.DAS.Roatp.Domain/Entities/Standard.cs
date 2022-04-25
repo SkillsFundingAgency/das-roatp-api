@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Roatp.Domain.Entities
 {
-    public class Course
+    public class Standard
     {
         public string StandardUId { get; set; }
         public int LarsCode { get; set; }

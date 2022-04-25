@@ -4,11 +4,11 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Data.Configuration
 {
-    public class CourseConfiguration : IEntityTypeConfiguration<Course>
+    public class CourseConfiguration : IEntityTypeConfiguration<Standard>
     {
-        public void Configure(EntityTypeBuilder<Course> builder)
+        public void Configure(EntityTypeBuilder<Standard> builder)
         {
-            builder.ToTable(nameof(Course));
+            builder.ToTable(nameof(Standard));
             builder.HasKey(c => c.StandardUId);
         }
     }

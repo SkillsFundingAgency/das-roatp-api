@@ -7,25 +7,25 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
-    internal class CourseReadRepository : ICourseReadRepository
+    internal class StandardReadRepository : IStandardReadRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
-        public CourseReadRepository(RoatpDataContext roatpDataContext)
+        public StandardReadRepository(RoatpDataContext roatpDataContext)
         {
             _roatpDataContext = roatpDataContext;
         }
-        public async Task<List<Course>> GetAllCourses()
+        public async Task<List<Standard>> GetAllCourses()
         {
             return await _roatpDataContext
-                .Courses
+                .Standards
                 .AsNoTracking()
                 .ToListAsync();
         }
-        public async Task<Course> GetCourse(int larsCode)
+        public async Task<Standard> GetCourse(int larsCode)
         {
             return await _roatpDataContext
-                .Courses
+                .Standards
                 .AsNoTracking()
                 .SingleOrDefaultAsync(c => c.LarsCode == larsCode);
         }

@@ -26,16 +26,16 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
             }
         };
 
-        private readonly List<Course> _coursesLookUp = new List<Course>
+        private readonly List<Standard> _standardsLookUp = new List<Standard>
         {
-            new Course
+            new Standard
             {
                 LarsCode = 1,
                 Level = 1,
                 IfateReferenceNumber = "ST1001",
                 Title = "Test training-1"
             },
-            new Course
+            new Standard
             {
                 LarsCode = 2,
                 Level = 2,
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
 
         private Mock<IProviderCourseReadRepository> _mockProviderCourseRepository;
         private Mock<IProviderReadRepository> _mockProviderReadRepository;
-        private Mock<ICourseReadRepository> _mockCourseRepository;
+        private Mock<IStandardReadRepository> _mockStandardRepository;
 
 
         [SetUp]
@@ -54,7 +54,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
         {
             _mockProviderCourseRepository = new Mock<IProviderCourseReadRepository>();
             _mockProviderReadRepository = new Mock<IProviderReadRepository>();
-            _mockCourseRepository = new Mock<ICourseReadRepository>();
+            _mockStandardRepository = new Mock<IStandardReadRepository>();
         }
 
         [Test]
@@ -64,9 +64,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
 
             _mockProviderCourseRepository.Setup(m => m.GetAllProviderCourses(It.IsAny<int>())).ReturnsAsync(_providerCourses);
 
-            _mockCourseRepository.Setup(c => c.GetAllCourses()).ReturnsAsync(_coursesLookUp);
+            _mockStandardRepository.Setup(c => c.GetAllCourses()).ReturnsAsync(_standardsLookUp);
 
-            var sut = new GetProviderCoursesService(_mockProviderCourseRepository.Object, _mockProviderReadRepository.Object, _mockCourseRepository.Object, Mock.Of<ILogger<GetProviderCoursesService>>());
+            var sut = new GetProviderCoursesService(_mockProviderCourseRepository.Object, _mockProviderReadRepository.Object, _mockStandardRepository.Object, Mock.Of<ILogger<GetProviderCoursesService>>());
 
             var courses = await sut.GetAllCourses(ukprn: 1);
 
@@ -82,7 +82,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
         [Test]
         public async Task GetAllCourses_ProviderNotFound_ReturnsEmptyList()
         {
-            var sut = new GetProviderCoursesService(_mockProviderCourseRepository.Object, _mockProviderReadRepository.Object, _mockCourseRepository.Object, Mock.Of<ILogger<GetProviderCoursesService>>());
+            var sut = new GetProviderCoursesService(_mockProviderCourseRepository.Object, _mockProviderReadRepository.Object, _mockStandardRepository.Object, Mock.Of<ILogger<GetProviderCoursesService>>());
 
             var courses = await sut.GetAllCourses(ukprn: 1);
 

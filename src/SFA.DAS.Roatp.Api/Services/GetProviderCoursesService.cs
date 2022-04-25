@@ -12,10 +12,10 @@ namespace SFA.DAS.Roatp.Api.Services
     {
         private readonly IProviderCourseReadRepository _providerCourseReadRepository;
         private readonly IProviderReadRepository _providerReadRepository;
-        private readonly ICourseReadRepository _courseReadRepository;
+        private readonly IStandardReadRepository _courseReadRepository;
         private readonly ILogger<GetProviderCoursesService> _logger;
 
-        public GetProviderCoursesService(IProviderCourseReadRepository providerCourseReadRepository, IProviderReadRepository providerReadRepository, ICourseReadRepository courseReadRepository, ILogger<GetProviderCoursesService> logger)
+        public GetProviderCoursesService(IProviderCourseReadRepository providerCourseReadRepository, IProviderReadRepository providerReadRepository, IStandardReadRepository courseReadRepository, ILogger<GetProviderCoursesService> logger)
         {
             _providerCourseReadRepository = providerCourseReadRepository;
             _providerReadRepository = providerReadRepository;
