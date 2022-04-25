@@ -33,14 +33,13 @@ namespace SFA.DAS.Roatp.Api.Services
             }
 
             ProviderCourseModel providerCourse = await _providerCourseReadRepository.GetProviderCourse(provider.Id, larsCode);
-            var coursesLookup = await _courseReadRepository.GetAllCourses();
-            if (!coursesLookup.Any())
+            var courseLookup = await _courseReadRepository.GetCourse(larsCode);
+            if (courseLookup == null)
             {
                 _logger.LogError("Courses Lookup data not found for {ukprn} and {larsCode}", ukprn, larsCode);
                 return null;
             }
-            var course = coursesLookup.Single(c => c.LarsCode == larsCode);
-            providerCourse.UpdateCourseDetails(course.IfateReferenceNumber, course.Level, course.Title);
+            providerCourse.UpdateCourseDetails(courseLookup.IfateReferenceNumber, courseLookup.Level, courseLookup.Title);
 
             return providerCourse;
         }

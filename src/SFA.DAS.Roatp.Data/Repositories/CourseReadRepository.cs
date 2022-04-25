@@ -22,5 +22,12 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .AsNoTracking()
                 .ToListAsync();
         }
+        public async Task<Course> GetCourse(int larsCode)
+        {
+            return await _roatpDataContext
+                .Courses
+                .AsNoTracking()
+                .SingleOrDefaultAsync(c => c.LarsCode == larsCode);
+        }
     }
 }

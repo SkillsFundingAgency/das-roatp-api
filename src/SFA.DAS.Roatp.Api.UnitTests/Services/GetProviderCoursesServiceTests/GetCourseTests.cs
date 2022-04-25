@@ -36,27 +36,17 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
                 IfateReferenceNumber = "ST1001",
                 IsImported = true
             };
-            List<Course> coursesLookUp = new List<Course>
+            var courseLookUp = new Course
             {
-                new Course
-                {
-                    LarsCode = 1,
-                    Level = 1,
-                    IfateReferenceNumber = "ST1001",
-                    Title = "Test training-1"
-                },
-                new Course
-                {
-                    LarsCode = 2,
-                    Level = 2,
-                    IfateReferenceNumber = "ST1002",
-                    Title = "Test training-2"
-                },
+                LarsCode = 1,
+                Level = 1,
+                IfateReferenceNumber = "ST1001",
+                Title = "Test training-1"
             };
 
             _mockProviderCourseRepository.Setup(m => m.GetProviderCourse(provider.Id, providerCourses.LarsCode)).ReturnsAsync(providerCourses);
 
-            _mockCourseRepository.Setup(c => c.GetAllCourses()).ReturnsAsync(coursesLookUp);
+            _mockCourseRepository.Setup(c => c.GetCourse(providerCourses.LarsCode)).ReturnsAsync(courseLookUp);
 
             var sut = new GetProviderCoursesService(_mockProviderCourseRepository.Object, _mockProviderReadRepository.Object, _mockCourseRepository.Object, Mock.Of<ILogger<GetProviderCoursesService>>());
 

@@ -7,5 +7,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     public interface ICourseReadRepository
     {
         Task<List<Course>> GetAllCourses();
+        Task<Course> GetCourse(int larsCode);
     }
 }
