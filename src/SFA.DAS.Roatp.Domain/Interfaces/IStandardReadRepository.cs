@@ -6,7 +6,7 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
 {
     public interface IStandardReadRepository
     {
-        Task<List<Standard>> GetAllCourses();
-        Task<Standard> GetCourse(int larsCode);
+        Task<List<Standard>> GetAllStandards();
+        Task<Standard> GetStandard(int larsCode);
     }
 }

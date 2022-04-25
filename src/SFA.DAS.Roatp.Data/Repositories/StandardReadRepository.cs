@@ -15,14 +15,14 @@ namespace SFA.DAS.Roatp.Data.Repositories
         {
             _roatpDataContext = roatpDataContext;
         }
-        public async Task<List<Standard>> GetAllCourses()
+        public async Task<List<Standard>> GetAllStandards()
         {
             return await _roatpDataContext
                 .Standards
                 .AsNoTracking()
                 .ToListAsync();
         }
-        public async Task<Standard> GetCourse(int larsCode)
+        public async Task<Standard> GetStandard(int larsCode)
         {
             return await _roatpDataContext
                 .Standards

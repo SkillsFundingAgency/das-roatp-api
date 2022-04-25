@@ -64,7 +64,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
 
             _mockProviderCourseRepository.Setup(m => m.GetAllProviderCourses(It.IsAny<int>())).ReturnsAsync(_providerCourses);
 
-            _mockStandardRepository.Setup(c => c.GetAllCourses()).ReturnsAsync(_standardsLookUp);
+            _mockStandardRepository.Setup(c => c.GetAllStandards()).ReturnsAsync(_standardsLookUp);
 
             var sut = new GetProviderCoursesService(_mockProviderCourseRepository.Object, _mockProviderReadRepository.Object, _mockStandardRepository.Object, Mock.Of<ILogger<GetProviderCoursesService>>());
 

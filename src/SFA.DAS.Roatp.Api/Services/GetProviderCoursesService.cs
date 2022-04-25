@@ -33,13 +33,13 @@ namespace SFA.DAS.Roatp.Api.Services
             }
 
             ProviderCourseModel providerCourse = await _providerCourseReadRepository.GetProviderCourse(provider.Id, larsCode);
-            var courseLookup = await _courseReadRepository.GetCourse(larsCode);
-            if (courseLookup == null)
+            var standardLookup = await _courseReadRepository.GetStandard(larsCode);
+            if (standardLookup == null)
             {
-                _logger.LogError("Courses Lookup data not found for {ukprn} and {larsCode}", ukprn, larsCode);
+                _logger.LogError("Standards Lookup data not found for {ukprn} and {larsCode}", ukprn, larsCode);
                 return null;
             }
-            providerCourse.UpdateCourseDetails(courseLookup.IfateReferenceNumber, courseLookup.Level, courseLookup.Title);
+            providerCourse.UpdateCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title);
 
             return providerCourse;
         }
@@ -61,15 +61,15 @@ namespace SFA.DAS.Roatp.Api.Services
             }
 
             var providerCourseModels = providerCourses.Select(p => (ProviderCourseModel)p).ToList();
-            var coursesLookup = await _courseReadRepository.GetAllCourses();
-            if (!coursesLookup.Any())
+            var standardsLookup = await _courseReadRepository.GetAllStandards();
+            if (!standardsLookup.Any())
             {
-                _logger.LogError("Courses Lookup data not found for {ukprn}", ukprn);
-                throw new InvalidOperationException($"Courses Lookup data not found for {ukprn}");
+                _logger.LogError("Standards Lookup data not found for {ukprn}", ukprn);
+                throw new InvalidOperationException($"Standards Lookup data not found for {ukprn}");
             }
             foreach (var p in providerCourseModels)
             {
-                var course = coursesLookup.Single(c => c.LarsCode == p.LarsCode);
+                var course = standardsLookup.Single(c => c.LarsCode == p.LarsCode);
                 p.UpdateCourseDetails(course.IfateReferenceNumber, course.Level, course.Title);
             }
             return providerCourseModels;
