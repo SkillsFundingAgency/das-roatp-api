@@ -1,4 +1,4 @@
-﻿CREATE TABLE [dbo].[Course]
+﻿CREATE TABLE [dbo].[Standard]
 (
     [StandardUId] VARCHAR(20) NOT NULL,
     [LarsCode] INT NOT NULL,
