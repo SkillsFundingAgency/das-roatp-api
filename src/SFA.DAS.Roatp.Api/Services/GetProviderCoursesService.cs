@@ -12,14 +12,14 @@ namespace SFA.DAS.Roatp.Api.Services
     {
         private readonly IProviderCourseReadRepository _providerCourseReadRepository;
         private readonly IProviderReadRepository _providerReadRepository;
-        private readonly IStandardReadRepository _courseReadRepository;
+        private readonly IStandardReadRepository _standardReadRepository;
         private readonly ILogger<GetProviderCoursesService> _logger;
 
-        public GetProviderCoursesService(IProviderCourseReadRepository providerCourseReadRepository, IProviderReadRepository providerReadRepository, IStandardReadRepository courseReadRepository, ILogger<GetProviderCoursesService> logger)
+        public GetProviderCoursesService(IProviderCourseReadRepository providerCourseReadRepository, IProviderReadRepository providerReadRepository, IStandardReadRepository standardReadRepository, ILogger<GetProviderCoursesService> logger)
         {
             _providerCourseReadRepository = providerCourseReadRepository;
             _providerReadRepository = providerReadRepository;
-            _courseReadRepository = courseReadRepository;
+            _standardReadRepository = standardReadRepository;
             _logger = logger;
         }
 
@@ -33,7 +33,7 @@ namespace SFA.DAS.Roatp.Api.Services
             }
 
             ProviderCourseModel providerCourse = await _providerCourseReadRepository.GetProviderCourse(provider.Id, larsCode);
-            var standardLookup = await _courseReadRepository.GetStandard(larsCode);
+            var standardLookup = await _standardReadRepository.GetStandard(larsCode);
             if (standardLookup == null)
             {
                 _logger.LogError("Standards Lookup data not found for {ukprn} and {larsCode}", ukprn, larsCode);
@@ -61,7 +61,7 @@ namespace SFA.DAS.Roatp.Api.Services
             }
 
             var providerCourseModels = providerCourses.Select(p => (ProviderCourseModel)p).ToList();
-            var standardsLookup = await _courseReadRepository.GetAllStandards();
+            var standardsLookup = await _standardReadRepository.GetAllStandards();
             if (!standardsLookup.Any())
             {
                 _logger.LogError("Standards Lookup data not found for {ukprn}", ukprn);
