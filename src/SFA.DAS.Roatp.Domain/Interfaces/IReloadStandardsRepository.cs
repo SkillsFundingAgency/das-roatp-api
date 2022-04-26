@@ -4,10 +4,8 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface IStandardsRepository
+    public interface IReloadStandardsRepository
     {
         Task<bool> ReloadStandards(List<Standard> standards);
-
-        Task<List<Standard>> GetStandards();
     }
 }

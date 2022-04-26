@@ -1,32 +1,34 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Api.Services
+namespace SFA.DAS.Roatp.Api.Handlers
 {
-    public class ReloadStandardsService : IReloadStandardsService
+    public class ReloadStandardsHandler: IRequestHandler<ReloadStandardsRequest,bool>
     {
-        private readonly IStandardsRepository _standardsRepository;
-        private readonly ILogger<ReloadStandardsService> _logger;
-        public ReloadStandardsService(IStandardsRepository standardsRepository, ILogger<ReloadStandardsService> logger)
+        private readonly IReloadStandardsRepository _reloadStandardsRepository;
+        private readonly ILogger<ReloadStandardsHandler> _logger;
+
+        public ReloadStandardsHandler(IReloadStandardsRepository reloadStandardsRepository, ILogger<ReloadStandardsHandler> logger)
         {
-            _standardsRepository = standardsRepository;
+            _reloadStandardsRepository = reloadStandardsRepository;
             _logger = logger;
         }
 
-        public async Task<bool> ReloadStandards(List<Standard> standards)
+        public async Task<bool> Handle(ReloadStandardsRequest request, CancellationToken cancellationToken)
         {
-
-            if (standards == null || standards.Count == 0)
+            var standards = request.Standards;
+            if (!standards.Any())
             {
                 _logger.LogWarning("No standards were passed into the ReloadStandardsData call, cancelling reload");
                 return false;
+            
             }
-
             var standardsToReload = standards.Select(standard => new Domain.Entities.Standard
                 {
                     StandardUId = standard.StandardUid,
@@ -37,8 +39,8 @@ namespace SFA.DAS.Roatp.Api.Services
                     Level = Convert.ToInt32(standard.Level)
                 })
                 .ToList();
-
-            return await _standardsRepository.ReloadStandards(standardsToReload);
+            
+            return await _reloadStandardsRepository.ReloadStandards(standardsToReload);
         }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -9,12 +8,12 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
-    internal class StandardsRepository : IStandardsRepository
+    internal class ReloadStandardsRepository : IReloadStandardsRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
-        private readonly ILogger<StandardsRepository> _logger;
+        private readonly ILogger<ReloadStandardsRepository> _logger;
 
-        public StandardsRepository(RoatpDataContext roatpDataContext, ILogger<StandardsRepository> logger)
+        public ReloadStandardsRepository(RoatpDataContext roatpDataContext, ILogger<ReloadStandardsRepository> logger)
         {
             _roatpDataContext = roatpDataContext;
             _logger = logger;
@@ -40,12 +39,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
             }
 
             return true;
-        }
-
-        public  async Task<List<Standard>> GetStandards()
-        {
-            return  _roatpDataContext.Standards.ToList();
-
         }
     }
 }

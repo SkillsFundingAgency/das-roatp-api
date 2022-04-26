@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -76,6 +77,8 @@ namespace SFA.DAS.Roatp.Api
                 opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
             });
 
+            services.AddMediatR(typeof(Startup));
+
             services
                 .AddControllers(o =>
                 {
@@ -95,7 +98,6 @@ namespace SFA.DAS.Roatp.Api
             });
 
             services.AddTransient<IGetProviderCoursesService, GetProviderCoursesService>();
-            services.AddTransient<IReloadStandardsService, ReloadStandardsService>();
             services.AddTransient<IGetStandardsService, GetStandardsService>();
         }
 
