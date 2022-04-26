@@ -8,12 +8,14 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.Roatp.Api.HealthCheck;
 using SFA.DAS.Roatp.Api.Services;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
@@ -61,8 +63,10 @@ namespace SFA.DAS.Roatp.Api
 
             services
                 .AddHealthChecks()
-                .AddDbContextCheck<RoatpDataContext>();
-
+                .AddDbContextCheck<RoatpDataContext>()
+                .AddCheck<StandardsHealthCheck>(StandardsHealthCheck.HealthCheckResultDescription,
+                    failureStatus: HealthStatus.Unhealthy,
+                    tags: new[] { "ready" });
 
             services.AddRoatpDataContext(Configuration["SqlDatabaseConnectionString"], _initialEnvironment);
 
@@ -92,6 +96,7 @@ namespace SFA.DAS.Roatp.Api
 
             services.AddTransient<IGetProviderCoursesService, GetProviderCoursesService>();
             services.AddTransient<IReloadStandardsService, ReloadStandardsService>();
+            services.AddTransient<IGetStandardsService, GetStandardsService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -113,6 +118,8 @@ namespace SFA.DAS.Roatp.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+          
 
             app.UseHealthChecks("/health", new HealthCheckOptions
             {

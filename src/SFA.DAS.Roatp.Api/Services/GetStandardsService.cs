@@ -8,11 +8,11 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Api.Services
 {
-    public class ReloadStandardsService : IReloadStandardsService
+    public class GetStandardsService : IGetStandardsService
     {
         private readonly IStandardsRepository _standardsRepository;
-        private readonly ILogger<ReloadStandardsService> _logger;
-        public ReloadStandardsService(IStandardsRepository standardsRepository, ILogger<ReloadStandardsService> logger)
+        private readonly ILogger<GetStandardsService> _logger;
+        public GetStandardsService(IStandardsRepository standardsRepository, ILogger<GetStandardsService> logger)
         {
             _standardsRepository = standardsRepository;
             _logger = logger;
@@ -39,6 +39,22 @@ namespace SFA.DAS.Roatp.Api.Services
                 .ToList();
 
             return await _standardsRepository.ReloadStandards(standardsToReload);
+        }
+
+        public async Task<List<Standard>> GetStandards()
+        {
+            var standards = await _standardsRepository.GetStandards();
+
+            return standards.Select(standard => new Standard
+                {
+                    StandardUid = standard.StandardUId,
+                    IfateReferenceNumber = standard.IfateReferenceNumber,
+                    LarsCode = standard.LarsCode,
+                    Title = standard.Title,
+                    Version = standard.Version,
+                    Level = standard.Level.ToString()
+                })
+                .ToList();
         }
     }
 }
