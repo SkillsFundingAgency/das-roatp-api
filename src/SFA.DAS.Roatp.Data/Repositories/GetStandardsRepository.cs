@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -22,7 +23,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
         public async Task<List<Standard>> GetStandards()
         {
             _logger.LogInformation("GetStandards invoked");
-            return _roatpDataContext.Standards.ToList();
+            return await _roatpDataContext.Standards.ToListAsync();
         }
     }
 }

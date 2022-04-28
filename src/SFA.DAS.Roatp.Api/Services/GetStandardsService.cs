@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.Api.Services
         public async Task<List<Standard>> GetStandards()
         {
             var standards = await _getStandardsRepository.GetStandards();
-
+            _logger.LogInformation("Gathering standards");
             return standards.Select(standard => new Standard
                 {
                     StandardUid = standard.StandardUId,
