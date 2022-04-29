@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.0.31919.166
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31624.102
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "SFA.DAS.Roatp.Database", "SFA.DAS.Roatp.Database\SFA.DAS.Roatp.Database.sqlproj", "{20495B80-9725-4529-92DD-DC9D5D442B40}"
 EndProject
@@ -15,7 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{7D495643
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Roatp.Api.AcceptanceTests", "SFA.DAS.Roatp.Api.AcceptanceTests\SFA.DAS.Roatp.Api.AcceptanceTests.csproj", "{4BA8BCE2-771A-4D08-AB1E-084A4385A921}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Roatp.Api.UnitTests", "SFA.DAS.Roatp.Api.UnitTests\SFA.DAS.Roatp.Api.UnitTests.csproj", "{7F310E70-5F1C-4B13-A59D-87983ED88EFB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SFA.DAS.Roatp.Api.UnitTests", "SFA.DAS.Roatp.Api.UnitTests\SFA.DAS.Roatp.Api.UnitTests.csproj", "{7F310E70-5F1C-4B13-A59D-87983ED88EFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SFA.DAS.Roatp.Application", "SFA.DAS.Roatp.Application\SFA.DAS.Roatp.Application.csproj", "{BB875C44-FD59-47A8-ADE7-020C9E2621A9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +107,18 @@ Global
 		{7F310E70-5F1C-4B13-A59D-87983ED88EFB}.Release|x64.Build.0 = Release|Any CPU
 		{7F310E70-5F1C-4B13-A59D-87983ED88EFB}.Release|x86.ActiveCfg = Release|Any CPU
 		{7F310E70-5F1C-4B13-A59D-87983ED88EFB}.Release|x86.Build.0 = Release|Any CPU
+		{BB875C44-FD59-47A8-ADE7-020C9E2621A9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB875C44-FD59-47A8-ADE7-020C9E2621A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB875C44-FD59-47A8-ADE7-020C9E2621A9}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{BB875C44-FD59-47A8-ADE7-020C9E2621A9}.Debug|x64.Build.0 = Debug|Any CPU
+		{BB875C44-FD59-47A8-ADE7-020C9E2621A9}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{BB875C44-FD59-47A8-ADE7-020C9E2621A9}.Debug|x86.Build.0 = Debug|Any CPU
+		{BB875C44-FD59-47A8-ADE7-020C9E2621A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB875C44-FD59-47A8-ADE7-020C9E2621A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB875C44-FD59-47A8-ADE7-020C9E2621A9}.Release|x64.ActiveCfg = Release|Any CPU
+		{BB875C44-FD59-47A8-ADE7-020C9E2621A9}.Release|x64.Build.0 = Release|Any CPU
+		{BB875C44-FD59-47A8-ADE7-020C9E2621A9}.Release|x86.ActiveCfg = Release|Any CPU
+		{BB875C44-FD59-47A8-ADE7-020C9E2621A9}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -4,18 +4,18 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Api.Models;
+using SFA.DAS.Roatp.Api.Requests;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class StandardsController : Controller
+    public class StandardsReloadController : Controller
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<StandardsController> _logger;
+        private readonly ILogger<StandardsReloadController> _logger;
 
-        public StandardsController(IMediator mediator, ILogger<StandardsController> logger)
+        public StandardsReloadController(IMediator mediator, ILogger<StandardsReloadController> logger)
         {
             _mediator = mediator;
             _logger = logger;

@@ -4,8 +4,8 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface IGetStandardsRepository
+    public interface IGetStandardsCountRepository
     {
-        Task<List<Standard>> GetStandards();
+        Task<int> GetStandardsCount();
     }
 }

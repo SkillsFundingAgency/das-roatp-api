@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -18,15 +19,23 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = roatpDataContext;
             _logger = logger;
         }
-        
+
+        public async Task BulkInsert<T>(IList<T> data) where T : class
+        {
+            using var tx = await _roatpDataContext.Database.BeginTransactionAsync();
+
+            await _roatpDataContext.BulkInsertAsync(data);
+
+            await tx.CommitAsync();
+        }
+
         public async Task<bool> ReloadStandards(List<Standard> standards)
         {
-            var standardsStored = _roatpDataContext.Standards;
             await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
             try
             {
-                _roatpDataContext.Standards.RemoveRange(standardsStored);
-                _roatpDataContext.Standards.AddRange(standards);
+                await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM Standard");
+                await _roatpDataContext.BulkInsertAsync(standards);
                 await _roatpDataContext.SaveChangesAsync();
                 await transaction.CommitAsync();
                 _logger.LogInformation("Standards reload complete");

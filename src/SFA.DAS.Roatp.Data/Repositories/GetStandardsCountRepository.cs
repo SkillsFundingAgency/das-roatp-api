@@ -8,22 +8,22 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
-    internal class GetStandardsRepository : IGetStandardsRepository
+    internal class GetStandardsCountRepository : IGetStandardsCountRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
-        private readonly ILogger<GetStandardsRepository> _logger;
+        private readonly ILogger<GetStandardsCountRepository> _logger;
 
-        public GetStandardsRepository(RoatpDataContext roatpDataContext, ILogger<GetStandardsRepository> logger)
+        public GetStandardsCountRepository(RoatpDataContext roatpDataContext, ILogger<GetStandardsCountRepository> logger)
         {
             _roatpDataContext = roatpDataContext;
             _logger = logger;
         }
 
 
-        public async Task<List<Standard>> GetStandards()
+        public async Task<int> GetStandardsCount()
         {
-            _logger.LogInformation("GetStandards invoked");
-            return await _roatpDataContext.Standards.ToListAsync();
+            _logger.LogInformation("GetStandardsCount invoked");
+            return await _roatpDataContext.Standards.CountAsync();
         }
     }
 }

@@ -1,0 +1,114 @@
+{
+	"info": {
+		"_postman_id": "d8c8b5ca-6883-42fd-a896-5f602ae557b9",
+		"name": "Roatp V2 Inner API",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Courses",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Version",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{Environment}}-roatp-api.apprenticeships.education.gov.uk/providers/10063272/courses",
+					"protocol": "https",
+					"host": [
+						"{{Environment}}-roatp-api",
+						"apprenticeships",
+						"education",
+						"gov",
+						"uk"
+					],
+					"path": [
+						"providers",
+						"10063272",
+						"courses"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Course",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Version",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "https://{{Environment}}-roatp-api.apprenticeships.education.gov.uk/providers/10063272/courses/240",
+					"protocol": "https",
+					"host": [
+						"{{Environment}}-roatp-api",
+						"apprenticeships",
+						"education",
+						"gov",
+						"uk"
+					],
+					"path": [
+						"providers",
+						"10063272",
+						"courses",
+						"240"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "POST ReloadStandardsData",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Version",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"standards\": [\r\n    {\r\n      \"standardUid\": \"1\",\r\n      \"larsCode\": 2000,\r\n      \"ifateReferenceNumber\": \"3\",\r\n      \"level\": \"4\",\r\n      \"version\": \"1.1\",\r\n      \"title\": \"test course\"\r\n    },\r\n    {\r\n      \"standardUid\": \"3\",\r\n      \"larsCode\": 2003,\r\n      \"ifateReferenceNumber\": \"4\",\r\n      \"level\": \"5\",\r\n      \"version\": \"1.2\",\r\n      \"title\": \"test course 3\"\r\n    }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:5111/ReloadStandardsData",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "5111",
+					"path": [
+						"ReloadStandardsData"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

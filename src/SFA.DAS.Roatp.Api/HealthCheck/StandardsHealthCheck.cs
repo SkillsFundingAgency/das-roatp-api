@@ -10,20 +10,19 @@ namespace SFA.DAS.Roatp.Api.HealthCheck
     public class StandardsHealthCheck:IHealthCheck
     {
         public const string HealthCheckResultDescription = "Standards Health Check";
-        private readonly IGetStandardsService _getStandardsService;
+        private readonly IGetStandardsCountService _getStandardsCountService;
 
-        public StandardsHealthCheck(IGetStandardsService getStandardsService)
+        public StandardsHealthCheck(IGetStandardsCountService getStandardsCountService)
         {
-            _getStandardsService = getStandardsService;
+            _getStandardsCountService = getStandardsCountService;
         }
 
         public async Task<HealthCheckResult> CheckHealthAsync(HealthCheckContext context, CancellationToken cancellationToken = new CancellationToken())
         {
-            var standards = await _getStandardsService.GetStandards();
-            if (standards == null || !standards.Any())
-                return HealthCheckResult.Unhealthy(HealthCheckResultDescription);
-
-            return HealthCheckResult.Healthy(HealthCheckResultDescription);
+            var standardsCount = await _getStandardsCountService.GetStandardsCount();
+            return standardsCount==0 
+                ? HealthCheckResult.Unhealthy(HealthCheckResultDescription) 
+                : HealthCheckResult.Healthy(HealthCheckResultDescription);
         }
     }
 }

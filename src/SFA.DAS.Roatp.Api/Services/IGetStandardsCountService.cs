@@ -4,8 +4,8 @@ using SFA.DAS.Roatp.Api.Models;
 
 namespace SFA.DAS.Roatp.Api.Services
 {
-    public interface IGetStandardsService
+    public interface IGetStandardsCountService
     {
-        public Task<List<Standard>> GetStandards();
+        public Task<int> GetStandardsCount();
     }
 }
