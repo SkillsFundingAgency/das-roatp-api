@@ -33,6 +33,7 @@ namespace SFA.DAS.Roatp.Data.Extensions
 
         private static void RegisterServices(IServiceCollection services)
         {
+            services.AddTransient<IStandardReadRepository, StandardReadRepository>();
             services.AddTransient<IProviderReadRepository, ProviderReadRepository>();
             services.AddTransient<IProviderCourseReadRepository, ProviderCourseReadRepository>();
             services.AddTransient<ICreateProviderRepository, CreateProviderRepository>();

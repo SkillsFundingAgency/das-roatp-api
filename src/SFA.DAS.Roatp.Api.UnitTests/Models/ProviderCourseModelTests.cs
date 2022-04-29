@@ -15,7 +15,6 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
 
             Assert.That(model, Is.Not.Null);
             Assert.That(model.LarsCode, Is.EqualTo(course.LarsCode));
-            Assert.That(model.IfateReferenceNumber, Is.EqualTo(course.IfateReferenceNumber));
             Assert.That(model.DeliveryModels, Contains.Item(DeliveryModel.Regular));
             Assert.That(model.DeliveryModels, Contains.Item(DeliveryModel.PortableFlexiJob));
         }
