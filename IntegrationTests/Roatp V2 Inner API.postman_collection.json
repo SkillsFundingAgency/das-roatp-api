@@ -75,6 +75,48 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "POST ReloadStandardsData",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "Bearer {{BearerToken}}",
+						"type": "text"
+					},
+					{
+						"key": "X-Version",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{  \"standards\": [    {      \"standardUid\": \"1\",      \"larsCode\": 2000,      \"ifateReferenceNumber\": \"3\",      \"level\": \"4\",      \"version\": \"1.1\",      \"title\": \"test course\"    },    {      \"standardUid\": \"3\",      \"larsCode\": 2003,      \"ifateReferenceNumber\": \"4\",      \"level\": \"5\",      \"version\": \"1.2\",      \"title\": \"test course 3\"    }  ]}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{Environment}}-roatp-api.apprenticeships.education.gov.uk/ReloadStandardsData",
+					"protocol": "https",
+					"host": [
+						"{{Environment}}-roatp-api",
+						"apprenticeships",
+						"education",
+						"gov",
+						"uk"
+					],
+					"path": [
+						"ReloadStandardsData"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
