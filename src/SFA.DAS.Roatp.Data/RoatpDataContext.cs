@@ -12,8 +12,6 @@ namespace SFA.DAS.Roatp.Data
         public DbSet<ProviderCourseLocation> ProviderCoursesLocations { get; set; }
         public DbSet<ProviderCourseVersion> ProviderCoursesVersions { get; set; }
 
-        public DbSet<Standard> Standards { get; set; }
-
         public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) {}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
