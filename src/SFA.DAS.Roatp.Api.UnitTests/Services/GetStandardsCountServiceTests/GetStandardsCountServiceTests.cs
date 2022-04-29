@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Services;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetStandardsServiceTests
+namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetStandardsCountServiceTests
 {
     [TestFixture]
     public class GetStandardsCountServiceTests

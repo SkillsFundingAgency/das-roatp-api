@@ -7,7 +7,7 @@ using SFA.DAS.Roatp.Api.Services;
 
 namespace SFA.DAS.Roatp.Api.HealthCheck
 {
-    public class StandardsHealthCheck:IHealthCheck
+    public class StandardsHealthCheck : IHealthCheck
     {
         public const string HealthCheckResultDescription = "Standards Health Check";
         private readonly IGetStandardsCountService _getStandardsCountService;
