@@ -4,9 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Api.Handlers;
-using SFA.DAS.Roatp.Api.Models;
-using SFA.DAS.Roatp.Api.Requests;
+using SFA.DAS.Roatp.Application.ReloadStandards;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Handlers

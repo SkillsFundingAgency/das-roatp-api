@@ -8,8 +8,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
-using SFA.DAS.Roatp.Api.Models;
-using SFA.DAS.Roatp.Api.Requests;
+using SFA.DAS.Roatp.Application.ReloadStandards;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {
@@ -31,7 +30,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task ReloadStandardsData_Successful_ReturnsSuccessfulStatus(bool returnStatus, HttpStatusCode expectedStatus)
         {
             var standards = new List<Standard>();
-            var request = new StandardsRequest { Standards = standards };
+            var request = new ReloadStandardsRequest { Standards = standards };
             _mediator.Setup(x => x.Send(It.IsAny<ReloadStandardsRequest>(), It.IsAny<CancellationToken>())).ReturnsAsync(returnStatus);
             var resultFromController = await _reloadController.ReloadStandardsData(request);
           

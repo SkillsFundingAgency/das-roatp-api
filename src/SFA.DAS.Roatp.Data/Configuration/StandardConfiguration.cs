@@ -12,8 +12,8 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.HasKey(p => p.StandardUId);
             builder.Property(p => p.LarsCode).IsRequired();
             builder.Property(p => p.IfateReferenceNumber).IsRequired().HasMaxLength(10);
-            builder.Property(p => p.Level);
-            builder.Property(p => p.Title).HasMaxLength(1000);
+            builder.Property(p => p.Level).IsRequired();
+            builder.Property(p => p.Title).IsRequired().HasMaxLength(1000);
             builder.Property(p => p.Version).IsRequired();
         }
     }

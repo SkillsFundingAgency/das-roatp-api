@@ -20,6 +20,7 @@ using SFA.DAS.Roatp.Api.HealthCheck;
 using SFA.DAS.Roatp.Api.Services;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
+using SFA.DAS.Roatp.Application.Extensions;
 
 namespace SFA.DAS.Roatp.Api
 {
@@ -44,7 +45,6 @@ namespace SFA.DAS.Roatp.Api
 
             Configuration = config.Build();
         }
-
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -77,7 +77,7 @@ namespace SFA.DAS.Roatp.Api
                 opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
             });
 
-            services.AddMediatR(typeof(Startup));
+            services.AddApplicationRegistrations();
 
             services
                 .AddControllers(o =>

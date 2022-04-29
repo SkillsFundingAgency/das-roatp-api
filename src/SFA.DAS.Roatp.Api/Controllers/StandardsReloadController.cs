@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Api.Requests;
+using SFA.DAS.Roatp.Application.ReloadStandards;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -27,10 +27,9 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(HttpStatusCode), 200)]
-        public async Task<IActionResult> ReloadStandardsData(StandardsRequest request)
+        public async Task<IActionResult> ReloadStandardsData(ReloadStandardsRequest request)
         {
-            var reloadStandardRequest = new ReloadStandardsRequest { Standards = request.Standards };
-            var successful= await _mediator.Send(reloadStandardRequest);
+            var successful = await _mediator.Send(request);
 
             if (!successful)
             {

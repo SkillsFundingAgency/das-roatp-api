@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Roatp.Api.Models
+﻿namespace SFA.DAS.Roatp.Application.ReloadStandards
 {
     public class Standard
     {
