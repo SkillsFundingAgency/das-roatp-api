@@ -3,7 +3,7 @@
     [Id] INT IDENTITY(1,1) NOT NULL,
     [ProviderId] INT NOT NULL,
     [LarsCode] INT NOT NULL,
-    [IfateReferenceNumber] VARCHAR(10) NOT NULL,
+    [IfateReferenceNumber] VARCHAR(10) NULL,
     [StandardInfoUrl] VARCHAR(500) NOT NULL,
     [ContactUsPageUrl] VARCHAR(500) NULL,
     [ContactUsEmail] VARCHAR(300) NULL,

@@ -1,6 +1,7 @@
 ﻿CREATE TABLE [dbo].[ProviderLocation]
 (
     [Id] INT IDENTITY(1,1) NOT NULL,
+    [ImportedLocationId] INT NULL,
     [NavigationId] UNIQUEIDENTIFIER NOT NULL,
     [ProviderId] INT NOT NULL,
     [LocationName] VARCHAR(250) NOT NULL,
