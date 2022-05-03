@@ -28,9 +28,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.StandardsCount
 
         [TestCase(0)]
         [TestCase(1)]
-        [TestCase(10)]
-        [TestCase(100)]
-        [TestCase(1000)]
         [TestCase(10000)]
         public async Task StandardsCount_ReturnsExpectedCount(int standardsCount)
         {
