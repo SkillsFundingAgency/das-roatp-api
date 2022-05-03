@@ -98,7 +98,6 @@ namespace SFA.DAS.Roatp.Api
             });
 
             services.AddTransient<IGetProviderCoursesService, GetProviderCoursesService>();
-            services.AddTransient<IGetStandardsCountService, GetStandardsCountService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
