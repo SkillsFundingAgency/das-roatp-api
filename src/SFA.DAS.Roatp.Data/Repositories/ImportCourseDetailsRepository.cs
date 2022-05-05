@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
     public class ImportCourseDetailsRepository:IImportCourseDetailsRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
-        private ILogger<ImportCourseDetailsRepository> _logger;
+        private readonly ILogger<ImportCourseDetailsRepository> _logger;
         public ImportCourseDetailsRepository(RoatpDataContext roatpDataContext, ILogger<ImportCourseDetailsRepository> logger)
         {
             _roatpDataContext = roatpDataContext;
