@@ -117,6 +117,43 @@
 				}
 			},
 			"response": []
+		},
+		{
+			"name": "POST ImportProvider",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "X-Version",
+						"value": "1",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"cdProvider\":\r\n    {\r\n      \"ukprn\": 19900028,\r\n      \"legalName\": \"MARK TRAINING LIMITED\",\r\n       \"tradingName\": \"MARK TRAINING LIMITED\",\r\n        \"email\": \"mark@marktraining.co.uk\",\r\n        \"website\": \"www.marktraining.co.uk\",\r\n        \"phone\": \"013333 3333333\",\r\n        \"employerSatisfaction\": 7.2,\r\n        \"learnerSatisfaction\": 9.8,\r\n        \"marketingInfo\":\"Mark Training operates across Yorkshire to support employers and young people into apprenticeship opportunities.  \\r\\n\\r\\nWe develop and deliver bespoke apprenticeship programmes that meet the needs of employers and enable apprentices to fulfil their potential and deliver their best.  \\r\\n\\r\\nOur staff are highly qualified, with sector experience, meaning our training solutions are delivered to a high standard to individuals, groups or company wide.  \\r\\n\\r\\nWe work in collaboration with the local enterprise partnerships skills agenda to ensure local labour market needs are met and we can support all employers from small to medium to LEVY.\",\r\n        \"courses\": [\r\n            {\r\n                \"larsCode\":78,\r\n                \"standardInfoUrl\":\"https://www.markTraining.co.uk\",\r\n                \"contactUsPhoneNumber\": \"04444333333\",\r\n                \"contactUsEmail\": \"enquiries@markTraining.co.uk\",\r\n                \"contactUsPageUrl\": \"www.test.co.uk\"\r\n            },\r\n            {\r\n                \"larsCode\":79,\r\n                \"standardInfoUrl\":\"https://www.markTraining2.co.uk\",\r\n                \"contactUsPhoneNumber\": \"04444333332\",\r\n                \"contactUsEmail\": \"enquiries2@markTraining.co.uk\",\r\n                \"contactUsPageUrl\": \"www.test2.co.uk\"\r\n            }\r\n        ]\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{Environment}}-roatp-api.apprenticeships.education.gov.uk/ImportProvider",
+					"protocol": "https",
+					"host": [
+						"{{Environment}}-roatp-api",
+						"apprenticeships",
+						"education",
+						"gov",
+						"uk"
+					],
+					"path": [
+						"ImportProvider"
+					]
+				}
+			},
+			"response": []
 		}
 	]
 }
