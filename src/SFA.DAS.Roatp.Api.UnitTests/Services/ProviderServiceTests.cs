@@ -44,7 +44,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services
         [Test]
         public async Task UpdateProvider_ChangeConfirmedDetails_ReturnProvider()
         {
-            var provider = new Provider() { Id = 123, Ukprn = 10012002, LegalName = "Test", HasConfirmedDetails = true, ConfirmedDetailsOn = System.DateTime.Now};
+            var provider = new Provider() { Id = 123, Ukprn = 10012002, LegalName = "Test", HasConfirmedDetails = true};
             _mockproviderRepo.Setup(m => m.UpdateProvider(provider.Ukprn, true)).ReturnsAsync(provider);
 
             var sut = new ProviderService(_mockproviderRepo.Object);

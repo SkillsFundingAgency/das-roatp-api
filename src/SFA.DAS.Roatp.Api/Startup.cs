@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -8,15 +9,18 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.Roatp.Api.HealthCheck;
 using SFA.DAS.Roatp.Api.Services;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
+using SFA.DAS.Roatp.Application.Extensions;
 
 namespace SFA.DAS.Roatp.Api
 {
@@ -42,7 +46,6 @@ namespace SFA.DAS.Roatp.Api
             Configuration = config.Build();
         }
 
-
         public void ConfigureServices(IServiceCollection services)
         {
             if (!IsEnvironmentLocalOrDev)
@@ -61,8 +64,10 @@ namespace SFA.DAS.Roatp.Api
 
             services
                 .AddHealthChecks()
-                .AddDbContextCheck<RoatpDataContext>();
-
+                .AddDbContextCheck<RoatpDataContext>()
+                .AddCheck<StandardsHealthCheck>(StandardsHealthCheck.HealthCheckResultDescription,
+                    failureStatus: HealthStatus.Unhealthy,
+                    tags: new[] { "ready" });
 
             services.AddRoatpDataContext(Configuration["SqlDatabaseConnectionString"], _initialEnvironment);
 
@@ -71,6 +76,8 @@ namespace SFA.DAS.Roatp.Api
                 opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
                 opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
             });
+
+            services.AddApplicationRegistrations();
 
             services
                 .AddControllers(o =>
@@ -113,6 +120,8 @@ namespace SFA.DAS.Roatp.Api
             app.UseHttpsRedirection();
 
             app.UseRouting();
+
+          
 
             app.UseHealthChecks("/health", new HealthCheckOptions
             {

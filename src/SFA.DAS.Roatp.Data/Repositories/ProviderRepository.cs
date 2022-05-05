@@ -35,8 +35,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
             if (providertoUpdate != null)
             {
                 providertoUpdate.HasConfirmedDetails = hasConfirmedDetails;
-                providertoUpdate.ConfirmedDetailsOn = System.DateTime.Now;
-
                 await _roatpDataContext.SaveChangesAsync();
             }
 

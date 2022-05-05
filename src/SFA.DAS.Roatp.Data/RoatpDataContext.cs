@@ -5,6 +5,7 @@ namespace SFA.DAS.Roatp.Data
 {
     public class RoatpDataContext : DbContext
     {
+        public DbSet<Standard> Standards { get; set; }
         public DbSet<Provider> Providers { get; set; }
         public DbSet<ProviderCourse> ProviderCourses { get; set; }
         public DbSet<ProviderLocation> ProviderLocations { get; set; }
