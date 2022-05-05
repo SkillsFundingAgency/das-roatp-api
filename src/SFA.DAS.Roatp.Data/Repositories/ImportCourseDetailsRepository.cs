@@ -33,7 +33,5 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _logger.LogInformation("Provider details imported for ukprn {ukprn}", ukprn);
             return true;
         }
-
-    
     }
 }
