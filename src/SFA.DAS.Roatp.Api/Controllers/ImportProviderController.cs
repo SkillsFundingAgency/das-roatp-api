@@ -25,11 +25,10 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpPost]
         [Route("/ImportProvider")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(HttpStatusCode), 200)]
         public async Task<IActionResult> ImportProvider(ImportProviderRequest request) 
         {
-            var ukprn = request.CdProvider.Ukprn;
+            var ukprn = request.Provider.Ukprn;
             _logger.LogInformation("Import provider processing started for {ukprn}",ukprn);
             var successful = await _mediator.Send(request);
 

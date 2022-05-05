@@ -3,8 +3,8 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface IImportCourseDetailsRepository
+    public interface IProviderImportRepository
     {
-        public Task<bool> ImportCourseDetails(Provider provider);
+        public Task<bool> ImportProviderDetails(Provider provider);
     }
 }

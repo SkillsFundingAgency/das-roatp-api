@@ -1,9 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Domain.ApiModels.Import;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using Provider = SFA.DAS.Roatp.Domain.ApiModels.Import.Provider;
+using ProviderCourse = SFA.DAS.Roatp.Domain.Entities.ProviderCourse;
 
 namespace SFA.DAS.Roatp.Application.Services
 {
@@ -18,41 +20,44 @@ namespace SFA.DAS.Roatp.Application.Services
             _logger = logger;
         }
 
-        public async Task<Provider> MapProvider(CdProvider cdProvider)
+        public async Task<Domain.Entities.Provider> MapProvider(Provider provider)
         {
-            var provider = new Provider
+            var newProvider = new Domain.Entities.Provider
             {
-                Ukprn = cdProvider.Ukprn,
-                LegalName = cdProvider.LegalName,
-                TradingName = cdProvider.TradingName,
-                Email = cdProvider.Email,
-                Website = cdProvider.Website,
-                Phone = cdProvider.Phone,
-                EmployerSatisfaction = cdProvider.EmployerSatisfaction,
-                LearnerSatisfaction = cdProvider.LearnerSatisfaction,
-                MarketingInfo = cdProvider.MarketingInfo,
+                Ukprn = provider.Ukprn,
+                LegalName = provider.LegalName,
+                TradingName = provider.TradingName,
+                Email = provider.Email,
+                Website = provider.Website,
+                Phone = provider.Phone,
+                EmployerSatisfaction = provider.EmployerSatisfaction,
+                LearnerSatisfaction = provider.LearnerSatisfaction,
+                MarketingInfo = provider.MarketingInfo,
                 HasConfirmedDetails = false,
-                HasConfirmedLocations = false
+                HasConfirmedLocations = false,
+                Courses = new List<ProviderCourse>()
             };
 
-            var providerCourses = new List<ProviderCourse>();
 
-            foreach (var cdProviderCourse in cdProvider.Courses)
+            var standards = await _standardReadRepository.GetAllStandards();
+
+            foreach (var providerCourse in provider.Courses)
             {
 
-                var standard = await _standardReadRepository.GetStandard(cdProviderCourse.LarsCode);
+                var standard = standards.FirstOrDefault(x=>x.LarsCode== providerCourse.LarsCode);
                 if (standard == null)
                 {
-                    _logger.LogWarning("No standard details were found for larscode {larscode}",cdProviderCourse.LarsCode);
+                    _logger.LogWarning("No standard details were found for larscode {larscode}",providerCourse.LarsCode);
+                    return null;
                 }
 
-                var newProviderCourse = new ProviderCourse
+                newProvider.Courses.Add( new ProviderCourse
                 {
-                    LarsCode = cdProviderCourse.LarsCode,
-                    StandardInfoUrl = cdProviderCourse.StandardInfoUrl,
-                    ContactUsPhoneNumber = cdProviderCourse.ContactUsPhoneNumber,
-                    ContactUsEmail = cdProviderCourse.ContactUsEmail,
-                    ContactUsPageUrl = cdProviderCourse.ContactUsPageUrl,
+                    LarsCode = providerCourse.LarsCode,
+                    StandardInfoUrl = providerCourse.StandardInfoUrl,
+                    ContactUsPhoneNumber = providerCourse.ContactUsPhoneNumber,
+                    ContactUsEmail = providerCourse.ContactUsEmail,
+                    ContactUsPageUrl = providerCourse.ContactUsPageUrl,
                     IsImported = true,
                     IsConfirmed = false,
                     HasNationalDeliveryOption = false,
@@ -61,18 +66,14 @@ namespace SFA.DAS.Roatp.Application.Services
                     {
                         new ProviderCourseVersion
                         {
-                            StandardUId = standard?.StandardUId,
-                            Version = standard?.Version
+                            StandardUId = standard.StandardUId,
+                            Version = standard.Version
                         }
                     }
-                };
-
-                providerCourses.Add(newProviderCourse);
+                });
             }
 
-            provider.Courses = providerCourses;
-            return provider;
-
+            return newProvider;
         }
     }
 }

@@ -8,6 +8,6 @@ namespace SFA.DAS.Roatp.Application.ImportProvider
 {
     public class ImportProviderRequest:IRequest<bool>
     {
-        public CdProvider CdProvider { get; set; }
+        public Provider Provider { get; set; }
     }
 }

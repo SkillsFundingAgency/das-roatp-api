@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Roatp.Domain.ApiModels.Import
 {
-    public class CdProvider
+    public class Provider
     {
         public int Ukprn { get; set; }
         public string LegalName { get; set; }
@@ -14,6 +14,6 @@ namespace SFA.DAS.Roatp.Domain.ApiModels.Import
         public decimal? EmployerSatisfaction { get; set; }
         public decimal? LearnerSatisfaction { get; set; }
 
-        public virtual List<CdProviderCourse> Courses { get; set; } = new List<CdProviderCourse>();
+        public virtual List<ProviderCourse> Courses { get; set; } = new List<ProviderCourse>();
     }
 }

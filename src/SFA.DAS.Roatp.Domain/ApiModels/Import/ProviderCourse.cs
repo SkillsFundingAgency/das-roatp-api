@@ -1,8 +1,7 @@
 ﻿namespace SFA.DAS.Roatp.Domain.ApiModels.Import
 {
-    public class CdProviderCourse
+    public class ProviderCourse
     {
-
         public int LarsCode { get; set; }
         public string StandardInfoUrl { get; set; }
         public string ContactUsPhoneNumber { get; set; }

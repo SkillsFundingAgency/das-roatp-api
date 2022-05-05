@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         [TestCase(false, HttpStatusCode.BadRequest)]
         public async Task ImportProvider_ReturnsExpectedStatus(bool returnStatus, HttpStatusCode expectedStatus)
         { 
-            var request = new ImportProviderRequest() { CdProvider = new CdProvider {Ukprn=12345678}};
+            var request = new ImportProviderRequest() { Provider = new Provider {Ukprn=12345678}};
             _mediator.Setup(x => x.Send(request, It.IsAny<CancellationToken>())).ReturnsAsync(returnStatus);
             var resultFromController = await _controller.ImportProvider(request);
 
