@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.Application.Mediatr.Behaviors
             var context = new ValidationContext<TRequest>(request);
 
             var failures = _validators
-                .Select(x => x.Validate(context))
+                .Select(x => x.ValidateAsync(context).GetAwaiter().GetResult())
                 .SelectMany(x => x.Errors)
                 .Where(x => x != null)
                 .ToList();
