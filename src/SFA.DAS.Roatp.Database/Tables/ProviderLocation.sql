@@ -17,6 +17,7 @@
     [Website] VARCHAR(500) NULL,
     [Phone] VARCHAR(50) NULL,
     [IsImported] BIT NOT NULL DEFAULT 0,
+    [LocationType] TINYINT NOT NULL, 
     CONSTRAINT PK_ProviderLocation PRIMARY KEY (Id),
     CONSTRAINT UK_ProviderLocation_NavigationId UNIQUE ([NavigationId]),
     CONSTRAINT UK_ProviderLocation_ProviderId_LocationName UNIQUE ([ProviderId], [LocationName]),
