@@ -14,6 +14,6 @@ namespace SFA.DAS.Roatp.Domain.ApiModels.Import
         public decimal? EmployerSatisfaction { get; set; }
         public decimal? LearnerSatisfaction { get; set; }
 
-        public virtual List<ProviderCourse> Courses { get; set; } = new List<ProviderCourse>();
+        public virtual List<ProviderCourse> Standards { get; set; } = new List<ProviderCourse>();
     }
 }

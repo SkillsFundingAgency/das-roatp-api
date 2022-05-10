@@ -19,7 +19,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public async Task<bool> ImportProviderDetails(Provider provider)
         {
-            // MFCMFC add coverage for this
             var matchingProvider =
                 await _roatpDataContext.Providers.FirstOrDefaultAsync(x => x.Ukprn == provider.Ukprn);
 

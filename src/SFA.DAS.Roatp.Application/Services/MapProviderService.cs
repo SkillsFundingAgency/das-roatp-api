@@ -38,10 +38,9 @@ namespace SFA.DAS.Roatp.Application.Services
                 Courses = new List<ProviderCourse>()
             };
 
-
             var standards = await _standardReadRepository.GetAllStandards();
 
-            foreach (var providerCourse in provider.Courses)
+            foreach (var providerCourse in provider.Standards)
             {
 
                 var standard = standards.FirstOrDefault(x=>x.LarsCode== providerCourse.LarsCode);

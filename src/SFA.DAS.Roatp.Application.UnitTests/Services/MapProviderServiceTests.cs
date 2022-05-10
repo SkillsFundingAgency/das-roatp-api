@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Services
         {
             var standardUid = "XXX_1.1";
             var version = "1.1";
-            var cdProvider = new Provider { Ukprn = Ukprn, Courses = new List<ProviderCourse> {new ProviderCourse {LarsCode = LarsCode}}};
+            var cdProvider = new Provider { Ukprn = Ukprn, Standards = new List<ProviderCourse> {new ProviderCourse {LarsCode = LarsCode}}};
             _repository.Setup(x => x.GetAllStandards())
                 .ReturnsAsync(new List<Standard> {new Standard { StandardUId = standardUid, Version = version, LarsCode = LarsCode}});
             var provider =await _service.MapProvider(cdProvider);
@@ -54,7 +54,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Services
         [Test]
         public async Task MapCdProvider_NoMatchingStandardWarning()
         {
-            var cdProvider = new Provider { Ukprn = Ukprn, Courses = new List<ProviderCourse> { new ProviderCourse { LarsCode = LarsCode } } };
+            var cdProvider = new Provider { Ukprn = Ukprn, Standards = new List<ProviderCourse> { new ProviderCourse { LarsCode = LarsCode } } };
             _repository.Setup(x => x.GetAllStandards())
                 .ReturnsAsync(new List<Standard>());
             var provider = await _service.MapProvider(cdProvider);

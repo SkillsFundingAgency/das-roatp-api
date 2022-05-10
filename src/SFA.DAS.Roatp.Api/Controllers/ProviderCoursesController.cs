@@ -47,11 +47,11 @@ namespace SFA.DAS.Roatp.Api.Controllers
 
             if (!result.Any())
             {
-                _logger.LogInformation("Courses data not found for {ukprn}", ukprn);
+                _logger.LogInformation("Standards data not found for {ukprn}", ukprn);
                 return new NotFoundObjectResult($"No data found for {ukprn}");
             }
 
-            _logger.LogInformation("Courses data found for {ukprn}", ukprn);
+            _logger.LogInformation("Standards data found for {ukprn}", ukprn);
             return new OkObjectResult(result);
         }
 
@@ -80,11 +80,11 @@ namespace SFA.DAS.Roatp.Api.Controllers
 
             if (result == null)
             {
-                _logger.LogInformation("Courses data not found for {ukprn} and {larsCode}", ukprn, larsCode);
+                _logger.LogInformation("Standards data not found for {ukprn} and {larsCode}", ukprn, larsCode);
                 return new NotFoundObjectResult($"No data found for {ukprn} and {larsCode}");
             }
 
-            _logger.LogInformation("Courses data found for {ukprn} and {larsCode}", ukprn, larsCode);
+            _logger.LogInformation("Standards data found for {ukprn} and {larsCode}", ukprn, larsCode);
             return new OkObjectResult(result);
         }
     }
