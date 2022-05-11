@@ -1,9 +1,8 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.ReloadStandards;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.StandardsCount
 {

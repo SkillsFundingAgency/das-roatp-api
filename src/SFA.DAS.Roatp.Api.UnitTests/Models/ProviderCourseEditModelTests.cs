@@ -10,7 +10,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
     public class ProviderCourseEditModelTests
     {
         [Test, AutoData]
-        public void ImplicitOperator_ReturnsCommant(ProviderCourseEditModel model)
+        public void ImplicitOperator_ReturnsCommand(ProviderCourseEditModel model)
         {
             ((UpdateProviderCourseCommand)model).Should().BeEquivalentTo(model);
         }
