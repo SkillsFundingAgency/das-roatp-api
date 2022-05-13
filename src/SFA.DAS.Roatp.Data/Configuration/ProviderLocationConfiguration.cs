@@ -25,6 +25,7 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.Property(p => p.Website).HasMaxLength(500);
             builder.Property(p => p.Phone).HasMaxLength(50);
             builder.Property(p => p.IsImported).IsRequired();
+            builder.Property(p => p.LocationType).IsRequired().HasConversion<int>();
 
             builder.HasOne(p => p.Provider)
                 .WithMany(p => p.Locations)

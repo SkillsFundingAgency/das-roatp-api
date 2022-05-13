@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -18,9 +17,9 @@ using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Roatp.Api.HealthCheck;
 using SFA.DAS.Roatp.Api.Services;
+using SFA.DAS.Roatp.Application.Extensions;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
-using SFA.DAS.Roatp.Application.Extensions;
 
 namespace SFA.DAS.Roatp.Api
 {
@@ -120,8 +119,6 @@ namespace SFA.DAS.Roatp.Api
 
             app.UseRouting();
 
-          
-
             app.UseHealthChecks("/health", new HealthCheckOptions
             {
                 ResponseWriter = HealthCheckResponseWriter.WriteJsonResponse
@@ -140,6 +137,8 @@ namespace SFA.DAS.Roatp.Api
                     }
                 });
             }
+
+            app.UseFluentValidationExceptionHandler();
 
             app.UseEndpoints(endpoints =>
             {
