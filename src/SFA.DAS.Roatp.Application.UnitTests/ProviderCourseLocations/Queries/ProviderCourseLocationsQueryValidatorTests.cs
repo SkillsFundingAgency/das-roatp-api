@@ -1,7 +1,8 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Locations.Queries;
+using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
@@ -10,32 +11,29 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
     [TestFixture]
     public class ProviderCourseLocationsQueryValidatorTests
     {
-        [TestCase(10000001, true)]
-        [TestCase(10000000, false)]
-        [TestCase(100000000, false)]
-        public async Task Validate_AcceptsEightDigitNumbersOnly(int ukprn, bool expectedResult)
+        [TestCase(0, false)]
+        [TestCase(-1, false)]
+        [TestCase(1, true)]
+        public async Task Validate_ProviderCourseId(int providerCourseId, bool expectedResult)
         {
-            var query = new ProviderLocationsQuery(ukprn);
-            var repoMock = new Mock<IProviderReadRepository>();
-            repoMock.Setup(x => x.GetByUkprn(ukprn)).ReturnsAsync(new Provider());
-            var sut = new ProviderLocationsQueryValidator(repoMock.Object);
+            var query = new ProviderCourseLocationsQuery(providerCourseId);
+            var repoMock = new Mock<IProviderCourseLocationReadRepository>();
+            repoMock.Setup(x => x.GetAllProviderCourseLocations(providerCourseId)).ReturnsAsync(new List<ProviderCourseLocation>());
+            var sut = new ProviderCourseLocationsQueryValidator();
 
             var result = await sut.ValidateAsync(query);
 
             Assert.AreEqual(expectedResult, result.IsValid);
         }
 
-        [TestCase(1, 0, ProviderLocationsQueryValidator.InvalidUkprnErrorMessage)]
-        [TestCase(10012002, 1, ProviderLocationsQueryValidator.ProviderNotFoundErrorMessage)]
-        public async Task Validate_ExecutesAsyncValidatorForValidUkprnOnly(int ukprn, int expectedTimesRepoIsInvoked, string expectedErrorMessage)
+        [TestCase(0, ProviderCourseLocationsQueryValidator.InvalidProviderCourseIdErrorMessage)]
+        public async Task Validate_ExecutesAsyncValidatorForProviderCourseId(int providerCourseId, string expectedErrorMessage)
         {
-            var query = new ProviderLocationsQuery(ukprn);
-            var repoMock = new Mock<IProviderReadRepository>();
-            var sut = new ProviderLocationsQueryValidator(repoMock.Object);
+            var query = new ProviderCourseLocationsQuery(providerCourseId);
+            var sut = new ProviderCourseLocationsQueryValidator();
 
             var result = await sut.ValidateAsync(query);
 
-            repoMock.Verify(x => x.GetByUkprn(It.IsAny<int>()), Times.Exactly(expectedTimesRepoIsInvoked));
             Assert.IsFalse(result.IsValid);
             Assert.IsTrue(result.Errors.Count == 1);
             Assert.AreEqual(expectedErrorMessage, result.Errors[0].ErrorMessage);
