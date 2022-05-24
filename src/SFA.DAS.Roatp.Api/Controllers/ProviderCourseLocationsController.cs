@@ -22,17 +22,17 @@ namespace SFA.DAS.Roatp.Api.Controllers
         }
 
         [HttpGet]
-        [Route("/providerCourseLocations/{providerCourseId}")]
+        [Route("/provider/{ukprn}/courses/{larsCode}/locations")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(List<ProviderCourseLocationModel>), 200)]
-        public async Task<ActionResult<List<ProviderCourseLocationModel>>> GetProviderCourseLocations(int providerCourseId)
+        public async Task<ActionResult<List<ProviderCourseLocationModel>>> GetProviderCourseLocations(int ukprn, int larsCode)
         {
-            _logger.LogInformation("Request received to get all provider Course Locations for providerCourseId: {providerCourseId}", providerCourseId);
+            _logger.LogInformation("Request received to get all provider Course Locations for ukprn: {ukprn}, larsCode : {larsCode}", ukprn, larsCode);
 
-            var result = await _mediator.Send(new ProviderCourseLocationsQuery(providerCourseId));
+            var result = await _mediator.Send(new ProviderCourseLocationsQuery(ukprn, larsCode));
 
-            _logger.LogInformation("Found {locationCount} locations for {providerCourseId}", result.ProviderCourseLocations.Count, providerCourseId);
+            _logger.LogInformation("Found {locationCount} locations for ukprn: {ukprn}, larsCode : {larsCode}", result.ProviderCourseLocations.Count, ukprn, larsCode);
 
             return new OkObjectResult(result.ProviderCourseLocations);
         }

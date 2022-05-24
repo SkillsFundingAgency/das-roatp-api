@@ -21,12 +21,13 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task GetLocations_CallsMediator(
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProviderCourseLocationsController sut,
-            int providerCourseId,
+             int ukprn,
+             int larsCode,
             ProviderCourseLocationsQueryResult handlerResult)
         {
             mediatorMock.Setup(m => m.Send(It.IsAny<ProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
 
-            var result = await sut.GetProviderCourseLocations(providerCourseId);
+            var result = await sut.GetProviderCourseLocations(ukprn, larsCode);
 
             (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.ProviderCourseLocations);
         }

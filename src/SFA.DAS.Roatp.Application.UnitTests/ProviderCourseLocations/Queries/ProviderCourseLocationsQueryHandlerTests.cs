@@ -16,33 +16,31 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
     {
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_ReturnsResult(
-            List<ProviderCourseLocation> locations, 
-            [Frozen]Mock<IProviderCourseLocationReadRepository> repoMock,
+            Provider provider,
+            ProviderCourse providerCourse,
+            List<ProviderCourseLocation> locations,
+            [Frozen] Mock<IProviderReadRepository> repoMockProvider,
+            [Frozen] Mock<IProviderCourseReadRepository> repoMockProviderCourse,
+            [Frozen]Mock<IProviderCourseLocationReadRepository> repoMockProviderCourseLocation,
             ProviderCourseLocationsQuery query,
+            int Ukprn,
+            int providerId,
+            int larcode,
+            int providerCourseId,
             ProviderCourseLocationsQueryHandler sut,
             CancellationToken cancellationToken)
         {
-            repoMock.Setup(r => r.GetAllProviderCourseLocations(query.ProviderCourseId)).ReturnsAsync(locations);
+            repoMockProvider.Setup(r => r.GetByUkprn(Ukprn)).ReturnsAsync(provider);
+
+            repoMockProviderCourse.Setup(r => r.GetProviderCourse(providerId, larcode)).ReturnsAsync(providerCourse);
+
+            repoMockProviderCourseLocation.Setup(r => r.GetAllProviderCourseLocations(providerCourseId)).ReturnsAsync(locations);
 
             var result = await sut.Handle(query, cancellationToken);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.ProviderCourseLocations.Count, Is.EqualTo(locations.Count));
         }
-
-        [Test, MoqAutoData()]
-        public async Task Handle_NoData_ReturnsEmptyResult(
-            [Frozen] Mock<IProviderCourseLocationReadRepository> repoMock,
-            ProviderCourseLocationsQuery query,
-            ProviderCourseLocationsQueryHandler sut,
-            CancellationToken cancellationToken)
-        {
-            repoMock.Setup(r => r.GetAllProviderCourseLocations(query.ProviderCourseId)).ReturnsAsync(new List<ProviderCourseLocation>());
-
-            var result = await sut.Handle(query, cancellationToken);
-
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.ProviderCourseLocations, Is.Empty);
-        }
+      
     }
 }
