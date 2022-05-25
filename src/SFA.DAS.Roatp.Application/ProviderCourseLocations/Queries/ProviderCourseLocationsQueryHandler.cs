@@ -47,6 +47,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
             {
                 ProviderCourseLocations = providerCourseLocations.Select(x => (ProviderCourseLocationModel)x).ToList()
             };
+
             return result;
         }
     }

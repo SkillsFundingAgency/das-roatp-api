@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
         public async Task<List<ProviderCourseLocation>> GetAllProviderCourseLocations(int providerCourseId)
         {
             return await _roatpDataContext
-                .ProviderCoursesLocations.Include(l => l.Location)
+                .ProviderCoursesLocations.Include(l => l.Location).ThenInclude(r=>r.Region)
                 .Where(p => p.ProviderCourseId == providerCourseId)
                 .AsNoTracking()
                 .ToListAsync();
