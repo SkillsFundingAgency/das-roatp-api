@@ -39,13 +39,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
         }
 
         [Test, RecursiveMoqAutoData()]
-        public async Task Handle_NoData_ReturnsNullResult(
+        public async Task Handle_NoData_ReturnsEmptyList(
            Provider provider,
            ProviderCourse providerCourse,
            [Frozen] Mock<IProviderReadRepository> repoMockProvider,
            [Frozen] Mock<IProviderCourseReadRepository> repoMockProviderCourse,
            [Frozen] Mock<IProviderCourseLocationReadRepository> repoMockProviderCourseLocation,
-            ProviderCourseLocationsQuery query,
+           ProviderCourseLocationsQuery query,
            ProviderCourseLocationsQueryHandler sut,
            CancellationToken cancellationToken)
         {
@@ -58,39 +58,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
 
             var result = await sut.Handle(query, cancellationToken);
 
-            Assert.That(result, Is.Null);
-        }
-
-        [Test, RecursiveMoqAutoData()]
-        public async Task Handle_NoProviderData_ReturnsNullResult(
-          [Frozen]  Mock<IProviderReadRepository> repoMockProvider,
-          ProviderCourseLocationsQuery query,
-          ProviderCourseLocationsQueryHandler sut,
-          CancellationToken cancellationToken)
-        {
-            repoMockProvider.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync((Provider)null);
-
-            var result = await sut.Handle(query, cancellationToken);
-
-            Assert.That(result, Is.Null);
-        }
-
-        [Test, RecursiveMoqAutoData()]
-        public async Task Handle_NoProviderCourseData_ReturnsEmptyResult(
-           Provider provider,
-           Mock<IProviderReadRepository> repoMockProvider,
-           [Frozen] Mock<IProviderCourseReadRepository> repoMockProviderCourse,
-           ProviderCourseLocationsQuery query,
-           ProviderCourseLocationsQueryHandler sut,
-           CancellationToken cancellationToken)
-        {
-            repoMockProvider.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
-
-            repoMockProviderCourse.Setup(r => r.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync((ProviderCourse)null);
-
-            var result = await sut.Handle(query, cancellationToken);
-
-            Assert.That(result, Is.Null);
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.ProviderCourseLocations, Is.Empty);
         }
     }
 }
