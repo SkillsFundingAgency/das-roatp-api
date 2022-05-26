@@ -4,7 +4,7 @@ parameters:
   OverrideBlockOnPossibleDataLoss: false
 
 jobs:
-- deployment: DeployWebApp
+- deployment: DeployFunctionApp
   pool:
     name: DAS - Continuous Deployment Agents
   environment: ${{ parameters.Environment }}

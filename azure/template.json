@@ -11,6 +11,9 @@
         "serviceName": {
             "type": "string"
         },
+        "functionAppServiceName": {
+            "type": "string"
+        },
         "sharedEnvResourceGroup": {
             "type": "string"
         },
@@ -68,8 +71,17 @@
         "sharedStorageAccountConnectionString": {
             "type": "securestring"
         },
+        "sharedEnvVirtualNetworkName": {
+            "type": "string"
+        },
         "subnetObject": {
             "type": "object"
+        },
+        "subnetServiceEndpointList": {
+            "type": "array"
+        },
+        "subnetDelegations": {
+            "type": "array"
         },
         "sharedApimResourceGroup": {
             "type": "string"
@@ -99,9 +111,10 @@
     "variables": {
         "deploymentUrlBase": "https://raw.githubusercontent.com/SkillsFundingAgency/das-platform-building-blocks/master/templates/",
         "resourceNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('serviceName')))]",
+        "functionAppNamePrefix": "[toLower(concat('das-', parameters('resourceEnvironmentName'),'-', parameters('functionAppServiceName')))]",
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), 'api-rg')]",
         "appServiceName": "[concat(variables('resourceNamePrefix'), 'api-as')]",
-        "functionAppName": "[concat(variables('resourceNamePrefix'), '-fa')]",
+        "functionAppName": "[concat(variables('functionAppNamePrefix'), '-fa')]",
         "appServicePlanName": "[concat(variables('resourceNamePrefix'), '-asp')]",
         "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
         "configNames": "SFA.DAS.Roatp.Api"
@@ -114,6 +127,39 @@
             "location": "[parameters('resourceGroupLocation')]",
             "tags": "[parameters('tags')]",
             "properties": {}
+        },
+        {
+            "apiVersion": "2021-04-01",
+            "name": "[concat(parameters('subnetObject').name, '-', parameters('utcValue'))]",
+            "type": "Microsoft.Resources/deployments",
+            "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
+            "properties": {
+                "mode": "Incremental",
+                "templateLink": {
+                    "uri": "[concat(variables('deploymentUrlBase'),'subnet.json')]",
+                    "contentVersion": "1.0.0.0"
+                },
+                "parameters": {
+                    "virtualNetworkName": {
+                        "value": "[parameters('sharedEnvVirtualNetworkName')]"
+                    },
+                    "subnetName": {
+                        "value": "[parameters('subnetObject').name]"
+                    },
+                    "subnetAddressPrefix": {
+                        "value": "[parameters('subnetObject').addressSpace]"
+                    },
+                    "serviceEndpointList": {
+                        "value": "[parameters('subnetServiceEndpointList')]"
+                    },
+                    "delegations": {
+                        "value": "[parameters('subnetDelegations')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[variables('resourceGroupName')]"
+            ]
         },
         {
             "apiVersion": "2021-04-01",
