@@ -12,6 +12,5 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
             Ukprn = ukprn;
             LarsCode = larsCode;
         }
-        public ProviderCourseLocationsQuery() { }
     }
 }

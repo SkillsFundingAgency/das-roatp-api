@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
-using SFA.DAS.Roatp.Application.Locations.Queries;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
@@ -21,8 +20,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task GetLocations_CallsMediator(
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProviderCourseLocationsController sut,
-             int ukprn,
-             int larsCode,
+            int ukprn,
+            int larsCode,
             ProviderCourseLocationsQueryResult handlerResult)
         {
             mediatorMock.Setup(m => m.Send(It.IsAny<ProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
