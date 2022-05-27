@@ -12,7 +12,6 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {
-   
     [TestFixture]
     public class ProviderCourseLocationsControllerTests
     {

@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
         }
 
         [Test]
-        public async Task Validate_ExecutesAsyncValidatorForInvalidUkprnLarsCode()
+        public async Task Validate_InvalidUkprnLarsCode()
         {
             int ukprn = 1;
             int larsCode = 0;
@@ -50,7 +50,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
         }
 
        [Test]
-        public async Task Validate_ExecutesAsyncValidatorForValidUkprnLarsCode_ReturnProviderCourseDataNotFound()
+        public async Task Validate_InvalidUkprnLarsCode_CourseDataNotFound()
         {
             int ukprn = 10012002;
             int larsCode = 1;
