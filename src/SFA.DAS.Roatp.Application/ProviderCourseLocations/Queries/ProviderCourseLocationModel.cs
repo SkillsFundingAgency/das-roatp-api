@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
                 HasBlockReleaseDeliveryOption = source.HasBlockReleaseDeliveryOption,
                 OffersPortableFlexiJob = source.OffersPortableFlexiJob,
                 IsImported = source.IsImported,
-                LocationName = source.Location?.LocationName,
+                LocationName = source.Location.LocationName,
                 LocationType = source.Location.LocationType,
                 RegionName = source.Location.Region?.RegionName
             };

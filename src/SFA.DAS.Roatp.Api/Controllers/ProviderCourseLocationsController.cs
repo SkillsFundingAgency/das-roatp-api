@@ -9,7 +9,6 @@ using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries;
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
     public class ProviderCourseLocationsController : ControllerBase
     {
         private readonly ILogger<ProviderCourseLocationsController> _logger;
