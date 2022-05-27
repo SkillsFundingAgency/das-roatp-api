@@ -12,7 +12,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
         public decimal Radius { get; set; }
         public bool? HasDayReleaseDeliveryOption { get; set; }
         public bool? HasBlockReleaseDeliveryOption { get; set; }
-        public bool? OffersPortableFlexiJob { get; set; }
         public bool IsImported { get; set; }
         public string LocationName { get; set; }
         public LocationType LocationType { get; set; }
@@ -28,7 +27,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
                 Radius = source.Radius,
                 HasDayReleaseDeliveryOption = source.HasDayReleaseDeliveryOption,
                 HasBlockReleaseDeliveryOption = source.HasBlockReleaseDeliveryOption,
-                OffersPortableFlexiJob = source.OffersPortableFlexiJob,
                 IsImported = source.IsImported,
                 LocationName = source.Location.LocationName,
                 LocationType = source.Location.LocationType,

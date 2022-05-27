@@ -11,7 +11,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public decimal Radius { get; set; }
         public bool? HasDayReleaseDeliveryOption { get; set; }
         public bool? HasBlockReleaseDeliveryOption { get; set; }
-        public bool? OffersPortableFlexiJob { get; set; }
         public bool IsImported { get; set; } = false;
         public virtual ProviderCourse Course { get; set; }
         public virtual ProviderLocation Location { get; set; }

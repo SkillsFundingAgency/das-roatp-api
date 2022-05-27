@@ -18,8 +18,10 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries
         public async Task<ProviderLocationsQueryResult> Handle(ProviderLocationsQuery request, CancellationToken cancellationToken)
         {
             var locations = await _providerLocationsReadRepository.GetAllProviderLocations(request.Ukprn);
-            var result = new ProviderLocationsQueryResult();
-            result.Locations = locations.Select(x => (ProviderLocationModel)x).ToList();
+            var result = new ProviderLocationsQueryResult
+            {
+                Locations = locations.Select(x => (ProviderLocationModel)x).ToList()
+            };
             return result;
         }
     }
