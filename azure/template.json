@@ -115,7 +115,7 @@
         "resourceGroupName": "[concat(variables('resourceNamePrefix'), 'api-rg')]",
         "appServiceName": "[concat(variables('resourceNamePrefix'), 'api-as')]",
         "functionAppName": "[concat(variables('functionAppNamePrefix'), '-fa')]",
-        "appServicePlanName": "[concat(variables('resourceNamePrefix'), '-asp')]",
+        "appServicePlanName": "[concat(variables('functionAppNamePrefix'), '-asp')]",
         "databaseName": "[concat(variables('resourceNamePrefix'), '-db')]",
         "configNames": "SFA.DAS.Roatp.Api"
     },
