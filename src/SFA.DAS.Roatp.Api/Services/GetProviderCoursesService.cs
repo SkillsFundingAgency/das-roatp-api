@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.Api.Services
                 _logger.LogError("Standards Lookup data not found for {ukprn} and {larsCode}", ukprn, larsCode);
                 return null;
             }
-            providerCourse.UpdateCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title);
+            providerCourse.UpdateCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title, standardLookup.Version,standardLookup.ApprovalBody);
 
             return providerCourse;
         }
@@ -70,7 +70,7 @@ namespace SFA.DAS.Roatp.Api.Services
             foreach (var p in providerCourseModels)
             {
                 var course = standardsLookup.Single(c => c.LarsCode == p.LarsCode);
-                p.UpdateCourseDetails(course.IfateReferenceNumber, course.Level, course.Title);
+                p.UpdateCourseDetails(course.IfateReferenceNumber, course.Level, course.Title, course.Version, course.ApprovalBody);
             }
             return providerCourseModels;
         }
