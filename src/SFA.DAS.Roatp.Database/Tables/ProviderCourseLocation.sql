@@ -7,6 +7,7 @@
     [Radius] DECIMAL(18,0) NOT NULL DEFAULT 0,
     [HasDayReleaseDeliveryOption] BIT NULL,
     [HasBlockReleaseDeliveryOption] BIT NULL,
+    [OffersPortableFlexiJob] BIT NULL,
     [IsImported] BIT NOT NULL DEFAULT 0,
     CONSTRAINT PK_ProviderCourseLocation PRIMARY KEY (Id),
     CONSTRAINT UK_ProviderCourseLocation_NavigationId UNIQUE ([NavigationId]),
