@@ -21,6 +21,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
                  .Excluding(s => s.ProviderLocationId)
                  .Excluding(s => s.Course)
                  .Excluding(s => s.Location)
+                 .Excluding(s=> s.OffersPortableFlexiJob)
             );
         }
     }
