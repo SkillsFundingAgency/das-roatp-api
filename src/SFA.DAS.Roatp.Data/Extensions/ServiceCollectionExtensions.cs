@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Azure.Services.AppAuthentication;
 using Microsoft.Data.SqlClient;
@@ -9,6 +10,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Extensions
 {
+    [ExcludeFromCodeCoverage]
     public static class ServiceCollectionExtensions
     {
         public static IServiceCollection AddRoatpDataContext(this IServiceCollection services, string connectionString, string environmentName)
@@ -40,6 +42,7 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IReloadStandardsRepository, ReloadStandardsRepository>();
             services.AddTransient<IGetStandardsCountRepository, GetStandardsCountRepository>();
             services.AddTransient<IProviderLocationsReadRepository, ProviderLocationsReadRepository>();
+            services.AddTransient<IProviderCourseEditRepository, ProviderCourseEditRepository>();
         }
 
         public static async Task<string> GenerateTokenAsync()
