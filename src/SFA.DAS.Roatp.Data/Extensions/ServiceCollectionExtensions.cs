@@ -43,6 +43,7 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IGetStandardsCountRepository, GetStandardsCountRepository>();
             services.AddTransient<IProviderLocationsReadRepository, ProviderLocationsReadRepository>();
             services.AddTransient<IProviderCourseEditRepository, ProviderCourseEditRepository>();
+            services.AddTransient<IReloadProviderRegistrationDetailsRepository, ReloadProviderRegistrationDetailsRepository>();
         }
 
         public static async Task<string> GenerateTokenAsync()
