@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +10,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
+    [ExcludeFromCodeCoverage]
     internal class ReloadStandardsRepository : IReloadStandardsRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
@@ -38,13 +40,12 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 await _roatpDataContext.BulkInsertAsync(standards);
                 await _roatpDataContext.SaveChangesAsync();
                 await transaction.CommitAsync();
-                _logger.LogInformation("Standards reload complete");
             }
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError("Standards reload failed on database update",ex);
-                return false;
+                _logger.LogError(ex, "Standards reload failed on database update");
+                throw;
             }
 
             return true;

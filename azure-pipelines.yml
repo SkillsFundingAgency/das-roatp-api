@@ -12,9 +12,7 @@ trigger:
 
 variables:
 - name: SolutionBaseName
-  value: SFA.DAS.Roatp.Api
-- name: DACPACSolutionBaseName
-  value: SFA.DAS.Roatp.Database
+  value: SFA.DAS.Roatp
 - name: BuildConfiguration
   value: release
 - name: BuildPlatform
@@ -53,8 +51,8 @@ stages:
       BuildConfiguration: $(BuildConfiguration)
   - template: azure-pipelines-templates/build/job/dacpac-template.yml@das-platform-building-blocks
     parameters:
-      SolutionBaseName: $(DACPACSolutionBaseName)
-      SqlProjectPath: src/$(DACPACSolutionBaseName)/$(DACPACSolutionBaseName).sqlproj
+      SolutionBaseName: $(SolutionBaseName).Database
+      SqlProjectPath: src/$(SolutionBaseName).Database/$(SolutionBaseName).Database.sqlproj
 
 - stage: Deploy_AT
   dependsOn: Build
