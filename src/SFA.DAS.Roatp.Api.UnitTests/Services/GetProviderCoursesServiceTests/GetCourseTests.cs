@@ -61,6 +61,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
             Assert.AreEqual(standardLookUp.Level, model.Level);
             Assert.AreEqual(standardLookUp.Title, model.CourseName);
             Assert.AreEqual(standardLookUp.ApprovalBody, model.ApprovalBody);
+            Assert.AreEqual(standardLookUp.Version,model.Version);
         }
 
         [Test]
