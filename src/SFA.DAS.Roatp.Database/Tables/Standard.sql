@@ -6,5 +6,6 @@
     [Level] INT NOT NULL,
     [Title] VARCHAR(1000) NOT NULL,
     [Version] VARCHAR(10) NOT NULL,
+    [ApprovalBody] VARCHAR(1000) NULL, 
     CONSTRAINT PK_Standard PRIMARY KEY (StandardUId)
 )

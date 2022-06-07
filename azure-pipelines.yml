@@ -12,9 +12,7 @@ trigger:
 
 variables:
 - name: SolutionBaseName
-  value: SFA.DAS.Roatp.Api
-- name: DACPACSolutionBaseName
-  value: SFA.DAS.Roatp.Database
+  value: SFA.DAS.Roatp
 - name: BuildConfiguration
   value: release
 - name: BuildPlatform
@@ -31,12 +29,12 @@ resources:
   - repository: das-platform-building-blocks
     type: github
     name: SkillsFundingAgency/das-platform-building-blocks
-    ref: refs/tags/0.4.37
+    ref: refs/tags/0.4.57
     endpoint: SkillsFundingAgency
   - repository: das-platform-automation
     type: github
     name: SkillsFundingAgency/das-platform-automation
-    ref: refs/tags/4.5.14
+    ref: refs/tags/5.0.2
     endpoint: SkillsFundingAgency
   pipelines:
   - pipeline: das-employer-config
@@ -53,8 +51,8 @@ stages:
       BuildConfiguration: $(BuildConfiguration)
   - template: azure-pipelines-templates/build/job/dacpac-template.yml@das-platform-building-blocks
     parameters:
-      SolutionBaseName: $(DACPACSolutionBaseName)
-      SqlProjectPath: src/$(DACPACSolutionBaseName)/$(DACPACSolutionBaseName).sqlproj
+      SolutionBaseName: $(SolutionBaseName).Database
+      SqlProjectPath: src/$(SolutionBaseName).Database/$(SolutionBaseName).Database.sqlproj
 
 - stage: Deploy_AT
   dependsOn: Build
