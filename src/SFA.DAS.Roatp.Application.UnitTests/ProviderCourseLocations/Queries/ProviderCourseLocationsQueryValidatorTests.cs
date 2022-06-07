@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             var repoMock = new Mock<IProviderReadRepository>();
             var repoMockProvideCourse = new Mock<IProviderCourseReadRepository>();
             repoMock.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
-            repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new ProviderCourse());
+            repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
             var sut = new ProviderCourseLocationsQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
 
             var result = await sut.ValidateAsync(query);
@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             var repoMockProvideCourse = new Mock<IProviderCourseReadRepository>();
             var repoMock = new Mock<IProviderReadRepository>();
             repoMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
-            repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync((ProviderCourse)null);
+            repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync((Domain.Entities.ProviderCourse)null);
             var sut = new ProviderCourseLocationsQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
 
             var result = await sut.ValidateAsync(query);
