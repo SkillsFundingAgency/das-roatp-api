@@ -42,6 +42,14 @@ namespace SFA.DAS.CourseManagement.OuterApi.MockServer
                     .WithStatusCode(200)
                     .WithHeader("Content-Type", "application/json")
                     .WithBodyFromFile("standards-lookup.json"));
+
+            server
+                .Given(Request.Create().WithPath(u => u.Contains("course-directory-data"))
+                .UsingGet())
+                .RespondWith(Response.Create()
+                    .WithStatusCode(200)
+                    .WithHeader("Content-Type", "application/json")
+                    .WithBodyFromFile("providers-lookup.json"));
         }
     }
 }
