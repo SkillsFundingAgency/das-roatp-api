@@ -1,0 +1,106 @@
+[
+  {
+    "Ukprn": 10000560,
+    "LegalName": "Basingstoke College of Technology",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  },
+  {
+    "Ukprn": 10000948,
+    "LegalName": "London South East College",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  },
+  {
+    "Ukprn": 10001259,
+    "LegalName": "CENTRAL TRAINING ACADEMY LIMITED",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  },
+  {
+    "Ukprn": 10005897,
+    "LegalName": "SKILLS TRAINING UK LIMITED",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  },
+  {
+    "Ukprn": 10006770,
+    "LegalName": "THE OLDHAM COLLEGE",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  },
+  {
+    "Ukprn": 10007424,
+    "LegalName": "THE WEST MIDLANDS CREATIVE ALLIANCE LIMITED",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  },
+  {
+    "Ukprn": 10033758,
+    "LegalName": "IXION HOLDINGS",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  },
+  {
+    "Ukprn": 10047111,
+    "LegalName": "THE APPRENTICESHIP COLLEGE",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  },
+  {
+    "Ukprn": 10062041,
+    "LegalName": "SKILLS4STEM LTD.",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  },
+  {
+    "Ukprn": 10063272,
+    "LegalName": "APPRENTIFY LIMITED",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  },
+  {
+    "Ukprn": 10064513,
+    "LegalName": "THE TRAINING INITIATIVE GROUP LTD",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  },
+  {
+    "Ukprn": 10065784,
+    "LegalName": "BLUE LION TRAINING ACADEMY LIMITED",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  },
+  {
+    "Ukprn": 10083150,
+    "LegalName": "PURPLE BEARD LTD",
+    "StatusId": 1,
+    "StatusDate": "2022-06-03T10:51:36.043",
+    "OrganisationTypeId": 1,
+    "ProviderTypeId": 1
+  }
+]

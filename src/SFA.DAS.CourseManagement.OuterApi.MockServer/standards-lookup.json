@@ -1,0 +1,218 @@
+[
+  {
+    "StandardUId": "ST0048_1.0",
+    "LarsCode": 502,
+    "IfateReferenceNumber": "ST0048",
+    "Level": 4,
+    "Title": "Construction site supervisor",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0095_1.1",
+    "LarsCode": 287,
+    "IfateReferenceNumber": "ST0095",
+    "Level": 2,
+    "Title": "Bricklayer",
+    "Version": "1.1",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0105_1.0",
+    "LarsCode": 174,
+    "IfateReferenceNumber": "ST0105",
+    "Level": 3,
+    "Title": "Junior content producer",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0106_1.0",
+    "LarsCode": 229,
+    "IfateReferenceNumber": "ST0106",
+    "Level": 3,
+    "Title": "Creative venue technician",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0116_1.1",
+    "LarsCode": 2,
+    "IfateReferenceNumber": "ST0116",
+    "Level": 4,
+    "Title": "Software developer",
+    "Version": "1.1",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0128_1.0",
+    "LarsCode": 154,
+    "IfateReferenceNumber": "ST0128",
+    "Level": 3,
+    "Title": "Software development technician",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0174_1.0",
+    "LarsCode": 516,
+    "IfateReferenceNumber": "ST0174",
+    "Level": 3,
+    "Title": "Props technician",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0221_1.0",
+    "LarsCode": 429,
+    "IfateReferenceNumber": "ST0221",
+    "Level": 3,
+    "Title": "Archaeological technician",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0255_1.1",
+    "LarsCode": 383,
+    "IfateReferenceNumber": "ST0255",
+    "Level": 3,
+    "Title": "Live event technician",
+    "Version": "1.1",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0263_1.1",
+    "LarsCode": 240,
+    "IfateReferenceNumber": "ST0263",
+    "Level": 3,
+    "Title": "Advanced carpentry and joinery",
+    "Version": "1.1",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0396_1.0",
+    "LarsCode": 407,
+    "IfateReferenceNumber": "ST0396",
+    "Level": 3,
+    "Title": "Cultural learning and participation officer",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0419_1.0",
+    "LarsCode": 188,
+    "IfateReferenceNumber": "ST0419",
+    "Level": 2,
+    "Title": "Rail infrastructure operator",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0425_1.0",
+    "LarsCode": 547,
+    "IfateReferenceNumber": "ST0425",
+    "Level": 5,
+    "Title": "Broadcast and media systems technician",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0442_1.0",
+    "LarsCode": 637,
+    "IfateReferenceNumber": "ST0442",
+    "Level": 2,
+    "Title": "Stonemason",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0463_1.0",
+    "LarsCode": 358,
+    "IfateReferenceNumber": "ST0463",
+    "Level": 2,
+    "Title": "Industrial coatings applicator",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0464_1.0",
+    "LarsCode": 524,
+    "IfateReferenceNumber": "ST0464",
+    "Level": 3,
+    "Title": "Smart home technician",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0506_1.0",
+    "LarsCode": 438,
+    "IfateReferenceNumber": "ST0506",
+    "Level": 3,
+    "Title": "Photographic assistant",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0559_1.0",
+    "LarsCode": 443,
+    "IfateReferenceNumber": "ST0559",
+    "Level": 3,
+    "Title": "Museums and galleries technician",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0611_1.0",
+    "LarsCode": 418,
+    "IfateReferenceNumber": "ST0611",
+    "Level": 4,
+    "Title": "Cultural heritage conservation technician",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0825_1.0",
+    "LarsCode": 548,
+    "IfateReferenceNumber": "ST0825",
+    "Level": 4,
+    "Title": "DevOps engineer",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0900_1.0",
+    "LarsCode": 573,
+    "IfateReferenceNumber": "ST0900",
+    "Level": 3,
+    "Title": "Camera prep technician",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0902_1.0",
+    "LarsCode": 648,
+    "IfateReferenceNumber": "ST0902",
+    "Level": 6,
+    "Title": "VFX artist or technical director",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0903_1.0",
+    "LarsCode": 597,
+    "IfateReferenceNumber": "ST0903",
+    "Level": 4,
+    "Title": "Junior vfx artist (generalist)",
+    "Version": "1.0",
+    "ApprovalBody": null
+  },
+  {
+    "StandardUId": "ST0953_1.0",
+    "LarsCode": 650,
+    "IfateReferenceNumber": "ST0953",
+    "Level": 7,
+    "Title": "Game programmer",
+    "Version": "1.0",
+    "ApprovalBody": null
+  }
+]
