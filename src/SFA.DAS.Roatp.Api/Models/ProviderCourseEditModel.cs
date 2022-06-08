@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Roatp.Application.ProviderCourse;
+﻿using SFA.DAS.Roatp.Application.ProviderCourse;
 
 namespace SFA.DAS.Roatp.Api.Models
 {

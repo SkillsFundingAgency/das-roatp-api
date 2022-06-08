@@ -28,5 +28,16 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
             await _roatpDataContext.SaveChangesAsync();
         }
+
+        public async Task UpdateConfirmRegulatedStandard(ProviderCourse updatedProviderCourseEntity)
+        {
+            var providerCourse = await _roatpDataContext
+                .ProviderCourses
+                .FindAsync(updatedProviderCourseEntity.Id);
+
+            providerCourse.IsApprovedByRegulator = updatedProviderCourseEntity.IsApprovedByRegulator;
+
+            await _roatpDataContext.SaveChangesAsync();
+        }
     }
 }

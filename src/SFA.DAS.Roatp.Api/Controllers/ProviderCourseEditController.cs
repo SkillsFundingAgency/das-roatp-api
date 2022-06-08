@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.ProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateConfirmRegulatedStandard;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers
@@ -25,6 +26,18 @@ namespace SFA.DAS.Roatp.Api.Controllers
         {
             _logger.LogInformation("Inner API: Request to update course contact details for ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, larsCode, providerCourseEditModel.UserId);
             var command = (UpdateProviderCourseCommand) providerCourseEditModel;
+            command.Ukprn = ukprn;
+            command.LarsCode = larsCode;
+            await _mediator.Send(command);
+            return NoContent();
+        }
+
+        [Route("/providers/{ukprn}/courses/{larsCode}/update-confirm-regulated-standard")]
+        [HttpPost]
+        public async Task<IActionResult> Save([FromRoute] int ukprn, [FromRoute] int larsCode, ProviderCourseEditConfirmRegulatedStandardModel model)
+        {
+            _logger.LogInformation("Inner API: Request to update course contact details for ukprn: {ukprn} larscode: {larscode}", ukprn, larsCode);
+            var command = (UpdateConfirmRegulatedStandardCommand)model;
             command.Ukprn = ukprn;
             command.LarsCode = larsCode;
             await _mediator.Send(command);
