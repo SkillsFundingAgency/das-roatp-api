@@ -21,13 +21,6 @@ namespace SFA.DAS.CourseManagement.OuterApi.MockServer
             var server = StandAloneApp.Start(settings);
 
             server
-                .Given(Request.Create().WithPath("/*").UsingGet())
-                .RespondWith(Response.Create()
-                    .WithStatusCode(404)
-                    .WithHeader("Content-Type", "application/json")
-                    .WithBody(@"{ 'msg': 'No matching endpoint found. Are you missing a setup?'}"));
-
-            server
                 .Given(Request.Create().WithPath(u => u.Contains("registered-providers"))
                 .UsingGet())
                 .RespondWith(Response.Create()
