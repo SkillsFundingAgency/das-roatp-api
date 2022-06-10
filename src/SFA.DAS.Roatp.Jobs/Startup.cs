@@ -65,6 +65,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Jobs
             builder.Services.AddRoatpDataContext(_configuration["SqlDatabaseConnectionString"], _configuration["EnvironmentName"]);
 
             builder.Services.AddTransient<IReloadStandardsCacheService, ReloadStandardsCacheService>();
+            builder.Services.AddTransient<IReloadProviderRegistrationDetailService, ReloadProviderRegistrationDetailService>();
         }
 
         private void ConfigureHttpClient(IServiceCollection services)

@@ -9,7 +9,6 @@ namespace SFA.DAS.Roatp.Jobs.Functions
     {
         private readonly IReloadStandardsCacheService _reloadStandardsCacheService;
 
-
         public ReloadStandardsCacheFunction(IReloadStandardsCacheService reloadStandardsCacheService)
         {
             _reloadStandardsCacheService = reloadStandardsCacheService;
