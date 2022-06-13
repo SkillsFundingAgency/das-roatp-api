@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
+using Standard = SFA.DAS.Roatp.Jobs.ApiModels.Lookup.Standard;
 
 namespace SFA.DAS.Roatp.Jobs.Services
 {
@@ -68,15 +70,20 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
             // remove any providers that are not on the roatp active providers lists
 
-            // get current list of providers, and remove those from providers (you may want to overwrite any that have not been 'confirmed'??
+            // get current list of providers, and remove those from providers?
+
+
+            // write new providers to database
 
 
         }
 
-        private List<Provider> MapCourseDirectoryProviders(List<CdProvider> cdProviders, List<ApiModels.Lookup.Standard> standards)
+
+        // this is best placed within a testable service
+        private IEnumerable<Provider> MapCourseDirectoryProviders(List<CdProvider> cdProviders, IReadOnlyCollection<Standard> standards)
         {
-            var counterNoLocationMapping = 0;
             var providers = new List<Provider>();
+
             foreach (var cdProvider in cdProviders)
             {
                 var provider = new Provider
@@ -124,7 +131,9 @@ namespace SFA.DAS.Roatp.Jobs.Services
                     }
 
                     if (cdProvider.Ukprn == 10000082)
-                        break;
+                    {
+                        var zzzz = 1;
+                    }
 
                     providerLocations.Add(new ProviderLocation
                     {
@@ -146,28 +155,20 @@ namespace SFA.DAS.Roatp.Jobs.Services
                     });
                 }
 
-
                 provider.Locations = providerLocations;
 
                 var providerCourses = new List<ProviderCourse>();
 
-
-
-
-                var counter = 0;
                 
                 foreach (var cdProviderCourse in cdProvider.Standards)
                 {
 
-                    //What shall I do if no standard returned???
-
-                    counter++;
-                    _logger.LogInformation($"updating record {counter}");
+                    //What shall I do if no standard returned???  For now, doing a break
                     var standard = standards.FirstOrDefault(x => x.LarsCode == cdProviderCourse.StandardCode);
 
                     if (standard?.LarsCode == null || standard.LarsCode == 0)
                     {
-                        // jump out? Log?
+                        // jump out? exception? Log?
                         _logger.LogError($"LarsCode {cdProviderCourse.StandardCode} found no match in couses-api");
                         break;
                     }
@@ -231,8 +232,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
                         if (providerLocation == null)
                         {
-                            counterNoLocationMapping++;
-                            
+                            // there are numerous cases of the provider.location not existing for the providercourselocation id
                             break;
                         }
 
@@ -259,7 +259,6 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
             }
 
-            var x = counterNoLocationMapping;
             return providers;
         }
 
