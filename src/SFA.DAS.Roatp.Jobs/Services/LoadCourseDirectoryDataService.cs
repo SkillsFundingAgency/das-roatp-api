@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
+using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 
 namespace SFA.DAS.Roatp.Jobs.Services
 {
@@ -42,10 +44,25 @@ namespace SFA.DAS.Roatp.Jobs.Services
             _logger.LogInformation($"{cdProviders.Count} providers returned from Course Directory");
 
 
-            var providers = MapCourseDirectoryProviders(cdProviders);
 
+            // get latest standards from courses-api or use roatp cache????
+
+
+            var (standardsSuccess, standardList) = await _courseManagementOuterApiClient.Get<StandardList>("lookup/standards");
+            if (!standardsSuccess || !standardList.Standards.Any())
+            {
+                _logger.LogError($"ReloadStandardsCacheFunction function failed to get active standards");
+                throw new InvalidOperationException("No standards were retrieved from courses api");
+            }
+
+            // use roatp cache for this???
+           // var standardsToReload = standardList.Standards.Select(standard => (Domain.Entities.Standard)standard).ToList();
 
             // map providers to model we want
+            var providers = MapCourseDirectoryProviders(cdProviders, standardList.Standards);
+
+
+            
 
             // get roatp active providers
 
@@ -56,8 +73,9 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
         }
 
-        private List<Provider> MapCourseDirectoryProviders(List<CdProvider> cdProviders)
+        private List<Provider> MapCourseDirectoryProviders(List<CdProvider> cdProviders, List<ApiModels.Lookup.Standard> standards)
         {
+            var counterNoLocationMapping = 0;
             var providers = new List<Provider>();
             foreach (var cdProvider in cdProviders)
             {
@@ -105,6 +123,8 @@ namespace SFA.DAS.Roatp.Jobs.Services
                         longitude = longitudeParsed;
                     }
 
+                    if (cdProvider.Ukprn == 10000082)
+                        break;
 
                     providerLocations.Add(new ProviderLocation
                     {
@@ -131,14 +151,27 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
                 var providerCourses = new List<ProviderCourse>();
 
+
+
+
+                var counter = 0;
+                
                 foreach (var cdProviderCourse in cdProvider.Standards)
                 {
 
                     //What shall I do if no standard returned???
-                    // use roatp cache for this???
-                    
-                    var standard = _roatpDataContext.Standards.FirstOrDefault(x => x.LarsCode == cdProviderCourse.StandardCode);
 
+                    counter++;
+                    _logger.LogInformation($"updating record {counter}");
+                    var standard = standards.FirstOrDefault(x => x.LarsCode == cdProviderCourse.StandardCode);
+
+                    if (standard?.LarsCode == null || standard.LarsCode == 0)
+                    {
+                        // jump out? Log?
+                        _logger.LogError($"LarsCode {cdProviderCourse.StandardCode} found no match in couses-api");
+                        break;
+                    }
+                    
                     // var nationalDeliveryOption = false;
                     //
                     // foreach (var courseLocation in cdProviderCourse.Locations)
@@ -179,8 +212,8 @@ namespace SFA.DAS.Roatp.Jobs.Services
                         new ProviderCourseVersion
                         {
                             // what to do if no standard returned?
-                            StandardUId = standard?.StandardUId,
-                            Version = standard?.Version
+                            StandardUId = standard.StandardUId,
+                            Version = standard.Version
                         }
                     }
                     };
@@ -194,7 +227,14 @@ namespace SFA.DAS.Roatp.Jobs.Services
                         var blockRelease = courseLocation.DeliveryModes.Any(deliveryMode => deliveryMode == BlockRelease);
                         var dayRelease = courseLocation.DeliveryModes.Any(deliveryMode => deliveryMode == DayRelease);
 
-                        var providerLocation = provider.Locations.First(x => x.ImportedLocationId == courseLocation.Id);
+                        var providerLocation = provider.Locations.FirstOrDefault(x => x.ImportedLocationId == courseLocation.Id);
+
+                        if (providerLocation == null)
+                        {
+                            counterNoLocationMapping++;
+                            
+                            break;
+                        }
 
                         providerCourseLocations.Add(new ProviderCourseLocation
                         {
@@ -219,7 +259,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
             }
 
-
+            var x = counterNoLocationMapping;
             return providers;
         }
 
