@@ -5,7 +5,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
     public class ProviderCourseLocation
     {
         public int Id { get; set; }
-        public Guid NavigationId { get; set;}
+        public Guid NavigationId { get; set; }
         public int ProviderCourseId { get; set; }
         public int? ProviderLocationId { get; set; }
         public decimal Radius { get; set; }

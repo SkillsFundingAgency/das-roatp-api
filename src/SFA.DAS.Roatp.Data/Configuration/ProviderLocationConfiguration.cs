@@ -31,6 +31,11 @@ namespace SFA.DAS.Roatp.Data.Configuration
                 .WithMany(p => p.Locations)
                 .HasPrincipalKey(p => p.Id)
                 .HasForeignKey(p => p.ProviderId);
+
+            builder.HasOne(p => p.Region)
+               .WithMany(l => l.Locations)
+               .HasPrincipalKey(p => p.Id)
+               .HasForeignKey(l => l.RegionId);
         }
     }
 
