@@ -25,6 +25,19 @@ namespace SFA.DAS.Roatp.Jobs.ApiClients
                     var content = default(T);
                     if (response.IsSuccessStatusCode)
                     {
+                        // This code is to sidestep an issue using the mock server, which otherwise generates error
+                        // System.Private.CoreLib: Exception while executing function: LoadCourseDirectoryDataFunction. Newtonsoft.Json: Unexpected character encountered while parsing value: [. Path '', line 1, position 1.
+                        // Which looks like something to do with file encoding type, but file seems to be UTF which should not cause a problem
+                        // but it just doesn't work...
+                        var type = typeof(T);
+                        if (type == typeof(String))
+                        {
+                            var dynamicContent = await response.Content.ReadAsAsync<dynamic>();
+                            var dynamicContentAsString = dynamicContent.ToString();
+                            return (true, dynamicContentAsString);
+                        }
+                       
+
                         content = await response.Content.ReadAsAsync<T>();
                         return (true, content);
                     }

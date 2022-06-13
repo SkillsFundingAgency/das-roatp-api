@@ -66,6 +66,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Jobs
 
             builder.Services.AddTransient<IReloadStandardsCacheService, ReloadStandardsCacheService>();
             builder.Services.AddTransient<IReloadProviderRegistrationDetailService, ReloadProviderRegistrationDetailService>();
+            builder.Services.AddTransient<ILoadCourseDirectoryDataService, LoadCourseDirectoryDataService>();
         }
 
         private void ConfigureHttpClient(IServiceCollection services)
