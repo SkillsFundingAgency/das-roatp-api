@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 
-namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateConfirmRegulatedStandard
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateApprovedByRegulator
 {
-    public class UpdateConfirmRegulatedStandardCommandValidator : AbstractValidator<UpdateConfirmRegulatedStandardCommand>
+    public class UpdateApprovedByRegulatorCommandValidator : AbstractValidator<UpdateApprovedByRegulatorCommand>
     {
-        public UpdateConfirmRegulatedStandardCommandValidator()
+        public UpdateApprovedByRegulatorCommandValidator()
         {
             RuleFor(c => c.Ukprn)
                 .GreaterThan(10000000)

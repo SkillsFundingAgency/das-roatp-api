@@ -2,7 +2,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Models;
-using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateConfirmRegulatedStandard;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateApprovedByRegulator;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Models
 {
@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
         [Test, AutoData]
         public void ImplicitOperator_ReturnsCommand(ProviderCourseEditConfirmRegulatedStandardModel model)
         {
-            ((UpdateConfirmRegulatedStandardCommand)model).Should().BeEquivalentTo(model);
+            ((UpdateApprovedByRegulatorCommand)model).Should().BeEquivalentTo(model);
         }
     }
 }

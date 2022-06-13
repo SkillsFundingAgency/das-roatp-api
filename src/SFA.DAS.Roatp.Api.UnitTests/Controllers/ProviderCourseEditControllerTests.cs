@@ -8,7 +8,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.ProviderCourse;
-using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateConfirmRegulatedStandard;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateApprovedByRegulator;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 
             (result as NoContentResult).Should().NotBeNull();
 
-            mediatorMock.Verify(m => m.Send(It.Is<UpdateConfirmRegulatedStandardCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode), It.IsAny<CancellationToken>()));
+            mediatorMock.Verify(m => m.Send(It.Is<UpdateApprovedByRegulatorCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode), It.IsAny<CancellationToken>()));
         }
 
     }

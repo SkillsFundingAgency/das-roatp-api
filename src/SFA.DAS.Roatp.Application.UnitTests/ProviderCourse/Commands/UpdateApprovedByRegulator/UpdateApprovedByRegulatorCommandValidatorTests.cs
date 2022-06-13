@@ -1,20 +1,20 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateConfirmRegulatedStandard;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateApprovedByRegulator;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.UpdateConfirmRegulatedStandard
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.UpdateApprovedByRegulator
 {
     [TestFixture]
-    public class UpdateConfirmRegulatedStandardCommandValidatorTests
+    public class UpdateApprovedByRegulatorCommandValidatorTests
     {
         [TestCase(10000000, false)]
         [TestCase(10000001, true)]
         [TestCase(100000000, false)]
         public void Validate_Ukprn(int ukprn, bool isValid)
         {
-            var validator = new UpdateConfirmRegulatedStandardCommandValidator();
+            var validator = new UpdateApprovedByRegulatorCommandValidator();
 
-            var result = validator.TestValidate(new UpdateConfirmRegulatedStandardCommand { Ukprn = ukprn });
+            var result = validator.TestValidate(new UpdateApprovedByRegulatorCommand { Ukprn = ukprn });
 
             if (isValid)
                 result.ShouldNotHaveValidationErrorFor(c => c.Ukprn);
@@ -27,9 +27,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.UpdateConf
         [TestCase(-1, false)]
         public void Validate_LarsCode(int larsCode, bool isValid)
         {
-            var validator = new UpdateConfirmRegulatedStandardCommandValidator();
+            var validator = new UpdateApprovedByRegulatorCommandValidator();
 
-            var result = validator.TestValidate(new UpdateConfirmRegulatedStandardCommand { LarsCode = larsCode });
+            var result = validator.TestValidate(new UpdateApprovedByRegulatorCommand { LarsCode = larsCode });
 
             if (isValid)
                 result.ShouldNotHaveValidationErrorFor(c => c.LarsCode);
@@ -42,9 +42,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.UpdateConf
         [TestCase(false, true)]
         public void Validate_IsApprovedByRegulator(bool isApprovedByRegulator, bool isValid)
         {
-            var validator = new UpdateConfirmRegulatedStandardCommandValidator();
+            var validator = new UpdateApprovedByRegulatorCommandValidator();
 
-            var result = validator.TestValidate(new UpdateConfirmRegulatedStandardCommand { IsApprovedByRegulator = isApprovedByRegulator });
+            var result = validator.TestValidate(new UpdateApprovedByRegulatorCommand { IsApprovedByRegulator = isApprovedByRegulator });
 
             if (isValid)
                 result.ShouldNotHaveValidationErrorFor(c => c.IsApprovedByRegulator);

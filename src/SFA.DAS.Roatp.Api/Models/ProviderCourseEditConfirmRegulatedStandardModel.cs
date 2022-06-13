@@ -1,12 +1,12 @@
-﻿using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateConfirmRegulatedStandard;
+﻿using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateApprovedByRegulator;
 
 namespace SFA.DAS.Roatp.Api.Models
 {
     public class ProviderCourseEditConfirmRegulatedStandardModel
     {
         public bool? IsApprovedByRegulator { get; set; }
-        public static implicit operator UpdateConfirmRegulatedStandardCommand(ProviderCourseEditConfirmRegulatedStandardModel model) =>
-            new UpdateConfirmRegulatedStandardCommand
+        public static implicit operator UpdateApprovedByRegulatorCommand(ProviderCourseEditConfirmRegulatedStandardModel model) =>
+            new UpdateApprovedByRegulatorCommand
             {
                 IsApprovedByRegulator = model.IsApprovedByRegulator,
             };

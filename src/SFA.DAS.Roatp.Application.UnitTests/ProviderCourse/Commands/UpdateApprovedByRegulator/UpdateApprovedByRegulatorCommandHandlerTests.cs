@@ -2,23 +2,23 @@
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateConfirmRegulatedStandard;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateApprovedByRegulator;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.UpdateConfirmRegulatedStandard
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.UpdateApprovedByRegulator
 {
     [TestFixture]
-    public class UpdateConfirmRegulatedStandardCommandHandlerTests
+    public class UpdateApprovedByRegulatorCommandHandlerTests
     {
         [Test, MoqAutoData]
         public async Task Handle_NoDataFound_ThrowsInvalidOperationException(
             [Frozen] Mock<IProviderCourseReadRepository> readRepoMock,
-            UpdateConfirmRegulatedStandardCommandHandler sut,
-            UpdateConfirmRegulatedStandardCommand command,
+            UpdateApprovedByRegulatorCommandHandler sut,
+            UpdateApprovedByRegulatorCommand command,
             CancellationToken cancellationToken)
         {
             readRepoMock.Setup(r => r.GetProviderCourseByUkprn(It.Is<int>(i => i == command.Ukprn), It.Is<int>(i => i == command.LarsCode))).ReturnsAsync((Domain.Entities.ProviderCourse)null);
@@ -32,8 +32,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.UpdateConf
         public async Task Handle_DataFound_SaveChanges(
             [Frozen] Mock<IProviderCourseReadRepository> readRepoMock,
             [Frozen] Mock<IProviderCourseEditRepository> editRepoMock,
-            UpdateConfirmRegulatedStandardCommandHandler sut,
-            UpdateConfirmRegulatedStandardCommand command,
+            UpdateApprovedByRegulatorCommandHandler sut,
+            UpdateApprovedByRegulatorCommand command,
             CancellationToken cancellationToken,
             Domain.Entities.ProviderCourse providerCourse)
         {
