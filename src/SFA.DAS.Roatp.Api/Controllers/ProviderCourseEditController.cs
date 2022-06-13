@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
             return NoContent();
         }
 
-        [Route("/providers/{ukprn}/courses/{larsCode}/update-confirm-regulated-standard")]
+        [Route("/providers/{ukprn}/courses/{larsCode}/update-approved-by-regulator")]
         [HttpPost]
         public async Task<IActionResult> Save([FromRoute] int ukprn, [FromRoute] int larsCode, ProviderCourseEditConfirmRegulatedStandardModel model)
         {
