@@ -47,6 +47,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 _logger.LogError($"ReloadStandardsCacheFunction function failed to get active standards");
                 throw new InvalidOperationException("No standards were retrieved from courses api");
             }
+            _logger.LogInformation($"Retrieved {standardList?.Standards?.Count} standards from courses-api");
 
             // get roatp active providers
             // from roatp-services-api or use roatp cache????
