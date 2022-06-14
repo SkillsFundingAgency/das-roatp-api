@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using WireMock.Logging;
+﻿using WireMock.Logging;
 using WireMock.Net.StandAlone;
 using WireMock.RequestBuilders;
 using WireMock.ResponseBuilders;
@@ -29,27 +28,19 @@ namespace SFA.DAS.CourseManagement.OuterApi.MockServer
                     .WithBodyFromFile("registered-providers.json"));
 
             server
-                .Given(Request.Create().WithPath(u => u.Contains("lookup/standards"))
+                .Given(Request.Create().WithPath(u => u.Contains("standards"))
                 .UsingGet())
                 .RespondWith(Response.Create()
                     .WithStatusCode(200)
                     .WithHeader("Content-Type", "application/json")
                     .WithBodyFromFile("standards-lookup.json"));
 
-            // server
-            //     .Given(Request.Create().WithPath(u => u.Contains("course-directory-data"))
-            //     .UsingGet())
-            //     .RespondWith(Response.Create()
-            //         .WithStatusCode(200)
-            //         .WithHeader("Content-Type", "application/json")
-            //         .WithBodyFromFile("providers-lookup.json"));
-
             server
-                .Given(Request.Create().WithPath(u => u.Contains("lookup/course-directory-data"))
+                .Given(Request.Create().WithPath(u => u.Contains("course-directory-data"))
                 .UsingGet())
                 .RespondWith(Response.Create()
                     .WithStatusCode(200)
-                    .WithHeader("Content-Type", "text")
+                    .WithHeader("Content-Type", "application/json")
                     .WithBodyFromFile("providers-lookup.json"));
         }
     }

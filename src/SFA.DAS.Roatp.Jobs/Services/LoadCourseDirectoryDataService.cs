@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection.Metadata;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
@@ -17,6 +16,8 @@ namespace SFA.DAS.Roatp.Jobs.Services
     public class LoadCourseDirectoryDataService: ILoadCourseDirectoryDataService
     {
         private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
+        private readonly IProviderReadRepository _providerReadRepository;
+        private readonly ILoadProvidersFromCourseDirectoryRepository _loadProvidersFromCourseDirectoryRepository;
         private readonly ILogger<LoadCourseDirectoryDataService> _logger;
 
         // put in class???
@@ -26,14 +27,48 @@ namespace SFA.DAS.Roatp.Jobs.Services
         const string DayRelease = "DayRelease";
         const string BlockRelease = "BlockRelease";
 
-        public LoadCourseDirectoryDataService(ICourseManagementOuterApiClient courseManagementOuterApiClient, ILogger<LoadCourseDirectoryDataService> logger)
+        public LoadCourseDirectoryDataService(ICourseManagementOuterApiClient courseManagementOuterApiClient, IProviderReadRepository providerReadRepository,  ILoadProvidersFromCourseDirectoryRepository loadProvidersFromCourseDirectoryRepository, ILogger<LoadCourseDirectoryDataService> logger)
         {
             _courseManagementOuterApiClient = courseManagementOuterApiClient;
+            _providerReadRepository = providerReadRepository;
+            _loadProvidersFromCourseDirectoryRepository = loadProvidersFromCourseDirectoryRepository;
             _logger = logger;
         }
 
         public async Task LoadCourseDirectoryData()
         {
+            
+            // get latest standards
+            // from courses-api or use roatp cache????
+            // create service for this
+            var (standardsSuccess, standardList) = await _courseManagementOuterApiClient.Get<StandardList>("lookup/standards");
+            if (!standardsSuccess || !standardList.Standards.Any())
+            {
+                _logger.LogError($"ReloadStandardsCacheFunction function failed to get active standards");
+                throw new InvalidOperationException("No standards were retrieved from courses api");
+            }
+
+            // get roatp active providers
+            // from roatp-services-api or use roatp cache????
+            // create service for this
+            var (successRoatpProviders, providerRegistrationDetails) = await _courseManagementOuterApiClient.Get<List<ProviderRegistrationDetail>>("lookup/registered-providers");
+            if (!successRoatpProviders)
+            {
+                const string errorMessage = "Unexpected response in loadCourseDirectoryService when trying to get provider registration details from the outer api.";
+                _logger.LogError(errorMessage);
+                throw new InvalidOperationException(errorMessage);
+            }
+            _logger.LogInformation($"Retrieved {providerRegistrationDetails.Count} provider registration details");
+
+
+            var activeProviderUkprns = providerRegistrationDetails.Where(x =>
+                x.StatusId == OrganisationStatus.Active ||
+                x.StatusId == OrganisationStatus.ActiveNotTakingOnApprentices).Select(x=>x.Ukprn);
+
+            _logger.LogInformation($"Finding {activeProviderUkprns?.Count()} active provider ukprns");
+
+            // get course directory data
+            // create service for this
             var (success, courseDirectoryResponse) = await _courseManagementOuterApiClient.Get<string>("lookup/course-directory-data");
 
             if (!success)
@@ -42,38 +77,31 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 _logger.LogError(errorMessage);
                 throw new InvalidOperationException(errorMessage);
             }
+
             var cdProviders = JsonConvert.DeserializeObject<List<CdProvider>>(courseDirectoryResponse);
             _logger.LogInformation($"{cdProviders.Count} providers returned from Course Directory");
 
-
-
-            // get latest standards from courses-api or use roatp cache????
-
-
-            var (standardsSuccess, standardList) = await _courseManagementOuterApiClient.Get<StandardList>("lookup/standards");
-            if (!standardsSuccess || !standardList.Standards.Any())
-            {
-                _logger.LogError($"ReloadStandardsCacheFunction function failed to get active standards");
-                throw new InvalidOperationException("No standards were retrieved from courses api");
-            }
-
-            // use roatp cache for this???
-           // var standardsToReload = standardList.Standards.Select(standard => (Domain.Entities.Standard)standard).ToList();
-
             // map providers to model we want
-            var providers = MapCourseDirectoryProviders(cdProviders, standardList.Standards);
-
-
-            
-
-            // get roatp active providers
+            var providers = MapCourseDirectoryProviders(cdProviders, standardList.Standards).ToList();
+            _logger.LogInformation($"Mapped {providers.Count} providers from course directory");
 
             // remove any providers that are not on the roatp active providers lists
 
-            // get current list of providers, and remove those from providers?
+            providers.RemoveAll(x => !activeProviderUkprns.Contains(x.Ukprn));
+            _logger.LogInformation($"{providers.Count} providers after removing non-active organisations from the mapped providers");
 
+            // get current list of providers, and remove those from providers to be inserted?
+            var currentProviders = await _providerReadRepository.GetAll();
+            _logger.LogInformation($"Current providers in roatp: {providers.Count}");
+
+            providers.RemoveAll(x => currentProviders.Select(x => x.Ukprn).Contains(x.Ukprn));
+            _logger.LogInformation($"{providers.Count} providers to insert after removing providers already present in roatp database");
 
             // write new providers to database
+            var successfulLoad =
+                await _loadProvidersFromCourseDirectoryRepository.LoadProvidersFromCourseDirectory(providers);
+           
+            _logger.LogInformation("Load providers from course directory successful: {sucessfulLoad}",successfulLoad);
 
 
         }
@@ -100,6 +128,8 @@ namespace SFA.DAS.Roatp.Jobs.Services
                     HasConfirmedDetails = false,
                     HasConfirmedLocations = false
                 };
+
+                var website = cdProvider.Website;
 
                 var providerLocations = new List<ProviderLocation>();
                 foreach (var cdProviderLocation in cdProvider.Locations)
@@ -200,7 +230,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
                     {
                         LarsCode = cdProviderCourse.StandardCode,
                         IfateReferenceNumber = null, // this is being retired, ignore
-                        StandardInfoUrl = cdProviderCourse.StandardInfoUrl,
+                        StandardInfoUrl = cdProviderCourse.StandardInfoUrl ?? website ?? "", //MFCMFC - some providers dont have a standard info url (eg aylesbury college), so substitute in website??
                         ContactUsPhoneNumber = cdProviderCourse.Contact?.Phone,
                         ContactUsEmail = cdProviderCourse.Contact?.Email,
                         ContactUsPageUrl = cdProviderCourse.Contact?.ContactUsUrl,
@@ -262,5 +292,15 @@ namespace SFA.DAS.Roatp.Jobs.Services
             return providers;
         }
 
+    }
+
+    // put in a better namespace
+
+    public class OrganisationStatus 
+    {
+        public const int Removed = 0;
+        public const int Active = 1;
+        public const int ActiveNotTakingOnApprentices = 2;
+        public const int Onboarding = 3;
     }
 }
