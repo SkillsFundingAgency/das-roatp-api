@@ -7,6 +7,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public int Id { get; set; }
         public Guid NavigationId { get; set; }
         public int ProviderId { get; set; }
+        public int? RegionId { get; set; }
         public int? ImportedLocationId { get; set; }
         public string LocationName { get; set; }
         public string SubregionName { get; set; }
@@ -24,6 +25,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public LocationType LocationType { get; set; }
 
         public virtual Provider Provider { get; set; }
-
+        public virtual Region Region { get; set; }
     }
 }
