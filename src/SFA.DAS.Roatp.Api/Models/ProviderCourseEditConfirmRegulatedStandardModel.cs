@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.Api.Models
         public static implicit operator UpdateApprovedByRegulatorCommand(ProviderCourseEditConfirmRegulatedStandardModel model) =>
             new UpdateApprovedByRegulatorCommand
             {
-                IsApprovedByRegulator = model.IsApprovedByRegulator,
+                IsApprovedByRegulator = (bool)model.IsApprovedByRegulator,
             };
     }
 }

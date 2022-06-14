@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateApprovedByRegu
             RuleFor(c => c.LarsCode)
                 .GreaterThan(0);
             RuleFor(c => c.IsApprovedByRegulator)
-                .NotEmpty();
+                .NotNull();
         }
     }
 }

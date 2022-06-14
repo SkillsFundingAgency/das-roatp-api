@@ -37,14 +37,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.UpdateAppr
                 result.ShouldHaveValidationErrorFor(c => c.LarsCode);
         }
 
-        [TestCase(null, true)]
         [TestCase(true, true)]
         [TestCase(false, true)]
         public void Validate_IsApprovedByRegulator(bool isApprovedByRegulator, bool isValid)
         {
             var validator = new UpdateApprovedByRegulatorCommandValidator();
 
-            var result = validator.TestValidate(new UpdateApprovedByRegulatorCommand { IsApprovedByRegulator = isApprovedByRegulator });
+            var result = validator.TestValidate(new UpdateApprovedByRegulatorCommand { Ukprn= 10000001, LarsCode = 1, IsApprovedByRegulator = isApprovedByRegulator });
 
             if (isValid)
                 result.ShouldNotHaveValidationErrorFor(c => c.IsApprovedByRegulator);
