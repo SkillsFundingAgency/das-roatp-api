@@ -4,10 +4,8 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface IProviderReadRepository
+    public interface ILoadProvidersFromCourseDirectoryRepository
     {
-        Task<Provider> GetByUkprn(int ukprn);
-
-        Task<List<Provider>> GetAll();
+        Task<bool> LoadProvidersFromCourseDirectory(List<Provider> providers);
     }
 }

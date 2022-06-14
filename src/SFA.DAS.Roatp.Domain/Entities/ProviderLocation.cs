@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Domain.Entities
 {
@@ -25,6 +26,10 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public LocationType LocationType { get; set; }
 
         public virtual Provider Provider { get; set; }
+
+
+        // MFCMFC Not sure about region here for the insert process
         public virtual Region Region { get; set; }
+        public virtual List<ProviderCourseLocation> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocation>();
     }
 }
