@@ -75,7 +75,6 @@ namespace SFA.DAS.Roatp.Api.Controllers
                 return new BadRequestObjectResult("Invalid ukprn or larscode.");
             }
 
-
             var result = await _getProviderCoursesService.GetCourse(ukprn, larsCode);
 
             if (result == null)

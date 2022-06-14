@@ -4,6 +4,7 @@
     [ImportedLocationId] INT NULL,
     [NavigationId] UNIQUEIDENTIFIER NOT NULL,
     [ProviderId] INT NOT NULL,
+    [RegionId] INT NULL,
     [LocationName] VARCHAR(250) NOT NULL,
     [SubregionName] VARCHAR(250) NULL,
     [AddressLine1] VARCHAR(250) NULL,
