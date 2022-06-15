@@ -28,7 +28,7 @@ INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude])
 		('Suffolk','East of England',52.1872,0.9708),
 		('Thurrock','East of England',51.4935,0.3529)
 
---London -32
+--London -31 (+Enfield == 32)
 INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude]) 
 		VALUES ('Barking and Dagenham','London',51.53628,0.08148),
 		('Barnet','London',51.65293,-0.19961),
@@ -180,3 +180,9 @@ INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude])
 		('Wakefield','Yorkshire and The Humber',53.68297,-1.4991),
 		('York','Yorkshire and The Humber',53.96,-1.0873)
 END
+
+if not exists(select * from Region where SubregionName='Enfield')
+	BEGIN
+		INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude]) 
+			VALUES ('Enfield','London',51.6521,-0.08153)
+	END

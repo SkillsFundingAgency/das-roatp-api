@@ -12,6 +12,9 @@ using SFA.DAS.Roatp.Jobs.Configuration;
 using SFA.DAS.Roatp.Jobs.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using SFA.DAS.Roatp.Data.Repositories;
+using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Jobs.Services.CourseDirectory;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 namespace SFA.DAS.Roatp.CourseManagement.Jobs
@@ -67,6 +70,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Jobs
             builder.Services.AddTransient<IReloadStandardsCacheService, ReloadStandardsCacheService>();
             builder.Services.AddTransient<IReloadProviderRegistrationDetailService, ReloadProviderRegistrationDetailService>();
             builder.Services.AddTransient<ILoadCourseDirectoryDataService, LoadCourseDirectoryDataService>();
+            builder.Services.AddTransient<IGetCourseDirectoryDataService, GetCourseDirectoryDataService>();
         }
 
         private void ConfigureHttpClient(IServiceCollection services)
