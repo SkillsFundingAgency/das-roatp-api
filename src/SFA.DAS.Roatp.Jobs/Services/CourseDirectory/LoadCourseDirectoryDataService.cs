@@ -4,18 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
+using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
-using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
-using Standard = SFA.DAS.Roatp.Jobs.ApiModels.Lookup.Standard;
 
-namespace SFA.DAS.Roatp.Jobs.Services
+namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 {
     public class LoadCourseDirectoryDataService: ILoadCourseDirectoryDataService
     {
-        private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
+        private readonly IGetCourseDirectoryDataService _getCourseDirectoryDataService;
+        private readonly IGetActiveProviderRegistrationsRepository _getActiveProviderRegistrationsRepository;
+
+        private readonly RoatpDataContext _roatpDataContext;
         private readonly IProviderReadRepository _providerReadRepository;
         private readonly ILoadProvidersFromCourseDirectoryRepository _loadProvidersFromCourseDirectoryRepository;
         private readonly ILogger<LoadCourseDirectoryDataService> _logger;
@@ -23,94 +25,83 @@ namespace SFA.DAS.Roatp.Jobs.Services
         // put in class???
         const decimal NationalLatitude = (decimal)52.564269;
         const decimal NationalLongitude = (decimal)-1.466056;
-        const string HundredPercentEmployer = "100PercentEmployer";
+
+        // put in class
         const string DayRelease = "DayRelease";
         const string BlockRelease = "BlockRelease";
+        private const string National = "National";
 
-        public LoadCourseDirectoryDataService(ICourseManagementOuterApiClient courseManagementOuterApiClient, IProviderReadRepository providerReadRepository,  ILoadProvidersFromCourseDirectoryRepository loadProvidersFromCourseDirectoryRepository, ILogger<LoadCourseDirectoryDataService> logger)
+        public LoadCourseDirectoryDataService(IGetCourseDirectoryDataService getCourseDirectoryDataService, IProviderReadRepository providerReadRepository,  ILoadProvidersFromCourseDirectoryRepository loadProvidersFromCourseDirectoryRepository, ILogger<LoadCourseDirectoryDataService> logger, RoatpDataContext roatpDataContext, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository)
         {
-            _courseManagementOuterApiClient = courseManagementOuterApiClient;
+            _getCourseDirectoryDataService = getCourseDirectoryDataService;
             _providerReadRepository = providerReadRepository;
             _loadProvidersFromCourseDirectoryRepository = loadProvidersFromCourseDirectoryRepository;
             _logger = logger;
+            _roatpDataContext = roatpDataContext;
+            _getActiveProviderRegistrationsRepository = getActiveProviderRegistrationsRepository;
         }
 
         public async Task LoadCourseDirectoryData()
         {
+            var cdProviders = await _getCourseDirectoryDataService.GetCourseDirectoryData();
+           
+
+
+            // // get current list of providerRegistrationDetails (cached from roatp-service), and filter out non-active registrations
+            // // put into a repository rather than direct call
+            // ///  repository-- GET ACTIVE PROVIDERS 
+            // var providerRegistrationDetails = _roatpDataContext.ProviderRegistrationDetails;
+            // _logger.LogInformation($"Retrieved {providerRegistrationDetails.Count()} provider registration details from ProviderRegistrationDetail");
+            //
+            // //var activeProviderUkprns = providerRegistrationDetails.Where(x =>
+            // //    x.StatusId == OrganisationStatus.Active ||
+            // //    x.StatusId == OrganisationStatus.ActiveNotTakingOnApprentices).Select(x => x.Ukprn);
+            //
+            // //_logger.LogInformation($"Finding {activeProviderUkprns?.Count()} active provider ukprns");
+            var activeProviders = await _getActiveProviderRegistrationsRepository.GetActiveProviderRegistrations();
             
-            // get latest standards
-            // from courses-api or use roatp cache????
-            // create service for this
-            var (standardsSuccess, standardList) = await _courseManagementOuterApiClient.Get<StandardList>("lookup/standards");
-            if (!standardsSuccess || !standardList.Standards.Any())
-            {
-                _logger.LogError($"ReloadStandardsCacheFunction function failed to get active standards");
-                throw new InvalidOperationException("No standards were retrieved from courses api");
-            }
-            _logger.LogInformation($"Retrieved {standardList?.Standards?.Count} standards from courses-api");
-
-            // get roatp active providers
-            // from roatp-services-api or use roatp cache????
-            // create service for this
-            var (successRoatpProviders, providerRegistrationDetails) = await _courseManagementOuterApiClient.Get<List<ProviderRegistrationDetail>>("lookup/registered-providers");
-            if (!successRoatpProviders)
-            {
-                const string errorMessage = "Unexpected response in loadCourseDirectoryService when trying to get provider registration details from the outer api.";
-                _logger.LogError(errorMessage);
-                throw new InvalidOperationException(errorMessage);
-            }
-            _logger.LogInformation($"Retrieved {providerRegistrationDetails.Count} provider registration details");
+            // remove any providers that are not on the roatp active providers lists
+            cdProviders.RemoveAll(x => !activeProviders.Select(x=>x.Ukprn).Contains(x.Ukprn));
+            _logger.LogInformation($"{cdProviders.Count} CD providers after removing non-active organisations from the CD providers");
+            //////////////-------------------////////////////////
 
 
-            var activeProviderUkprns = providerRegistrationDetails.Where(x =>
-                x.StatusId == OrganisationStatus.Active ||
-                x.StatusId == OrganisationStatus.ActiveNotTakingOnApprentices).Select(x=>x.Ukprn);
-
-            _logger.LogInformation($"Finding {activeProviderUkprns?.Count()} active provider ukprns");
-
-            // get course directory data
-            // create service for this
-            var (success, courseDirectoryResponse) = await _courseManagementOuterApiClient.Get<string>("lookup/course-directory-data");
-
-            if (!success)
-            {
-                const string errorMessage = "Unexpected response when trying to get course directory details from the outer api.";
-                _logger.LogError(errorMessage);
-                throw new InvalidOperationException(errorMessage);
-            }
-
-            var cdProviders = JsonConvert.DeserializeObject<List<CdProvider>>(courseDirectoryResponse);
-            _logger.LogInformation($"{cdProviders.Count} providers returned from Course Directory");
+            // get current list of providers, to remove those from providers to be inserted
+            var currentProviders = await _providerReadRepository.GetAll();
+            // remove current providers
+            cdProviders.RemoveAll(x => currentProviders.Select(x => x.Ukprn).Contains(x.Ukprn));
+            _logger.LogInformation($"{cdProviders.Count} CD providers to insert after removing providers already present in roatp database");
+            ///////////////////////----------------------//////////////////////
 
             // map providers to model we want
-            var providers = MapCourseDirectoryProviders(cdProviders, standardList.Standards).ToList();
+            var providers = MapCourseDirectoryProviders(cdProviders).ToList();
             _logger.LogInformation($"Mapped {providers.Count} providers from course directory");
-
-            // remove any providers that are not on the roatp active providers lists
-
-            providers.RemoveAll(x => !activeProviderUkprns.Contains(x.Ukprn));
-            _logger.LogInformation($"{providers.Count} providers after removing non-active organisations from the mapped providers");
-
-            // get current list of providers, and remove those from providers to be inserted?
-            var currentProviders = await _providerReadRepository.GetAll();
-            _logger.LogInformation($"Current providers in roatp: {providers.Count}");
-
-            providers.RemoveAll(x => currentProviders.Select(x => x.Ukprn).Contains(x.Ukprn));
-            _logger.LogInformation($"{providers.Count} providers to insert after removing providers already present in roatp database");
 
             // write new providers to database
             var successfulLoad =
                 await _loadProvidersFromCourseDirectoryRepository.LoadProvidersFromCourseDirectory(providers);
            
             _logger.LogInformation("Load providers from course directory successful: {sucessfulLoad}",successfulLoad);
-
-
         }
 
 
-        // this is best placed within a testable service
-        private IEnumerable<Provider> MapCourseDirectoryProviders(List<CdProvider> cdProviders, IReadOnlyCollection<Standard> standards)
+
+        //MFCMFC cheange save to import at the end of the mapping
+        // place within a testable service
+        private IEnumerable<Provider> MapCourseDirectoryProviders(List<CdProvider> cdProviders)
         {
+
+            // add logs to any decision points
+
+            // put in repository
+            var standards = _roatpDataContext.Standards.ToList();
+            _logger.LogInformation($"Retrieved {standards.Count} standards from Standard table");
+
+            // put in repository
+            var regions = _roatpDataContext.Regions.ToList();
+            _logger.LogInformation($"Retrieved {standards.Count} regions from Region table");
+
+
             var providers = new List<Provider>();
 
             foreach (var cdProvider in cdProviders)
@@ -121,26 +112,35 @@ namespace SFA.DAS.Roatp.Jobs.Services
                     LegalName = cdProvider.Name,
                     TradingName = cdProvider.TradingName,
                     Email = cdProvider.Email,
-                    Website = cdProvider.Website,
                     Phone = cdProvider.Phone,
+                    Website = cdProvider.Website,
+                    MarketingInfo = cdProvider.MarketingInfo,
                     EmployerSatisfaction = cdProvider.EmployerSatisfaction,
                     LearnerSatisfaction = cdProvider.LearnerSatisfaction,
-                    MarketingInfo = cdProvider.MarketingInfo,
-                    HasConfirmedDetails = false,
-                    HasConfirmedLocations = false
+                    IsImported = true,
+                    //HasConfirmedDetails = false, // This is being removed from the database/EF
+                    //HasConfirmedLocations = false // This is being removed from the database/EF
                 };
 
+
+                //MFCMFC not needed as a variable
                 var website = cdProvider.Website;
 
                 var providerLocations = new List<ProviderLocation>();
                 foreach (var cdProviderLocation in cdProvider.Locations)
                 {
                     var locationType = LocationType.Provider;
-                    if (cdProviderLocation.Address?.Address1 == cdProviderLocation.Name && cdProviderLocation.Address?.Postcode == null)
+                    var locationName = cdProviderLocation.Name;
+                    var address = cdProviderLocation.Address;
+
+                    //MFCMFC
+                    // expand the address object to include this mapping stuff so it simplifies the mapping
+                    if (address?.Address1 == locationName && address?.Address2 == null && address?.Town == null && address?.Postcode == null)
                     {
-                        if (cdProviderLocation.Name == null && cdProviderLocation.Address?.Lat == NationalLatitude.ToString() && cdProviderLocation.Address?.Long == NationalLongitude.ToString())
+                        if (locationName == null && cdProviderLocation.Address?.Lat == NationalLatitude.ToString() && cdProviderLocation.Address?.Long == NationalLongitude.ToString())
                         {
                             locationType = LocationType.National;
+                            locationName = National;
                         }
                         else
                         {
@@ -161,28 +161,36 @@ namespace SFA.DAS.Roatp.Jobs.Services
                         longitude = longitudeParsed;
                     }
 
-                    if (cdProvider.Ukprn == 10000082)
+                    
+                    Region region = null;
+
+                    if (locationType == LocationType.Regional)
                     {
-                        var zzzz = 1;
+                        region = regions.FirstOrDefault(x => x.SubregionName == locationName);
+                        
+                        // if it's a regional field, this should always be present, not sure how to handle this if it happens
+                        // if (region == null)
+                        //     throw new InvalidDataException($"Region location cannot be mapped to {locationName}");
                     }
 
                     providerLocations.Add(new ProviderLocation
                     {
-                        NavigationId = Guid.NewGuid(),
                         ImportedLocationId = cdProviderLocation.Id,
-                        LocationName = cdProviderLocation.Name ?? (locationType == LocationType.National ? "National" : "No name given"),
+                        NavigationId = Guid.NewGuid(),
+                        LocationName = locationName,
                         LocationType = locationType,
-                        AddressLine1 = cdProviderLocation.Address?.Address1,
-                        AddressLine2 = cdProviderLocation.Address?.Address2,
-                        County = cdProviderLocation.Address?.County,
-                        Town = cdProviderLocation.Address?.Town,
-                        Postcode = cdProviderLocation.Address?.Postcode,
+                        AddressLine1 = address?.Address1,
+                        AddressLine2 = address?.Address2,
+                        Town = address?.Town,
+                        Postcode = address?.Postcode,
+                        County = address?.County,
                         Latitude = latitude,
                         Longitude = longitude,
-                        IsImported = true,
                         Email = cdProviderLocation.Email,
                         Website = cdProviderLocation.Website,
-                        Phone = cdProviderLocation.Phone
+                        Phone = cdProviderLocation.Phone,
+                        IsImported = true,
+                        Region = region
                     });
                 }
 
@@ -200,8 +208,8 @@ namespace SFA.DAS.Roatp.Jobs.Services
                     if (standard?.LarsCode == null || standard.LarsCode == 0)
                     {
                         // jump out? exception? Log?
-                        _logger.LogError($"LarsCode {cdProviderCourse.StandardCode} found no match in couses-api");
-                        break;
+                        _logger.LogWarning($"LarsCode {cdProviderCourse.StandardCode} found no match in couses-api");
+                        continue;
                     }
                     
                     // var nationalDeliveryOption = false;
@@ -230,15 +238,16 @@ namespace SFA.DAS.Roatp.Jobs.Services
                     var newProviderCourse = new ProviderCourse
                     {
                         LarsCode = cdProviderCourse.StandardCode,
-                        IfateReferenceNumber = null, // this is being retired, ignore
-                        StandardInfoUrl = cdProviderCourse.StandardInfoUrl ?? website ?? "", //MFCMFC - some providers dont have a standard info url (eg aylesbury college), so substitute in website??
+                        //IfateReferenceNumber = null, // This is being removed from the database/EF
+                        StandardInfoUrl = cdProviderCourse.StandardInfoUrl ?? "", 
                         ContactUsPhoneNumber = cdProviderCourse.Contact?.Phone,
                         ContactUsEmail = cdProviderCourse.Contact?.Email,
                         ContactUsPageUrl = cdProviderCourse.Contact?.ContactUsUrl,
                         IsImported = true,
-                        //IsConfirmed = false,
-                        //HasNationalDeliveryOption = nationalDeliveryOption,
-                        //HasHundredPercentEmployerDeliveryOption = hundredPercentEmployer,
+                        //IsConfirmed = false,   // This is being removed from the database/EF
+                        //HasNationalDeliveryOption = nationalDeliveryOption,   // This is being removed from the database/EF
+                        //HasHundredPercentEmployerDeliveryOption = hundredPercentEmployer, // This is being removed from the database/EF
+                        //---- OffersPortableFlexiJob = false //---- This is being ADDED to the database/EF.  
                         Versions = new List<ProviderCourseVersion>
                     {
                         new ProviderCourseVersion
@@ -255,7 +264,6 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
                     foreach (var courseLocation in cdProviderCourse.Locations)
                     {
-
                         var blockRelease = courseLocation.DeliveryModes.Any(deliveryMode => deliveryMode == BlockRelease);
                         var dayRelease = courseLocation.DeliveryModes.Any(deliveryMode => deliveryMode == DayRelease);
 
@@ -264,7 +272,9 @@ namespace SFA.DAS.Roatp.Jobs.Services
                         if (providerLocation == null)
                         {
                             // there are numerous cases of the provider.location not existing for the providercourselocation id
-                            break;
+                            // need to check this doesn't happen in prod, and if it does, how to deal with it
+                            // MFCMFC add a log warning
+                            continue;
                         }
 
                         providerCourseLocations.Add(new ProviderCourseLocation
@@ -272,11 +282,11 @@ namespace SFA.DAS.Roatp.Jobs.Services
                             NavigationId = Guid.NewGuid(),
                             Course = newProviderCourse,
                             Location = providerLocation,
-                            //Radius = courseLocation.Radius == null ? 0 : (decimal)courseLocation.Radius, // To delete?
+                            //Radius = courseLocation.Radius == null ? 0 : (decimal)courseLocation.Radius, // This is being removed from the database/EF
                             HasDayReleaseDeliveryOption = dayRelease,
                             HasBlockReleaseDeliveryOption = blockRelease,
-                            IsImported = true,
-                            //OffersPortableFlexiJob = false  // default value on entry????
+                            //OffersPortableFlexiJob = false  // This is being removed from the database/EF
+                            IsImported = true
                         });
                     }
 
@@ -287,21 +297,11 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 provider.Courses = providerCourses;
 
                 providers.Add(provider);
+                //MFCMFC do not add to the providers, insert the record
 
             }
 
             return providers;
         }
-
-    }
-
-    // put in a better namespace
-
-    public class OrganisationStatus 
-    {
-        public const int Removed = 0;
-        public const int Active = 1;
-        public const int ActiveNotTakingOnApprentices = 2;
-        public const int Onboarding = 3;
     }
 }

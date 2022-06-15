@@ -2,6 +2,7 @@
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Jobs.Services;
+using SFA.DAS.Roatp.Jobs.Services.CourseDirectory;
 
 namespace SFA.DAS.Roatp.Jobs.Functions
 {
@@ -14,7 +15,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
             _loadCourseDirectoryDataService = loadCourseDirectoryDataService;
         }
 
-
+        // http trigger
         [FunctionName(nameof(LoadCourseDirectoryDataFunction))]
         public async Task Run([TimerTrigger("%ReloadStandardsCacheSchedule%"
 #if DEBUG
@@ -23,6 +24,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         
         )] TimerInfo myTimer, ILogger log)
         {
+
             log.LogInformation("LoadCourseDirectoryData function started");
 
             await _loadCourseDirectoryDataService.LoadCourseDirectoryData();

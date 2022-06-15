@@ -46,6 +46,8 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IReloadProviderRegistrationDetailsRepository, ReloadProviderRegistrationDetailsRepository>();
             services.AddTransient<IProviderCourseLocationReadRepository, ProviderCourseLocationReadRepository>();
             services.AddTransient<ILoadProvidersFromCourseDirectoryRepository, LoadProvidersFromCourseDirectoryRepository>();
+            services.AddTransient<IGetActiveProviderRegistrationsRepository, GetActiveProviderRegistrationsRepository>();
+            services.AddTransient<IGetActiveProviderRegistrationsRepository, GetActiveProviderRegistrationsRepository>();
         }
 
         public static async Task<string> GenerateTokenAsync()

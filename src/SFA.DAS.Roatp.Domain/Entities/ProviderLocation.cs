@@ -27,8 +27,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
 
         public virtual Provider Provider { get; set; }
 
-
-        // MFCMFC Not sure about region here for the insert process
         public virtual Region Region { get; set; }
         public virtual List<ProviderCourseLocation> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocation>();
     }

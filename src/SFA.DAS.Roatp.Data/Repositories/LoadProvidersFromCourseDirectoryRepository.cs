@@ -23,33 +23,33 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public async Task<bool> LoadProvidersFromCourseDirectory(List<Provider> providers)
         {
-            // await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
-            // try
-            // {
-            //     //await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM Providers");
-            //     //await _roatpDataContext.BulkInsertAsync(providers);
-            //     await _roatpDataContext.Providers.AddRangeAsync(providers);
-            //     await _roatpDataContext.SaveChangesAsync();
-            //     await transaction.CommitAsync();
-            // }
-            // catch (Exception ex)
-            // {
-            //     await transaction.RollbackAsync();
-            //     _logger.LogError(ex, "Providers load failed on database update");
-            //     throw;
-            // }
+           // // await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
+           //  try
+           //  {
+           //      //await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM Providers");
+           //      //await _roatpDataContext.BulkInsertAsync(providers);
+           //      await _roatpDataContext.Providers.AddRangeAsync(providers);
+           //      await _roatpDataContext.SaveChangesAsync();
+           //     // await transaction.CommitAsync();
+           //  }
+           //  catch (Exception ex)
+           //  {
+           //     // await transaction.RollbackAsync();
+           //      _logger.LogError(ex, "Providers load failed on database update");
+           //      throw;
+           //  }
 
             foreach (var provider in providers)
             {
                 try
                 {
-
+            
                     await _roatpDataContext.Providers.AddAsync(provider);
                     await _roatpDataContext.SaveChangesAsync();
                 }
                 catch (Exception ex)
                 {
-                    _logger.LogError(ex, "Providers load failed on database update");
+                    _logger.LogError(ex, $"Provider {provider.Ukprn} load failed on database update");
                     continue;
                 }
             }
