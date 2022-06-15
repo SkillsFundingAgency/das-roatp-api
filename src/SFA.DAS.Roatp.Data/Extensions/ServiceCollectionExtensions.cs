@@ -23,6 +23,7 @@ namespace SFA.DAS.Roatp.Data.Extensions
                 {
                     var generateTokenTask = GenerateTokenAsync();
                     connection.AccessToken = generateTokenTask.GetAwaiter().GetResult();
+                    options.EnableSensitiveDataLogging();
                 }
 
                 options.UseSqlServer(
@@ -45,6 +46,7 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IProviderCourseEditRepository, ProviderCourseEditRepository>();
             services.AddTransient<IReloadProviderRegistrationDetailsRepository, ReloadProviderRegistrationDetailsRepository>();
             services.AddTransient<IProviderCourseLocationReadRepository, ProviderCourseLocationReadRepository>();
+            services.AddTransient<IProviderCourseLocationDeleteRepository, ProviderCourseLocationDeleteRepository>();
         }
 
         public static async Task<string> GenerateTokenAsync()
