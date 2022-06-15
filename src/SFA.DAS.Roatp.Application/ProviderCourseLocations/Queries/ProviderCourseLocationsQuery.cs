@@ -3,7 +3,7 @@ using SFA.DAS.Roatp.Application.Common;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
 {
-    public class ProviderCourseLocationsQuery : IRequest<ProviderCourseLocationsQueryResult>, ILarsCode
+    public class ProviderCourseLocationsQuery : IRequest<ProviderCourseLocationsQueryResult>, ILarsCode, IUkprn
     {
         public int Ukprn { get; }
         public int LarsCode { get; }
