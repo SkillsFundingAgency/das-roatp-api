@@ -16,13 +16,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
         {
             new ProviderCourse
             {
-                LarsCode = 1,
-                IfateReferenceNumber = "ST1001"
+                LarsCode = 1
             },
             new ProviderCourse
             {
-                LarsCode = 2,
-                IfateReferenceNumber = "ST1002"
+                LarsCode = 2
             }
         };
 
@@ -32,14 +30,12 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
             {
                 LarsCode = 1,
                 Level = 1,
-                IfateReferenceNumber = "ST1001",
                 Title = "Test training-1"
             },
             new Standard
             {
                 LarsCode = 2,
                 Level = 2,
-                IfateReferenceNumber = "ST1002",
                 Title = "Test training-2"
             },
         };

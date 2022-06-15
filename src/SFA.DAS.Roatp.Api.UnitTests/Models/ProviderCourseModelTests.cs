@@ -10,7 +10,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
         [Test]
         public void ProviderCourseOperator_ReturnsProviderCourseModel()
         {
-            var course = new ProviderCourse() { LarsCode = 1, IfateReferenceNumber = "ST1001" };
+            var course = new ProviderCourse() { LarsCode = 1};
             var model = (ProviderCourseModel) course;
 
             Assert.That(model, Is.Not.Null);

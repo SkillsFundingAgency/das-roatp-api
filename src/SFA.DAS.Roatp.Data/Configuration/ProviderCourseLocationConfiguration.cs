@@ -15,7 +15,6 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.Property(p => p.ProviderCourseId).IsRequired();
             builder.Property(p => p.ProviderLocationId).IsRequired();
             builder.Property(p => p.IsImported).IsRequired();
-            builder.Property(p => p.Radius).HasColumnType("decimal").IsRequired();
         }
     }
 }
