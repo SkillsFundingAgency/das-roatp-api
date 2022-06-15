@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
@@ -22,16 +23,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
                 })
                 .WithMessage(ProviderNotFoundErrorMessage);
 
-            RuleFor(x => x.LarsCode)
-               .Cascade(CascadeMode.Stop)
-               .GreaterThan(0).WithMessage(InvalidLarsCodeErrorMessage)
-               .MustAsync(async (model, larsCode, cancellation) =>
-               {
-                   var provider = await providerReadRepository.GetByUkprn(model.Ukprn);
-                   var providerCourse = await providerCourseReadRepository.GetProviderCourse(provider.Id, larsCode);
-                   return providerCourse != null;
-               })
-               .WithMessage(ProviderCourseNotFoundErrorMessage);
+            Include(new LarsCodeValidator(providerReadRepository, providerCourseReadRepository));
         }
     }
 }
