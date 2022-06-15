@@ -22,7 +22,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Roatp.Application\SFA.DAS.Roatp.Application.csproj" />
-    <ProjectReference Include="..\SFA.DAS.Roatp.Domain\SFA.DAS.Roatp.Domain.csproj" />
   </ItemGroup>
 
   <ItemGroup>
