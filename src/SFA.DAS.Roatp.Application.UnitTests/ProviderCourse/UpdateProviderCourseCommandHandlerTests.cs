@@ -41,7 +41,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse
 
             await sut.Handle(command, cancellationToken);
 
-            editRepoMock.Verify(e => e.UpdateContactDetails(It.Is<Domain.Entities.ProviderCourse>(c => c.ContactUsEmail == command.ContactUsEmail && c.ContactUsPageUrl == command.ContactUsPageUrl && c.ContactUsPhoneNumber == command.ContactUsPhoneNumber && c.StandardInfoUrl == command.StandardInfoUrl)));
+            editRepoMock.Verify(e => e.UpdateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ContactUsEmail == command.ContactUsEmail && c.ContactUsPageUrl == command.ContactUsPageUrl && c.ContactUsPhoneNumber == command.ContactUsPhoneNumber && c.StandardInfoUrl == command.StandardInfoUrl)));
         }
     }
 }

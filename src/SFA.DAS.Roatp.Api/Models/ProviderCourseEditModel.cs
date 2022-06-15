@@ -9,6 +9,7 @@ namespace SFA.DAS.Roatp.Api.Models
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsPageUrl { get; set; }
         public string StandardInfoUrl { get; set; }
+        public bool? IsApprovedByRegulator { get; set; }
         public static implicit operator UpdateProviderCourseCommand(ProviderCourseEditModel model) =>
             new UpdateProviderCourseCommand
             {
@@ -16,7 +17,8 @@ namespace SFA.DAS.Roatp.Api.Models
                 ContactUsEmail = model.ContactUsEmail,
                 ContactUsPhoneNumber = model.ContactUsPhoneNumber,
                 StandardInfoUrl = model.StandardInfoUrl,
-                ContactUsPageUrl = model.ContactUsPageUrl
+                ContactUsPageUrl = model.ContactUsPageUrl,
+                IsApprovedByRegulator = model.IsApprovedByRegulator
             };
     }
 }

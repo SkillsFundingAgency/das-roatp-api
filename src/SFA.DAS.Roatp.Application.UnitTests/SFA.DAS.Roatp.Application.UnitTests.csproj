@@ -25,4 +25,8 @@
     <ProjectReference Include="..\SFA.DAS.Roatp.Domain\SFA.DAS.Roatp.Domain.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ProviderCourse\Commands\" />
+  </ItemGroup>
+
 </Project>

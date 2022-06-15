@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = context;
         }
 
-        public async Task UpdateContactDetails(ProviderCourse updatedProviderCourseEntity)
+        public async Task UpdateProviderCourse(ProviderCourse updatedProviderCourseEntity)
         {
             var providerCourse = await _roatpDataContext
                 .ProviderCourses
@@ -25,16 +25,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
             providerCourse.ContactUsPageUrl = updatedProviderCourseEntity.ContactUsPageUrl;
             providerCourse.ContactUsPhoneNumber = updatedProviderCourseEntity.ContactUsPhoneNumber;
             providerCourse.StandardInfoUrl = updatedProviderCourseEntity.StandardInfoUrl;
-
-            await _roatpDataContext.SaveChangesAsync();
-        }
-
-        public async Task UpdateConfirmRegulatedStandard(ProviderCourse updatedProviderCourseEntity)
-        {
-            var providerCourse = await _roatpDataContext
-                .ProviderCourses
-                .FindAsync(updatedProviderCourseEntity.Id);
-
             providerCourse.IsApprovedByRegulator = updatedProviderCourseEntity.IsApprovedByRegulator;
 
             await _roatpDataContext.SaveChangesAsync();
