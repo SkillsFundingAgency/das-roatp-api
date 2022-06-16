@@ -40,8 +40,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
             {
                 LarsCode = 1,
                 Level = 1,
-                IfateReferenceNumber = "ST1001",
-                Title = "Test training-1"
+                IfateReferenceNumber = "ST1002",
+                Title = "Test training-1",
+                ApprovalBody = "approval body 1"
             };
 
             _mockProviderCourseRepository.Setup(m => m.GetProviderCourse(provider.Id, providerCourses.LarsCode)).ReturnsAsync(providerCourses);
@@ -56,6 +57,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
             Assert.IsNotEmpty(model.CourseName);
             Assert.IsNotEmpty(model.IfateReferenceNumber);
             Assert.IsTrue(model.Level > 0);
+            Assert.AreEqual(standardLookUp.IfateReferenceNumber, model.IfateReferenceNumber);
+            Assert.AreEqual(standardLookUp.Level, model.Level);
+            Assert.AreEqual(standardLookUp.Title, model.CourseName);
+            Assert.AreEqual(standardLookUp.ApprovalBody, model.ApprovalBody);
+            Assert.AreEqual(standardLookUp.Version,model.Version);
         }
 
         [Test]

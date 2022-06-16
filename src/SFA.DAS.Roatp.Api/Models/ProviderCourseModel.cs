@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Api.Models
@@ -20,7 +21,8 @@ namespace SFA.DAS.Roatp.Api.Models
         public bool? HasNationalDeliveryOption { get; set; }
         public bool? HasHundredPercentEmployerDeliveryOption { get; set; }
         public List<DeliveryModel> DeliveryModels { get; set; } = new List<DeliveryModel>();
-
+        public string Version { get; set; }
+        public string ApprovalBody { get; set; }
         public static implicit operator ProviderCourseModel(ProviderCourse providerCourse)
         {
             if (providerCourse == null) return null;
@@ -49,11 +51,14 @@ namespace SFA.DAS.Roatp.Api.Models
 
             return model;
         }
-        public void UpdateCourseDetails(string ifateRefNum, int level, string title)
+
+        public void UpdateCourseDetails(string ifateRefNum, int level, string title, string version, string approvalBody)
         {
             IfateReferenceNumber = ifateRefNum;
             Level = level;
             CourseName = title;
+            Version = version;
+            ApprovalBody = approvalBody;
         }
     }
 
