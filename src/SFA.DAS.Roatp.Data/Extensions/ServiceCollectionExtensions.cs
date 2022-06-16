@@ -38,6 +38,7 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IStandardReadRepository, StandardReadRepository>();
             services.AddTransient<IProviderReadRepository, ProviderReadRepository>();
             services.AddTransient<IProviderCourseReadRepository, ProviderCourseReadRepository>();
+            services.AddTransient<IRegionReadRepository, RegionReadRepository>();
             services.AddTransient<ICreateProviderRepository, CreateProviderRepository>();
             services.AddTransient<IReloadStandardsRepository, ReloadStandardsRepository>();
             services.AddTransient<IGetStandardsCountRepository, GetStandardsCountRepository>();
@@ -45,7 +46,7 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IProviderCourseEditRepository, ProviderCourseEditRepository>();
             services.AddTransient<IReloadProviderRegistrationDetailsRepository, ReloadProviderRegistrationDetailsRepository>();
             services.AddTransient<IProviderCourseLocationReadRepository, ProviderCourseLocationReadRepository>();
-            services.AddTransient<ILoadProvidersFromCourseDirectoryRepository, LoadProvidersFromCourseDirectoryRepository>();
+            services.AddTransient<ILoadProviderFromCourseDirectoryRepository, LoadProviderFromCourseDirectoryRepository>();
             services.AddTransient<IGetActiveProviderRegistrationsRepository, GetActiveProviderRegistrationsRepository>();
             services.AddTransient<IGetActiveProviderRegistrationsRepository, GetActiveProviderRegistrationsRepository>();
         }

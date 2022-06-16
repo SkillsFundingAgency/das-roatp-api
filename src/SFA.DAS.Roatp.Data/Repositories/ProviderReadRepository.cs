@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             return await _roatpDataContext.Providers.AsNoTracking().SingleOrDefaultAsync(p => p.Ukprn == ukprn);
         }
 
-        public async Task<List<Provider>> GetAll()
+        public async Task<List<Provider>> GetAllProviders()
         {
             return await _roatpDataContext.Providers.AsNoTracking().ToListAsync();
         }

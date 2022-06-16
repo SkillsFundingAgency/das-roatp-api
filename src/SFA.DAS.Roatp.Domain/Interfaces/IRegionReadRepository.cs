@@ -4,8 +4,8 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface ILoadProviderFromCourseDirectoryRepository
+    public interface IRegionReadRepository
     {
-        Task<bool> LoadProviderFromCourseDirectory(Provider provider);
+        Task<List<Region>> GetAllRegions();
     }
 }

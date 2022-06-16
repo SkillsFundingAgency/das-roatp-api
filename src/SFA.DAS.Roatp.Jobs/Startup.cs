@@ -71,6 +71,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Jobs
             builder.Services.AddTransient<IReloadProviderRegistrationDetailService, ReloadProviderRegistrationDetailService>();
             builder.Services.AddTransient<ILoadCourseDirectoryDataService, LoadCourseDirectoryDataService>();
             builder.Services.AddTransient<IGetCourseDirectoryDataService, GetCourseDirectoryDataService>();
+            builder.Services.AddTransient<ICourseDirectoryDataProcessingService, CourseDirectoryDataProcessingService>();
+            builder.Services.AddTransient<IImportCourseDirectoryDataService, ImportCourseDirectoryDataService>();
         }
 
         private void ConfigureHttpClient(IServiceCollection services)

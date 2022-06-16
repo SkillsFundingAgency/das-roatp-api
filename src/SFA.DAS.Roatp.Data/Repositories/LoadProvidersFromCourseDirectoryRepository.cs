@@ -1,8 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Threading.Tasks;
-using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -10,50 +11,40 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public class LoadProvidersFromCourseDirectoryRepository : ILoadProvidersFromCourseDirectoryRepository
+    public class LoadProviderFromCourseDirectoryRepository : ILoadProviderFromCourseDirectoryRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
-        private readonly ILogger<LoadProvidersFromCourseDirectoryRepository> _logger;
+        private readonly ILogger<LoadProviderFromCourseDirectoryRepository> _logger;
 
-        public LoadProvidersFromCourseDirectoryRepository(RoatpDataContext roatpDataContext, ILogger<LoadProvidersFromCourseDirectoryRepository> logger)
+        public LoadProviderFromCourseDirectoryRepository(RoatpDataContext roatpDataContext, ILogger<LoadProviderFromCourseDirectoryRepository> logger)
         {
             _roatpDataContext = roatpDataContext;
             _logger = logger;
         }
 
-        public async Task<bool> LoadProvidersFromCourseDirectory(List<Provider> providers)
+        public async Task<bool> LoadProviderFromCourseDirectory(Provider provider)
         {
-           // // await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
-           //  try
-           //  {
-           //      //await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM Providers");
-           //      //await _roatpDataContext.BulkInsertAsync(providers);
-           //      await _roatpDataContext.Providers.AddRangeAsync(providers);
-           //      await _roatpDataContext.SaveChangesAsync();
-           //     // await transaction.CommitAsync();
-           //  }
-           //  catch (Exception ex)
-           //  {
-           //     // await transaction.RollbackAsync();
-           //      _logger.LogError(ex, "Providers load failed on database update");
-           //      throw;
-           //  }
-
-            foreach (var provider in providers)
-            {
-                try
+            try
                 {
-            
                     await _roatpDataContext.Providers.AddAsync(provider);
                     await _roatpDataContext.SaveChangesAsync();
                 }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, $"Provider {provider.Ukprn} load failed on database update");
-                    continue;
-                }
-            }
+            //catch (DbUpdateException ex)
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, $"Provider {provider.Ukprn} load failed on database update, message: {ex.Message} : {ex.InnerException?.Message}");
 
+                if (ex?.InnerException?.Message!=null && ex.InnerException.Message.Contains("UK_ProviderLocation_ProviderId_LocationName"))
+                {
+                    return false;
+                }
+                if (ex?.InnerException?.Message != null && ex.InnerException.Message.Contains("UK_ProviderCourse_ProviderId_LarsCode"))
+                {
+                    return false;
+                }
+                return false;
+            }
+            
             return true;
         }
 

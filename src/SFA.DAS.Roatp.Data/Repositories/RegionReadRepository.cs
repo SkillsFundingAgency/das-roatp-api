@@ -1,0 +1,26 @@
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
+
+namespace SFA.DAS.Roatp.Data.Repositories
+{
+    internal class RegionReadRepository : IRegionReadRepository
+    {
+        private readonly RoatpDataContext _roatpDataContext;
+
+        public RegionReadRepository(RoatpDataContext roatpDataContext)
+        {
+            _roatpDataContext = roatpDataContext;
+        }
+
+        public async Task<List<Region>> GetAllRegions()
+        {
+            return await _roatpDataContext
+                .Regions
+                .AsNoTracking()
+                .ToListAsync();
+        }
+    }
+}
