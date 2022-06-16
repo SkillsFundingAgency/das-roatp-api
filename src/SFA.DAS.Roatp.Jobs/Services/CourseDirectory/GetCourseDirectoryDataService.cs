@@ -8,18 +8,20 @@ using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
 
 namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 {
-    class GetCourseDirectoryDataService : IGetCourseDirectoryDataService
+    public class GetCourseDirectoryDataService : IGetCourseDirectoryDataService
     {
         private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
         private readonly ILogger<GetCourseDirectoryDataService> _logger;
 
-        public GetCourseDirectoryDataService(ICourseManagementOuterApiClient courseManagementOuterApiClient, ILogger<GetCourseDirectoryDataService> logger)
+        public GetCourseDirectoryDataService(ICourseManagementOuterApiClient courseManagementOuterApiClient,
+            ILogger<GetCourseDirectoryDataService> logger)
         {
             _courseManagementOuterApiClient = courseManagementOuterApiClient;
             _logger = logger;
         }
 
-        public async Task<List<CdProvider>> GetCourseDirectoryData()
+
+    public async Task<List<CdProvider>> GetCourseDirectoryData()
         {
             var (success, courseDirectoryResponse) = await _courseManagementOuterApiClient.Get<string>("lookup/course-directory-data");
 
