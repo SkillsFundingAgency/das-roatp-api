@@ -9,7 +9,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
         public Guid NavigationId { get; set; }
         public int ProviderCourseId { get; set; }
         public int? ProviderLocationId { get; set; }
-        public decimal Radius { get; set; }
         public bool? HasDayReleaseDeliveryOption { get; set; }
         public bool? HasBlockReleaseDeliveryOption { get; set; }
         public bool IsImported { get; set; }
@@ -24,7 +23,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
                 NavigationId = source.NavigationId,
                 ProviderCourseId = source.ProviderCourseId,
                 ProviderLocationId = source.ProviderLocationId,
-                Radius = source.Radius,
                 HasDayReleaseDeliveryOption = source.HasDayReleaseDeliveryOption,
                 HasBlockReleaseDeliveryOption = source.HasBlockReleaseDeliveryOption,
                 IsImported = source.IsImported,

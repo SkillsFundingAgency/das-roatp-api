@@ -11,8 +11,6 @@
     [EmployerSatisfaction] DECIMAL NULL,
     [LearnerSatisfaction] DECIMAL NULL,
     [IsImported] BIT NOT NULL DEFAULT 0,
-    [HasConfirmedLocations] BIT NULL,
-    [HasConfirmedDetails] BIT NULL,
 
     CONSTRAINT PK_Provider PRIMARY KEY (Id),
     CONSTRAINT UK_Provider_Ukprn UNIQUE (Ukprn)
