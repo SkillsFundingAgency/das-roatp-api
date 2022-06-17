@@ -155,11 +155,11 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 {
                     LarsCode = cdProviderCourse.StandardCode,
                     StandardInfoUrl = cdProviderCourse.StandardInfoUrl ?? "",
-                    ContactUsPhoneNumber = cdProviderCourse.Contact?.Phone,
-                    ContactUsEmail = cdProviderCourse.Contact?.Email,
-                    ContactUsPageUrl = cdProviderCourse.Contact?.ContactUsUrl,
+                    ContactUsPhoneNumber = cdProviderCourse.ContactUsPhoneNumber,
+                    ContactUsEmail = cdProviderCourse.ContactUsEmail,
+                    ContactUsPageUrl = cdProviderCourse.ContactUsPageUrl,
                     IsImported = true,
-                    //---- OffersPortableFlexiJob = false //---- This is being ADDED to the database/EF.  
+                    //---- OffersPortableFlexiJob = false //---- This is being ADDED to the database/EF.  MFC
                     Versions = new List<ProviderCourseVersion>
                     {
                         new ProviderCourseVersion
@@ -182,6 +182,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
                     if (providerLocation == null)
                     {
+                        //PRODCHECK
                         // there are numerous cases of the provider.location not existing for the providercourselocation id
                         // it seems reasonable to continue as the remaining data is coherent
                         // need to check this doesn't happen in prod, and if it does, how to deal with it
