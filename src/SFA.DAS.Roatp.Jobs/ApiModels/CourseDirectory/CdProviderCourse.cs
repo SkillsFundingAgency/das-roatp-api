@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using Microsoft.WindowsAzure.Storage.Blob;
 
 namespace SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory
 {
