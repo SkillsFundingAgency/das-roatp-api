@@ -11,5 +11,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsPageUrl { get; set; }
         public string StandardInfoUrl { get; set; }
+        public bool? IsApprovedByRegulator { get; set; }
     }
 }
