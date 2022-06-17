@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Jobs.Services;
 using SFA.DAS.Roatp.Jobs.Services.CourseDirectory;
 
 namespace SFA.DAS.Roatp.Jobs.Functions

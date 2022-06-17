@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Data.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
@@ -33,17 +33,5 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
             return activeProviders.ToList();
         }
-    }
-
-
-
-    // put in a better namespace
-
-    public class OrganisationStatus
-    {
-        public const int Removed = 0;
-        public const int Active = 1;
-        public const int ActiveNotTakingOnApprentices = 2;
-        public const int Onboarding = 3;
     }
 }
