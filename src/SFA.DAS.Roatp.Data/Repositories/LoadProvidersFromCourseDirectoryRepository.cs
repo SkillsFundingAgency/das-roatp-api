@@ -1,7 +1,6 @@
 ﻿using System;
-using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
-using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -24,24 +23,35 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public async Task<bool> LoadProviderFromCourseDirectory(Provider provider)
         {
+            var provs = await _roatpDataContext.Providers.ToListAsync();
+            var count = provs.Count;
+            var match = provs.Where(x => x.Ukprn == provider.Ukprn);
+
+            if (provider.Ukprn == 10001928)
+            {
+                var x = "take out the constraint, see what's happening";
+            }
             try
-                {
-                    await _roatpDataContext.Providers.AddAsync(provider);
+            {
+                await _roatpDataContext.Providers.AddAsync(provider);
                     await _roatpDataContext.SaveChangesAsync();
-                }
-            //catch (DbUpdateException ex)
+            }
             catch(Exception ex)
             {
                 _logger.LogError(ex, $"Provider {provider.Ukprn} load failed on database update, message: {ex.Message} : {ex.InnerException?.Message}");
 
-                if (ex?.InnerException?.Message!=null && ex.InnerException.Message.Contains("UK_ProviderLocation_ProviderId_LocationName"))
-                {
-                    return false;
-                }
-                if (ex?.InnerException?.Message != null && ex.InnerException.Message.Contains("UK_ProviderCourse_ProviderId_LarsCode"))
-                {
-                    return false;
-                }
+                // if (ex?.InnerException?.Message!=null && ex.InnerException.Message.Contains("UK_ProviderLocation_ProviderId_LocationName"))
+                // {
+                //     _roatpDataContext.Providers.Remove(provider);
+                //     return false;
+                // }
+                // if (ex?.InnerException?.Message != null && ex.InnerException.Message.Contains("UK_ProviderCourse_ProviderId_LarsCode"))
+                // {
+                //     _roatpDataContext.Providers.Remove(provider);
+                //     return false;
+                // }
+
+                _roatpDataContext.Providers.Remove(provider);
                 return false;
             }
             
