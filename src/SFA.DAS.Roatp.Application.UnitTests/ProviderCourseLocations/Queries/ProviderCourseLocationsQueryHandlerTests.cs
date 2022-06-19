@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
 
             repoMockProviderCourse.Setup(r => r.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
 
-            repoMockProviderCourseLocation.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>())).ReturnsAsync(locations);
+            repoMockProviderCourseLocation.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(locations);
 
             var result = await sut.Handle(query, cancellationToken);
 
@@ -54,7 +54,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
 
             repoMockProviderCourse.Setup(r => r.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
 
-            repoMockProviderCourseLocation.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>())).ReturnsAsync(locations);
+            repoMockProviderCourseLocation.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(locations);
 
             var result = await sut.Handle(query, cancellationToken);
 
