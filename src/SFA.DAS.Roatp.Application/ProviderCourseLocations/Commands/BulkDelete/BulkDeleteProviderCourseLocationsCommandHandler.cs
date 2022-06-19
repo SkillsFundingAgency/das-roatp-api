@@ -34,14 +34,14 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
 
             IEnumerable<ProviderCourseLocation> locationsToDelete;
 
-            if (request.DeleteOptions == DeleteOptions.DeleteProviderLocations)
+            if (request.DeleteProviderCourseLocationOptions == DeleteProviderCourseLocationOption.DeleteProviderLocations)
                 locationsToDelete = courseLocations.Where(l => l.Location.LocationType == LocationType.Provider);
             else
                 locationsToDelete = courseLocations.Where(l => l.Location.LocationType != LocationType.Provider);
 
             var count = locationsToDelete.Count();
 
-            var locationType = request.DeleteOptions == DeleteOptions.DeleteProviderLocations ? "Provider" : "Employer";
+            var locationType = request.DeleteProviderCourseLocationOptions == DeleteProviderCourseLocationOption.DeleteProviderLocations ? "Provider" : "Employer";
             if (count == 0)
             {
                 _logger.LogInformation("No {locationType} locations found for Ukprn:{ukprn} and LarsCode:{larscode}", locationType, request.Ukprn, request.LarsCode);

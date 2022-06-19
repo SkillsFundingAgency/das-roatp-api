@@ -12,8 +12,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
 
             Include(new LarsCodeValidator(providerReadRepository, providerCourseReadRepository));
 
-            RuleFor(c => c.DeleteOptions)
-                .NotEqual(DeleteOptions.None)
+            RuleFor(c => c.DeleteProviderCourseLocationOptions)
+                .NotEqual(DeleteProviderCourseLocationOption.None)
                 .WithMessage("Delete option not specified, expected DeleteProviderLocations or DeleteEmployerLocations");
         }
     }
