@@ -5,6 +5,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
 {
     public interface IProviderCourseLocationDeleteRepository
     {
-        Task<int> BulkDelete(int ukprn, int larsCode, bool deleteProviderLocation);
+        Task<int> BulkDelete(int ukprn, int larsCode, bool deleteProviderLocations);
     }
 }

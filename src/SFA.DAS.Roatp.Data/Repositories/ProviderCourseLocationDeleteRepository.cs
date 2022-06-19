@@ -17,12 +17,12 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = roatpDataContext;
         }
 
-        public async Task<int> BulkDelete(int ukprn, int larsCode, bool deleteProviderLocation)
+        public async Task<int> BulkDelete(int ukprn, int larsCode, bool deleteProviderLocations)
         {
             var query = _roatpDataContext.ProviderCoursesLocations
                 .Where(l => l.Course.LarsCode == larsCode && l.Course.Provider.Ukprn == ukprn);
 
-            if (deleteProviderLocation)
+            if (deleteProviderLocations)
                 query = query.Where(l => l.Location.LocationType == LocationType.Provider);
             else
                 query = query.Where(l => l.Location.LocationType != LocationType.Provider);
