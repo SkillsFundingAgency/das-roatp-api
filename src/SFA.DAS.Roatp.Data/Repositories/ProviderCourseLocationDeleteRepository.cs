@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -17,22 +17,15 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = roatpDataContext;
         }
 
-        public async Task<int> BulkDelete(int ukprn, int larsCode, bool deleteProviderLocations)
+        public async Task BulkDelete(IEnumerable<int> providerCourseLocationIds)
         {
-            var query = _roatpDataContext.ProviderCoursesLocations
-                .Where(l => l.Course.LarsCode == larsCode && l.Course.Provider.Ukprn == ukprn);
-
-            if (deleteProviderLocations)
-                query = query.Where(l => l.Location.LocationType == LocationType.Provider);
-            else
-                query = query.Where(l => l.Location.LocationType != LocationType.Provider);
-
-            var locations = await query.ToListAsync();
+            var locations = await _roatpDataContext.ProviderCoursesLocations
+                .Where(l => providerCourseLocationIds.Contains(l.Id))
+                .ToListAsync();
 
             _roatpDataContext.RemoveRange(locations);
-            await _roatpDataContext.SaveChangesAsync();
 
-            return locations.Count;
+            await _roatpDataContext.SaveChangesAsync();
         }
     }
 }
