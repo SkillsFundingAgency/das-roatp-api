@@ -36,10 +36,7 @@ namespace SFA.DAS.Roatp.Api.Models
                 ContactUsEmail = providerCourse.ContactUsEmail,
                 ContactUsPageUrl = providerCourse.ContactUsPageUrl,
                 IsApprovedByRegulator = providerCourse.IsApprovedByRegulator,
-                IsImported = providerCourse.IsImported,
-                IsConfirmed = providerCourse.IsConfirmed,
-                HasNationalDeliveryOption = providerCourse.HasNationalDeliveryOption,
-                HasHundredPercentEmployerDeliveryOption =providerCourse.HasHundredPercentEmployerDeliveryOption
+                IsImported = providerCourse.IsImported
             };
 
             //Regular is assumed by default
