@@ -28,7 +28,7 @@ INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude])
 		('Suffolk','East of England',52.1872,0.9708),
 		('Thurrock','East of England',51.4935,0.3529)
 
---London -31 (+Enfield == 32)
+--London -32 (+Enfield)
 INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude]) 
 		VALUES ('Barking and Dagenham','London',51.53628,0.08148),
 		('Barnet','London',51.65293,-0.19961),
