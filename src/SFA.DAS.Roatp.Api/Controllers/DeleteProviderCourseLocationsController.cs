@@ -22,18 +22,17 @@ namespace SFA.DAS.Roatp.Api.Controllers
 
         [HttpDelete]
         [Route("/providers/{ukprn}/courses/{larsCode}/locations")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> BulkDeleteProviderCourseLocations([FromRoute] int ukprn, [FromRoute] int larsCode, [FromQuery] DeleteProviderCourseLocationOption options)
+        public async Task<ActionResult> BulkDeleteProviderCourseLocations([FromRoute] int ukprn, [FromRoute] int larsCode, [FromQuery] DeleteProviderCourseLocationOption options, [FromQuery] string userId )
         {
             _logger.LogInformation("Request received for bulk delete provider course locations for Ukprn:{ukprn} LarsCode:{larscode} DeleteOptions:{deleteOptions}", ukprn, larsCode, options);
 
-            var command = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, options);
+            var command = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, options, userId);
             var result = await _mediator.Send(command);
 
             _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider course locations for Ukprn:{ukprn} LarsCode:{larscode}", result, ukprn, larsCode);
 
-            return result > 0 ? StatusCode((int)HttpStatusCode.NoContent) : StatusCode((int)HttpStatusCode.NotFound);
+            return NoContent();
         }
     }
 }

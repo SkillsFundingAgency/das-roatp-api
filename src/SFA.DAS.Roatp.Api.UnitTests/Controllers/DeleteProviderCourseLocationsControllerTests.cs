@@ -19,47 +19,45 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task BulkDeleteProviderCourseLocations_CallsHandler(
             [Frozen] Mock<IMediator> _mediatorMock,
             [Greedy] DeleteProviderCourseLocationsController sut,
-            int ukprn, int larsCode, DeleteProviderCourseLocationOption options)
+            int ukprn, int larsCode, DeleteProviderCourseLocationOption options, string userId)
         {
-            await sut.BulkDeleteProviderCourseLocations(ukprn, larsCode, options);
+            await sut.BulkDeleteProviderCourseLocations(ukprn, larsCode, options, userId);
 
             _mediatorMock.Verify(m => m.Send(It.Is<BulkDeleteProviderCourseLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.DeleteProviderCourseLocationOptions == options), It.IsAny<CancellationToken>()));
         }
 
         [Test, MoqAutoData]
-        public async Task BulkDeleteProviderCourseLocations_ZeroResults_ReturnsNotFoundResponse(
+        public async Task BulkDeleteProviderCourseLocations_ZeroResults_ReturnsNoContentResponse(
             [Frozen] Mock<IMediator> _mediatorMock,
             [Greedy] DeleteProviderCourseLocationsController sut,
-            int ukprn, int larsCode, DeleteProviderCourseLocationOption options)
+            int ukprn, int larsCode, DeleteProviderCourseLocationOption options, string userId)
         {
             _mediatorMock.Setup(m => m.Send(It.Is<BulkDeleteProviderCourseLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.DeleteProviderCourseLocationOptions == options), It.IsAny<CancellationToken>())).ReturnsAsync(0);
 
-            var result = await sut.BulkDeleteProviderCourseLocations(ukprn, larsCode, options);
+            var result = await sut.BulkDeleteProviderCourseLocations(ukprn, larsCode, options, userId);
 
             _mediatorMock.Verify(m => m.Send(It.Is<BulkDeleteProviderCourseLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.DeleteProviderCourseLocationOptions == options), It.IsAny<CancellationToken>()));
 
-            var statusCodeResult = (StatusCodeResult)result;
+            var statusCodeResult = (NoContentResult)result;
 
             statusCodeResult.Should().NotBeNull();
-            statusCodeResult.StatusCode.Should().Be(404);
         }
 
         [Test, MoqAutoData]
         public async Task BulkDeleteProviderCourseLocations_MoreThanZeroResults_ReturnsNoContentResponse(
             [Frozen] Mock<IMediator> _mediatorMock,
             [Greedy] DeleteProviderCourseLocationsController sut,
-            int ukprn, int larsCode, DeleteProviderCourseLocationOption options)
+            int ukprn, int larsCode, DeleteProviderCourseLocationOption options, string userId)
         {
             _mediatorMock.Setup(m => m.Send(It.Is<BulkDeleteProviderCourseLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.DeleteProviderCourseLocationOptions == options), It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
-            var result = await sut.BulkDeleteProviderCourseLocations(ukprn, larsCode, options);
+            var result = await sut.BulkDeleteProviderCourseLocations(ukprn, larsCode, options, userId);
 
             _mediatorMock.Verify(m => m.Send(It.Is<BulkDeleteProviderCourseLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.DeleteProviderCourseLocationOptions == options), It.IsAny<CancellationToken>()));
 
-            var statusCodeResult = (StatusCodeResult)result;
+            var statusCodeResult = (NoContentResult)result;
 
             statusCodeResult.Should().NotBeNull();
-            statusCodeResult.StatusCode.Should().Be(204);
         }
     }
 }
