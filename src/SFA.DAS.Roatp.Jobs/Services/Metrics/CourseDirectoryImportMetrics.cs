@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SFA.DAS.Roatp.Jobs.Services
+﻿namespace SFA.DAS.Roatp.Jobs.Services.Metrics
 {
     public class CourseDirectoryImportMetrics
     {
@@ -8,5 +6,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
         public int SuccessfulLoads { get; set; }
         public int FailedMappings { get; set; }
         public int FailedLoads { get; set; }
+        public LocationDuplicationMetrics LocationDuplicationMetrics { get; set; }
+        public LarsCodeDuplicationMetrics LarsCodeDuplicationMetrics { get; set; }
     }
 }

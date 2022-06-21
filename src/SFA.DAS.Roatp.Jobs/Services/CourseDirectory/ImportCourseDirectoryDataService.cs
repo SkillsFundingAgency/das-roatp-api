@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiModels;
 using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
+using SFA.DAS.Roatp.Jobs.Services.Metrics;
 
 namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 {
@@ -16,16 +17,16 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         private readonly ILogger<ImportCourseDirectoryDataService> _logger;
         private readonly IStandardReadRepository _standardReadReadRepository;
         private readonly IRegionReadRepository _regionReadRepository;
-        private readonly ILoadProviderFromCourseDirectoryRepository _loadProviderFromCourseDirectory;
+        private readonly ILoadProviderRepository _loadProvider;
 
         private const string National = "National";
 
-        public ImportCourseDirectoryDataService(ILogger<ImportCourseDirectoryDataService> logger, IStandardReadRepository standardReadReadRepository, IRegionReadRepository regionReadRepository, ILoadProviderFromCourseDirectoryRepository loadProviderFromCourseDirectory)
+        public ImportCourseDirectoryDataService(ILogger<ImportCourseDirectoryDataService> logger, IStandardReadRepository standardReadReadRepository, IRegionReadRepository regionReadRepository, ILoadProviderRepository loadProvider)
         {
             _logger = logger;
             _standardReadReadRepository = standardReadReadRepository;
             _regionReadRepository = regionReadRepository;
-            _loadProviderFromCourseDirectory = loadProviderFromCourseDirectory;
+            _loadProvider = loadProvider;
         }
 
 
@@ -45,7 +46,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             var regions = await _regionReadRepository.GetAllRegions();
             if (standards == null || standards.Count == 0)
             {
-                var errorMessage = "No regionss could be retrieved from the regions table";
+                var errorMessage = "No regions could be retrieved from the regions table";
                 _logger.LogError(errorMessage);
                 throw new InvalidDataException(errorMessage);
             }
@@ -58,7 +59,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 var (successMapping, provider) = await MapCourseDirectoryProvider(cdProvider,standards,regions);
                 if (successMapping)
                 {
-                    var successfulLoading = await _loadProviderFromCourseDirectory.LoadProviderFromCourseDirectory(provider);
+                    var successfulLoading = await _loadProvider.LoadProvider(provider);
                     if (successfulLoading)
                     {
                         _logger.LogInformation($"Ukprn {cdProvider.Ukprn} mapped and loaded successfully");

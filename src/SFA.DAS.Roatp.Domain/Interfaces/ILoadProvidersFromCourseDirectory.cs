@@ -3,8 +3,8 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface ILoadProviderFromCourseDirectoryRepository
+    public interface ILoadProviderRepository
     {
-        Task<bool> LoadProviderFromCourseDirectory(Provider provider);
+        Task<bool> LoadProvider(Provider provider);
     }
 }

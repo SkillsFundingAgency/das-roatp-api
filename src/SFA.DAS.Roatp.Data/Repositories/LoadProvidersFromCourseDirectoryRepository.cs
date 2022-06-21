@@ -8,18 +8,18 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public class LoadProviderFromCourseDirectoryRepository : ILoadProviderFromCourseDirectoryRepository
+    public class LoadProviderRepository : ILoadProviderRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
-        private readonly ILogger<LoadProviderFromCourseDirectoryRepository> _logger;
+        private readonly ILogger<LoadProviderRepository> _logger;
 
-        public LoadProviderFromCourseDirectoryRepository(RoatpDataContext roatpDataContext, ILogger<LoadProviderFromCourseDirectoryRepository> logger)
+        public LoadProviderRepository(RoatpDataContext roatpDataContext, ILogger<LoadProviderRepository> logger)
         {
             _roatpDataContext = roatpDataContext;
             _logger = logger;
         }
 
-        public async Task<bool> LoadProviderFromCourseDirectory(Provider provider)
+        public async Task<bool> LoadProvider(Provider provider)
         {
             try
             {
