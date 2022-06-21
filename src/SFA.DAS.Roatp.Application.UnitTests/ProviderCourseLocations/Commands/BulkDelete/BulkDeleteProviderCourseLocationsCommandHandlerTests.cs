@@ -47,9 +47,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         }
 
         [Test, AutoData]
-        public async Task Handler_NoProviderLocations_ReturnsZero(int ukprn, int larsCode)
+        public async Task Handler_NoProviderLocations_ReturnsZero(int ukprn, int larsCode, string userId)
         {
-            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteProviderLocations);
+            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteProviderLocations, userId);
             var locations = new List<ProviderCourseLocation>() 
             {
                 _nationalLocation,
@@ -64,9 +64,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         }
 
         [Test, AutoData]
-        public async Task Handler_NoEmployerLocations_ReturnsZero(int ukprn, int larsCode)
+        public async Task Handler_NoEmployerLocations_ReturnsZero(int ukprn, int larsCode, string userId)
         {
-            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteEmployerLocations);
+            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteEmployerLocations, userId);
             var locations = new List<ProviderCourseLocation>()
             {
                 _providerLocation
@@ -80,9 +80,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         }
 
         [Test, AutoData]
-        public async Task Handler_DeleteEmployerLocations_CallsRepositoryWithEmployerLocationIds(int ukprn, int larsCode)
+        public async Task Handler_DeleteEmployerLocations_CallsRepositoryWithEmployerLocationIds(int ukprn, int larsCode, string userId)
         {
-            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteEmployerLocations);
+            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteEmployerLocations, userId);
             var locations = new List<ProviderCourseLocation>()
             {
                 _nationalLocation,
@@ -99,9 +99,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         }
 
         [Test, AutoData]
-        public async Task Handler_DeleteEmployerLocations_CallsRepositoryWithProviderLocationIds(int ukprn, int larsCode)
+        public async Task Handler_DeleteEmployerLocations_CallsRepositoryWithProviderLocationIds(int ukprn, int larsCode,string userId)
         {
-            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteProviderLocations);
+            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteProviderLocations, userId);
             var locations = new List<ProviderCourseLocation>()
             {
                 _nationalLocation,
