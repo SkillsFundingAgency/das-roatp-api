@@ -19,8 +19,6 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         {
             log.LogInformation("ReloadProviderRegistrationDetailsFunction function started");
 
-            // fullImport clear down 
-            // partialImport clear down - clear down everything that's not pilot
             await _service.ReloadProviderRegistrationDetails();
 
             log.LogInformation("Provider registration details reload complete");

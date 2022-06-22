@@ -6,7 +6,6 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory
     {
 
         public int StandardCode { get; set; }
-        public string MarketingInfo { get; set; } // PRODCHECK I don't think this is needed
         public string StandardInfoUrl { get; set; }
         public Contact Contact { get; set; }
         public string ContactUsPhoneNumber => Contact?.Phone;

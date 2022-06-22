@@ -66,7 +66,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         {
             var metrics = new LocationDuplicationMetrics();
 
-          
             var currentLocationNames = new List<string>();
             var locationsToRemove = new List<CdProviderLocation>();
             foreach (var location in provider.Locations)
@@ -99,7 +98,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         {
             var metrics = new LarsCodeDuplicationMetrics();
 
-           
             var currentLarsCodes = new List<int>();
             var coursesToRemove = new List<CdProviderCourse>();
             foreach (var course in provider.Standards)
@@ -161,7 +159,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             var providerLocations = new List<ProviderLocation>();
             foreach (var cdProviderLocation in cdProvider.Locations)
             {
-
                 int? regionId = null;
 
                 if (cdProviderLocation.LocationType == LocationType.Regional)

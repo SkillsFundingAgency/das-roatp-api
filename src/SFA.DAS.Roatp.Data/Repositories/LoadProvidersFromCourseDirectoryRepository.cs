@@ -29,19 +29,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
             catch(Exception ex)
             {
                 _logger.LogError(ex, $"Provider {provider.Ukprn} load failed on database update, message: {ex.Message} : {ex.InnerException?.Message}");
-
-                //PRODCHECK
-                // if (ex?.InnerException?.Message!=null && ex.InnerException.Message.Contains("UK_ProviderLocation_ProviderId_LocationName"))
-                // {
-                //     _roatpDataContext.Providers.Remove(provider);
-                //     return false;
-                // }
-                // if (ex?.InnerException?.Message != null && ex.InnerException.Message.Contains("UK_ProviderCourse_ProviderId_LarsCode"))
-                // {
-                //     _roatpDataContext.Providers.Remove(provider);
-                //     return false;
-                // }
-
                 _roatpDataContext.Providers.Remove(provider);
                 return false;
             }

@@ -20,8 +20,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             _logger = logger;
         }
 
-
-    public async Task<List<CdProvider>> GetCourseDirectoryData()
+        public async Task<List<CdProvider>> GetCourseDirectoryData()
         {
             var (success, courseDirectoryResponse) = await _courseManagementOuterApiClient.Get<string>("lookup/course-directory-data");
 
