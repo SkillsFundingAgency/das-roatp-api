@@ -2,7 +2,7 @@
 {
     public class LocationDuplicationMetrics
     {
-        public int ProvidersWithDuplicateNames { get; set; }
+        public int ProvidersWithDuplicateLocationNames { get; set; }
         public int ProviderLocationsRemoved { get; set; }
     }
 }

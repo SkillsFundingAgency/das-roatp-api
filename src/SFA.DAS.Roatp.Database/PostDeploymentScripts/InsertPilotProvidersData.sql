@@ -1,4 +1,5 @@
-﻿IF 312 > (SELECT COUNT(*) FROM ProviderCourse)
+﻿/*
+IF 312 > (SELECT COUNT(*) FROM ProviderCourse)
 BEGIN
 
     DELETE FROM [ProviderCourse]
@@ -72,3 +73,4 @@ BEGIN
     END
 
 END
+*/
