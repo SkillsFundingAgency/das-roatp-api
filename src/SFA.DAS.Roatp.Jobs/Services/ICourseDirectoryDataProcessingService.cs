@@ -10,10 +10,10 @@ namespace SFA.DAS.Roatp.Jobs.Services
     {
         public Task RemoveProvidersNotActiveOnRegister(List<CdProvider> providers);
         public Task RemoveProvidersAlreadyPresentOnRoatp(List<CdProvider> providers);
-        public Task RemoveProvidersNotOnBetaList(List<CdProvider> providers);
+        public Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers);
         public Task<LocationDuplicationMetrics> CleanseDuplicateLocationNames(CdProvider provider);
         public Task<LarsCodeDuplicationMetrics> CleanseDuplicateLarsCodes(CdProvider provider);
-        public Task InsertMissingPilotData(CdProvider provider);
+        public Task AugmentPilotData(Provider provider);
         public Task<(bool, Provider)> MapCourseDirectoryProvider(CdProvider cdProvider, List<Standard> standards, List<Region> regions);
     }
 }

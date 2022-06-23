@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -31,35 +32,46 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         public async Task RemoveProvidersNotActiveOnRegister(List<CdProvider> providers)
         {
             var focusText = "active registered providers from roatp-service cache";
-            _logger.LogInformation($"Gathering {focusText}");
+            _logger.LogInformation("Gathering {focus}",focusText);
             var activeProviders = await _getActiveProviderRegistrationsRepository.GetActiveProviderRegistrations();
-            _logger.LogInformation($"{activeProviders.Count} {focusText}");
-            _logger.LogInformation($"{providers.Count} CD providers before removing non-{focusText}");
+            _logger.LogInformation("{count} {focus}",activeProviders.Count, focusText);
+            _logger.LogInformation("{count} CD providers before removing non-{focus}", providers.Count, focusText);
            
             providers.RemoveAll(x => !activeProviders.Select(x => x.Ukprn).Contains(x.Ukprn));
-            _logger.LogInformation($"{providers.Count} CD providers after removing non-{focusText}");
+            _logger.LogInformation("{count} CD providers after removing non-{focus}", providers.Count, focusText);
 
         }
 
         public async Task RemoveProvidersAlreadyPresentOnRoatp(List<CdProvider> providers)
         {
             var focusText = "providers already present in roatp database";
-            _logger.LogInformation($"Gathering {focusText}");
+            _logger.LogInformation("Gathering {focus}", focusText);
             var currentProviders = await _providerReadRepository.GetAllProviders();
-            _logger.LogInformation($"{currentProviders.Count} {focusText}");
-            _logger.LogInformation($"{providers.Count} CD providers before removing {focusText}");
+            _logger.LogInformation("{count} {focus}", currentProviders.Count, focusText);
+            _logger.LogInformation("{count} CD providers before removing {focus}", providers.Count, focusText);
 
             providers.RemoveAll(x => currentProviders.Select(x => x.Ukprn).Contains(x.Ukprn));
-            _logger.LogInformation($"{providers.Count} CD providers to insert after removing {focusText}");
+            _logger.LogInformation("{count} CD providers to insert after removing {focus}", providers.Count, focusText);
+
         }
 
-        public async Task RemoveProvidersNotOnBetaList(List<CdProvider> providers)
+        public async Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
         {
-            var focusText = "beta providers";
-           
-            _logger.LogInformation($"{providers.Count} CD providers before removing non-{focusText}");
-            providers.RemoveAll(x => !BetaProviders.Ukprns.Contains(x.Ukprn));
-            _logger.LogInformation($"{providers.Count} CD providers to insert after removing non-{focusText}");
+            var metrics = new BetaAndPilotProviderMetrics();
+            var focusText = "beta and pilot providers";
+
+            var betaAndPilotUkprns = BetaProviders.Ukprns;
+            betaAndPilotUkprns.AddRange(PilotProviders.Ukprns);
+
+            metrics.PilotProviders = PilotProviders.Ukprns.Count;
+            metrics.BetaProviders = BetaProviders.Ukprns.Count;
+            metrics.CombinedBetaAndPilotProvidersProcessed = betaAndPilotUkprns.Distinct().Count();
+
+            _logger.LogInformation("{count} CD providers before removing non-{focus}", providers.Count, focusText);
+            providers.RemoveAll(x => !betaAndPilotUkprns.Distinct().Contains(x.Ukprn));
+            _logger.LogInformation("{count} CD providers to insert after removing non-{focus}",providers.Count, focusText);
+
+            return metrics;
         }
 
         public async Task<LocationDuplicationMetrics> CleanseDuplicateLocationNames(CdProvider provider)
@@ -87,7 +99,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 {
                     provider.Locations.Remove(locationToRemove);
                     metrics.ProviderLocationsRemoved++;
-                    _logger.LogWarning($"Duplicate location name - provider UKPRN {provider.Ukprn}: removing location id {locationToRemove.Id} location name '{locationToRemove.Name}'");
+                    _logger.LogWarning("Duplicate location name - provider UKPRN {ukprn}: removing location id {id} location name '{name}'",provider.Ukprn,locationToRemove.Id,locationToRemove.Name);
                 }
             }
             
@@ -119,26 +131,25 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 {
                     provider.Standards.Remove(courseToRemove);
                     metrics.ProviderStandardsRemoved++;
-                    _logger.LogWarning($"Duplicate lars code - provider UKPRN {provider.Ukprn}: removing duplicate larsCode {courseToRemove.StandardCode}'");
+                    _logger.LogWarning("Duplicate lars code - provider UKPRN {ukprn}: removing duplicate larsCode {standardCode}'", provider.Ukprn,courseToRemove.StandardCode);
                 }
             }
             
             return metrics;
         }
 
-        public async Task InsertMissingPilotData(CdProvider provider)
+        public async Task AugmentPilotData(Provider provider)
         {
-            if (PilotProviders.Ukprns.All(x => x != provider.Ukprn))
+            if (PilotProviders.Ukprns.Any(x => x == provider.Ukprn))
             {
-                return;
-            }
-
-            foreach (var pilotCourse in PilotProviderCourses.PilotCourses.Where(pilotCourse => provider.Standards.All(x => x.StandardCode != pilotCourse.LarsCode)))
-            {
-                provider.Standards.Add(new CdProviderCourse {StandardCode = pilotCourse.LarsCode, StandardInfoUrl = pilotCourse.StandardInfoUrl});
-                _logger.LogInformation($"Adding pilot courses for UKPRN {provider.Ukprn} LarsCode {pilotCourse.LarsCode}");
+                foreach (var larsCode in PilotProviderCourses.LarsCodes.Where(l => provider.Courses.All(x => x.LarsCode != l)))
+                {
+                    provider.Courses.Add(new ProviderCourse { LarsCode = larsCode, HasPortableFlexiJobOption = true });
+                    _logger.LogInformation("Adding pilot courses for UKPRN {ukprn} LarsCode {LarsCode}", provider.Ukprn, larsCode);
+                }
             }
         }
+
 
         public async Task<(bool, Provider)> MapCourseDirectoryProvider(CdProvider cdProvider, List<Standard> standards, List<Region> regions)
         {
@@ -166,8 +177,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                     regionId = regions.FirstOrDefault(x => x.SubregionName == cdProviderLocation.Name)?.Id;
                     if (regionId == null)
                     {
-                        var errorMessage = $"Region location cannot be mapped to {cdProviderLocation.Name}";
-                        _logger.LogWarning(errorMessage);
+                        _logger.LogWarning("Region location cannot be mapped to {name}",cdProviderLocation.Name);
                         return (false, null);
                     }
                 }
@@ -197,16 +207,13 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
             var providerCourses = new List<ProviderCourse>(); 
             
-            var isPilotProvider = PilotProviders.Ukprns.Contains(cdProvider.Ukprn);
-
             foreach (var cdProviderCourse in cdProvider.Standards)
             {
                 var standard = standards.FirstOrDefault(x => x.LarsCode == cdProviderCourse.StandardCode);
 
                 if (standard?.LarsCode == null || standard.LarsCode == 0)
                 {
-                    var errorMessage = $"LarsCode {cdProviderCourse.StandardCode} for ukprn {cdProvider.Ukprn} found no match in courses-api";
-                    _logger.LogWarning(errorMessage);
+                    _logger.LogWarning("LarsCode {standardCode} for ukprn {ukprn} found no match in courses-api", cdProviderCourse.StandardCode, cdProvider.Ukprn);
                     break;
                 }
 
@@ -218,7 +225,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                     ContactUsEmail = cdProviderCourse.ContactUsEmail,
                     ContactUsPageUrl = cdProviderCourse.ContactUsPageUrl,
                     IsImported = true,
-                    HasPortableFlexiJobOption = isPilotProvider,
+                    HasPortableFlexiJobOption = false,
                     Versions = new List<ProviderCourseVersion>
                     {
                         new ProviderCourseVersion
@@ -228,7 +235,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                         }
                     }
                 };
-
 
                 var providerCourseLocations = new List<ProviderCourseLocation>();
 
@@ -245,9 +251,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                         // there are numerous cases of the provider.location not existing for the providercourselocation id
                         // it seems reasonable to continue as the remaining data is coherent
                         // need to check this doesn't happen in prod, and if it does, how to deal with it
-                        var warningMessage =
-                            $"Provider course location id {courseLocation.Id} found no match in provider location for ukprn: {cdProvider.Ukprn}";
-                        _logger.LogWarning(warningMessage);
+                        _logger.LogWarning("Provider course location id {id} found no match in provider location for ukprn: {ukprn}", courseLocation.Id, cdProvider.Ukprn);
                     }
                     else
                     {

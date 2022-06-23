@@ -18,7 +18,6 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory
 
         public virtual List<CdProviderLocation> Locations { get; set; } = new List<CdProviderLocation>();
         public virtual List<CdProviderCourse> Standards { get; set; } = new List<CdProviderCourse>();
-       
     }
 
 }

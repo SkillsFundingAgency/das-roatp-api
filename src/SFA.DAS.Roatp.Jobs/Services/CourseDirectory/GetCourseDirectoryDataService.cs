@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             }
 
             var cdProviders = JsonConvert.DeserializeObject<List<CdProvider>>(courseDirectoryResponse);
-            _logger.LogInformation($"GetCourseDirectoryData: {cdProviders.Count} providers returned from Course Directory");
+            _logger.LogInformation("GetCourseDirectoryData: {count} providers returned from Course Directory", cdProviders.Count);
 
             return cdProviders;
         }

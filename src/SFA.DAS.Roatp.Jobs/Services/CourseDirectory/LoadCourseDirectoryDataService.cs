@@ -5,7 +5,9 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
+using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 using SFA.DAS.Roatp.Jobs.Services.Metrics;
+using Standard = SFA.DAS.Roatp.Domain.Entities.Standard;
 
 namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 {
@@ -28,74 +30,54 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             _logger = logger;
         }
 
-        public async Task LoadCourseDirectoryData()
+        public async Task<CourseDirectoryImportMetrics> LoadCourseDirectoryData(bool betaAndPilotProvidersOnly)
         {
             var standards = await GetStandards();
             var regions = await GetRegions();
 
             var cdProviders = await _getCourseDirectoryDataService.GetCourseDirectoryData();
-            
-            await _courseDirectoryDataProcessingService.RemoveProvidersNotActiveOnRegister(cdProviders);
+
+           
+
+            var betaAndPilotProviderMetrics = (BetaAndPilotProviderMetrics)null;
+            if (betaAndPilotProvidersOnly)
+                betaAndPilotProviderMetrics = await _courseDirectoryDataProcessingService.RemoveProvidersNotOnBetaOrPilotList(cdProviders);
+            else
+                await _courseDirectoryDataProcessingService.RemoveProvidersNotActiveOnRegister(cdProviders);
+
             await _courseDirectoryDataProcessingService.RemoveProvidersAlreadyPresentOnRoatp(cdProviders);
-
-            var betaProvidersOnly = true;  // does this need a switch/feature flag?
-
-            // this will need to handle beta providers
-            // put in flag in http trigger to be 'beta only', all etc
-            if (betaProvidersOnly)
-                await _courseDirectoryDataProcessingService.RemoveProvidersNotOnBetaList(cdProviders);
-
-            var locationDuplicationMetrics = new LocationDuplicationMetrics();
-            var larsCodeDuplicationMetrics = new LarsCodeDuplicationMetrics();
 
             var loadMetrics = new CourseDirectoryImportMetrics
             {
-                ProvidersToLoad = cdProviders.Count
+                ProvidersToLoad = cdProviders.Count,
+                LocationDuplicationMetrics = new LocationDuplicationMetrics(),
+                LarsCodeDuplicationMetrics = new LarsCodeDuplicationMetrics(),
+                BetaAndPilotProvidersOnly = betaAndPilotProvidersOnly,
+                BetaAndPilotProviderMetrics = betaAndPilotProviderMetrics
             };
 
             foreach (var cdProvider in cdProviders)
             {
-                await CleanseDuplicateLocationNames(cdProvider, locationDuplicationMetrics);
-                await CleanseDuplicateLarsCodes(cdProvider, larsCodeDuplicationMetrics);
-                await _courseDirectoryDataProcessingService.InsertMissingPilotData(cdProvider);
+                await CleanseDuplicateLocationNames(cdProvider, loadMetrics.LocationDuplicationMetrics);
+                await CleanseDuplicateLarsCodes(cdProvider, loadMetrics.LarsCodeDuplicationMetrics);
                 
                 var(successMapping, provider) = await _courseDirectoryDataProcessingService.MapCourseDirectoryProvider(cdProvider, standards, regions);
 
                 if (!successMapping)
                 {
-                    _logger.LogWarning($"Ukprn {cdProvider.Ukprn} failed to map");
+                    _logger.LogWarning("Ukprn {ukprn} failed to map", cdProvider.Ukprn);
                     loadMetrics.FailedMappings++;
                 }
                 else
                 {
-                    var loadMetricsProvider =
-                        await _importCourseDirectoryDataService.ImportProviders(provider);
+                    await _courseDirectoryDataProcessingService.AugmentPilotData(provider);
+                    var loadMetricsProvider = await _importCourseDirectoryDataService.ImportProviders(provider);
                     loadMetrics.SuccessfulLoads += loadMetricsProvider.SuccessfulLoads;
                     loadMetrics.FailedLoads += loadMetricsProvider.FailedLoads;
                 }
             }
             
-            LogMetrics(loadMetrics, locationDuplicationMetrics, larsCodeDuplicationMetrics, betaProvidersOnly);
-        }
-
-        private void LogMetrics(CourseDirectoryImportMetrics loadMetrics, LocationDuplicationMetrics locationDuplicationMetrics,
-            LarsCodeDuplicationMetrics larsCodeDuplicationMetrics, bool betaProvidersOnly)
-        {
-            if (loadMetrics.FailedLoads == 0 && loadMetrics.FailedMappings == 0 &&
-                locationDuplicationMetrics.ProviderLocationsRemoved == 0 &&
-                larsCodeDuplicationMetrics.ProviderStandardsRemoved == 0)
-                _logger.LogInformation(
-                    $"Load providers from course directory beta providers only: [{betaProvidersOnly}] successful with no issues: {loadMetrics.ProvidersToLoad} for loading, {loadMetrics.SuccessfulLoads} loaded");
-            else
-            {
-                _logger.LogInformation($"Load providers from course directory did not fully load successfully: " +
-                                       $"{loadMetrics.SuccessfulLoads} successfully loaded ( beta providers only: [{betaProvidersOnly}] ), {loadMetrics.FailedMappings} failed to map, " +
-                                       $"{loadMetrics.FailedLoads} failed to load, " +
-                                       $"{locationDuplicationMetrics.ProvidersWithDuplicateLocationNames} providers with duplicate locations removed" +
-                                       $"{locationDuplicationMetrics.ProviderLocationsRemoved} total duplicate locations removed" +
-                                       $"{larsCodeDuplicationMetrics.ProviderStandardsRemoved} providers with duplicate standards removed" +
-                                       $"{larsCodeDuplicationMetrics.ProvidersWithDuplicateStandards} total duplicate standards removed");
-            }
+            return loadMetrics;
         }
 
         private async Task CleanseDuplicateLarsCodes(CdProvider cdProvider,
@@ -124,7 +106,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 throw new InvalidDataException(errorMessage);
             }
 
-            _logger.LogInformation($"Retrieved {regions.Count} regions from Region table");
+            _logger.LogInformation("Retrieved {count} regions from Region table", regions.Count);
             return regions;
         }
 
@@ -138,7 +120,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 throw new InvalidDataException(errorMessage);
             }
 
-            _logger.LogInformation($"Retrieved {standards?.Count} standards from Standard table");
+            _logger.LogInformation("Retrieved {count} standards from Standard table", standards?.Count);
             return standards;
         }
     }

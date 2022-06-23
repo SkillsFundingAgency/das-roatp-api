@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             }
             catch(Exception ex)
             {
-                _logger.LogError(ex, $"Provider {provider.Ukprn} load failed on database update, message: {ex.Message} : {ex.InnerException?.Message}");
+                _logger.LogError(ex, "Provider {ukprn} load failed on database update", provider.Ukprn);
                 _roatpDataContext.Providers.Remove(provider);
                 return false;
             }

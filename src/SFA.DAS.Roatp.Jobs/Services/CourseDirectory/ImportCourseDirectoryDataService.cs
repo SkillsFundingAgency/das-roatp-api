@@ -24,12 +24,12 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             var successfulLoading = await _loadProvider.LoadProvider(provider);
             if (successfulLoading)
             {
-                _logger.LogInformation($"Ukprn {provider.Ukprn} mapped and loaded successfully");
+                _logger.LogInformation("Ukprn {ukprn} mapped and loaded successfully", provider.Ukprn);
                 metrics.SuccessfulLoads = 1;
             }
             else
             {
-                _logger.LogWarning($"Ukprn {provider.Ukprn} failed to load");
+                _logger.LogWarning("Ukprn {ukprn} failed to load", provider.Ukprn);
                 metrics.FailedLoads = 1;
             }
                 
