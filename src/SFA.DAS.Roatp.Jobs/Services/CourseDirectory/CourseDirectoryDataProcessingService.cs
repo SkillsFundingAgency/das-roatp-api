@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -172,16 +173,10 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             foreach (var cdProviderLocation in cdProvider.Locations)
             {
                 int? regionId = null;
+                var regionIdMapped = RegionIdMapped(cdProviderLocation, regions, ref regionId);
 
-                if (cdProviderLocation.LocationType == LocationType.Regional)
-                {
-                    regionId = regions.FirstOrDefault(x => x.SubregionName == cdProviderLocation.Name)?.Id;
-                    if (regionId == null)
-                    {
-                        _logger.LogWarning("Region location cannot be mapped to {name}",cdProviderLocation.Name);
-                        return Task.FromResult((false, (Provider)null));
-                    }
-                }
+                if(!regionIdMapped)
+                    return Task.FromResult((false, (Provider)null));
 
                 providerLocations.Add(new ProviderLocation
                 {
@@ -212,7 +207,8 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             {
                 var standard = standards.FirstOrDefault(x => x.LarsCode == cdProviderCourse.StandardCode);
 
-                if (CheckStandardLarsCode( standard,cdProviderCourse.StandardCode, cdProvider.Ukprn)) break;
+                if(!CheckStandardIsSuitable(standard, cdProviderCourse.StandardCode, cdProvider.Ukprn))
+                    break;
 
                 var newProviderCourse = new ProviderCourse
                 {
@@ -237,9 +233,30 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
                 foreach (var courseLocation in cdProviderCourse.Locations)
                 {
-                  
                     var providerLocation = provider.Locations.FirstOrDefault(x => x.ImportedLocationId == courseLocation.Id);
-                    AddProviderLocation(providerCourseLocations, providerLocation,  newProviderCourse, courseLocation,  cdProvider.Ukprn );
+                    
+                    if (providerLocation == null)
+                    {
+                        //PRODCHECK
+                        // there are numerous cases of the provider.location not existing for the providercourselocation id
+                        // it seems reasonable to continue as the remaining data is coherent
+                        // need to check this doesn't happen in prod, and if it does, how to deal with it
+                        _logger.LogWarning("Provider course location id {id} found no match in provider location for ukprn: {ukprn}", courseLocation.Id, cdProvider.Ukprn);
+                    }
+                    else
+                    {
+                        var blockRelease = courseLocation.DeliveryModes.Any(deliveryMode => deliveryMode == DeliveryMode.BlockRelease);
+                        var dayRelease = courseLocation.DeliveryModes.Any(deliveryMode => deliveryMode == DeliveryMode.DayRelease);
+                        providerCourseLocations.Add(new ProviderCourseLocation
+                        {
+                            NavigationId = Guid.NewGuid(),
+                            Course = newProviderCourse,
+                            Location = providerLocation,
+                            HasDayReleaseDeliveryOption = dayRelease,
+                            HasBlockReleaseDeliveryOption = blockRelease,
+                            IsImported = true
+                        });
+                    }
                 }
 
                 newProviderCourse.Locations = providerCourseLocations;
@@ -251,42 +268,27 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             return Task.FromResult((true, provider));
         }
 
-        private void AddProviderLocation(ICollection<ProviderCourseLocation> providerCourseLocations, ProviderLocation providerLocation, ProviderCourse newProviderCourse,
-            CdProviderCourseLocation courseLocation, int cdProviderUkprn)
+        private bool RegionIdMapped(CdProviderLocation cdProviderLocation, IEnumerable<Region> regions, ref int? regionId)
         {
-            if (providerLocation == null)
-            {
-                //PRODCHECK
-                // there are numerous cases of the provider.location not existing for the providercourselocation id
-                // it seems reasonable to continue as the remaining data is coherent
-                // need to check this doesn't happen in prod, and if it does, how to deal with it
-                _logger.LogWarning("Provider course location id {id} found no match in provider location for ukprn: {ukprn}",
-                    courseLocation.Id, cdProviderUkprn);
-            }
-            else
-            {
-                var blockRelease = courseLocation.DeliveryModes.Any(deliveryMode => deliveryMode == DeliveryMode.BlockRelease);
-                var dayRelease = courseLocation.DeliveryModes.Any(deliveryMode => deliveryMode == DeliveryMode.DayRelease);
-
-                providerCourseLocations.Add(new ProviderCourseLocation
-                {
-                    NavigationId = Guid.NewGuid(),
-                    Course = newProviderCourse,
-                    Location = providerLocation,
-                    HasDayReleaseDeliveryOption = dayRelease,
-                    HasBlockReleaseDeliveryOption = blockRelease,
-                    IsImported = true
-                });
-            }
+            if (cdProviderLocation.LocationType != LocationType.Regional) return true;
+         
+            regionId = regions.FirstOrDefault(x => x.SubregionName == cdProviderLocation.Name)?.Id;
+            if (regionId != null) return true;
+    
+            _logger.LogWarning("Region location cannot be mapped to {name}", cdProviderLocation.Name);
+            return false;
         }
 
-        private bool CheckStandardLarsCode( Standard standard, int cdProviderCourseStandardCode, int cdProviderUkprn)
+        private bool CheckStandardIsSuitable( Standard standard, int cdProviderCourseStandardCode, int cdProviderUkprn)
         {
-            if (standard?.LarsCode != null && standard.LarsCode != 0) return false;
-            _logger.LogWarning("LarsCode {standardCode} for ukprn {ukprn} found no match in courses-api",
-                cdProviderCourseStandardCode, cdProviderUkprn);
-            return true;
+            if (standard?.LarsCode == null || standard.LarsCode == 0)
+            {
+                _logger.LogWarning("LarsCode {standardCode} for ukprn {ukprn} found no match in courses-api",
+                    cdProviderCourseStandardCode, cdProviderUkprn);
+                return false;
+            }
 
+            return true;
         }
     }
 }
