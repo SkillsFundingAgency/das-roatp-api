@@ -4,7 +4,6 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory
 {
     public class CdProviderCourse
     {
-
         public int StandardCode { get; set; }
         public string StandardInfoUrl { get; set; }
         public Contact Contact { get; set; }
@@ -13,12 +12,5 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory
         public string ContactUsPageUrl => Contact?.ContactUsUrl;
 
         public virtual List<CdProviderCourseLocation> Locations { get; set; } = new List<CdProviderCourseLocation>();
-    }
-
-    public class Contact
-    {
-        public string ContactUsUrl { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
     }
 }

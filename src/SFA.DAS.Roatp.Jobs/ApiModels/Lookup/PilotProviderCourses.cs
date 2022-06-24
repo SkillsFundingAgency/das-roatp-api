@@ -32,7 +32,6 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup
                  188
             };
     }
-
 }
 
 

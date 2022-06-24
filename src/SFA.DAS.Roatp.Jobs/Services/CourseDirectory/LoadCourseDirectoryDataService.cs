@@ -37,8 +37,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
             var cdProviders = await _getCourseDirectoryDataService.GetCourseDirectoryData();
 
-           
-
             var betaAndPilotProviderMetrics = (BetaAndPilotProviderMetrics)null;
             if (betaAndPilotProvidersOnly)
                 betaAndPilotProviderMetrics = await _courseDirectoryDataProcessingService.RemoveProvidersNotOnBetaOrPilotList(cdProviders);

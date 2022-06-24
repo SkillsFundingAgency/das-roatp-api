@@ -21,7 +21,6 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory
         public decimal? Latitude => ConvertToDecimal(Address?.Lat);
         public decimal? Longitude => ConvertToDecimal(Address?.Long);
 
-
         public LocationType LocationType {
             get
             {
@@ -38,7 +37,6 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory
                 return LocationType.Provider;
             }
         }
-
 
         private decimal? ConvertToDecimal(string conversionString)
         {

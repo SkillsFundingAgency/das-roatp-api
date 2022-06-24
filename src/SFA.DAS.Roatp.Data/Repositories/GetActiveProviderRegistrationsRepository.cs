@@ -23,13 +23,13 @@ namespace SFA.DAS.Roatp.Data.Repositories
         public async Task<List<ProviderRegistrationDetail>> GetActiveProviderRegistrations()
         {
             var providerRegistrationDetails =  await _roatpDataContext.ProviderRegistrationDetails.AsNoTracking().ToListAsync();
-            _logger.LogInformation($"Retrieved {providerRegistrationDetails.Count()} provider registration details from ProviderRegistrationDetail");
+            _logger.LogInformation("Retrieved {count} provider registration details from ProviderRegistrationDetail", providerRegistrationDetails.Count);
 
             var activeProviders = providerRegistrationDetails.Where(x =>
                 x.StatusId == OrganisationStatus.Active ||
                 x.StatusId == OrganisationStatus.ActiveNotTakingOnApprentices).ToList();
 
-            _logger.LogInformation($"Finding {activeProviders.Count} active providers");
+            _logger.LogInformation("Finding {count} active providers", activeProviders.Count);
 
             return activeProviders.ToList();
         }

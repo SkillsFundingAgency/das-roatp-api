@@ -21,7 +21,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         private readonly ILogger<CourseDirectoryDataProcessingService> _logger;
         private const string National = "National";
 
-
         public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProviderReadRepository providerReadRepository)
         {
             _getActiveProviderRegistrationsRepository = getActiveProviderRegistrationsRepository;
@@ -39,7 +38,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
            
             providers.RemoveAll(x => !activeProviders.Select(x => x.Ukprn).Contains(x.Ukprn));
             _logger.LogInformation("{count} CD providers after removing non-{focus}", providers.Count, focusText);
-
         }
 
         public async Task RemoveProvidersAlreadyPresentOnRoatp(List<CdProvider> providers)
@@ -52,7 +50,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
             providers.RemoveAll(x => currentProviders.Select(x => x.Ukprn).Contains(x.Ukprn));
             _logger.LogInformation("{count} CD providers to insert after removing {focus}", providers.Count, focusText);
-
         }
 
         public async Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
@@ -124,17 +121,15 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 }
             }
 
-            if (coursesToRemove.Any())
+            if (!coursesToRemove.Any()) return metrics;
+            metrics.ProvidersWithDuplicateStandards++;
+            foreach (var courseToRemove in coursesToRemove)
             {
-                metrics.ProvidersWithDuplicateStandards++;
-                foreach (var courseToRemove in coursesToRemove)
-                {
-                    provider.Standards.Remove(courseToRemove);
-                    metrics.ProviderStandardsRemoved++;
-                    _logger.LogWarning("Duplicate lars code - provider UKPRN {ukprn}: removing duplicate larsCode {standardCode}'", provider.Ukprn,courseToRemove.StandardCode);
-                }
+                provider.Standards.Remove(courseToRemove);
+                metrics.ProviderStandardsRemoved++;
+                _logger.LogWarning("Duplicate lars code - provider UKPRN {ukprn}: removing duplicate larsCode {standardCode}'", provider.Ukprn,courseToRemove.StandardCode);
             }
-            
+
             return metrics;
         }
 
@@ -149,7 +144,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 }
             }
         }
-
 
         public async Task<(bool, Provider)> MapCourseDirectoryProvider(CdProvider cdProvider, List<Standard> standards, List<Region> regions)
         {
@@ -220,7 +214,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 var newProviderCourse = new ProviderCourse
                 {
                     LarsCode = cdProviderCourse.StandardCode,
-                    StandardInfoUrl = cdProviderCourse.StandardInfoUrl ?? "",
+                    StandardInfoUrl = cdProviderCourse.StandardInfoUrl,
                     ContactUsPhoneNumber = cdProviderCourse.ContactUsPhoneNumber,
                     ContactUsEmail = cdProviderCourse.ContactUsEmail,
                     ContactUsPageUrl = cdProviderCourse.ContactUsPageUrl,
