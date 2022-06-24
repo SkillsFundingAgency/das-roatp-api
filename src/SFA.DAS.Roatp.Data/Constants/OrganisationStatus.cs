@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Roatp.Data.Constants
 {
-    public class OrganisationStatus
+    public static class OrganisationStatus
     {
         public const int Removed = 0;
         public const int Active = 1;

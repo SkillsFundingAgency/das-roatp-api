@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
     {
         private readonly ILoadCourseDirectoryDataService _loadCourseDirectoryDataService;
 
+        [ExcludeFromCodeCoverage]
         public LoadCourseDirectoryDataFunction(ILoadCourseDirectoryDataService loadCourseDirectoryDataService)
         {
             _loadCourseDirectoryDataService = loadCourseDirectoryDataService;

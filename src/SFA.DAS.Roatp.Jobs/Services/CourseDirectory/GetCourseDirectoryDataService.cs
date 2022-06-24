@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -8,6 +9,7 @@ using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
 
 namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 {
+    [ExcludeFromCodeCoverage]
     public class GetCourseDirectoryDataService : IGetCourseDirectoryDataService
     {
         private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;

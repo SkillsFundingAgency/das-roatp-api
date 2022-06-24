@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -6,6 +7,7 @@ using SFA.DAS.Roatp.Jobs.Services.Metrics;
 
 namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 {
+    [ExcludeFromCodeCoverage]
     public class ImportCourseDirectoryDataService: IImportCourseDirectoryDataService
     {
         private readonly ILogger<ImportCourseDirectoryDataService> _logger;

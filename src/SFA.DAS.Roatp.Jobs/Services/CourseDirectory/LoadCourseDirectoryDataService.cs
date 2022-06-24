@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
-using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 using SFA.DAS.Roatp.Jobs.Services.Metrics;
 using Standard = SFA.DAS.Roatp.Domain.Entities.Standard;
 
 namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 {
+    [ExcludeFromCodeCoverage]
     public class LoadCourseDirectoryDataService: ILoadCourseDirectoryDataService
     {
         private readonly IGetCourseDirectoryDataService _getCourseDirectoryDataService;

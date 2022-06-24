@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Security.Cryptography;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -14,6 +14,7 @@ using Standard = SFA.DAS.Roatp.Domain.Entities.Standard;
 
 namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 {
+    [ExcludeFromCodeCoverage]
     public class CourseDirectoryDataProcessingService : ICourseDirectoryDataProcessingService
     {
         private readonly IGetActiveProviderRegistrationsRepository _getActiveProviderRegistrationsRepository;
@@ -30,7 +31,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
         public async Task RemoveProvidersNotActiveOnRegister(List<CdProvider> providers)
         {
-            var focusText = "active registered providers from roatp-service cache";
+            const string focusText = "active registered providers from roatp-service cache";
             _logger.LogInformation("Gathering {focus}",focusText);
             var activeProviders = await _getActiveProviderRegistrationsRepository.GetActiveProviderRegistrations();
             _logger.LogInformation("{count} {focus}",activeProviders.Count, focusText);
@@ -42,7 +43,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
         public async Task RemoveProvidersAlreadyPresentOnRoatp(List<CdProvider> providers)
         {
-            var focusText = "providers already present in roatp database";
+            const string focusText = "providers already present in roatp database";
             _logger.LogInformation("Gathering {focus}", focusText);
             var currentProviders = await _providerReadRepository.GetAllProviders();
             _logger.LogInformation("{count} {focus}", currentProviders.Count, focusText);
@@ -52,10 +53,10 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             _logger.LogInformation("{count} CD providers to insert after removing {focus}", providers.Count, focusText);
         }
 
-        public async Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
+        public  Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
         {
             var metrics = new BetaAndPilotProviderMetrics();
-            var focusText = "beta and pilot providers";
+            const string focusText = "beta and pilot providers";
 
             var betaAndPilotUkprns = BetaProviders.Ukprns;
             betaAndPilotUkprns.AddRange(PilotProviders.Ukprns);
@@ -68,10 +69,10 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             providers.RemoveAll(x => !betaAndPilotUkprns.Distinct().Contains(x.Ukprn));
             _logger.LogInformation("{count} CD providers to insert after removing non-{focus}",providers.Count, focusText);
 
-            return metrics;
+            return Task.FromResult(metrics);
         }
 
-        public async Task<LocationDuplicationMetrics> CleanseDuplicateLocationNames(CdProvider provider)
+        public Task<LocationDuplicationMetrics> CleanseDuplicateLocationNames(CdProvider provider)
         {
             var metrics = new LocationDuplicationMetrics();
 
@@ -100,10 +101,10 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 }
             }
             
-            return metrics;
+            return Task.FromResult(metrics);
         }
 
-        public async Task<LarsCodeDuplicationMetrics> CleanseDuplicateLarsCodes(CdProvider provider)
+        public Task<LarsCodeDuplicationMetrics> CleanseDuplicateLarsCodes(CdProvider provider)
         {
             var metrics = new LarsCodeDuplicationMetrics();
 
@@ -121,19 +122,23 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 }
             }
 
-            if (!coursesToRemove.Any()) return metrics;
-            metrics.ProvidersWithDuplicateStandards++;
-            foreach (var courseToRemove in coursesToRemove)
+            if (coursesToRemove.Any())
             {
-                provider.Standards.Remove(courseToRemove);
-                metrics.ProviderStandardsRemoved++;
-                _logger.LogWarning("Duplicate lars code - provider UKPRN {ukprn}: removing duplicate larsCode {standardCode}'", provider.Ukprn,courseToRemove.StandardCode);
+                metrics.ProvidersWithDuplicateStandards++;
+                foreach (var courseToRemove in coursesToRemove)
+                {
+                    provider.Standards.Remove(courseToRemove);
+                    metrics.ProviderStandardsRemoved++;
+                    _logger.LogWarning(
+                        "Duplicate lars code - provider UKPRN {ukprn}: removing duplicate larsCode {standardCode}'",
+                        provider.Ukprn, courseToRemove.StandardCode);
+                }
             }
 
-            return metrics;
+            return Task.FromResult(metrics); 
         }
 
-        public async Task AugmentPilotData(Provider provider)
+        public Task AugmentPilotData(Provider provider)
         {
             if (PilotProviders.Ukprns.Any(x => x == provider.Ukprn))
             {
@@ -143,9 +148,11 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                     _logger.LogInformation("Adding pilot courses for UKPRN {ukprn} LarsCode {LarsCode}", provider.Ukprn, larsCode);
                 }
             }
+
+            return Task.CompletedTask;
         }
 
-        public async Task<(bool, Provider)> MapCourseDirectoryProvider(CdProvider cdProvider, List<Standard> standards, List<Region> regions)
+        public Task<(bool, Provider)> MapCourseDirectoryProvider(CdProvider cdProvider, List<Standard> standards, List<Region> regions)
         {
             var provider = new Provider
             {
@@ -172,7 +179,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                     if (regionId == null)
                     {
                         _logger.LogWarning("Region location cannot be mapped to {name}",cdProviderLocation.Name);
-                        return (false, null);
+                        return Task.FromResult((false, (Provider)null));
                     }
                 }
 
@@ -267,7 +274,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
             provider.Courses = providerCourses;
 
-            return (true, provider);
+            return Task.FromResult((true, provider));
         }
     }
 }
