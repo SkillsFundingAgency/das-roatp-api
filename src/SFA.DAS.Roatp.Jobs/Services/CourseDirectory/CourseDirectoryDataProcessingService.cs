@@ -203,9 +203,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 });
             }
 
-
-          //  var providerCourses = new List<ProviderCourse>(); 
-            
             foreach (var cdProviderCourse in cdProvider.Standards)
             {
                 var standard = standards.FirstOrDefault(x => x.LarsCode == cdProviderCourse.StandardCode);
