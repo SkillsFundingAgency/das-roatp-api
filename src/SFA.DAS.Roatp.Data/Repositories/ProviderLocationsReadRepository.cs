@@ -26,5 +26,13 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .AsNoTracking()
                 .ToListAsync();
         }
+        public async Task<List<ProviderLocation>> GetProviderLocationsById(int providerLocationId)
+        {
+            return await _roatpDataContext
+                .ProviderLocations
+                .Where(p => p.Id == providerLocationId)
+                .AsNoTracking()
+                .ToListAsync();
+        }
     }
 }

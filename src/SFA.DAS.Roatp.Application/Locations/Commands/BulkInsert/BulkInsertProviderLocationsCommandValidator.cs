@@ -3,9 +3,9 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 {
-    public class BulkDeleteProviderLocationsCommandValidator : AbstractValidator<BulkInsertProviderLocationsCommand>
+    public class BulkInsertProviderLocationsCommandValidator : AbstractValidator<BulkInsertProviderLocationsCommand>
     {
-        public BulkDeleteProviderLocationsCommandValidator(IProviderReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository)
+        public BulkInsertProviderLocationsCommandValidator(IProviderReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository)
         {
             RuleFor(c => c.Ukprn)
                 .GreaterThan(10000000)

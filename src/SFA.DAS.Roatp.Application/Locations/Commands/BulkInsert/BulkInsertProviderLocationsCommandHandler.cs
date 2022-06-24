@@ -11,42 +11,31 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 {
     public class BulkInsertProviderLocationsCommandHandler : IRequestHandler<BulkInsertProviderLocationsCommand, int>
     {
-        private readonly IProviderLocationsInsertRepository _providerLocationsInsertRepository;
-        private readonly IProviderLocationsDeleteRepository _providerLocationsDeleteRepository;
+        private readonly IProviderReadRepository _providerReadRepository;
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
         private readonly IRegionReadRepository _regionReadRepository;
+        private readonly IProviderLocationsInsertRepository _providerLocationsInsertRepository;
         private readonly ILogger<BulkInsertProviderLocationsCommandHandler> _logger;
 
-        public BulkInsertProviderLocationsCommandHandler(IProviderLocationsInsertRepository providerLocationsInsertRepository, IProviderLocationsDeleteRepository providerLocationsDeleteRepository, 
-            IProviderLocationsReadRepository providerLocationsReadRepository, IRegionReadRepository regionReadRepository, ILogger<BulkInsertProviderLocationsCommandHandler> logger)
+        public BulkInsertProviderLocationsCommandHandler(IProviderReadRepository providerReadRepository, IProviderLocationsReadRepository providerLocationsReadRepository,
+            IRegionReadRepository regionReadRepository, IProviderLocationsInsertRepository providerLocationsInsertRepository,
+             ILogger<BulkInsertProviderLocationsCommandHandler> logger)
         {
-            _providerLocationsInsertRepository = providerLocationsInsertRepository;
-            _providerLocationsDeleteRepository = providerLocationsDeleteRepository;
+            _providerReadRepository = providerReadRepository;
             _providerLocationsReadRepository = providerLocationsReadRepository;
             _regionReadRepository = regionReadRepository;
+            _providerLocationsInsertRepository = providerLocationsInsertRepository;
             _logger = logger;
         }
 
         public async Task<int> Handle(BulkInsertProviderLocationsCommand command, CancellationToken cancellationToken)
         {
+            var provider = await _providerReadRepository.GetByUkprn(command.Ukprn);
             var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
-
-            if (!providerLocations.Any())
-            {
-                _logger.LogInformation("No locations are associated with Ukprn:{ukprn}", command.Ukprn);
-                return 0;
-            }
-
-            //IEnumerable<ProviderLocation> locationsToDelete = providerLocations.Where(l => l.LocationType == LocationType.Regional);
-
-            //var count = locationsToDelete.Count();
-
-            //_logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn}", count, LocationType.Regional, command.Ukprn);
-            //await _providerLocationsDeleteRepository.BulkDelete(locationsToDelete.Select(l => l.Id));
 
             var regions = await _regionReadRepository.GetAllRegions();
             List<ProviderLocation> locationsToInsert = new List<ProviderLocation>();
-            foreach (var i in command.SubregionIds)
+            foreach (var i in command.SelectedSubregionIds)
             {
                 var region = regions.FirstOrDefault(r => r.Id == i);
                 var providerLocation = new ProviderLocation();
@@ -57,10 +46,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
                 providerLocation.AddressLine1 = region.SubregionName;
                 providerLocation.Latitude = region.Latitude;
                 providerLocation.Longitude = region.Longitude;
-                providerLocation.ProviderId = providerLocations.FirstOrDefault().ProviderId;
-                providerLocation.Email = providerLocations.FirstOrDefault().Email;
-                providerLocation.Website = providerLocations.FirstOrDefault().Website;
-                providerLocation.Phone = providerLocations.FirstOrDefault().Phone;
+                providerLocation.ProviderId = provider.Id;
                 locationsToInsert.Add(providerLocation);
             }
             _logger.LogInformation("{count} {locationType} locations will be inserted for Ukprn:{ukprn}", locationsToInsert.Count(), LocationType.Regional, command.Ukprn);

@@ -25,9 +25,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
 
         [HttpPost]
         [Route("/providers/{ukprn}/locations/bulk")]
-        [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(List<ProviderLocationModel>), 200)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public async Task<ActionResult<List<ProviderLocationModel>>> BulkInsertProviderLocations([FromRoute] int ukprn,  ProviderLocationsInsertModel providerLocationsInsertModel)
         {
             _logger.LogInformation("Inner API: Request received to bulk insert locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, providerLocationsInsertModel.LarsCode, providerLocationsInsertModel.UserId);
