@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Jobs.ApiModels;
 using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 using SFA.DAS.Roatp.Jobs.Services.Metrics;
@@ -143,10 +141,17 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         {
             if (PilotProviders.Ukprns.Any(x => x == provider.Ukprn))
             {
-                foreach (var larsCode in PilotProviderCourses.LarsCodes.Where(l => provider.Courses.All(x => x.LarsCode != l)))
+                foreach (var larsCode in PilotProviderCourses.LarsCodes)
                 {
-                    provider.Courses.Add(new ProviderCourse { LarsCode = larsCode, HasPortableFlexiJobOption = true });
-                    _logger.LogInformation("Adding pilot courses for UKPRN {ukprn} LarsCode {LarsCode}", provider.Ukprn, larsCode);
+                    if (provider.Courses.All(x => x.LarsCode != larsCode))
+                    {
+                        provider.Courses.Add(new ProviderCourse { LarsCode = larsCode, HasPortableFlexiJobOption = true });
+                        _logger.LogInformation("Adding pilot courses for UKPRN {ukprn} LarsCode {LarsCode}", provider.Ukprn, larsCode);
+                    }
+                    else
+                    {
+                        provider.Courses.First(x => x.LarsCode == larsCode).HasPortableFlexiJobOption = true;
+                    }
                 }
             }
 
@@ -169,7 +174,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 IsImported = true
             };
 
-            var providerLocations = new List<ProviderLocation>();
             foreach (var cdProviderLocation in cdProvider.Locations)
             {
                 int? regionId = null;
@@ -178,7 +182,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 if(!regionIdMapped)
                     return Task.FromResult((false, (Provider)null));
 
-                providerLocations.Add(new ProviderLocation
+                provider.Locations.Add(new ProviderLocation
                 {
                     ImportedLocationId = cdProviderLocation.Id,
                     NavigationId = Guid.NewGuid(),
@@ -199,9 +203,8 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 });
             }
 
-            provider.Locations = providerLocations;
 
-            var providerCourses = new List<ProviderCourse>(); 
+          //  var providerCourses = new List<ProviderCourse>(); 
             
             foreach (var cdProviderCourse in cdProvider.Standards)
             {
@@ -260,10 +263,8 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 }
 
                 newProviderCourse.Locations = providerCourseLocations;
-                providerCourses.Add(newProviderCourse);
+                provider.Courses.Add(newProviderCourse);
             }
-
-            provider.Courses = providerCourses;
 
             return Task.FromResult((true, provider));
         }

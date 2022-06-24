@@ -16,26 +16,27 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
     {
         private readonly IGetCourseDirectoryDataService _getCourseDirectoryDataService;
         private readonly ICourseDirectoryDataProcessingService _courseDirectoryDataProcessingService;
-        private readonly IImportCourseDirectoryDataService _importCourseDirectoryDataService;
-        private readonly IStandardReadRepository _standardReadReadRepository;
+        private readonly IStandardReadRepository _standardReadRepository;
         private readonly IRegionReadRepository _regionReadRepository;
+        private readonly ILoadProviderRepository _loadProvider;
+
         private readonly ILogger<LoadCourseDirectoryDataService> _logger;
 
-        public LoadCourseDirectoryDataService(IGetCourseDirectoryDataService getCourseDirectoryDataService,   ICourseDirectoryDataProcessingService courseDirectoryDataProcessingService, IImportCourseDirectoryDataService importCourseDirectoryDataService,  IStandardReadRepository standardReadReadRepository, IRegionReadRepository regionReadRepository, ILogger<LoadCourseDirectoryDataService> logger)
+        public LoadCourseDirectoryDataService(IGetCourseDirectoryDataService getCourseDirectoryDataService,   ICourseDirectoryDataProcessingService courseDirectoryDataProcessingService,   IStandardReadRepository standardReadRepository, IRegionReadRepository regionReadRepository, ILogger<LoadCourseDirectoryDataService> logger, ILoadProviderRepository loadProvider)
         {
             _getCourseDirectoryDataService = getCourseDirectoryDataService;
             _courseDirectoryDataProcessingService = courseDirectoryDataProcessingService;
-            _importCourseDirectoryDataService = importCourseDirectoryDataService;
-            _standardReadReadRepository = standardReadReadRepository;
+            _standardReadRepository = standardReadRepository;
             _regionReadRepository = regionReadRepository;
             _logger = logger;
+            _loadProvider = loadProvider;
         }
 
         public async Task<CourseDirectoryImportMetrics> LoadCourseDirectoryData(bool betaAndPilotProvidersOnly)
         {
             var standards = await GetStandards();
-            var regions = await GetRegions();
-
+            var regions =  await GetRegions();
+            
             var cdProviders = await _getCourseDirectoryDataService.GetCourseDirectoryData();
 
             var betaAndPilotProviderMetrics = (BetaAndPilotProviderMetrics)null;
@@ -70,9 +71,19 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 else
                 {
                     await _courseDirectoryDataProcessingService.AugmentPilotData(provider);
-                    var loadMetricsProvider = await _importCourseDirectoryDataService.ImportProviders(provider);
-                    loadMetrics.SuccessfulLoads += loadMetricsProvider.SuccessfulLoads;
-                    loadMetrics.FailedLoads += loadMetricsProvider.FailedLoads;
+                    
+                    var successfulLoading = await _loadProvider.LoadProvider(provider);
+                    if (successfulLoading)
+                    {
+                        _logger.LogInformation("Ukprn {ukprn} mapped and loaded successfully", provider.Ukprn);
+                        loadMetrics.SuccessfulLoads += 1;
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Ukprn {ukprn} failed to load", provider.Ukprn);
+                        loadMetrics.SuccessfulLoads += 1;
+                    }
+
                 }
             }
             
@@ -111,7 +122,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
         private async Task<List<Standard>> GetStandards()
         {
-            var standards = await _standardReadReadRepository.GetAllStandards();
+            var standards = await _standardReadRepository.GetAllStandards();
             if (standards == null || standards.Count == 0)
             {
                 var errorMessage = "No standards could be retrieved from the standards cache";

@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Roatp.Jobs.ApiModels
+﻿namespace SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory
 {
     public class Address
     {
