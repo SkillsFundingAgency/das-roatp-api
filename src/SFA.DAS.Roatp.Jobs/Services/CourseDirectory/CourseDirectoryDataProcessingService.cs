@@ -212,11 +212,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             {
                 var standard = standards.FirstOrDefault(x => x.LarsCode == cdProviderCourse.StandardCode);
 
-                if (standard?.LarsCode == null || standard.LarsCode == 0)
-                {
-                    _logger.LogWarning("LarsCode {standardCode} for ukprn {ukprn} found no match in courses-api", cdProviderCourse.StandardCode, cdProvider.Ukprn);
-                    break;
-                }
+                if (CheckStandardLarsCode( standard,cdProviderCourse.StandardCode, cdProvider.Ukprn)) break;
 
                 var newProviderCourse = new ProviderCourse
                 {
@@ -231,8 +227,8 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                     {
                         new ProviderCourseVersion
                         {
-                            StandardUId = standard.StandardUId,
-                            Version = standard.Version
+                            StandardUId = standard?.StandardUId,
+                            Version = standard?.Version
                         }
                     }
                 };
@@ -241,31 +237,9 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
                 foreach (var courseLocation in cdProviderCourse.Locations)
                 {
-                    var blockRelease = courseLocation.DeliveryModes.Any(deliveryMode => deliveryMode == DeliveryMode.BlockRelease);
-                    var dayRelease = courseLocation.DeliveryModes.Any(deliveryMode => deliveryMode == DeliveryMode.DayRelease);
-
+                  
                     var providerLocation = provider.Locations.FirstOrDefault(x => x.ImportedLocationId == courseLocation.Id);
-
-                    if (providerLocation == null)
-                    {
-                        //PRODCHECK
-                        // there are numerous cases of the provider.location not existing for the providercourselocation id
-                        // it seems reasonable to continue as the remaining data is coherent
-                        // need to check this doesn't happen in prod, and if it does, how to deal with it
-                        _logger.LogWarning("Provider course location id {id} found no match in provider location for ukprn: {ukprn}", courseLocation.Id, cdProvider.Ukprn);
-                    }
-                    else
-                    {
-                        providerCourseLocations.Add(new ProviderCourseLocation
-                        {
-                            NavigationId = Guid.NewGuid(),
-                            Course = newProviderCourse,
-                            Location = providerLocation,
-                            HasDayReleaseDeliveryOption = dayRelease,
-                            HasBlockReleaseDeliveryOption = blockRelease,
-                            IsImported = true
-                        });
-                    }
+                    AddProviderLocation(providerCourseLocations, providerLocation,  newProviderCourse, courseLocation,  cdProvider.Ukprn );
                 }
 
                 newProviderCourse.Locations = providerCourseLocations;
@@ -275,6 +249,44 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             provider.Courses = providerCourses;
 
             return Task.FromResult((true, provider));
+        }
+
+        private void AddProviderLocation(ICollection<ProviderCourseLocation> providerCourseLocations, ProviderLocation providerLocation, ProviderCourse newProviderCourse,
+            CdProviderCourseLocation courseLocation, int cdProviderUkprn)
+        {
+            if (providerLocation == null)
+            {
+                //PRODCHECK
+                // there are numerous cases of the provider.location not existing for the providercourselocation id
+                // it seems reasonable to continue as the remaining data is coherent
+                // need to check this doesn't happen in prod, and if it does, how to deal with it
+                _logger.LogWarning("Provider course location id {id} found no match in provider location for ukprn: {ukprn}",
+                    courseLocation.Id, cdProviderUkprn);
+            }
+            else
+            {
+                var blockRelease = courseLocation.DeliveryModes.Any(deliveryMode => deliveryMode == DeliveryMode.BlockRelease);
+                var dayRelease = courseLocation.DeliveryModes.Any(deliveryMode => deliveryMode == DeliveryMode.DayRelease);
+
+                providerCourseLocations.Add(new ProviderCourseLocation
+                {
+                    NavigationId = Guid.NewGuid(),
+                    Course = newProviderCourse,
+                    Location = providerLocation,
+                    HasDayReleaseDeliveryOption = dayRelease,
+                    HasBlockReleaseDeliveryOption = blockRelease,
+                    IsImported = true
+                });
+            }
+        }
+
+        private bool CheckStandardLarsCode( Standard standard, int cdProviderCourseStandardCode, int cdProviderUkprn)
+        {
+            if (standard?.LarsCode != null && standard.LarsCode != 0) return false;
+            _logger.LogWarning("LarsCode {standardCode} for ukprn {ukprn} found no match in courses-api",
+                cdProviderCourseStandardCode, cdProviderUkprn);
+            return true;
+
         }
     }
 }
