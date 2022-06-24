@@ -7,14 +7,14 @@ namespace SFA.DAS.Roatp.Api.Models
     {
         public string UserId { get; set; }
         public int LarsCode { get; set; }
-        public List<int> SubregionIds { get; set; }
+        public List<int> SelectedSubregionIds { get; set; } = new List<int>();
 
         public static implicit operator BulkInsertProviderLocationsCommand(ProviderLocationsInsertModel model) =>
             new BulkInsertProviderLocationsCommand
             {
                 UserId = model.UserId,
                 LarsCode = model.LarsCode,
-                SubregionIds = model.SubregionIds
+                SelectedSubregionIds = model.SelectedSubregionIds
             };
     }
 }
