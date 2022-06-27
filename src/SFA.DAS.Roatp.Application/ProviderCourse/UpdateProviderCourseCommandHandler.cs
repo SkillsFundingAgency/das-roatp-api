@@ -34,8 +34,9 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
             providerCourse.ContactUsPageUrl = request.ContactUsPageUrl;
             providerCourse.ContactUsPhoneNumber = request.ContactUsPhoneNumber;
             providerCourse.StandardInfoUrl = request.StandardInfoUrl;
+            providerCourse.IsApprovedByRegulator = request.IsApprovedByRegulator;
 
-            await _providerCourseEditRepository.UpdateContactDetails(providerCourse);
+            await _providerCourseEditRepository.UpdateProviderCourse(providerCourse);
 
             return Unit.Value;
         }

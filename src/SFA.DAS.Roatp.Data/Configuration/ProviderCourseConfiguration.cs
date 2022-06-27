@@ -12,7 +12,6 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.HasKey(p => p.Id);
             builder.Property(p => p.ProviderId).IsRequired();
             builder.Property(p => p.LarsCode).IsRequired();
-            builder.Property(p => p.IfateReferenceNumber).HasMaxLength(10);
             builder.Property(p => p.StandardInfoUrl).IsRequired().HasMaxLength(500);
             builder.Property(p => p.ContactUsPageUrl).HasMaxLength(500);
             builder.Property(p => p.ContactUsEmail).HasMaxLength(500);

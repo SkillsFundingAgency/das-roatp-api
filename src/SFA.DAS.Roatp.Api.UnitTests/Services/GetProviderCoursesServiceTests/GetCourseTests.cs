@@ -33,14 +33,12 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Services.GetProviderCoursesServiceTests
             var providerCourses = new ProviderCourse
             {
                 LarsCode = 1,
-                IfateReferenceNumber = "ST1001",
                 IsImported = true
             };
             var standardLookUp = new Standard
             {
                 LarsCode = 1,
                 Level = 1,
-                IfateReferenceNumber = "ST1002",
                 Title = "Test training-1",
                 ApprovalBody = "approval body 1"
             };

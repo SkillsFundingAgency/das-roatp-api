@@ -15,9 +15,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public decimal? EmployerSatisfaction { get; set; }
         public decimal? LearnerSatisfaction { get; set; }
         public bool IsImported { get; set; } = false; 
-        public bool? HasConfirmedLocations { get; set; } //Required if imported
-        public bool? HasConfirmedDetails { get; set; } //Required if imported
-
 
         public virtual List<ProviderLocation> Locations { get; set; } = new List<ProviderLocation>();
 
