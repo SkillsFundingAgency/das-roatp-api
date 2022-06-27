@@ -33,6 +33,9 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 throw new InvalidOperationException(errorMessage);
             }
 
+            var sizeOfResponse = courseDirectoryResponse.Length;
+            var sizeInMegabytes = ((sizeOfResponse / 1024F) / 1024F).ToString("0.00");
+            _logger.LogInformation("Course Directory Date size: {sizeOfResponse} Mb",sizeInMegabytes);
             var cdProviders = JsonConvert.DeserializeObject<List<CdProvider>>(courseDirectoryResponse);
             _logger.LogInformation("GetCourseDirectoryData: {count} providers returned from Course Directory", cdProviders.Count);
 
