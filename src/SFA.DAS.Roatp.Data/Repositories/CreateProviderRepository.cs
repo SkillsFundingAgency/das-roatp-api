@@ -1,10 +1,11 @@
-﻿using System;
-using System.Threading.Tasks;
-using SFA.DAS.Roatp.Domain.Entities;
+﻿using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
+    [ExcludeFromCodeCoverage]
     internal class CreateProviderRepository : ICreateProviderRepository
     {
         private readonly RoatpDataContext _roatpDataContext;

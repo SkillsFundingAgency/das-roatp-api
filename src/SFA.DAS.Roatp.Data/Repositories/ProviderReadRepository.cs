@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
+    [ExcludeFromCodeCoverage]
     internal class ProviderReadRepository : IProviderReadRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
