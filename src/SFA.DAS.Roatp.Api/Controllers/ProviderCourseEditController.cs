@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         }
 
         [Route("/providers/{ukprn}/courses/{larsCode}")]
-        [HttpPost]
+        [HttpPut]
         public async Task<IActionResult> Save([FromRoute]int ukprn, [FromRoute]int larsCode, ProviderCourseEditModel providerCourseEditModel)
         {
             _logger.LogInformation("Inner API: Request to update course contact details for ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, larsCode, providerCourseEditModel.UserId);

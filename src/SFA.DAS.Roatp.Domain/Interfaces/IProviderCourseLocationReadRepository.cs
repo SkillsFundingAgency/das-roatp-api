@@ -6,6 +6,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
 {
     public interface IProviderCourseLocationReadRepository
     {
-        Task<List<ProviderCourseLocation>> GetAllProviderCourseLocations(int providerCourseId);
+        Task<List<ProviderCourseLocation>> GetAllProviderCourseLocations(int ukprn, int larsCode);
     }
 }

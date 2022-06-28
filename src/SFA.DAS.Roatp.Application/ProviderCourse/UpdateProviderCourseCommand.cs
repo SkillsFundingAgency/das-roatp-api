@@ -1,8 +1,9 @@
 ﻿using MediatR;
+using SFA.DAS.Roatp.Application.Common;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse
 {
-    public class UpdateProviderCourseCommand : IRequest
+    public class UpdateProviderCourseCommand : IRequest, IUkprn, ILarsCode
     {
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }
