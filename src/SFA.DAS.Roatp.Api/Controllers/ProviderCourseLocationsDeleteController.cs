@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    public class DeleteProviderCourseLocationsController : ControllerBase
+    public class ProviderCourseLocationsDeleteController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<DeleteProviderCourseLocationsController> _logger;
+        private readonly ILogger<ProviderCourseLocationsDeleteController> _logger;
 
-        public DeleteProviderCourseLocationsController(IMediator mediator, ILogger<DeleteProviderCourseLocationsController> logger)
+        public ProviderCourseLocationsDeleteController(IMediator mediator, ILogger<ProviderCourseLocationsDeleteController> logger)
         {
             _mediator = mediator;
             _logger = logger;

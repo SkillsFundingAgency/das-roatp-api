@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         [Test, MoqAutoData]
         public async Task BulkDeleteProviderCourseLocations_CallsHandler(
             [Frozen] Mock<IMediator> _mediatorMock,
-            [Greedy] DeleteProviderCourseLocationsController sut,
+            [Greedy] ProviderCourseLocationsDeleteController sut,
             int ukprn, int larsCode, DeleteProviderCourseLocationOption options, string userId)
         {
             await sut.BulkDeleteProviderCourseLocations(ukprn, larsCode, options, userId);
@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         [Test, MoqAutoData]
         public async Task BulkDeleteProviderCourseLocations_ZeroResults_ReturnsNoContentResponse(
             [Frozen] Mock<IMediator> _mediatorMock,
-            [Greedy] DeleteProviderCourseLocationsController sut,
+            [Greedy] ProviderCourseLocationsDeleteController sut,
             int ukprn, int larsCode, DeleteProviderCourseLocationOption options, string userId)
         {
             _mediatorMock.Setup(m => m.Send(It.Is<BulkDeleteProviderCourseLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.DeleteProviderCourseLocationOptions == options), It.IsAny<CancellationToken>())).ReturnsAsync(0);
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         [Test, MoqAutoData]
         public async Task BulkDeleteProviderCourseLocations_MoreThanZeroResults_ReturnsNoContentResponse(
             [Frozen] Mock<IMediator> _mediatorMock,
-            [Greedy] DeleteProviderCourseLocationsController sut,
+            [Greedy] ProviderCourseLocationsDeleteController sut,
             int ukprn, int larsCode, DeleteProviderCourseLocationOption options, string userId)
         {
             _mediatorMock.Setup(m => m.Send(It.Is<BulkDeleteProviderCourseLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.DeleteProviderCourseLocationOptions == options), It.IsAny<CancellationToken>())).ReturnsAsync(1);
