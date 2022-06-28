@@ -43,7 +43,6 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
                 providerLocation.NavigationId = System.Guid.NewGuid();
                 providerLocation.RegionId = region.Id;
                 providerLocation.LocationName = region.SubregionName;
-                providerLocation.AddressLine1 = region.SubregionName;
                 providerLocation.Latitude = region.Latitude;
                 providerLocation.Longitude = region.Longitude;
                 providerLocation.ProviderId = provider.Id;
