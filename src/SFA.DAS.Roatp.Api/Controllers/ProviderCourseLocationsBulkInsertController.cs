@@ -9,7 +9,6 @@ using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert;
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]/")]
     public class ProviderCourseLocationsBulkInsertController : Controller
     {
         private readonly ILogger<ProviderCourseLocationsBulkInsertController> _logger;
@@ -27,10 +26,12 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public async Task<IActionResult> BulkInsertProviderCourseLocations([FromRoute] int ukprn, ProviderCourseLocationsInsertModel providerLocationsInsertModel)
         {
-            _logger.LogInformation("Inner API: Request received to bulk insert locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, providerLocationsInsertModel.LarsCode, providerLocationsInsertModel.UserId);
+            _logger.LogInformation("Inner API: Request received to bulk insert provider course locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, providerLocationsInsertModel.LarsCode, providerLocationsInsertModel.UserId);
             var command = (BulkInsertProviderCourseLocationsCommand)providerLocationsInsertModel;
             command.Ukprn = ukprn;
-            await _mediator.Send(command);
+            var result = await _mediator.Send(command);
+            _logger.LogInformation("Inserted {numberOfRecordsInserted} provider course locations for Ukprn:{ukprn} LarsCode:{larscode}", result, ukprn, providerLocationsInsertModel.LarsCode);
+
             return NoContent();
         }
     }

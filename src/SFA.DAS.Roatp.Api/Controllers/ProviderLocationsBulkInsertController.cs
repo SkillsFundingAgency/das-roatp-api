@@ -11,7 +11,6 @@ using SFA.DAS.Roatp.Application.Locations.Queries;
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]/")]
     public class ProviderLocationsBulkInsertController : Controller
     {
         private readonly ILogger<ProviderLocationsBulkInsertController> _logger;
@@ -32,7 +31,9 @@ namespace SFA.DAS.Roatp.Api.Controllers
             _logger.LogInformation("Inner API: Request received to bulk insert locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, providerLocationsInsertModel.LarsCode, providerLocationsInsertModel.UserId);
             var command = (BulkInsertProviderLocationsCommand)providerLocationsInsertModel;
             command.Ukprn = ukprn;
-            await _mediator.Send(command);
+            var result =  await _mediator.Send(command);
+            _logger.LogInformation("Inserted {numberOfRecordsInserted} provider locations for Ukprn:{ukprn} LarsCode:{larscode}", result, ukprn, providerLocationsInsertModel.LarsCode);
+
             return NoContent();
         }
     }

@@ -18,20 +18,13 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public async Task BulkDelete(IEnumerable<int> providerLocationIds)
         {
-            try
-            {
-                var providerLocations = await _roatpDataContext.ProviderLocations
-                    .Where(l => providerLocationIds.Contains(l.Id))
-                    .ToListAsync();
+            var providerLocations = await _roatpDataContext.ProviderLocations
+                .Where(l => providerLocationIds.Contains(l.Id))
+                .ToListAsync();
 
-                _roatpDataContext.ProviderLocations.RemoveRange(providerLocations);
+            _roatpDataContext.ProviderLocations.RemoveRange(providerLocations);
 
-                await _roatpDataContext.SaveChangesAsync();
-            }
-            catch(Exception e)
-            {
-
-            }
+            await _roatpDataContext.SaveChangesAsync();
         }
     }
 }
