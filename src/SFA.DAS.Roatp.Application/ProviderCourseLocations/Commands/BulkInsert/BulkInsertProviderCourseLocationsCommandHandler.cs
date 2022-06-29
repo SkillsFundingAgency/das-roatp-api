@@ -38,9 +38,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
             var providerCourses = await _providerCourseReadRepository.GetAllProviderCourses(provider.Id);
             var providerCourseLocations = await _providerCourseLocationReadRepository.GetAllProviderCourseLocations(command.Ukprn, command.LarsCode);
 
-            _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn}", providerCourseLocations.Count(), LocationType.Regional, command.Ukprn);
-            await _providerCourseLocationsDeleteRepository.BulkDelete(providerCourseLocations.Select(l => l.Id));
-
             List<ProviderCourseLocation> providerCourseLocationsToInsert = new List<ProviderCourseLocation>();
             foreach (var i in command.SelectedSubregionIds)
             {

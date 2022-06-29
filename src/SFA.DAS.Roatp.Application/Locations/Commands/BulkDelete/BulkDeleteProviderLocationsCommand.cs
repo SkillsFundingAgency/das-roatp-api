@@ -1,5 +1,4 @@
 ﻿using MediatR;
-using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
 {
@@ -8,7 +7,6 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }
         public string UserId { get; set; }
-        public List<int> DeSelectedSubregionIds { get; set; }
     }
 
 }
