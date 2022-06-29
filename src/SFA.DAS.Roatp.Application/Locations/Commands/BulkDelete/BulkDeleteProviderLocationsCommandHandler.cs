@@ -12,30 +12,33 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
     public class BulkDeleteProviderLocationsCommandHandler : IRequestHandler<BulkDeleteProviderLocationsCommand, int>
     {
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
+        private readonly IProviderCourseLocationReadRepository _providerCourseLocationReadRepository;
         private readonly IProviderLocationsDeleteRepository _providerLocationsDeleteRepository;
         private readonly ILogger<BulkDeleteProviderLocationsCommandHandler> _logger;
 
         public BulkDeleteProviderLocationsCommandHandler(IProviderLocationsReadRepository providerLocationsReadRepository,
             IProviderLocationsDeleteRepository providerLocationsDeleteRepository,
-             ILogger<BulkDeleteProviderLocationsCommandHandler> logger)
+            IProviderCourseLocationReadRepository providerCourseLocationReadRepository,
+            ILogger<BulkDeleteProviderLocationsCommandHandler> logger)
         {
             _providerLocationsReadRepository = providerLocationsReadRepository;
             _providerLocationsDeleteRepository = providerLocationsDeleteRepository;
+            _providerCourseLocationReadRepository = providerCourseLocationReadRepository;
             _logger = logger;
         }
 
         public async Task<int> Handle(BulkDeleteProviderLocationsCommand command, CancellationToken cancellationToken)
         {
             var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
+            var providerCourseLocations = await _providerCourseLocationReadRepository.GetProviderCourseLocationsByUkprn(command.Ukprn);
 
             var providerLocationIdsToDelete = new List<int>();
-            foreach (var r in command.DeSelectedSubregionIds)
+            foreach (var providerLocation in providerLocations)
             {
-                var providerLocationId = providerLocations.Find(l => l.RegionId == r).Id;
-                var providerLocationsById = await _providerLocationsReadRepository.GetProviderLocationsById(providerLocationId);
-                if(providerLocationsById.Count == 0)
+                var hasProviderCourseLocations = providerCourseLocations.Any(a => a.ProviderLocationId == providerLocation.Id);
+                if (!hasProviderCourseLocations)
                 {
-                    providerLocationIdsToDelete.Add(providerLocationId);
+                    providerLocationIdsToDelete.Add(providerLocation.Id);
                 }
             }
             _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn}", providerLocationIdsToDelete.Count(), LocationType.Regional, command.Ukprn);
