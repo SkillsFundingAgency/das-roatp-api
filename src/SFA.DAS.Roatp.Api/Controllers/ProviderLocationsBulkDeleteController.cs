@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete;
-using SFA.DAS.Roatp.Application.Locations.Queries;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -27,9 +24,13 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> BulkDeleteProviderLocations([FromRoute] int ukprn, [FromRoute] int larsCode, [FromQuery] string userId)
         {
-            _logger.LogInformation("Inner API: Request received to bulk insert locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, larsCode, userId);
+            _logger.LogInformation("Inner API: Request received to bulk delete provider locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, larsCode, userId);
+            
             var command = new BulkDeleteProviderLocationsCommand(ukprn, larsCode,  userId);
-            await _mediator.Send(command);
+            var result = await _mediator.Send(command);
+
+            _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn} LarsCode:{larscode}", result, ukprn, larsCode);
+
             return NoContent();
         }
     }
