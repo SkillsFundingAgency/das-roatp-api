@@ -7,6 +7,5 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     public interface IProviderLocationsReadRepository
     {
         Task<List<ProviderLocation>> GetAllProviderLocations(int ukprn);
-        Task<List<ProviderLocation>> GetProviderLocationsById(int providerLocationId);
     }
 }

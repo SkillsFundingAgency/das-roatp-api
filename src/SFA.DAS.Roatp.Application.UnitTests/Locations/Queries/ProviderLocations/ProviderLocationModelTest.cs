@@ -21,6 +21,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
                  .Excluding(s => s.RegionId)
                  .Excluding(s => s.Provider)
                  .Excluding(s => s.Region)
+                 .Excluding(s => s.ProviderCourseLocations)
             );
         }
     }
