@@ -11,7 +11,6 @@ using SFA.DAS.Roatp.Application.Locations.Queries;
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]/")]
     public class ProviderLocationsBulkDeleteController : Controller
     {
         private readonly ILogger<ProviderLocationsBulkDeleteController> _logger;
@@ -23,15 +22,13 @@ namespace SFA.DAS.Roatp.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpPost]
-        [Route("/providers/{ukprn}/locations/cleanup")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
-        public async Task<ActionResult<List<ProviderLocationModel>>> BulkDeleteProviderLocations([FromRoute] int ukprn,  ProviderLocationsDeleteModel providerLocationsDeleteModel)
+        [HttpDelete]
+        [Route("/providers/{ukprn}/locations/{LarsCode}/cleanup")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        public async Task<ActionResult> BulkDeleteProviderLocations([FromRoute] int ukprn, [FromRoute] int larsCode, [FromQuery] string userId)
         {
-            _logger.LogInformation("Inner API: Request received to bulk insert locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, providerLocationsDeleteModel.LarsCode, providerLocationsDeleteModel.UserId);
-            var command = (BulkDeleteProviderLocationsCommand)providerLocationsDeleteModel;
-            command.Ukprn = ukprn;
+            _logger.LogInformation("Inner API: Request received to bulk insert locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, larsCode, userId);
+            var command = new BulkDeleteProviderLocationsCommand(ukprn, larsCode,  userId);
             await _mediator.Send(command);
             return NoContent();
         }

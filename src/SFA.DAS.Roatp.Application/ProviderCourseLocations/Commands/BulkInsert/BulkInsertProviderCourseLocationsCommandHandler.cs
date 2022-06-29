@@ -12,19 +12,18 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
     public class BulkInsertProviderCourseLocationsCommandHandler : IRequestHandler<BulkInsertProviderCourseLocationsCommand, int>
     {
         private readonly IProviderCourseLocationsInsertRepository _providerCourseLocationsInsertRepository;
-        private readonly IProviderCourseLocationsDeleteRepository _providerCourseLocationsDeleteRepository;
-        private readonly IProviderCourseLocationReadRepository _providerCourseLocationReadRepository;
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
         private readonly IProviderCourseReadRepository _providerCourseReadRepository;
         private readonly IProviderReadRepository _providerReadRepository;
         private readonly ILogger<BulkInsertProviderCourseLocationsCommandHandler> _logger;
 
-        public BulkInsertProviderCourseLocationsCommandHandler(IProviderCourseLocationsInsertRepository providerCourseLocationsInsertRepository, IProviderCourseLocationsDeleteRepository providerCourseLocationsDeleteRepository,
-            IProviderCourseLocationReadRepository providerCourseLocationReadRepository, ILogger<BulkInsertProviderCourseLocationsCommandHandler> logger, IProviderLocationsReadRepository providerLocationsReadRepository, IProviderCourseReadRepository providerCourseReadRepository, IProviderReadRepository providerReadRepository)
+        public BulkInsertProviderCourseLocationsCommandHandler(IProviderCourseLocationsInsertRepository providerCourseLocationsInsertRepository,
+            IProviderLocationsReadRepository providerLocationsReadRepository,
+            IProviderCourseReadRepository providerCourseReadRepository,
+            IProviderReadRepository providerReadRepository,
+            ILogger<BulkInsertProviderCourseLocationsCommandHandler> logger)
         {
             _providerCourseLocationsInsertRepository = providerCourseLocationsInsertRepository;
-            _providerCourseLocationsDeleteRepository = providerCourseLocationsDeleteRepository;
-            _providerCourseLocationReadRepository = providerCourseLocationReadRepository;
             _logger = logger;
             _providerLocationsReadRepository = providerLocationsReadRepository;
             _providerCourseReadRepository = providerCourseReadRepository;
@@ -36,15 +35,16 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
             var provider = await _providerReadRepository.GetByUkprn(command.Ukprn);
             var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
             var providerCourses = await _providerCourseReadRepository.GetAllProviderCourses(provider.Id);
-            var providerCourseLocations = await _providerCourseLocationReadRepository.GetAllProviderCourseLocations(command.Ukprn, command.LarsCode);
 
             List<ProviderCourseLocation> providerCourseLocationsToInsert = new List<ProviderCourseLocation>();
             foreach (var i in command.SelectedSubregionIds)
             {
-                var providerCourseLocation = new ProviderCourseLocation();
-                providerCourseLocation.NavigationId = System.Guid.NewGuid();
-                providerCourseLocation.ProviderCourseId = providerCourses.First(a => a.LarsCode == command.LarsCode).Id;
-                providerCourseLocation.ProviderLocationId = providerLocations.First(a => a.RegionId == i).Id;
+                var providerCourseLocation = new ProviderCourseLocation
+                {
+                    NavigationId = System.Guid.NewGuid(),
+                    ProviderCourseId = providerCourses.First(a => a.LarsCode == command.LarsCode).Id,
+                    ProviderLocationId = providerLocations.First(a => a.RegionId == i).Id
+                };
                 providerCourseLocationsToInsert.Add(providerCourseLocation);
             }
             _logger.LogInformation("{count} {locationType} locations will be inserted for Ukprn:{ukprn}", providerCourseLocationsToInsert.Count(), LocationType.Regional, command.Ukprn);

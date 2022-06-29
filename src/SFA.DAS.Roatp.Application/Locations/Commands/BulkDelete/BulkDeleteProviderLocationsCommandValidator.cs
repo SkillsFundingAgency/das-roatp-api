@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
@@ -7,12 +8,9 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
     {
         public BulkDeleteProviderLocationsCommandValidator(IProviderReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository)
         {
-            RuleFor(c => c.Ukprn)
-                .GreaterThan(10000000)
-                .LessThan(99999999);
+            Include(new UkprnValidator(providerReadRepository));
 
-            RuleFor(c => c.LarsCode)
-                .GreaterThan(0);
+            Include(new LarsCodeValidator(providerReadRepository, providerCourseReadRepository));
 
             RuleFor(c => c.UserId).NotEmpty();
         }
