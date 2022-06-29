@@ -1,18 +1,16 @@
 ﻿using FluentValidation;
+using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
 {
-    public class BulkDeleteProviderCourseLocationsCommandValidator : AbstractValidator<BulkInsertProviderCourseLocationsCommand>
+    public class BulkInsertProviderCourseLocationsCommandValidator : AbstractValidator<BulkInsertProviderCourseLocationsCommand>
     {
-        public BulkDeleteProviderCourseLocationsCommandValidator(IProviderReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository)
+        public BulkInsertProviderCourseLocationsCommandValidator(IProviderReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository)
         {
-            RuleFor(c => c.Ukprn)
-                .GreaterThan(10000000)
-                .LessThan(99999999);
+            Include(new UkprnValidator(providerReadRepository));
 
-            RuleFor(c => c.LarsCode)
-                .GreaterThan(0);
+            Include(new LarsCodeValidator(providerReadRepository, providerCourseReadRepository));
 
             RuleFor(c => c.UserId).NotEmpty();
         }

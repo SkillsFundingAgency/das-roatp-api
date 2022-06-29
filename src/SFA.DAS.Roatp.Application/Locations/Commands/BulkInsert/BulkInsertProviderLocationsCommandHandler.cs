@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 
         public BulkInsertProviderLocationsCommandHandler(IProviderReadRepository providerReadRepository, IProviderLocationsReadRepository providerLocationsReadRepository,
             IRegionReadRepository regionReadRepository, IProviderLocationsInsertRepository providerLocationsInsertRepository,
-             ILogger<BulkInsertProviderLocationsCommandHandler> logger)
+            ILogger<BulkInsertProviderLocationsCommandHandler> logger)
         {
             _providerReadRepository = providerReadRepository;
             _providerLocationsReadRepository = providerLocationsReadRepository;
@@ -38,14 +38,16 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
             foreach (var i in command.SelectedSubregionIds)
             {
                 var region = regions.FirstOrDefault(r => r.Id == i);
-                var providerLocation = new ProviderLocation();
-                providerLocation.LocationType = LocationType.Regional;
-                providerLocation.NavigationId = System.Guid.NewGuid();
-                providerLocation.RegionId = region.Id;
-                providerLocation.LocationName = region.SubregionName;
-                providerLocation.Latitude = region.Latitude;
-                providerLocation.Longitude = region.Longitude;
-                providerLocation.ProviderId = provider.Id;
+                var providerLocation = new ProviderLocation
+                {
+                    LocationType = LocationType.Regional,
+                    NavigationId = System.Guid.NewGuid(),
+                    RegionId = region.Id,
+                    LocationName = region.SubregionName,
+                    Latitude = region.Latitude,
+                    Longitude = region.Longitude,
+                    ProviderId = provider.Id
+                };
                 locationsToInsert.Add(providerLocation);
             }
             _logger.LogInformation("{count} {locationType} locations will be inserted for Ukprn:{ukprn}", locationsToInsert.Count(), LocationType.Regional, command.Ukprn);
