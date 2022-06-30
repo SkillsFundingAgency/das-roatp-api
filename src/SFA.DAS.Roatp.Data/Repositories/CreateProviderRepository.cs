@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class CreateProviderRepository : ICreateProviderRepository
+    public class CreateProviderRepository : ICreateProviderRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
