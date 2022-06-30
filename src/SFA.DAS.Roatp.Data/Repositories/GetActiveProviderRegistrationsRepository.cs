@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
         public async Task<List<ProviderRegistrationDetail>> GetActiveProviderRegistrations()
         {
             var providerRegistrationDetails =  await _roatpDataContext.ProviderRegistrationDetails.AsNoTracking().ToListAsync();
-            _logger.LogInformation($"Retrieved {providerRegistrationDetails.Count()} provider registration details from ProviderRegistrationDetail");
+            _logger.LogInformation($"Retrieved {providerRegistrationDetails.Count} provider registration details from ProviderRegistrationDetail");
 
             var activeProviders = providerRegistrationDetails.Where(x =>
                 x.StatusId == OrganisationStatus.Active ||

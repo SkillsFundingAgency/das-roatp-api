@@ -47,9 +47,9 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
                 };
                 providerCourseLocationsToInsert.Add(providerCourseLocation);
             }
-            _logger.LogInformation("{count} {locationType} locations will be inserted for Ukprn:{ukprn}", providerCourseLocationsToInsert.Count(), LocationType.Regional, command.Ukprn);
+            _logger.LogInformation("{count} {locationType} locations will be inserted for Ukprn:{ukprn}", providerCourseLocationsToInsert.Count, LocationType.Regional, command.Ukprn);
             await _providerCourseLocationsInsertRepository.BulkInsert(providerCourseLocationsToInsert);
-            return providerCourseLocationsToInsert.Count();
+            return providerCourseLocationsToInsert.Count;
         }
     }
 }

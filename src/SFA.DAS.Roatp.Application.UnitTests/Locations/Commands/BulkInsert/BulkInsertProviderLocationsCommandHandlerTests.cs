@@ -18,7 +18,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_Inserts_Records(
             [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
-            [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
             [Frozen] Mock<IRegionReadRepository> regionReadRepositoryMock,
             BulkInsertProviderLocationsCommand command,
             BulkInsertProviderLocationsCommandHandler sut,
@@ -28,8 +27,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             var providerLocations = new List<ProviderLocation> { new ProviderLocation { Id = 1, ProviderId = 1, RegionId = command.SelectedSubregionIds.First() } };
             var regions = new List<Domain.Entities.Region>() { new Domain.Entities.Region { RegionName = "Test", Id = command.SelectedSubregionIds.First(), SubregionName = "Test", Latitude=11, Longitude=10} };
             providerReadRepositoryMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
-
-            providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
 
             regionReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(regions);
 
@@ -44,7 +41,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_Inserts_NoRecords(
             [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
-            [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
             [Frozen] Mock<IRegionReadRepository> regionReadRepositoryMock,
             Provider provider,
             List<ProviderLocation> providerLocations,
@@ -54,8 +50,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             CancellationToken cancellationToken)
         {
             providerReadRepositoryMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
-
-            providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
 
             regionReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(regions);
 
