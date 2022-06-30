@@ -41,9 +41,9 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
                     providerLocationIdsToDelete.Add(providerLocation.Id);
                 }
             }
-            _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn}", providerLocationIdsToDelete.Count(), LocationType.Regional, command.Ukprn);
+            _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn}", providerLocationIdsToDelete.Count, LocationType.Regional, command.Ukprn);
             await _providerLocationsDeleteRepository.BulkDelete(providerLocationIdsToDelete);
-            return providerLocationIdsToDelete.Count();
+            return providerLocationIdsToDelete.Count;
         }
     }
 }
