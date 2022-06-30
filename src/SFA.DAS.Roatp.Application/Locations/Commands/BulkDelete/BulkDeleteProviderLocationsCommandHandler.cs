@@ -33,12 +33,12 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
             var providerCourseLocations = await _providerCourseLocationReadRepository.GetProviderCourseLocationsByUkprn(command.Ukprn);
 
             var providerLocationIdsToDelete = new List<int>();
-            foreach (var providerLocation in providerLocations)
+            foreach (var providerLocationId in providerCourseLocations.Select(providerLocation => providerLocation.Id))
             {
-                var hasProviderCourseLocations = providerCourseLocations.Any(a => a.ProviderLocationId == providerLocation.Id);
+                var hasProviderCourseLocations = providerCourseLocations.Any(a => a.ProviderLocationId == providerLocationId);
                 if (!hasProviderCourseLocations)
                 {
-                    providerLocationIdsToDelete.Add(providerLocation.Id);
+                    providerLocationIdsToDelete.Add(providerLocationId);
                 }
             }
             _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn}", providerLocationIdsToDelete.Count, LocationType.Regional, command.Ukprn);
