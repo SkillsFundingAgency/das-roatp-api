@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {
     [TestFixture]
-    public class DeleteProviderCourseLocationsControllerTests
+    public class ProviderCourseLocationsDeleteControllerTests
     {
         [Test, MoqAutoData]
         public async Task BulkDeleteProviderCourseLocations_CallsHandler(
