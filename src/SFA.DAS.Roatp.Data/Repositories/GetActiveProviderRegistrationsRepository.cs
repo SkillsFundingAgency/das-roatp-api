@@ -1,5 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +9,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class GetActiveProviderRegistrationsRepository: IGetActiveProviderRegistrationsRepository
     {
         private readonly RoatpDataContext _roatpDataContext;

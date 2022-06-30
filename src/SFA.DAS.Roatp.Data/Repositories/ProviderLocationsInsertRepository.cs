@@ -1,10 +1,12 @@
 ﻿using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class ProviderLocationsInsertRepository : IProviderLocationsInsertRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
