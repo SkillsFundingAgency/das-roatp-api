@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             _logger = logger;
         }
 
-        public async Task RemoveProvidersNotActiveOnRegister(List<CdProvider> providers)
+        public async Task<int> RemoveProvidersNotActiveOnRegister(List<CdProvider> providers)
         {
             const string focusText = "active registered providers from roatp-service cache";
             _logger.LogInformation("Gathering {focus}",focusText);
@@ -38,9 +38,10 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
            
             providers.RemoveAll(x => !activeProviders.Select(x => x.Ukprn).Contains(x.Ukprn));
             _logger.LogInformation("{count} CD providers after removing non-{focus}", providers.Count, focusText);
+            return activeProviders.Count;
         }
 
-        public async Task RemoveProvidersAlreadyPresentOnRoatp(List<CdProvider> providers)
+        public async Task<int> RemovePreviouslyLoadedProviders(List<CdProvider> providers)
         {
             const string focusText = "providers already present in roatp database";
             _logger.LogInformation("Gathering {focus}", focusText);
@@ -50,6 +51,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
             providers.RemoveAll(x => currentProviders.Select(x => x.Ukprn).Contains(x.Ukprn));
             _logger.LogInformation("{count} CD providers to insert after removing {focus}", providers.Count, focusText);
+            return currentProviders.Count;
         }
 
         public  Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)

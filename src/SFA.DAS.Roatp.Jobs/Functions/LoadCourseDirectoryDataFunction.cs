@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -37,7 +38,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
 
             var loadMetrics = await _loadCourseDirectoryDataService.LoadCourseDirectoryData(betaAndPilotProvidersOnly);
 
-            log.LogInformation("Course Directory load complete");
+            log.LogInformation($"Course Directory load complete {JsonSerializer.Serialize(loadMetrics, new JsonSerializerOptions() { WriteIndented = true })}" );
             return new OkObjectResult(loadMetrics);
         }
     }

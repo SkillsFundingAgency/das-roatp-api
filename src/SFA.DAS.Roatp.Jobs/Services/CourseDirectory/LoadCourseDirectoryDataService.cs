@@ -34,27 +34,33 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
         public async Task<CourseDirectoryImportMetrics> LoadCourseDirectoryData(bool betaAndPilotProvidersOnly)
         {
-            var standards = await GetStandards();
-            var regions =  await GetRegions();
-            
-            var cdProviders = await _getCourseDirectoryDataService.GetCourseDirectoryData();
-
-            var betaAndPilotProviderMetrics = (BetaAndPilotProviderMetrics)null;
-            if (betaAndPilotProvidersOnly)
-                betaAndPilotProviderMetrics = await _courseDirectoryDataProcessingService.RemoveProvidersNotOnBetaOrPilotList(cdProviders);
-            else
-                await _courseDirectoryDataProcessingService.RemoveProvidersNotActiveOnRegister(cdProviders);
-
-            await _courseDirectoryDataProcessingService.RemoveProvidersAlreadyPresentOnRoatp(cdProviders);
-
-            var loadMetrics = new CourseDirectoryImportMetrics
+            var loadMetrics = new CourseDirectoryImportMetrics()
             {
-                ProvidersToLoad = cdProviders.Count,
                 LocationDuplicationMetrics = new LocationDuplicationMetrics(),
                 LarsCodeDuplicationMetrics = new LarsCodeDuplicationMetrics(),
-                BetaAndPilotProvidersOnly = betaAndPilotProvidersOnly,
-                BetaAndPilotProviderMetrics = betaAndPilotProviderMetrics
+                BetaAndPilotProvidersOnly = betaAndPilotProvidersOnly
             };
+
+            var standards = await GetStandards();
+            loadMetrics.TotalStandardsInCache = standards.Count;
+
+            var regions =  await GetRegions();
+
+            var cdProviders = await _getCourseDirectoryDataService.GetCourseDirectoryData();
+            loadMetrics.TotalProvidersFromCourseDirectory = cdProviders.Count;
+
+            if (betaAndPilotProvidersOnly)
+            {
+                loadMetrics.BetaAndPilotProviderMetrics = await _courseDirectoryDataProcessingService.RemoveProvidersNotOnBetaOrPilotList(cdProviders);
+            }
+            else
+            {
+                loadMetrics.TotalProvidersOnTheRegister = await _courseDirectoryDataProcessingService.RemoveProvidersNotActiveOnRegister(cdProviders);
+            }
+
+            loadMetrics.NumberOfProvidersAlreadyLoaded = await _courseDirectoryDataProcessingService.RemovePreviouslyLoadedProviders(cdProviders);
+
+            loadMetrics.TotalNumberOfProvidersToBeLoaded = cdProviders.Count;
 
             foreach (var cdProvider in cdProviders)
             {
@@ -66,7 +72,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 if (!successMapping)
                 {
                     _logger.LogWarning("Ukprn {ukprn} failed to map", cdProvider.Ukprn);
-                    loadMetrics.FailedMappings++;
+                    loadMetrics.NumberOfProvidersFailedDuringMapping++;
                 }
                 else
                 {
@@ -76,14 +82,13 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                     if (successfulLoading)
                     {
                         _logger.LogInformation("Ukprn {ukprn} mapped and loaded successfully", provider.Ukprn);
-                        loadMetrics.SuccessfulLoads += 1;
+                        loadMetrics.NumberOfProvidersLoadedSuccessfully++;
                     }
                     else
                     {
                         _logger.LogWarning("Ukprn {ukprn} failed to load", provider.Ukprn);
-                        loadMetrics.SuccessfulLoads += 1;
+                        loadMetrics.NumberOfProvidersLoadedSuccessfully++;
                     }
-
                 }
             }
             
