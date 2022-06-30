@@ -32,12 +32,12 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
         {
             var provider = await _providerReadRepository.GetByUkprn(command.Ukprn);
             var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
-
             var regions = await _regionReadRepository.GetAllRegions();
+
             List<ProviderLocation> locationsToInsert = new List<ProviderLocation>();
-            foreach (var i in command.SelectedSubregionIds)
+            foreach (var selectedSubregionId in command.SelectedSubregionIds)
             {
-                var region = regions.FirstOrDefault(r => r.Id == i);
+                var region = regions.FirstOrDefault(r => r.Id == selectedSubregionId);
                 var providerLocation = new ProviderLocation
                 {
                     LocationType = LocationType.Regional,
