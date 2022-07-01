@@ -9,7 +9,6 @@ using SFA.DAS.Roatp.Application.Region.Queries;
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]/")]
     public class RegionsController : Controller
     {
         private readonly ILogger<RegionsController> _logger;
@@ -22,7 +21,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         }
 
         [HttpGet]
-        [Route("/regions")]
+        [Route("/lookup/regions")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(List<RegionModel>), 200)]
