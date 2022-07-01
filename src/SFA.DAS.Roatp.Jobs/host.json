@@ -5,7 +5,8 @@
       "default": "Information",
       "Host.Results": "Error",
       "Function": "Error",
-      "Host.Aggregator": "Trace"
+      "Host.Aggregator": "Trace",
+      "Microsoft.EntityFrameworkCore.Database.Command": "Information"
     },
     "applicationInsights": {
       "samplingSettings": {
