@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public class ProviderLocationsDeleteRepository : IProviderLocationsDeleteRepository
+    internal class ProviderLocationsDeleteRepository : IProviderLocationsDeleteRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 

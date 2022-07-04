@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public class ReloadProviderRegistrationDetailsRepository : IReloadProviderRegistrationDetailsRepository
+    internal class ReloadProviderRegistrationDetailsRepository : IReloadProviderRegistrationDetailsRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
         private readonly ILogger<ReloadProviderRegistrationDetailsRepository> _logger;
