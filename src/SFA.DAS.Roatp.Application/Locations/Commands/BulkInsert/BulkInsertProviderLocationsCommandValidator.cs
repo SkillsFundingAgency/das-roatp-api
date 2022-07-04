@@ -24,12 +24,8 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
                   var regions = await regionReadRepository.GetAllRegions();
                   if (regions == null || !regions.Any()) return false;
                   var providerLocations = await providerLocationsReadRepository.GetAllProviderLocations(ukprn);
-                  foreach (var _ in model.SelectedSubregionIds.Where(Id => providerLocations.Exists(a => a.RegionId == Id)).Select(Id => new { }))
-                  {
-                      return false;
-                  }
 
-                  return true;
+                  return !model.SelectedSubregionIds.Any(a => providerLocations.Exists(b => b.RegionId == a));
               })
               .WithMessage(RegionsNotFoundErrorMessage);
         }
