@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
                 UserId = _userId
             };
 
-            var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderCourseReadRepository>());
+            var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IRegionReadRepository>(), Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderCourseReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
                 LarsCode = 123,
                 UserId = _userId
             };
-            var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderCourseReadRepository>());
+            var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IRegionReadRepository>(), Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderCourseReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
                 LarsCode = 123,
                 UserId = userId
             };
-            var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderCourseReadRepository>());
+            var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IRegionReadRepository>(), Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderCourseReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 

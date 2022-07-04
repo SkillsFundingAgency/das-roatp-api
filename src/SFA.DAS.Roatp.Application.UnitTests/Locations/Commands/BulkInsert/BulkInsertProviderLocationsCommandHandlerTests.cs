@@ -19,6 +19,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
         public async Task Handle_Inserts_Records(
             [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
             [Frozen] Mock<IRegionReadRepository> regionReadRepositoryMock,
+            [Frozen] Mock<IProviderLocationsInsertRepository> providerLocationsInsertRepositoryMock,
             BulkInsertProviderLocationsCommand command,
             BulkInsertProviderLocationsCommandHandler sut,
             CancellationToken cancellationToken)
@@ -33,32 +34,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             command.SelectedSubregionIds = new List<int> { providerLocations.FirstOrDefault(a => a.RegionId.HasValue).RegionId.Value };
 
             var result = await sut.Handle(command, cancellationToken);
+            providerLocationsInsertRepositoryMock.Verify(d => d.BulkInsert(It.IsAny<IEnumerable<ProviderLocation>>()), Times.Once);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.EqualTo(1));
-        }
-
-        [Test, RecursiveMoqAutoData()]
-        public async Task Handle_Inserts_NoRecords(
-            [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
-            [Frozen] Mock<IRegionReadRepository> regionReadRepositoryMock,
-            Provider provider,
-            List<ProviderLocation> providerLocations,
-            List<Domain.Entities.Region> regions,
-            BulkInsertProviderLocationsCommand command,
-            BulkInsertProviderLocationsCommandHandler sut,
-            CancellationToken cancellationToken)
-        {
-            providerReadRepositoryMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
-
-            regionReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(regions);
-
-            command.SelectedSubregionIds = new List<int>();
-
-            var result = await sut.Handle(command, cancellationToken);
-
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.EqualTo(command.SelectedSubregionIds.Count));
         }
     }
 

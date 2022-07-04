@@ -25,6 +25,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
 
             var result = await sut.Handle(query, cancellationToken);
 
+            repoMock.Verify(d => d.GetAllRegions(), Times.Once);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Regions.Count, Is.EqualTo(regions.Count));
         }
@@ -40,6 +41,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
 
             var result = await sut.Handle(query, cancellationToken);
 
+            repoMock.Verify(d => d.GetAllRegions(), Times.Once);
             Assert.That(result, Is.Not.Null);
             Assert.That(result.Regions, Is.Empty);
         }

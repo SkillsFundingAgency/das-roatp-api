@@ -24,13 +24,12 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [Route("/providers/{ukprn}/courses/{larsCode}/locations/bulk-insert-regions")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> BulkInsertProviderCourseLocations([FromRoute] int ukprn, ProviderCourseLocationsInsertModel providerLocationsInsertModel)
+        public async Task<IActionResult> BulkInsertProviderCourseLocations([FromRoute] int ukprn, BulkInsertProviderCourseLocationsCommand command)
         {
-            _logger.LogInformation("Inner API: Request received to bulk insert provider course locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, providerLocationsInsertModel.LarsCode, providerLocationsInsertModel.UserId);
-            var command = (BulkInsertProviderCourseLocationsCommand)providerLocationsInsertModel;
+            _logger.LogInformation("Inner API: Request received to bulk insert provider course locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, command.LarsCode, command.UserId);
             command.Ukprn = ukprn;
             var result = await _mediator.Send(command);
-            _logger.LogInformation("Inserted {numberOfRecordsInserted} provider course locations for Ukprn:{ukprn} LarsCode:{larscode}", result, ukprn, providerLocationsInsertModel.LarsCode);
+            _logger.LogInformation("Inserted {numberOfRecordsInserted} provider course locations for Ukprn:{ukprn} LarsCode:{larscode}", result, ukprn, command.LarsCode);
 
             return NoContent();
         }

@@ -21,7 +21,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         public async Task Handle_Inserts_Records(
             [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock,
+            [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock, 
+            [Frozen] Mock<IProviderCourseLocationsInsertRepository> providerCourseLocationsInsertRepositoryMock, 
             BulkInsertProviderCourseLocationsCommand command,
             BulkInsertProviderCourseLocationsCommandHandler sut,
             CancellationToken cancellationToken)
@@ -39,34 +40,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
 
             var result = await sut.Handle(command, cancellationToken);
 
+            providerCourseLocationsInsertRepositoryMock.Verify(d => d.BulkInsert(It.IsAny<IEnumerable<ProviderCourseLocation>>()), Times.Once);
+
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.EqualTo(1));
-        }
-
-        [Test, RecursiveMoqAutoData()]
-        public async Task Handle_Inserts_NoRecords(
-            [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
-            [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock,
-            Provider provider,
-            List<ProviderLocation> providerLocations,
-            Domain.Entities.ProviderCourse providerCourse,
-            BulkInsertProviderCourseLocationsCommand command,
-            BulkInsertProviderCourseLocationsCommandHandler sut,
-            CancellationToken cancellationToken)
-        {
-            providerReadRepositoryMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
-
-            providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
-
-            providerCourseReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
-
-            command.SelectedSubregionIds = new List<int>();
-
-            var result = await sut.Handle(command, cancellationToken);
-
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.EqualTo(command.SelectedSubregionIds.Count));
         }
     }
 

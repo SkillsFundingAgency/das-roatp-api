@@ -26,6 +26,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             var result = await sut.GetRegions();
 
             (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.Regions);
+
+            mediatorMock.Verify(m => m.Send(It.IsAny<RegionsQuery>(),It.IsAny<CancellationToken>()));
         }
     }
 }

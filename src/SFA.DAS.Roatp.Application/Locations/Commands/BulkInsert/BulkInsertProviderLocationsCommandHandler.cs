@@ -11,17 +11,17 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 {
     public class BulkInsertProviderLocationsCommandHandler : IRequestHandler<BulkInsertProviderLocationsCommand, int>
     {
-        private readonly IProviderReadRepository _providerReadRepository;
         private readonly IRegionReadRepository _regionReadRepository;
+        private readonly IProviderReadRepository _providerReadRepository;
         private readonly IProviderLocationsInsertRepository _providerLocationsInsertRepository;
         private readonly ILogger<BulkInsertProviderLocationsCommandHandler> _logger;
 
-        public BulkInsertProviderLocationsCommandHandler(IProviderReadRepository providerReadRepository,
-            IRegionReadRepository regionReadRepository, IProviderLocationsInsertRepository providerLocationsInsertRepository,
+        public BulkInsertProviderLocationsCommandHandler(IRegionReadRepository regionReadRepository, IProviderReadRepository providerReadRepository,
+            IProviderLocationsInsertRepository providerLocationsInsertRepository,
             ILogger<BulkInsertProviderLocationsCommandHandler> logger)
         {
-            _providerReadRepository = providerReadRepository;
             _regionReadRepository = regionReadRepository;
+            _providerReadRepository = providerReadRepository;
             _providerLocationsInsertRepository = providerLocationsInsertRepository;
             _logger = logger;
         }
@@ -47,8 +47,11 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
                 };
                 locationsToInsert.Add(providerLocation);
             }
-            _logger.LogInformation("{count} {locationType} locations will be inserted for Ukprn:{ukprn}", locationsToInsert.Count, LocationType.Regional, command.Ukprn);
-            await _providerLocationsInsertRepository.BulkInsert(locationsToInsert);
+            if(locationsToInsert.Any())
+            {
+                _logger.LogInformation("{count} {locationType} locations will be inserted for Ukprn:{ukprn}", locationsToInsert.Count, LocationType.Regional, command.Ukprn);
+                await _providerLocationsInsertRepository.BulkInsert(locationsToInsert);
+            }
             return locationsToInsert.Count;
         }
     }
