@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         }
 
         [HttpPost]
-        [Route("/providers/{ukprn}/locations/bulk")]
+        [Route("/providers/{ukprn}/locations/bulk-insert-regions")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
         public async Task<ActionResult> BulkInsertProviderLocations([FromRoute] int ukprn,  ProviderLocationsInsertModel providerLocationsInsertModel)
