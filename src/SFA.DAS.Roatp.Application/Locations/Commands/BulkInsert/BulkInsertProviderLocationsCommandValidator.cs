@@ -7,7 +7,8 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 {
     public class BulkInsertProviderLocationsCommandValidator : AbstractValidator<BulkInsertProviderLocationsCommand>
     {
-        public const string RegionsNotFoundErrorMessage = "No Region data found/Region is already exists";
+        public const string RegionsNotFoundErrorMessage = "No Regions data found";
+        public const string RegionsAlreadyExistsErrorMessage = "Region is already exists in the provider locations";
         public BulkInsertProviderLocationsCommandValidator(IRegionReadRepository regionReadRepository, IProviderReadRepository providerReadRepository, 
             IProviderCourseReadRepository providerCourseReadRepository, IProviderLocationsReadRepository providerLocationsReadRepository)
         {
@@ -19,15 +20,20 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 
             RuleFor(x => x.Ukprn)
               .Cascade(CascadeMode.Stop)
-              .MustAsync(async ( model, ukprn, cancellation) =>
+              .MustAsync(async (ukprn, cancellation) =>
               {
                   var regions = await regionReadRepository.GetAllRegions();
                   if (regions == null || !regions.Any()) return false;
+                  return true;
+              })
+              .WithMessage(RegionsNotFoundErrorMessage)
+             .MustAsync(async (model, ukprn, cancellation) =>
+              {
                   var providerLocations = await providerLocationsReadRepository.GetAllProviderLocations(ukprn);
 
                   return !model.SelectedSubregionIds.Any(a => providerLocations.Exists(b => b.RegionId == a));
               })
-              .WithMessage(RegionsNotFoundErrorMessage);
+              .WithMessage(RegionsAlreadyExistsErrorMessage);
         }
     }
 }
