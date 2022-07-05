@@ -33,8 +33,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
         public async Task<int> Handle(BulkInsertProviderCourseLocationsCommand command, CancellationToken cancellationToken)
         {
             var provider = await _providerReadRepository.GetByUkprn(command.Ukprn);
-            var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
             var providerCourses = await _providerCourseReadRepository.GetAllProviderCourses(provider.Id);
+            var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
 
             List<ProviderCourseLocation> providerCourseLocationsToInsert = new List<ProviderCourseLocation>();
             foreach (var i in command.SelectedSubregionIds)

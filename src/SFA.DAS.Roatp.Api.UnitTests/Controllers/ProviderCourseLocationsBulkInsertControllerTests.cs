@@ -5,8 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
-using SFA.DAS.Roatp.Api.Models;
-using SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
