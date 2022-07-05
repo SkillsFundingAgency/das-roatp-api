@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
 {
     public class BulkInsertProviderCourseLocationsCommandValidator : AbstractValidator<BulkInsertProviderCourseLocationsCommand>
     {
-        public const string ProviderDataNotFoundErrorMessage = "relevant provider data not found to insert provider course locations";
+        public const string ProviderDataNotFoundErrorMessage = "Relevant provider data not found to insert provider course locations";
         public BulkInsertProviderCourseLocationsCommandValidator(IProviderReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository, 
             IProviderLocationsReadRepository providerLocationsReadRepository)
         {
@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
                  var providerCourses = await providerCourseReadRepository.GetAllProviderCourses(provider.Id);
                  var providerLocations = await providerLocationsReadRepository.GetAllProviderLocations(ukprn);
 
-                 return model.SelectedSubregionIds.Any(a => providerLocations.Exists(b => b.RegionId == a)) && providerCourses.Any();
+                 return model.SelectedSubregionIds.Any() && model.SelectedSubregionIds.Any(a => providerLocations.Exists(b => b.RegionId == a)) && providerCourses.Any();
              })
               .WithMessage(ProviderDataNotFoundErrorMessage);
         }

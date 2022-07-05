@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }
         public string UserId { get; set; }
-        public List<int> SelectedSubregionIds { get; set; }
+        public List<int> SelectedSubregionIds { get; set; } = new List<int>();
     }
 
 }
