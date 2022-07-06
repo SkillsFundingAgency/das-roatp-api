@@ -8,7 +8,9 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
 {
     public class BulkInsertProviderCourseLocationsCommandValidator : AbstractValidator<BulkInsertProviderCourseLocationsCommand>
     {
-        public const string ProviderDataNotFoundErrorMessage = "Relevant provider data not found to insert provider course locations";
+        public const string EmptptySubregionIdsErrorMessage = "SubregionIds to insert into provider course locations is empty";
+        public const string SelectedSubregionIdsNotExistsinProviderLocationsErrorMessage = "Selected SubregionIds are not exists in provider locations";
+        public const string SelectedSubregionIdsAlreadyExistsinProviderCourseLocationsErrorMessage = "Selected SubregionIds already exists in provider course locations";
         public BulkInsertProviderCourseLocationsCommandValidator(IProviderReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository, 
             IProviderLocationsReadRepository providerLocationsReadRepository, IProviderCourseLocationReadRepository providerCourseLocationReadRepository)
         {
@@ -18,19 +20,23 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
 
             RuleFor(c => c.UserId).NotEmpty();
 
-            RuleFor(x => x.Ukprn)
+            RuleFor(x => x.SelectedSubregionIds)
               .Cascade(CascadeMode.Stop)
+              .NotEmpty().WithMessage(EmptptySubregionIdsErrorMessage)
+              .MustAsync(async (model, ukprn, cancellation) =>
+              {
+                  var providerLocations = await providerLocationsReadRepository.GetAllProviderLocations(model.Ukprn);
+                  return model.SelectedSubregionIds.Any(a => providerLocations.Exists(b => b.RegionId == a));
+              })
+              .WithMessage(SelectedSubregionIdsNotExistsinProviderLocationsErrorMessage)
              .MustAsync(async (model, ukprn, cancellation) =>
              {
-                 var provider = await providerReadRepository.GetByUkprn(ukprn);
-                 var providerCourses = await providerCourseReadRepository.GetAllProviderCourses(provider.Id);
-                 var providerLocations = await providerLocationsReadRepository.GetAllProviderLocations(ukprn);
-                 var providerCourseLocations = await providerCourseLocationReadRepository.GetAllProviderCourseLocations(ukprn, model.LarsCode);
-                 var hasproviderCourseLocations =  providerCourseLocations.Any(l => l.Location.LocationType != LocationType.Provider);
+                 var providerCourseLocations = await providerCourseLocationReadRepository.GetAllProviderCourseLocations(model.Ukprn, model.LarsCode);
+                 var hasproviderCourseLocations = providerCourseLocations.Any(l => l.Location.LocationType != LocationType.Provider);
 
-                 return model.SelectedSubregionIds.Any() && model.SelectedSubregionIds.Any(a => providerLocations.Exists(b => b.RegionId == a)) && providerCourses.Any() && !hasproviderCourseLocations;
+                 return  !hasproviderCourseLocations;
              })
-              .WithMessage(ProviderDataNotFoundErrorMessage);
+              .WithMessage(SelectedSubregionIdsAlreadyExistsinProviderCourseLocationsErrorMessage);
         }
     }
 }

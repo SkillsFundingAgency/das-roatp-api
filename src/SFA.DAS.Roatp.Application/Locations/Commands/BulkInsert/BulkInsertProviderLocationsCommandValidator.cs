@@ -7,6 +7,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 {
     public class BulkInsertProviderLocationsCommandValidator : AbstractValidator<BulkInsertProviderLocationsCommand>
     {
+        public const string EmptptySubregionIdsErrorMessage = "Selected SubregionIds to insert into provider locations is empty ";
         public const string RegionsNotFoundErrorMessage = "No Regions data found";
         public const string RegionsAlreadyExistsErrorMessage = "Region is already exists in the provider locations";
         public BulkInsertProviderLocationsCommandValidator(IRegionReadRepository regionReadRepository, IProviderReadRepository providerReadRepository, 
@@ -18,20 +19,22 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 
             RuleFor(c => c.UserId).NotEmpty();
 
-            RuleFor(x => x.Ukprn)
+            RuleFor(x => x.SelectedSubregionIds)
               .Cascade(CascadeMode.Stop)
-              .MustAsync(async (ukprn, cancellation) =>
+              .NotEmpty()
+              .WithMessage(EmptptySubregionIdsErrorMessage)
+              .MustAsync(async (model, cancellation) =>
               {
                   var regions = await regionReadRepository.GetAllRegions();
                   if (regions == null || !regions.Any()) return false;
                   return true;
               })
               .WithMessage(RegionsNotFoundErrorMessage)
-             .MustAsync(async (model, ukprn, cancellation) =>
+             .MustAsync(async (model, selectedSubregionIds, cancellation) =>
               {
-                  var providerLocations = await providerLocationsReadRepository.GetAllProviderLocations(ukprn);
+                  var providerLocations = await providerLocationsReadRepository.GetAllProviderLocations(model.Ukprn);
 
-                  return !model.SelectedSubregionIds.Any(a => providerLocations.Exists(b => b.RegionId == a));
+                  return !selectedSubregionIds.Any(a => providerLocations.Exists(b => b.RegionId == a));
               })
               .WithMessage(RegionsAlreadyExistsErrorMessage);
         }

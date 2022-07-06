@@ -13,13 +13,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
     public class BulkInsertProviderCourseLocationsCommandValidatorTests
     {
         private readonly string _userId = "userid";
-        private const string ProviderDataNotFoundErrorMessage = "Relevant provider data not found to insert provider course locations";
+        private const string EmptptySubregionIdsErrorMessage = "SubregionIds to insert into provider course locations is empty";
+        private const string SelectedSubregionIdsNotExistsinProviderLocationsErrorMessage = "Selected SubregionIds are not exists in provider locations";
+        private const string SelectedSubregionIdsAlreadyExistsinProviderCourseLocationsErrorMessage = "Selected SubregionIds already exists in provider course locations";
         Mock<IProviderReadRepository> providerReadRepositoryMock;
         Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock;
         Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock;
         Mock<IProviderCourseLocationReadRepository> providerCourseLocationReadRepositoryMock;
-
-        
 
         [SetUp]
         public void Setup()
@@ -28,24 +28,23 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             providerReadRepositoryMock.Setup(p => p.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
 
             providerCourseReadRepositoryMock = new Mock<IProviderCourseReadRepository>();
-            providerCourseReadRepositoryMock.Setup(m => m.GetAllProviderCourses(It.IsAny<int>())).ReturnsAsync(new List<Domain.Entities.ProviderCourse>());
+            providerCourseReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
             providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(new List<ProviderLocation> { new ProviderLocation { Id = 1, RegionId = 1 } });
 
             providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationReadRepository>();
-            providerCourseLocationReadRepositoryMock.Setup(l => l.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new List<ProviderCourseLocation>());
+            providerCourseLocationReadRepositoryMock.Setup(l => l.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new List<ProviderCourseLocation> { new ProviderCourseLocation { Location = new ProviderLocation { LocationType = LocationType.Regional } } });
         }
 
         [Test]
-        public async Task ValidateUkprn_InValid_ReturnsError()
+        public async Task ValidateUkprn_InUkprnValid_ReturnsError()
         {
             var command = new BulkInsertProviderCourseLocationsCommand
             {
-                Ukprn = 10012002,
+                Ukprn = 100,
                 LarsCode = 123,
                 UserId = _userId,
-                SelectedSubregionIds = new List<int> { 1 }
             };
 
             var sut = new BulkInsertProviderCourseLocationsCommandValidator(providerReadRepositoryMock.Object, providerCourseReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationReadRepositoryMock.Object);
@@ -61,9 +60,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var command = new BulkInsertProviderCourseLocationsCommand
             {
                 Ukprn = 10012002,
-                LarsCode = 123,
+                LarsCode = 0,
                 UserId = _userId,
-                SelectedSubregionIds = new List<int> { 1 }
             };
             var sut = new BulkInsertProviderCourseLocationsCommandValidator(providerReadRepositoryMock.Object, providerCourseReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationReadRepositoryMock.Object);
 
@@ -82,7 +80,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
                 Ukprn = 10012002,
                 LarsCode = 123,
                 UserId = userId,
-                SelectedSubregionIds = new List<int> { 1 }
             };
 
 
@@ -94,7 +91,42 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         }
 
         [Test]
-        public async Task ValidateUkprn_ProviderDataNotFound_ReturnsError()
+        public async Task ValidateSelectedSubregionIds_EmptySelectedSubregionIds_ReturnsError()
+        {
+            var command = new BulkInsertProviderCourseLocationsCommand
+            {
+                Ukprn = 10012002,
+                LarsCode = 123,
+                UserId = _userId,
+            };
+            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providerReadRepositoryMock.Object, providerCourseReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationReadRepositoryMock.Object);
+
+            var result = await sut.TestValidateAsync(command);
+
+            result.ShouldHaveValidationErrorFor(c => c.SelectedSubregionIds);
+            Assert.IsTrue(result.Errors.Exists(a => a.ErrorMessage.Contains(EmptptySubregionIdsErrorMessage)));
+        }
+
+        [Test]
+        public async Task ValidateSelectedSubregionIds_ProviderDataNotFound_ReturnsError()
+        {
+            var command = new BulkInsertProviderCourseLocationsCommand
+            {
+                Ukprn = 10012002,
+                LarsCode = 123,
+                UserId = _userId,
+                SelectedSubregionIds = new List<int> { 10 }
+            };
+            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providerReadRepositoryMock.Object, providerCourseReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationReadRepositoryMock.Object);
+
+            var result = await sut.TestValidateAsync(command);
+
+            result.ShouldHaveValidationErrorFor(c => c.SelectedSubregionIds);
+            Assert.IsTrue(result.Errors.Exists(a => a.ErrorMessage.Contains(SelectedSubregionIdsNotExistsinProviderLocationsErrorMessage)));
+        }
+
+        [Test]
+        public async Task ValidateSelectedSubregionIds_SubregionIdsAlreadyExistsinProviderCourseLocations_ReturnsError()
         {
             var command = new BulkInsertProviderCourseLocationsCommand
             {
@@ -107,8 +139,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
 
             var result = await sut.TestValidateAsync(command);
 
-            result.ShouldHaveValidationErrorFor(c => c.Ukprn);
-            Assert.IsTrue(result.Errors.Exists(a => a.ErrorMessage.Contains(ProviderDataNotFoundErrorMessage)));
+            result.ShouldHaveValidationErrorFor(c => c.SelectedSubregionIds);
+            Assert.IsTrue(result.Errors.Exists(a => a.ErrorMessage.Contains(SelectedSubregionIdsAlreadyExistsinProviderCourseLocationsErrorMessage)));
         }
     }
 }
