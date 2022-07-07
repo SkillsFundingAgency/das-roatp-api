@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -18,6 +19,11 @@ namespace SFA.DAS.Roatp.Data.Repositories
         public async Task<Provider> GetByUkprn(int ukprn)
         {
             return await _roatpDataContext.Providers.AsNoTracking().SingleOrDefaultAsync(p => p.Ukprn == ukprn);
+        }
+
+        public async Task<List<Provider>> GetAllProviders()
+        {
+            return await _roatpDataContext.Providers.AsNoTracking().ToListAsync();
         }
     }
 }

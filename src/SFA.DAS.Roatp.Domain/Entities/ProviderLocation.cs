@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Domain.Entities
 {
@@ -22,8 +23,8 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string Phone { get; set; }
         public bool IsImported { get; set; }
         public LocationType LocationType { get; set; }
-
         public virtual Provider Provider { get; set; }
         public virtual Region Region { get; set; }
+        public virtual List<ProviderCourseLocation> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocation>();
     }
 }

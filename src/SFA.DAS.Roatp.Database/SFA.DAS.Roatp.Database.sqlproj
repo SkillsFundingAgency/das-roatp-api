@@ -73,9 +73,6 @@
     <Build Include="Tables\ProvderRegistrationDetail.sql" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="PostDeploymentScripts\InsertPilotProvidersData.sql">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
   </ItemGroup>
 </Project>
