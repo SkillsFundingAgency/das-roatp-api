@@ -10,7 +10,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public int ProviderId { get; set; }
         public int? RegionId { get; set; }
         public int? ImportedLocationId { get; set; }
-        public string LocationName { get; set; };
+        public string LocationName { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string Town { get; set; }
