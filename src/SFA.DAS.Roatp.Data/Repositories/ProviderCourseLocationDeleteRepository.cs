@@ -27,5 +27,16 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
             await _roatpDataContext.SaveChangesAsync();
         }
+
+        public async Task Delete(int providerCourseLocationId)
+        {
+            var location = await _roatpDataContext.ProviderCoursesLocations
+                .Where(l => l.Id == providerCourseLocationId)
+                .SingleAsync();
+
+            _roatpDataContext.Remove(location);
+
+            await _roatpDataContext.SaveChangesAsync();
+        }
     }
 }
