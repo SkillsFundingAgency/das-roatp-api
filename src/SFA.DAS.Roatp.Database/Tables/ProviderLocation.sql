@@ -5,7 +5,7 @@
     [NavigationId] UNIQUEIDENTIFIER NOT NULL,
     [ProviderId] INT NOT NULL,
     [RegionId] INT NULL,
-    [LocationName] VARCHAR(250) NOT NULL,
+    [LocationName] VARCHAR(250) NULL,
     [AddressLine1] VARCHAR(250) NULL,
     [AddressLine2] VARCHAR(250) NULL,
     [Town] VARCHAR(250) NULL,
@@ -20,6 +20,5 @@
     [LocationType] INT NOT NULL, 
     CONSTRAINT PK_ProviderLocation PRIMARY KEY (Id),
     CONSTRAINT UK_ProviderLocation_NavigationId UNIQUE ([NavigationId]),
-    CONSTRAINT UK_ProviderLocation_ProviderId_LocationName UNIQUE ([ProviderId], [LocationName]),
     CONSTRAINT FK_ProviderLocation_Provider FOREIGN KEY (ProviderId) REFERENCES [Provider] (Id)
 )

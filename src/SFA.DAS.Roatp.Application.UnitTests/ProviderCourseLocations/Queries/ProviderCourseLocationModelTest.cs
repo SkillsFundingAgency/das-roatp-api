@@ -23,5 +23,25 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
                  .Excluding(s => s.Location)
             );
         }
+
+
+        [TestCase(LocationType.Provider, "location name", "subregionName", "location name")]
+        [TestCase(LocationType.Regional, "location name", "subregionName", "subregionName")]
+        [TestCase(LocationType.National, "location name", null, null)]
+
+        public void Operator_PopulatesModelFromEntity_SetsLocationNameBasedOnType( LocationType locationType, string locationName, string subregionName, string expectedLocationName)
+        {
+            var location = new ProviderCourseLocation() { Location = new ProviderLocation
+                {
+                    LocationType = locationType,
+                    LocationName = locationName,
+                    Region = new Region {SubregionName = subregionName}
+                }
+            };
+
+            var model = (ProviderCourseLocationModel)location;
+            model.LocationName.Should().Be(expectedLocationName);
+
+        }
     }
 }

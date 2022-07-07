@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
                 HasDayReleaseDeliveryOption = source.HasDayReleaseDeliveryOption,
                 HasBlockReleaseDeliveryOption = source.HasBlockReleaseDeliveryOption,
                 IsImported = source.IsImported,
-                LocationName = source.Location.LocationName,
+                LocationName = source.Location.LocationType==LocationType.Provider ? source.Location.LocationName: source.Location.Region?.SubregionName,
                 LocationType = source.Location.LocationType,
                 RegionName = source.Location.Region?.RegionName
             };

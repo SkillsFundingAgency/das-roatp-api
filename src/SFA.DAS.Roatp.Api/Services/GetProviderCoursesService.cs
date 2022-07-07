@@ -39,7 +39,8 @@ namespace SFA.DAS.Roatp.Api.Services
                 _logger.LogError("Standards Lookup data not found for {ukprn} and {larsCode}", ukprn, larsCode);
                 return null;
             }
-            providerCourse.UpdateCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title, standardLookup.Version,standardLookup.ApprovalBody);
+
+            providerCourse?.UpdateCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title, standardLookup.Version,standardLookup.ApprovalBody);
 
             return providerCourse;
         }

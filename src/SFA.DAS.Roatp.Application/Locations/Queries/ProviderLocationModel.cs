@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries
             new ProviderLocationModel
             {
                 NavigationId = source.NavigationId,
-                LocationName = source.LocationName,
+                LocationName = source.LocationType==LocationType.Provider ? source.LocationName: source.AddressLine1,
                 AddressLine1 = source.AddressLine1,
                 AddressLine2 = source.AddressLine2,
                 Town = source.Town,
