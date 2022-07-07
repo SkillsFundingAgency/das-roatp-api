@@ -10,5 +10,4 @@ Post-Deployment Script Template
 --------------------------------------------------------------------------------------
 */
 
-:r .\PostDeploymentScripts\InsertPilotProvidersData.sql
 :r .\PostDeploymentScripts\PopulateRegionData.sql

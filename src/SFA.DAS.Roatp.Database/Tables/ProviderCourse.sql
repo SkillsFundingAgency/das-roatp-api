@@ -3,7 +3,7 @@
     [Id] INT IDENTITY(1,1) NOT NULL,
     [ProviderId] INT NOT NULL,
     [LarsCode] INT NOT NULL,
-    [StandardInfoUrl] VARCHAR(500) NOT NULL,
+    [StandardInfoUrl] VARCHAR(500) NULL,
     [ContactUsPageUrl] VARCHAR(500) NULL,
     [ContactUsEmail] VARCHAR(300) NULL,
     [ContactUsPhoneNumber] VARCHAR(50) NULL,
