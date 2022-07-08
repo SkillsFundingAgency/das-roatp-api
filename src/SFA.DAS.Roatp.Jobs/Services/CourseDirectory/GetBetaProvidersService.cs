@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using SFA.DAS.Authorization.ProviderFeatures.Configuration;
 
 namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
@@ -16,17 +15,14 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             _providerFeaturesConfiguration = providerFeaturesConfiguration;
         }
 
-        public Task<List<int>> GetBetaProviderUkprns()
+        public List<int> GetBetaProviderUkprns()
         {
             var featureToggles = _providerFeaturesConfiguration.FeatureToggles;
 
             var courseManagementFeature = featureToggles.First(f => f.Feature == CourseManagement);
-            if (courseManagementFeature?.Whitelist == null)
-                return Task.FromResult(new List<int>());
-            
-            var ukprns = courseManagementFeature.Whitelist.Select(w => Convert.ToInt32(w.Ukprn)).ToList();
-
-            return Task.FromResult(ukprns);
+            return courseManagementFeature?.Whitelist == null ? 
+                new List<int>() : 
+                courseManagementFeature.Whitelist.Select(w => Convert.ToInt32(w.Ukprn)).ToList();
         }
     }
 }

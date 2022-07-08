@@ -55,12 +55,12 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             return currentProviders.Count;
         }
 
-        public async Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
+        public Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
         { 
             var metrics = new BetaAndPilotProviderMetrics();
             const string focusText = "beta and pilot providers";
 
-            var betaProviders = await _getBetaProvidersService.GetBetaProviderUkprns();
+            var betaProviders = _getBetaProvidersService.GetBetaProviderUkprns();
 
             var betaAndPilotUkprns = new List<int>();
             betaAndPilotUkprns.AddRange(betaProviders);
@@ -75,7 +75,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             providers.RemoveAll(x => !betaAndPilotUkprns.Distinct().Contains(x.Ukprn));
             _logger.LogInformation("{count} CD providers to insert after removing non-{focus}",providers.Count, focusText);
 
-            return metrics;
+            return Task.FromResult(metrics);
         }
 
         public Task<LocationDuplicationMetrics> CleanseDuplicateLocationNames(CdProvider provider)
