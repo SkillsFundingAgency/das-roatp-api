@@ -8,6 +8,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 {
     public class GetBetaProvidersService: IGetBetaProvidersService
     {
+        private const string CourseManagement = "CourseManagement";
         private readonly ProviderFeaturesConfiguration _providerFeaturesConfiguration;
 
         public GetBetaProvidersService(ProviderFeaturesConfiguration providerFeaturesConfiguration)
@@ -19,11 +20,11 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         {
             var featureToggles = _providerFeaturesConfiguration.FeatureToggles;
 
-            var courseManagementFeature = featureToggles.First(x => x.Feature == "CourseManagement");
+            var courseManagementFeature = featureToggles.First(f => f.Feature == CourseManagement);
             if (courseManagementFeature?.Whitelist == null)
                 return Task.FromResult(new List<int>());
             
-            var ukprns = courseManagementFeature.Whitelist.Select(z => Convert.ToInt32(z.Ukprn)).ToList();
+            var ukprns = courseManagementFeature.Whitelist.Select(w => Convert.ToInt32(w.Ukprn)).ToList();
 
             return Task.FromResult(ukprns);
         }

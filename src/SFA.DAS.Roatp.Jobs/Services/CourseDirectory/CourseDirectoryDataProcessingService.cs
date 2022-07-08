@@ -16,7 +16,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
     [ExcludeFromCodeCoverage]
     public class CourseDirectoryDataProcessingService : ICourseDirectoryDataProcessingService
     {
-        
         private readonly IGetActiveProviderRegistrationsRepository _getActiveProviderRegistrationsRepository;
         private readonly IProviderReadRepository _providerReadRepository;
         private readonly IGetBetaProvidersService _getBetaProvidersService;
@@ -57,7 +56,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         }
 
         public async Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
-        {
+        { 
             var metrics = new BetaAndPilotProviderMetrics();
             const string focusText = "beta and pilot providers";
 

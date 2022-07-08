@@ -69,7 +69,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Jobs
             var providerFeaturesConfiguration = _configuration
                 .GetSection(nameof(ProviderFeaturesConfiguration))
                 .Get<ProviderFeaturesConfiguration>();
-               builder.Services.AddSingleton(providerFeaturesConfiguration);
+               
+            builder.Services.AddSingleton(providerFeaturesConfiguration);
 
             builder.Services.AddRoatpDataContext(_configuration["SqlDatabaseConnectionString"], _configuration["EnvironmentName"]);
 
