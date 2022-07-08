@@ -4,6 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using SFA.DAS.Authorization.ProviderFeatures.Configuration;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
@@ -16,14 +18,16 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
     [ExcludeFromCodeCoverage]
     public class CourseDirectoryDataProcessingService : ICourseDirectoryDataProcessingService
     {
+        private readonly ProviderFeaturesConfiguration _providerFeaturesConfiguration;
         private readonly IGetActiveProviderRegistrationsRepository _getActiveProviderRegistrationsRepository;
         private readonly IProviderReadRepository _providerReadRepository;
         private readonly ILogger<CourseDirectoryDataProcessingService> _logger;
 
-        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProviderReadRepository providerReadRepository)
+        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProviderReadRepository providerReadRepository, ProviderFeaturesConfiguration providerFeaturesConfiguration)//, IOptions<ProviderFeaturesConfiguration> config )
         {
             _getActiveProviderRegistrationsRepository = getActiveProviderRegistrationsRepository;
             _providerReadRepository = providerReadRepository;
+            _providerFeaturesConfiguration = providerFeaturesConfiguration;
             _logger = logger;
         }
 
@@ -55,6 +59,8 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
         public  Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
         {
+            var x = _providerFeaturesConfiguration.FeatureToggles;
+
             var metrics = new BetaAndPilotProviderMetrics();
             const string focusText = "beta and pilot providers";
 
