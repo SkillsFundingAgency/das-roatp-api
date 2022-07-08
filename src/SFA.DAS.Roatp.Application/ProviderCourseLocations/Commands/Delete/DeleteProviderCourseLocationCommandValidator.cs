@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete
 {
@@ -17,13 +16,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete
 
             RuleFor(c => c.UserId).NotEmpty();
 
-            RuleFor(c => c.ProviderCourseLocationId).
+            RuleFor(c => c.Id).
                 Cascade(CascadeMode.Stop).
                 GreaterThan(0).WithMessage(InvalidProviderCourseLocationIdErrorMessage)
                 .MustAsync(async (model, providerCourseLocationId, cancellation) =>
                 {
                     var providerCourseLocations = await providerCourseLocationReadRepository.GetAllProviderCourseLocations(model.Ukprn, model.LarsCode);
-                    return providerCourseLocations.Any() && providerCourseLocations.Exists(l=>l.Id == providerCourseLocationId);
+                    return providerCourseLocations.Exists(l=>l.Id == providerCourseLocationId);
                 })
                .WithMessage(ProviderCourseLocationNotFoundErrorMessage);
         }

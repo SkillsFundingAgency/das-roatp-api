@@ -7,13 +7,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete
     {
         public int Ukprn { get; }
         public int LarsCode { get; }
-        public int ProviderCourseLocationId { get; set; }
+        public int Id { get; set; }
         public string UserId { get; }
-        public DeleteProviderCourseLocationCommand(int ukprn, int larsCode, int providerCourseLocationId, string userId)
+        public DeleteProviderCourseLocationCommand(int ukprn, int larsCode, int id, string userId)
         {
             Ukprn = ukprn;
             LarsCode = larsCode;
-            ProviderCourseLocationId = providerCourseLocationId;
+            Id = id;
             UserId = userId;
         }
     }

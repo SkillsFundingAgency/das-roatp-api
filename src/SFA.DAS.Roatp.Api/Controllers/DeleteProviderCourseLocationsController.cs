@@ -37,16 +37,16 @@ namespace SFA.DAS.Roatp.Api.Controllers
         }
 
         [HttpDelete]
-        [Route("/providers/{ukprn}/courses/{larsCode}/location")]
+        [Route("/providers/{ukprn}/courses/{larsCode}/location/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> DeleteProviderCourseLocation([FromRoute] int ukprn, [FromRoute] int larsCode, [FromRoute] int providerCourseLocationId, [FromQuery] string userId)
+        public async Task<ActionResult> DeleteProviderCourseLocation([FromRoute] int ukprn, [FromRoute] int larsCode, [FromRoute] int id, [FromQuery] string userId)
         {
-            _logger.LogInformation("Inner API: Request received for delete provider course location for Ukprn:{ukprn} LarsCode:{larscode} ProviderCourseLocationId:{providerCourseLocationId}", ukprn, larsCode, providerCourseLocationId);
+            _logger.LogInformation("Inner API: Request received for delete provider course location for Ukprn:{ukprn} LarsCode:{larscode} ProviderCourseLocationId:{id}", ukprn, larsCode, id);
 
-            var command = new DeleteProviderCourseLocationCommand(ukprn, larsCode, providerCourseLocationId, userId);
+            var command = new DeleteProviderCourseLocationCommand(ukprn, larsCode, id, userId);
             await _mediator.Send(command);
 
-            _logger.LogInformation("Deleted provider course locations for Ukprn:{ukprn} LarsCode:{larscode} ProviderCourseLocationId:{providerCourseLocationId}", ukprn, larsCode, providerCourseLocationId);
+            _logger.LogInformation("Deleted provider course locations for Ukprn:{ukprn} LarsCode:{larscode} ProviderCourseLocationId:{id}", ukprn, larsCode, id);
 
             return NoContent();
         }

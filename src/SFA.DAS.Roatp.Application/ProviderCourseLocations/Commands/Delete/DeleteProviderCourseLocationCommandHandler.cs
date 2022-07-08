@@ -19,8 +19,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete
 
         public async Task<Unit> Handle(DeleteProviderCourseLocationCommand request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Deleting provider course location for ukprn: {ukprn} LarsCode: {larscode} providerCourseLocationId: {providerCourseLocationId} by user: {userid}", request.Ukprn, request.LarsCode, request.ProviderCourseLocationId, request.UserId);
-            await _providerCourseLocationDeleteRepository.Delete(request.ProviderCourseLocationId);
+            _logger.LogInformation("Deleting provider course location for ukprn: {ukprn} LarsCode: {larscode} providerCourseLocationId: {id} by user: {userid}", request.Ukprn, request.LarsCode, request.Id, request.UserId);
+            await _providerCourseLocationDeleteRepository.Delete(request.Id);
 
             return Unit.Value;
         }
