@@ -7,8 +7,8 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 {
     public class BulkInsertProviderLocationsCommandValidator : AbstractValidator<BulkInsertProviderLocationsCommand>
     {
-        public const string EmptptySubregionIdsErrorMessage = "Selected SubregionIds to insert into provider locations is empty ";
-        public const string RegionsAlreadyExistsErrorMessage = "Region is already exists in the provider locations";
+        public const string EmptptySubregionIdsErrorMessage = "SubregionsIds is required";
+        public const string SubRegionsAlreadyExistsErrorMessage = "All or some of the sub-regions already exist on the provider locations";
         public BulkInsertProviderLocationsCommandValidator(IProviderReadRepository providerReadRepository, 
             IProviderCourseReadRepository providerCourseReadRepository, IProviderLocationsReadRepository providerLocationsReadRepository)
         {
@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 
                   return !selectedSubregionIds.Any(a => providerLocations.Exists(b => b.RegionId == a));
               })
-              .WithMessage(RegionsAlreadyExistsErrorMessage);
+              .WithMessage(SubRegionsAlreadyExistsErrorMessage);
         }
     }
 }

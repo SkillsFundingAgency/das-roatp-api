@@ -13,8 +13,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
     public class BulkInsertProviderLocationsCommandValidatorTests
     {
         private readonly string _userId = "userid";
-        private const string EmptptySubregionIdsErrorMessage = "Selected SubregionIds to insert into provider locations is empty ";
-        private const string RegionsAlreadyExistsErrorMessage = "Region is already exists in the provider locations";
+        private const string EmptptySubregionIdsErrorMessage = "SubregionsIds is required";
+        private const string SubRegionsAlreadyExistsErrorMessage = "All or some of the sub-regions already exist on the provider locations";
         [Test]
         public async Task ValidateUkprn_InValid_ReturnsError()
         {
@@ -123,7 +123,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             var result = await sut.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.SelectedSubregionIds);
-            Assert.IsTrue(result.Errors.Exists(a => a.ErrorMessage.Contains(RegionsAlreadyExistsErrorMessage)));
+            Assert.IsTrue(result.Errors.Exists(a => a.ErrorMessage.Contains(SubRegionsAlreadyExistsErrorMessage)));
         }
     }
 }

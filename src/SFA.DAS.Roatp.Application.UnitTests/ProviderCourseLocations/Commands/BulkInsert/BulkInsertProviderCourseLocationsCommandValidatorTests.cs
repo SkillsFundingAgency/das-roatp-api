@@ -13,9 +13,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
     public class BulkInsertProviderCourseLocationsCommandValidatorTests
     {
         private readonly string _userId = "userid";
-        private const string EmptptySubregionIdsErrorMessage = "SubregionIds to insert into provider course locations is empty";
-        private const string SelectedSubregionIdsNotExistsinProviderLocationsErrorMessage = "Selected SubregionIds are not exists in provider locations";
-        private const string SelectedSubregionIdsAlreadyExistsinProviderCourseLocationsErrorMessage = "Selected SubregionIds already exists in provider course locations";
+        private const string EmptptySubregionIdsErrorMessage = "SubregionsIds is required";
+        private const string SelectedSubregionIdsNotExistsinProviderLocationsErrorMessage = "Provider locations does not have any or some of the sub-regions being added on the course. It is required to add sub regions to the provider locations before associating them with a course";
+        private const string SelectedSubregionIdsAlreadyExistsinProviderCourseLocationsErrorMessage = "All or some of the sub-regions are associated to the provider course. It is required that there are no national or regional locations associated to the course";
         Mock<IProviderReadRepository> providerReadRepositoryMock;
         Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock;
         Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock;
@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         }
 
         [Test]
-        public async Task ValidateUkprn_InUkprnValid_ReturnsError()
+        public async Task ValidateUkprn_InValid_ReturnsError()
         {
             var command = new BulkInsertProviderCourseLocationsCommand
             {
