@@ -65,7 +65,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Jobs
 
             _configuration = configBuilder.Build();
             builder.Services.Replace(ServiceDescriptor.Singleton(typeof(IConfiguration), _configuration));
-            //
+            
             var providerFeaturesConfiguration = _configuration
                 .GetSection(nameof(ProviderFeaturesConfiguration))
                 .Get<ProviderFeaturesConfiguration>();
@@ -78,6 +78,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Jobs
             builder.Services.AddTransient<ILoadCourseDirectoryDataService, LoadCourseDirectoryDataService>();
             builder.Services.AddTransient<IGetCourseDirectoryDataService, GetCourseDirectoryDataService>();
             builder.Services.AddTransient<ICourseDirectoryDataProcessingService, CourseDirectoryDataProcessingService>();
+            builder.Services.AddTransient<IGetBetaProvidersService, GetBetaProvidersService>();
+            
         }
 
         private void ConfigureHttpClient(IServiceCollection services)

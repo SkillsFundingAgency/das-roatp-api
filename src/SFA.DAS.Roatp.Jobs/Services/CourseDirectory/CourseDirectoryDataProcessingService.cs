@@ -4,8 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
-using SFA.DAS.Authorization.ProviderFeatures.Configuration;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
@@ -18,16 +16,17 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
     [ExcludeFromCodeCoverage]
     public class CourseDirectoryDataProcessingService : ICourseDirectoryDataProcessingService
     {
-        private readonly ProviderFeaturesConfiguration _providerFeaturesConfiguration;
+        
         private readonly IGetActiveProviderRegistrationsRepository _getActiveProviderRegistrationsRepository;
         private readonly IProviderReadRepository _providerReadRepository;
+        private readonly IGetBetaProvidersService _getBetaProvidersService;
         private readonly ILogger<CourseDirectoryDataProcessingService> _logger;
 
-        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProviderReadRepository providerReadRepository, ProviderFeaturesConfiguration providerFeaturesConfiguration)//, IOptions<ProviderFeaturesConfiguration> config )
+        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProviderReadRepository providerReadRepository, IGetBetaProvidersService getBetaProvidersService)
         {
             _getActiveProviderRegistrationsRepository = getActiveProviderRegistrationsRepository;
             _providerReadRepository = providerReadRepository;
-            _providerFeaturesConfiguration = providerFeaturesConfiguration;
+            _getBetaProvidersService = getBetaProvidersService;
             _logger = logger;
         }
 
@@ -57,25 +56,27 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             return currentProviders.Count;
         }
 
-        public  Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
+        public async Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
         {
-            var x = _providerFeaturesConfiguration.FeatureToggles;
-
             var metrics = new BetaAndPilotProviderMetrics();
             const string focusText = "beta and pilot providers";
 
-            var betaAndPilotUkprns = BetaProviders.Ukprns;
+            var betaProviders = await _getBetaProvidersService.GetBetaProviderUkprns();
+
+            var betaAndPilotUkprns = new List<int>();
+            betaAndPilotUkprns.AddRange(betaProviders);
             betaAndPilotUkprns.AddRange(PilotProviders.Ukprns);
 
             metrics.PilotProviders = PilotProviders.Ukprns.Count;
-            metrics.BetaProviders = BetaProviders.Ukprns.Count;
+            metrics.BetaProviders = betaProviders.Count;
+
             metrics.CombinedBetaAndPilotProvidersProcessed = betaAndPilotUkprns.Distinct().Count();
 
             _logger.LogInformation("{count} CD providers before removing non-{focus}", providers.Count, focusText);
             providers.RemoveAll(x => !betaAndPilotUkprns.Distinct().Contains(x.Ukprn));
             _logger.LogInformation("{count} CD providers to insert after removing non-{focus}",providers.Count, focusText);
 
-            return Task.FromResult(metrics);
+            return metrics;
         }
 
         public Task<LocationDuplicationMetrics> CleanseDuplicateLocationNames(CdProvider provider)
