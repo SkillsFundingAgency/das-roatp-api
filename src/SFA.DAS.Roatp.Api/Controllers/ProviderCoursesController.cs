@@ -1,11 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Api.Models;
-using SFA.DAS.Roatp.Api.Services;
+using SFA.DAS.Roatp.Application.Locations.Queries;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries;
+using ProviderCourseModel = SFA.DAS.Roatp.Api.Models.ProviderCourseModel;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -14,14 +16,13 @@ namespace SFA.DAS.Roatp.Api.Controllers
     public class ProviderCoursesController : ControllerBase
     {
         private readonly ILogger<ProviderCoursesController> _logger;
-        private readonly IGetProviderCoursesService _getProviderCoursesService;
+        private readonly IMediator _mediator;
 
         public ProviderCoursesController(
-            ILogger<ProviderCoursesController> logger,
-            IGetProviderCoursesService getProviderCoursesService)
+            ILogger<ProviderCoursesController> logger, IMediator mediator)
         {
             _logger = logger;
-            _getProviderCoursesService = getProviderCoursesService;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -43,9 +44,11 @@ namespace SFA.DAS.Roatp.Api.Controllers
                 return new BadRequestObjectResult("Invalid ukprn");
             }
 
-            var result = await _getProviderCoursesService.GetAllCourses(ukprn);
 
-            if (!result.Any())
+            var allCoursesResult = await _mediator.Send(new ProviderAllCoursesQuery(ukprn));
+            var result = allCoursesResult?.Courses;
+
+            if (result == null || !result.Any())
             {
                 _logger.LogInformation("Courses data not found for {ukprn}", ukprn);
                 return new NotFoundObjectResult($"No data found for {ukprn}");
@@ -75,15 +78,16 @@ namespace SFA.DAS.Roatp.Api.Controllers
                 return new BadRequestObjectResult("Invalid ukprn or larscode.");
             }
 
-            var result = await _getProviderCoursesService.GetCourse(ukprn, larsCode);
+            var courseResult = await _mediator.Send(new ProviderCourseQuery(ukprn, larsCode));
+            var result = courseResult?.Course;
 
             if (result == null)
             {
-                _logger.LogInformation("Courses data not found for {ukprn} and {larsCode}", ukprn, larsCode);
+                _logger.LogInformation("Course data not found for {ukprn} and {larsCode}", ukprn, larsCode);
                 return new NotFoundObjectResult($"No data found for {ukprn} and {larsCode}");
             }
 
-            _logger.LogInformation("Courses data found for {ukprn} and {larsCode}", ukprn, larsCode);
+            _logger.LogInformation("Course data found for {ukprn} and {larsCode}", ukprn, larsCode);
             return new OkObjectResult(result);
         }
     }
