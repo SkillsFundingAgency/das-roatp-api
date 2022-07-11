@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string Email { get; set; }
         public string Website { get; set; }
         public string Phone { get; set; }
-        public bool IsImported { get; set; }
+        public bool IsImported { get; set; } = false;
         public LocationType LocationType { get; set; }
         public virtual Provider Provider { get; set; }
         public virtual Region Region { get; set; }

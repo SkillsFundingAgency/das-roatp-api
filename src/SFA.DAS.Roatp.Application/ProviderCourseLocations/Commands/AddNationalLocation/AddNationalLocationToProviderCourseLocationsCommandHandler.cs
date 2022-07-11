@@ -59,8 +59,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
             {
                 NavigationId = Guid.NewGuid(),
                 ProviderLocationId = nationalLocation.Id,
-                ProviderCourseId = providerCourse.Id,
-                IsImported = false
+                ProviderCourseId = providerCourse.Id
             };
 
             return await _providerCourseLocationWriteRepository.Create(providerCourseLocation);
