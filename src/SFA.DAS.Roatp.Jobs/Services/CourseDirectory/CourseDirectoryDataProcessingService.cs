@@ -189,25 +189,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 if(!regionIdMapped)
                     return Task.FromResult((false, (Provider)null));
 
-                provider.Locations.Add(new ProviderLocation
-                {
-                    ImportedLocationId = cdProviderLocation.Id,
-                    NavigationId = Guid.NewGuid(),
-                    LocationName = cdProviderLocation.LocationType == LocationType.Provider ? cdProviderLocation.Name : null,
-                    LocationType = cdProviderLocation.LocationType,
-                    AddressLine1 = cdProviderLocation.LocationType == LocationType.Provider ? cdProviderLocation.AddressLine1: null,
-                    AddressLine2 = cdProviderLocation.AddressLine2,
-                    Town = cdProviderLocation.Town,
-                    Postcode = cdProviderLocation.Postcode,
-                    County = cdProviderLocation.County,
-                    Latitude = cdProviderLocation.Latitude,
-                    Longitude = cdProviderLocation.Longitude,
-                    Email = cdProviderLocation.Email,
-                    Website = cdProviderLocation.Website,
-                    Phone = cdProviderLocation.Phone,
-                    IsImported = true,
-                    RegionId = regionId
-                });
+                AddProviderLocation(provider, cdProviderLocation, regionId);
             }
 
             foreach (var cdProviderCourse in cdProvider.Standards)
@@ -271,6 +253,30 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             }
 
             return Task.FromResult((true, provider));
+        }
+
+        private static void AddProviderLocation(Provider provider, CdProviderLocation cdProviderLocation, int? regionId)
+        {
+            provider.Locations.Add(new ProviderLocation
+            {
+                ImportedLocationId = cdProviderLocation.Id,
+                NavigationId = Guid.NewGuid(),
+                LocationName = cdProviderLocation.LocationType == LocationType.Provider ? cdProviderLocation.Name : null,
+                LocationType = cdProviderLocation.LocationType,
+                AddressLine1 =
+                    cdProviderLocation.LocationType == LocationType.Provider ? cdProviderLocation.AddressLine1 : null,
+                AddressLine2 = cdProviderLocation.AddressLine2,
+                Town = cdProviderLocation.Town,
+                Postcode = cdProviderLocation.Postcode,
+                County = cdProviderLocation.County,
+                Latitude = cdProviderLocation.Latitude,
+                Longitude = cdProviderLocation.Longitude,
+                Email = cdProviderLocation.Email,
+                Website = cdProviderLocation.Website,
+                Phone = cdProviderLocation.Phone,
+                IsImported = true,
+                RegionId = regionId
+            });
         }
 
         private bool RegionIdMapped(CdProviderLocation cdProviderLocation, IEnumerable<Region> regions, ref int? regionId)
