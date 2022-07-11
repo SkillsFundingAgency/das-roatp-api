@@ -19,7 +19,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         private readonly IGetActiveProviderRegistrationsRepository _getActiveProviderRegistrationsRepository;
         private readonly IProviderReadRepository _providerReadRepository;
         private readonly ILogger<CourseDirectoryDataProcessingService> _logger;
-        private const string National = "National";
 
         public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProviderReadRepository providerReadRepository)
         {
@@ -188,7 +187,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 {
                     ImportedLocationId = cdProviderLocation.Id,
                     NavigationId = Guid.NewGuid(),
-                    LocationName = cdProviderLocation.LocationType != LocationType.National ? cdProviderLocation.Name : National,
+                    LocationName = cdProviderLocation.LocationType == LocationType.Provider ? cdProviderLocation.Name : null,
                     LocationType = cdProviderLocation.LocationType,
                     AddressLine1 = cdProviderLocation.AddressLine1,
                     AddressLine2 = cdProviderLocation.AddressLine2,
