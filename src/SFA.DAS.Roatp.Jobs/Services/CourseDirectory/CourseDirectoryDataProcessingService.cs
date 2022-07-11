@@ -195,7 +195,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                     NavigationId = Guid.NewGuid(),
                     LocationName = cdProviderLocation.LocationType == LocationType.Provider ? cdProviderLocation.Name : null,
                     LocationType = cdProviderLocation.LocationType,
-                    AddressLine1 = cdProviderLocation.AddressLine1,
+                    AddressLine1 = cdProviderLocation.LocationType == LocationType.Provider ? cdProviderLocation.AddressLine1: null,
                     AddressLine2 = cdProviderLocation.AddressLine2,
                     Town = cdProviderLocation.Town,
                     Postcode = cdProviderLocation.Postcode,
