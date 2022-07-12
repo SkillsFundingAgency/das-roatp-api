@@ -18,12 +18,14 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
     {
         private readonly IGetActiveProviderRegistrationsRepository _getActiveProviderRegistrationsRepository;
         private readonly IProviderReadRepository _providerReadRepository;
+        private readonly IGetBetaProvidersService _getBetaProvidersService;
         private readonly ILogger<CourseDirectoryDataProcessingService> _logger;
 
-        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProviderReadRepository providerReadRepository)
+        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProviderReadRepository providerReadRepository, IGetBetaProvidersService getBetaProvidersService)
         {
             _getActiveProviderRegistrationsRepository = getActiveProviderRegistrationsRepository;
             _providerReadRepository = providerReadRepository;
+            _getBetaProvidersService = getBetaProvidersService;
             _logger = logger;
         }
 
@@ -53,16 +55,20 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             return currentProviders.Count;
         }
 
-        public  Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
-        {
+        public Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
+        { 
             var metrics = new BetaAndPilotProviderMetrics();
             const string focusText = "beta and pilot providers";
 
-            var betaAndPilotUkprns = BetaProviders.Ukprns;
+            var betaProviders = _getBetaProvidersService.GetBetaProviderUkprns();
+
+            var betaAndPilotUkprns = new List<int>();
+            betaAndPilotUkprns.AddRange(betaProviders);
             betaAndPilotUkprns.AddRange(PilotProviders.Ukprns);
 
             metrics.PilotProviders = PilotProviders.Ukprns.Count;
-            metrics.BetaProviders = BetaProviders.Ukprns.Count;
+            metrics.BetaProviders = betaProviders.Count;
+
             metrics.CombinedBetaAndPilotProvidersProcessed = betaAndPilotUkprns.Distinct().Count();
 
             _logger.LogInformation("{count} CD providers before removing non-{focus}", providers.Count, focusText);
@@ -183,25 +189,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 if(!regionIdMapped)
                     return Task.FromResult((false, (Provider)null));
 
-                provider.Locations.Add(new ProviderLocation
-                {
-                    ImportedLocationId = cdProviderLocation.Id,
-                    NavigationId = Guid.NewGuid(),
-                    LocationName = cdProviderLocation.LocationType == LocationType.Provider ? cdProviderLocation.Name : null,
-                    LocationType = cdProviderLocation.LocationType,
-                    AddressLine1 = cdProviderLocation.AddressLine1,
-                    AddressLine2 = cdProviderLocation.AddressLine2,
-                    Town = cdProviderLocation.Town,
-                    Postcode = cdProviderLocation.Postcode,
-                    County = cdProviderLocation.County,
-                    Latitude = cdProviderLocation.Latitude,
-                    Longitude = cdProviderLocation.Longitude,
-                    Email = cdProviderLocation.Email,
-                    Website = cdProviderLocation.Website,
-                    Phone = cdProviderLocation.Phone,
-                    IsImported = true,
-                    RegionId = regionId
-                });
+                AddProviderLocation(provider, cdProviderLocation, regionId);
             }
 
             foreach (var cdProviderCourse in cdProvider.Standards)
@@ -265,6 +253,30 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             }
 
             return Task.FromResult((true, provider));
+        }
+
+        private static void AddProviderLocation(Provider provider, CdProviderLocation cdProviderLocation, int? regionId)
+        {
+            provider.Locations.Add(new ProviderLocation
+            {
+                ImportedLocationId = cdProviderLocation.Id,
+                NavigationId = Guid.NewGuid(),
+                LocationName = cdProviderLocation.LocationType == LocationType.Provider ? cdProviderLocation.Name : null,
+                LocationType = cdProviderLocation.LocationType,
+                AddressLine1 =
+                    cdProviderLocation.LocationType == LocationType.Provider ? cdProviderLocation.AddressLine1 : null,
+                AddressLine2 = cdProviderLocation.AddressLine2,
+                Town = cdProviderLocation.Town,
+                Postcode = cdProviderLocation.Postcode,
+                County = cdProviderLocation.County,
+                Latitude = cdProviderLocation.Latitude,
+                Longitude = cdProviderLocation.Longitude,
+                Email = cdProviderLocation.Email,
+                Website = cdProviderLocation.Website,
+                Phone = cdProviderLocation.Phone,
+                IsImported = true,
+                RegionId = regionId
+            });
         }
 
         private bool RegionIdMapped(CdProviderLocation cdProviderLocation, IEnumerable<Region> regions, ref int? regionId)
