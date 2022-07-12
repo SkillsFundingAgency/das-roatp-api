@@ -12,6 +12,7 @@ using SFA.DAS.Roatp.Jobs.Configuration;
 using SFA.DAS.Roatp.Jobs.Services;
 using System;
 using System.Diagnostics.CodeAnalysis;
+using SFA.DAS.Authorization.ProviderFeatures.Configuration;
 using SFA.DAS.Roatp.Data.Repositories;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.Services.CourseDirectory;
@@ -56,7 +57,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Jobs
             
             configBuilder.AddAzureTableStorage(options =>
                 {
-                    options.ConfigurationKeys = new[] { "SFA.DAS.Roatp.Jobs" };
+                    options.ConfigurationKeys = new[] { "SFA.DAS.Roatp.Jobs", "SFA.DAS.Roatp.CourseManagement.Web" };
                     options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
                     options.EnvironmentName = configuration["EnvironmentName"];
                     options.PreFixConfigurationKeys = false;
@@ -65,6 +66,12 @@ namespace SFA.DAS.Roatp.CourseManagement.Jobs
             _configuration = configBuilder.Build();
             builder.Services.Replace(ServiceDescriptor.Singleton(typeof(IConfiguration), _configuration));
             
+            var providerFeaturesConfiguration = _configuration
+                .GetSection(nameof(ProviderFeaturesConfiguration))
+                .Get<ProviderFeaturesConfiguration>();
+               
+            builder.Services.AddSingleton(providerFeaturesConfiguration);
+
             builder.Services.AddRoatpDataContext(_configuration["SqlDatabaseConnectionString"], _configuration["EnvironmentName"]);
 
             builder.Services.AddTransient<IReloadStandardsCacheService, ReloadStandardsCacheService>();
@@ -72,6 +79,8 @@ namespace SFA.DAS.Roatp.CourseManagement.Jobs
             builder.Services.AddTransient<ILoadCourseDirectoryDataService, LoadCourseDirectoryDataService>();
             builder.Services.AddTransient<IGetCourseDirectoryDataService, GetCourseDirectoryDataService>();
             builder.Services.AddTransient<ICourseDirectoryDataProcessingService, CourseDirectoryDataProcessingService>();
+            builder.Services.AddTransient<IGetBetaProvidersService, GetBetaProvidersService>();
+            
         }
 
         private void ConfigureHttpClient(IServiceCollection services)

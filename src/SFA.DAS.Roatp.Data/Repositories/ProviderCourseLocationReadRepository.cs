@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System.Collections.Generic;
@@ -21,9 +22,9 @@ namespace SFA.DAS.Roatp.Data.Repositories
         public async Task<List<ProviderCourseLocation>> GetAllProviderCourseLocations(int ukprn, int larsCode)
         {
             return await _roatpDataContext
-                .ProviderCoursesLocations
+                    .ProviderCoursesLocations
                     .Include(l => l.Location)
-                    .ThenInclude(r=>r.Region)
+                    .ThenInclude(r => r.Region)
                     .Where(p => p.Course.Provider.Ukprn == ukprn && p.Course.LarsCode == larsCode)
                     .AsNoTracking()
                     .ToListAsync();
