@@ -11,13 +11,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
 {
     public class BulkDeleteProviderCourseLocationsCommandHandler : IRequestHandler<BulkDeleteProviderCourseLocationsCommand, int>
     {
-        private readonly IProviderCourseLocationDeleteRepository _providerCourseLocationDeleteRepository;
+        private readonly IProviderCourseLocationsDeleteRepository _providerCourseLocationsDeleteRepository;
         private readonly IProviderCourseLocationReadRepository _providerCourseLocationReadRepository;
         private readonly ILogger<BulkDeleteProviderCourseLocationsCommandHandler> _logger;
 
-        public BulkDeleteProviderCourseLocationsCommandHandler(IProviderCourseLocationDeleteRepository providerCourseLocationDeleteRepository, IProviderCourseLocationReadRepository providerCourseLocationReadRepository, ILogger<BulkDeleteProviderCourseLocationsCommandHandler> logger)
+        public BulkDeleteProviderCourseLocationsCommandHandler(IProviderCourseLocationsDeleteRepository providerCourseLocationsDeleteRepository, IProviderCourseLocationReadRepository providerCourseLocationReadRepository, ILogger<BulkDeleteProviderCourseLocationsCommandHandler> logger)
         {
-            _providerCourseLocationDeleteRepository = providerCourseLocationDeleteRepository;
+            _providerCourseLocationsDeleteRepository = providerCourseLocationsDeleteRepository;
             _providerCourseLocationReadRepository = providerCourseLocationReadRepository;
             _logger = logger;
         }
@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
             }
 
             _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn} and LarsCode:{larscode}", count, locationType, request.Ukprn, request.LarsCode);
-            await _providerCourseLocationDeleteRepository.BulkDelete(locationsToDelete.Select(l => l.Id));
+            await _providerCourseLocationsDeleteRepository.BulkDelete(locationsToDelete.Select(l => l.Id));
 
             return count;
         }
