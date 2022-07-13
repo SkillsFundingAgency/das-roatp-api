@@ -54,7 +54,6 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IProviderCourseLocationReadRepository, ProviderCourseLocationReadRepository>();
             services.AddTransient<IProviderCourseLocationsDeleteRepository, ProviderCourseLocationsDeleteRepository>();
             services.AddTransient<IProviderCourseLocationsInsertRepository, ProviderCourseLocationsInsertRepository>();
-            services.AddTransient<IProviderCourseLocationDeleteRepository, ProviderCourseLocationDeleteRepository>();
             services.AddTransient<ILoadProviderRepository, LoadProviderRepository>();
             services.AddTransient<IGetActiveProviderRegistrationsRepository, GetActiveProviderRegistrationsRepository>();
         }
