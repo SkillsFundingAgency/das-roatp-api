@@ -7,16 +7,16 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
     [TestFixture]
     public class ProviderCourseModelTests
     {
-        [Test]
-        public void ProviderCourseOperator_ReturnsProviderCourseModel()
+        [TestCase(true)]
+        [TestCase(false)]
+        public void ProviderCourseOperator_ReturnsProviderCourseModel(bool hasPortableFlexiJobOption)
         {
-            var course = new ProviderCourse() { LarsCode = 1};
+            var course = new ProviderCourse() { LarsCode = 1, HasPortableFlexiJobOption = hasPortableFlexiJobOption};
             var model = (ProviderCourseModel) course;
 
             Assert.That(model, Is.Not.Null);
             Assert.That(model.LarsCode, Is.EqualTo(course.LarsCode));
-            Assert.That(model.DeliveryModels, Contains.Item(ProviderCourseModel.DeliveryModel.Regular));
-            Assert.That(model.DeliveryModels, Contains.Item(ProviderCourseModel.DeliveryModel.PortableFlexiJob));
+            Assert.That(model.HasPortableFlexiJobOption, Is.EqualTo(hasPortableFlexiJobOption));
         }
 
         [Test]

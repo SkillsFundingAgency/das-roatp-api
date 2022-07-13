@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries
         public bool? IsConfirmed { get; set; } //required if imported
         public bool? HasNationalDeliveryOption { get; set; }
         public bool? HasHundredPercentEmployerDeliveryOption { get; set; }
-        public List<DeliveryModel> DeliveryModels { get; set; } = new List<DeliveryModel>();
+       public bool HasPortableFlexiJobOption { get; set; }
         public string Version { get; set; }
         public string ApprovalBody { get; set; }
 
@@ -35,16 +35,12 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries
                 ContactUsEmail = providerCourse.ContactUsEmail,
                 ContactUsPageUrl = providerCourse.ContactUsPageUrl,
                 IsApprovedByRegulator = providerCourse.IsApprovedByRegulator,
-                IsImported = providerCourse.IsImported
+                IsImported = providerCourse.IsImported,
+                HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption
+                
             };
 
-            //Regular is assumed by default
-            model.DeliveryModels.Add(DeliveryModel.Regular);
-
-            //For pilot assume all the standards are flexible
-            //For MVS this flag will have to be derived from ProviderCourseLocation
-            model.DeliveryModels.Add(DeliveryModel.PortableFlexiJob);
-
+           
             return model;
         }
         public void UpdateCourseDetails(string ifateRefNum, int level, string title, string version, string approvalBody)
@@ -54,11 +50,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries
             CourseName = title;
             Version = version;
             ApprovalBody = approvalBody;
-        }
-        public enum DeliveryModel
-        {
-            Regular,
-            PortableFlexiJob
         }
     }
 }
