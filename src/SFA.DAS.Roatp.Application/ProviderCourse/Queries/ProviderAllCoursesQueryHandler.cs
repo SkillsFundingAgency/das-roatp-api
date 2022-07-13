@@ -27,7 +27,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries
         {
             var providerCourses = await _providerCourseReadRepository.GetAllProviderCourses(request.Ukprn);
 
-            
             if (!providerCourses.Any())
             {
                 _logger.LogInformation("ProviderCourses data not found for {ukprn}", request.Ukprn);

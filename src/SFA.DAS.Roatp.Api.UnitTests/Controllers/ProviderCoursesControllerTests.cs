@@ -27,12 +27,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             ProviderAllCoursesQueryResult handlerResult)
         {
             mediatorMock.Setup(m => m.Send(It.IsAny<ProviderAllCoursesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
-
             var result = await sut.GetAllCourses(ukprn);
-
             (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.Courses);
         }
-
 
         [Test, MoqAutoData]
         public async Task GetCourse_CallsMediator(
@@ -43,9 +40,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             ProviderCourseQueryResult handlerResult)
         {
             mediatorMock.Setup(m => m.Send(It.IsAny<ProviderCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
-
             var result = await sut.GetCourse(ukprn, larsCode);
-
             (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.Course);
         }
     }

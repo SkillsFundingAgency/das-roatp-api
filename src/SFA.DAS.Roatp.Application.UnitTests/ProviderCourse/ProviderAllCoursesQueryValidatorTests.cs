@@ -12,9 +12,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse
     [TestFixture]
     public class ProviderAllCoursesQueryValidatorTests
     {
-
-
-
         [TestCase(10000001,  true)]
         [TestCase(10000000, false)]
         [TestCase(100000000,  false)]
