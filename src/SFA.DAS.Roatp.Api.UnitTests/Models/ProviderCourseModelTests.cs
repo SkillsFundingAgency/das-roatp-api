@@ -1,5 +1,5 @@
 ﻿using NUnit.Framework;
-using SFA.DAS.Roatp.Api.Models;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries;
 using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Models
@@ -15,8 +15,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
 
             Assert.That(model, Is.Not.Null);
             Assert.That(model.LarsCode, Is.EqualTo(course.LarsCode));
-            Assert.That(model.DeliveryModels, Contains.Item(DeliveryModel.Regular));
-            Assert.That(model.DeliveryModels, Contains.Item(DeliveryModel.PortableFlexiJob));
+            Assert.That(model.DeliveryModels, Contains.Item(ProviderCourseModel.DeliveryModel.Regular));
+            Assert.That(model.DeliveryModels, Contains.Item(ProviderCourseModel.DeliveryModel.PortableFlexiJob));
         }
 
         [Test]

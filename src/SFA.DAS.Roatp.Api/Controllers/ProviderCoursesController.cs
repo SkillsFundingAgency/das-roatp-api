@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.Locations.Queries;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries;
-using ProviderCourseModel = SFA.DAS.Roatp.Api.Models.ProviderCourseModel;
+
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
