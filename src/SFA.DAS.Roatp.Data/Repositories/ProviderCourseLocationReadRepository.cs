@@ -29,5 +29,16 @@ namespace SFA.DAS.Roatp.Data.Repositories
                     .AsNoTracking()
                     .ToListAsync();
         }
+
+        public async Task<List<ProviderCourseLocation>> GetProviderCourseLocationsByUkprn(int ukprn)
+        {
+            return await _roatpDataContext
+                .ProviderCoursesLocations
+                    .Include(l => l.Location)
+                    .ThenInclude(r => r.Region)
+                    .Where(p => p.Course.Provider.Ukprn == ukprn)
+                    .AsNoTracking()
+                    .ToListAsync();
+        }
     }
 }

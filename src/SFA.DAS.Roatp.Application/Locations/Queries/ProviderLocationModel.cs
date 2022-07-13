@@ -6,6 +6,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries
     public class ProviderLocationModel
     {
         public Guid NavigationId { get; set; }
+        public int? RegionId { get; set; }
         public string LocationName { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
@@ -24,6 +25,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries
             new ProviderLocationModel
             {
                 NavigationId = source.NavigationId,
+                RegionId = source.RegionId,
                 LocationName = source.LocationName,
                 AddressLine1 = source.AddressLine1,
                 AddressLine2 = source.AddressLine2,

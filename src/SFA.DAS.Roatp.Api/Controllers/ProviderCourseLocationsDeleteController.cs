@@ -3,18 +3,17 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    public class DeleteProviderCourseLocationsController : ControllerBase
+    public class ProviderCourseLocationsDeleteController : ControllerBase
     {
         private readonly IMediator _mediator;
-        private readonly ILogger<DeleteProviderCourseLocationsController> _logger;
+        private readonly ILogger<ProviderCourseLocationsDeleteController> _logger;
 
-        public DeleteProviderCourseLocationsController(IMediator mediator, ILogger<DeleteProviderCourseLocationsController> logger)
+        public ProviderCourseLocationsDeleteController(IMediator mediator, ILogger<ProviderCourseLocationsDeleteController> logger)
         {
             _mediator = mediator;
             _logger = logger;
@@ -25,7 +24,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         public async Task<ActionResult> BulkDeleteProviderCourseLocations([FromRoute] int ukprn, [FromRoute] int larsCode, [FromQuery] DeleteProviderCourseLocationOption options, [FromQuery] string userId )
         {
-            _logger.LogInformation("Request received for bulk delete provider course locations for Ukprn:{ukprn} LarsCode:{larscode} DeleteOptions:{deleteOptions}", ukprn, larsCode, options);
+            _logger.LogInformation("Inner API: Request received for bulk delete provider course locations for Ukprn:{ukprn} LarsCode:{larscode} DeleteOptions:{deleteOptions}", ukprn, larsCode, options);
 
             var command = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, options, userId);
             var result = await _mediator.Send(command);
