@@ -62,6 +62,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
                 ProviderCourseId = providerCourse.Id
             };
 
+            _logger.LogInformation($"Associating national location for ProviderCourse:{providerCourse.Id}");
+
             return await _providerCourseLocationWriteRepository.Create(providerCourseLocation);
         }
     }
