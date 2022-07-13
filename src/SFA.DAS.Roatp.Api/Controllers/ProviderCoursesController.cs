@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -38,22 +37,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
         public async Task<ActionResult<List<ProviderCourseModel>>> GetAllCourses(int ukprn)
         {
-            if (ukprn <= 0)
-            {
-                _logger.LogInformation("Invalid ukprn {ukprn}", ukprn);
-                return new BadRequestObjectResult("Invalid ukprn");
-            }
-
-
             var allCoursesResult = await _mediator.Send(new ProviderAllCoursesQuery(ukprn));
-            var result = allCoursesResult?.Courses;
-
-            if (result == null || !result.Any())
-            {
-                _logger.LogInformation("Courses data not found for {ukprn}", ukprn);
-                return new NotFoundObjectResult($"No data found for {ukprn}");
-            }
-
+            var result = allCoursesResult.Courses;
             _logger.LogInformation("Courses data found for {ukprn}", ukprn);
             return new OkObjectResult(result);
         }
@@ -72,21 +57,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(ProviderCourseModel), 200)]
         public async Task<ActionResult<ProviderCourseModel>> GetCourse(int ukprn, int larsCode)
         {
-            if (ukprn <= 0 || larsCode <= 0)
-            {
-                _logger.LogInformation("Invalid ukprn or larscode {ukprn}, {larsCode}", ukprn, larsCode);
-                return new BadRequestObjectResult("Invalid ukprn or larscode.");
-            }
-
             var courseResult = await _mediator.Send(new ProviderCourseQuery(ukprn, larsCode));
-            var result = courseResult?.Course;
-
-            if (result == null)
-            {
-                _logger.LogInformation("Course data not found for {ukprn} and {larsCode}", ukprn, larsCode);
-                return new NotFoundObjectResult($"No data found for {ukprn} and {larsCode}");
-            }
-
+            var result = courseResult.Course;
             _logger.LogInformation("Course data found for {ukprn} and {larsCode}", ukprn, larsCode);
             return new OkObjectResult(result);
         }
