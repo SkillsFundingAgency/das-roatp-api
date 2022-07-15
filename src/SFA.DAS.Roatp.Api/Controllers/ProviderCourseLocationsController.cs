@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         }
 
         [HttpGet]
-        [Route("/providers/{ukprn}/courses/{larsCode}/locations")]
+        [Route("/providers/{ukprn}/courses/{larsCode}/locations", Name = RouteNames.GetProviderCourseLocations)]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(List<ProviderCourseLocationModel>), 200)]
