@@ -8,10 +8,10 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete
 {
     public class DeleteProviderCourseLocationCommandHandler : IRequestHandler<DeleteProviderCourseLocationCommand, Unit>
     {
-        private readonly IProviderCourseLocationDeleteRepository _providerCourseLocationDeleteRepository;
+        private readonly IProviderCourseLocationsDeleteRepository _providerCourseLocationDeleteRepository;
         private readonly ILogger<DeleteProviderCourseLocationCommandHandler> _logger;
 
-        public DeleteProviderCourseLocationCommandHandler(IProviderCourseLocationDeleteRepository providerCourseLocationDeleteRepository, ILogger<DeleteProviderCourseLocationCommandHandler> logger)
+        public DeleteProviderCourseLocationCommandHandler(IProviderCourseLocationsDeleteRepository providerCourseLocationDeleteRepository, ILogger<DeleteProviderCourseLocationCommandHandler> logger)
         {
             _providerCourseLocationDeleteRepository = providerCourseLocationDeleteRepository;
             _logger = logger;

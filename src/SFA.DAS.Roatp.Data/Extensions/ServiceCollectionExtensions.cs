@@ -23,6 +23,9 @@ namespace SFA.DAS.Roatp.Data.Extensions
                 {
                     var generateTokenTask = GenerateTokenAsync();
                     connection.AccessToken = generateTokenTask.GetAwaiter().GetResult();
+                }
+                else
+                {
                     options.EnableSensitiveDataLogging();
                 }
 
@@ -44,10 +47,17 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IReloadStandardsRepository, ReloadStandardsRepository>();
             services.AddTransient<IGetStandardsCountRepository, GetStandardsCountRepository>();
             services.AddTransient<IProviderLocationsReadRepository, ProviderLocationsReadRepository>();
+            services.AddTransient<IProviderLocationsDeleteRepository, ProviderLocationsDeleteRepository>();
+            services.AddTransient<IProviderLocationsInsertRepository, ProviderLocationsInsertRepository>();
             services.AddTransient<IProviderCourseEditRepository, ProviderCourseEditRepository>();
             services.AddTransient<IReloadProviderRegistrationDetailsRepository, ReloadProviderRegistrationDetailsRepository>();
             services.AddTransient<IProviderCourseLocationReadRepository, ProviderCourseLocationReadRepository>();
-            services.AddTransient<IProviderCourseLocationDeleteRepository, ProviderCourseLocationDeleteRepository>();
+            services.AddTransient<IProviderCourseLocationsDeleteRepository, ProviderCourseLocationsDeleteRepository>();
+            services.AddTransient<IProviderCourseLocationsInsertRepository, ProviderCourseLocationsInsertRepository>();
+            services.AddTransient<ILoadProviderRepository, LoadProviderRepository>();
+            services.AddTransient<IGetActiveProviderRegistrationsRepository, GetActiveProviderRegistrationsRepository>();
+            services.AddTransient<IProviderLocationWriteRepository, ProviderLocationWriteRepository>();
+            services.AddTransient<IProviderCourseLocationWriteRepository, ProviderCourseLocationWriteRepository>();
         }
 
         public static async Task<string> GenerateTokenAsync()

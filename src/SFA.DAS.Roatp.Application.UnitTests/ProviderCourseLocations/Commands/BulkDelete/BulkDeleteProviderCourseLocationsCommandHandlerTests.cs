@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
     [TestFixture]
     public class BulkDeleteProviderCourseLocationsCommandHandlerTests
     {
-        private Mock<IProviderCourseLocationDeleteRepository> _providerCourseLocationDeleteRepositoryMock;
+        private Mock<IProviderCourseLocationsDeleteRepository> _providerCourseLocationDeleteRepositoryMock;
         private Mock<IProviderCourseLocationReadRepository> _providerCourseLocationReadRepositoryMock;
         private BulkDeleteProviderCourseLocationsCommandHandler _sut;
 
@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         [SetUp]
         public void Before_Each_Test()
         {
-            _providerCourseLocationDeleteRepositoryMock = new Mock<IProviderCourseLocationDeleteRepository>();
+            _providerCourseLocationDeleteRepositoryMock = new Mock<IProviderCourseLocationsDeleteRepository>();
             _providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationReadRepository>();
             _sut = new BulkDeleteProviderCourseLocationsCommandHandler(_providerCourseLocationDeleteRepositoryMock.Object, _providerCourseLocationReadRepositoryMock.Object, Mock.Of<ILogger<BulkDeleteProviderCourseLocationsCommandHandler>>());
         }

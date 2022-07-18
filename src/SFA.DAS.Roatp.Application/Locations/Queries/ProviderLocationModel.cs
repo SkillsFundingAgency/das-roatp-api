@@ -7,6 +7,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries
     {
         public int ProviderLocationId { get; set; }
         public Guid NavigationId { get; set; }
+        public int? RegionId { get; set; }
         public string LocationName { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
@@ -26,6 +27,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries
             {
                 ProviderLocationId =  source.Id,
                 NavigationId = source.NavigationId,
+                RegionId = source.RegionId,
                 LocationName = source.LocationName,
                 AddressLine1 = source.AddressLine1,
                 AddressLine2 = source.AddressLine2,

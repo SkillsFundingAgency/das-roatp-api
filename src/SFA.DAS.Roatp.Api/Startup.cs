@@ -16,7 +16,6 @@ using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Roatp.Api.HealthCheck;
-using SFA.DAS.Roatp.Api.Services;
 using SFA.DAS.Roatp.Application.Extensions;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
@@ -96,7 +95,6 @@ namespace SFA.DAS.Roatp.Api
                 options.OperationFilter<SwaggerVersionHeaderFilter>();
             });
 
-            services.AddTransient<IGetProviderCoursesService, GetProviderCoursesService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

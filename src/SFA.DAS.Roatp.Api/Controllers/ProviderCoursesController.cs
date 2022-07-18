@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Api.Models;
-using SFA.DAS.Roatp.Api.Services;
+using SFA.DAS.Roatp.Application.Locations.Queries;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries;
+
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -14,14 +15,13 @@ namespace SFA.DAS.Roatp.Api.Controllers
     public class ProviderCoursesController : ControllerBase
     {
         private readonly ILogger<ProviderCoursesController> _logger;
-        private readonly IGetProviderCoursesService _getProviderCoursesService;
+        private readonly IMediator _mediator;
 
         public ProviderCoursesController(
-            ILogger<ProviderCoursesController> logger,
-            IGetProviderCoursesService getProviderCoursesService)
+            ILogger<ProviderCoursesController> logger, IMediator mediator)
         {
             _logger = logger;
-            _getProviderCoursesService = getProviderCoursesService;
+            _mediator = mediator;
         }
 
         /// <summary>
@@ -37,20 +37,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
         public async Task<ActionResult<List<ProviderCourseModel>>> GetAllCourses(int ukprn)
         {
-            if (ukprn <= 0)
-            {
-                _logger.LogInformation("Invalid ukprn {ukprn}", ukprn);
-                return new BadRequestObjectResult("Invalid ukprn");
-            }
-
-            var result = await _getProviderCoursesService.GetAllCourses(ukprn);
-
-            if (!result.Any())
-            {
-                _logger.LogInformation("Courses data not found for {ukprn}", ukprn);
-                return new NotFoundObjectResult($"No data found for {ukprn}");
-            }
-
+            var allCoursesResult = await _mediator.Send(new ProviderAllCoursesQuery(ukprn));
+            var result = allCoursesResult.Courses;
             _logger.LogInformation("Courses data found for {ukprn}", ukprn);
             return new OkObjectResult(result);
         }
@@ -69,21 +57,9 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(ProviderCourseModel), 200)]
         public async Task<ActionResult<ProviderCourseModel>> GetCourse(int ukprn, int larsCode)
         {
-            if (ukprn <= 0 || larsCode <= 0)
-            {
-                _logger.LogInformation("Invalid ukprn or larscode {ukprn}, {larsCode}", ukprn, larsCode);
-                return new BadRequestObjectResult("Invalid ukprn or larscode.");
-            }
-
-            var result = await _getProviderCoursesService.GetCourse(ukprn, larsCode);
-
-            if (result == null)
-            {
-                _logger.LogInformation("Courses data not found for {ukprn} and {larsCode}", ukprn, larsCode);
-                return new NotFoundObjectResult($"No data found for {ukprn} and {larsCode}");
-            }
-
-            _logger.LogInformation("Courses data found for {ukprn} and {larsCode}", ukprn, larsCode);
+            var courseResult = await _mediator.Send(new ProviderCourseQuery(ukprn, larsCode));
+            var result = courseResult.Course;
+            _logger.LogInformation("Course data found for {ukprn} and {larsCode}", ukprn, larsCode);
             return new OkObjectResult(result);
         }
     }
