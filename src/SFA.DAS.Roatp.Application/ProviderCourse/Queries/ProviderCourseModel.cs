@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using SFA.DAS.Roatp.Domain.Entities;
+﻿using System.Collections.Generic;
 
-namespace SFA.DAS.Roatp.Api.Models
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries
 {
     public class ProviderCourseModel
     {
@@ -20,10 +18,11 @@ namespace SFA.DAS.Roatp.Api.Models
         public bool? IsConfirmed { get; set; } //required if imported
         public bool? HasNationalDeliveryOption { get; set; }
         public bool? HasHundredPercentEmployerDeliveryOption { get; set; }
-        public List<DeliveryModel> DeliveryModels { get; set; } = new List<DeliveryModel>();
+       public bool HasPortableFlexiJobOption { get; set; }
         public string Version { get; set; }
         public string ApprovalBody { get; set; }
-        public static implicit operator ProviderCourseModel(ProviderCourse providerCourse)
+
+        public static implicit operator ProviderCourseModel(Domain.Entities.ProviderCourse providerCourse)
         {
             if (providerCourse == null) return null;
 
@@ -36,19 +35,14 @@ namespace SFA.DAS.Roatp.Api.Models
                 ContactUsEmail = providerCourse.ContactUsEmail,
                 ContactUsPageUrl = providerCourse.ContactUsPageUrl,
                 IsApprovedByRegulator = providerCourse.IsApprovedByRegulator,
-                IsImported = providerCourse.IsImported
+                IsImported = providerCourse.IsImported,
+                HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption
+                
             };
 
-            //Regular is assumed by default
-            model.DeliveryModels.Add(DeliveryModel.Regular);
-
-            //For pilot assume all the standards are flexible
-            //For MVS this flag will have to be derived from ProviderCourseLocation
-            model.DeliveryModels.Add(DeliveryModel.PortableFlexiJob);
-
+           
             return model;
         }
-
         public void UpdateCourseDetails(string ifateRefNum, int level, string title, string version, string approvalBody)
         {
             IfateReferenceNumber = ifateRefNum;
@@ -57,11 +51,5 @@ namespace SFA.DAS.Roatp.Api.Models
             Version = version;
             ApprovalBody = approvalBody;
         }
-    }
-
-    public enum DeliveryModel
-    {
-        Regular,
-        PortableFlexiJob
     }
 }

@@ -8,6 +8,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     {
         Task<ProviderCourse> GetProviderCourse(int providerId, int larsCode);
         Task<ProviderCourse> GetProviderCourseByUkprn(int ukprn, int larsCode);
-        Task<List<ProviderCourse>> GetAllProviderCourses(int providerId);
+        Task<List<ProviderCourse>> GetAllProviderCourses(int ukprn);
     }
 }
