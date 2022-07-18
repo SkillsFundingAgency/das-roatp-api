@@ -1,4 +1,5 @@
 ﻿using SFA.DAS.Roatp.Domain.Entities;
+using static SFA.DAS.Roatp.Domain.Constants;
 
 namespace SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory
 {
