@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers
