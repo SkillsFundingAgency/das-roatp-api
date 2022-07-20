@@ -17,7 +17,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
     {
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_Inserts_Records(
-            [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
             [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock, 
             [Frozen] Mock<IProviderCourseLocationsInsertRepository> providerCourseLocationsInsertRepositoryMock, 
@@ -25,11 +24,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             BulkInsertProviderCourseLocationsCommandHandler sut,
             CancellationToken cancellationToken)
         {
-            var provider = new Provider { Id = 1, Ukprn = command.Ukprn };
             var providerLocations = new List<ProviderLocation> { new ProviderLocation { Id = 1, ProviderId = 1, RegionId = command.SelectedSubregionIds.First() } };
             var providerCourse = new List<Domain.Entities.ProviderCourse>() { new Domain.Entities.ProviderCourse { ProviderId = 1, Id = 1, LarsCode = command.LarsCode } };
-            providerReadRepositoryMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
-
+            
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
 
             providerCourseReadRepositoryMock.Setup(r => r.GetAllProviderCourses(It.IsAny<int>())).ReturnsAsync(providerCourse);

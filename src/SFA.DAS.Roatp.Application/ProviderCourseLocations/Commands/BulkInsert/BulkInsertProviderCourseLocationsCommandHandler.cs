@@ -14,26 +14,22 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
         private readonly IProviderCourseLocationsInsertRepository _providerCourseLocationsInsertRepository;
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
         private readonly IProviderCourseReadRepository _providerCourseReadRepository;
-        private readonly IProviderReadRepository _providerReadRepository;
         private readonly ILogger<BulkInsertProviderCourseLocationsCommandHandler> _logger;
 
         public BulkInsertProviderCourseLocationsCommandHandler(IProviderCourseLocationsInsertRepository providerCourseLocationsInsertRepository,
             IProviderLocationsReadRepository providerLocationsReadRepository,
             IProviderCourseReadRepository providerCourseReadRepository,
-            IProviderReadRepository providerReadRepository,
             ILogger<BulkInsertProviderCourseLocationsCommandHandler> logger)
         {
             _providerCourseLocationsInsertRepository = providerCourseLocationsInsertRepository;
             _logger = logger;
             _providerLocationsReadRepository = providerLocationsReadRepository;
             _providerCourseReadRepository = providerCourseReadRepository;
-            _providerReadRepository = providerReadRepository;
         }
 
         public async Task<int> Handle(BulkInsertProviderCourseLocationsCommand command, CancellationToken cancellationToken)
         {
-            var provider = await _providerReadRepository.GetByUkprn(command.Ukprn);
-            var providerCourses = await _providerCourseReadRepository.GetAllProviderCourses(provider.Id);
+            var providerCourses = await _providerCourseReadRepository.GetAllProviderCourses(command.Ukprn);
             var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
 
             List<ProviderCourseLocation> providerCourseLocationsToInsert = new List<ProviderCourseLocation>();
