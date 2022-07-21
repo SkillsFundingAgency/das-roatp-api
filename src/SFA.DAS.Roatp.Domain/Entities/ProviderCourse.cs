@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Roatp.Domain.Entities
 {
-    public class ProviderCourse
+    public class ProviderCourse: ProviderCourseBase
     {
         public int Id { get; set; }
         public int ProviderId { get; set; }
@@ -11,12 +11,16 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
         public string ContactUsPageUrl { get; set; }
-        public bool? IsApprovedByRegulator { get; set; }
         public bool IsImported { get; set; } = false;
         public bool HasPortableFlexiJobOption { get; set; }
 
         public virtual Provider Provider { get; set; }
         public virtual List<ProviderCourseLocation> Locations { get; set; } = new List<ProviderCourseLocation>();
         public virtual List<ProviderCourseVersion> Versions { get; set; } = new List<ProviderCourseVersion>();
+    }
+
+    public class ProviderCourseBase
+    {
+        public bool? IsApprovedByRegulator { get; set; }
     }
 }
