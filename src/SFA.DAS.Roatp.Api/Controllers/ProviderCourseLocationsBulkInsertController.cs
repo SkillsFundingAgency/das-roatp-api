@@ -3,7 +3,6 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert;
 
 namespace SFA.DAS.Roatp.Api.Controllers
