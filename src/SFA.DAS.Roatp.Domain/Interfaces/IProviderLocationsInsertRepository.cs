@@ -7,5 +7,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     public interface IProviderLocationsInsertRepository
     {
         Task BulkInsert(IEnumerable<ProviderLocation> providerLocations);
+        Task Create(ProviderLocation providerLocation);
     }
 }
