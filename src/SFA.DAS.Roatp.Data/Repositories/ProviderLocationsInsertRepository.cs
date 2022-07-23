@@ -22,11 +22,5 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
             await _roatpDataContext.SaveChangesAsync();
         }
-
-        public async Task Create(ProviderLocation providerLocation)
-        {
-            _roatpDataContext.ProviderLocations.Add(providerLocation);
-            await _roatpDataContext.SaveChangesAsync();
-        }
     }
 }
