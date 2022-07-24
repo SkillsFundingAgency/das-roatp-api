@@ -27,17 +27,17 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
                 NavigationId = Guid.NewGuid(),
                 IsImported = false,
                 LocationType = LocationType.Provider,
-                LocationName = command.LocationName,
-                AddressLine1 = command.AddressLine1,
-                AddressLine2 = command.AddressLine2,
-                Town = command.Town,
-                Postcode = command.Postcode,
-                County = command.County,
+                LocationName = command.LocationName.Trim(),
+                AddressLine1 = command.AddressLine1.Trim(),
+                AddressLine2 = command.AddressLine2.Trim(),
+                Town = command.Town.Trim(),
+                Postcode = command.Postcode.Trim(),
+                County = command.County.Trim(),
                 Latitude = command.Latitude,
                 Longitude = command.Longitude,
-                Email = command.Email,
-                Website = command.Website,
-                Phone = command.Phone
+                Email = command.Email.Trim(),
+                Website = command.Website.Trim(),
+                Phone = command.Phone.Trim()
             };
     }
 }

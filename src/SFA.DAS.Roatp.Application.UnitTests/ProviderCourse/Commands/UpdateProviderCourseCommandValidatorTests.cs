@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using FluentValidation.TestHelper;
+﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse;
 
