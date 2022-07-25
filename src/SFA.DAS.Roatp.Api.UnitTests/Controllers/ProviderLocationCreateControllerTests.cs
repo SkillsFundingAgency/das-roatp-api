@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
-using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
@@ -21,15 +20,29 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task CreateLocaiton_InvokesCommand(
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProviderLocationCreateController sut,
-            int ukprn,
-            ProviderLocationCreateModel model)
+            [Frozen] int ukprn,
+            CreateProviderLocationCommand command)
         {
-            var response = await sut.CreateLocation(ukprn, model);
+            var response = await sut.CreateLocation(ukprn, command);
 
-            mediatorMock.Verify(m => m.Send(It.Is<CreateProviderLocationCommand>(c => c.Ukprn == ukprn), It.IsAny<CancellationToken>()));
+            mediatorMock.Verify(m => m.Send(command, It.IsAny<CancellationToken>()));
             var result = (StatusCodeResult)response;
             result.Should().NotBeNull();
             result.StatusCode.Should().Be(StatusCodes.Status201Created);
+        }
+
+        [Test, MoqAutoData]
+        public async Task CreateLocaiton_UkprnMismatch_ReturnsBadRequestResult(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Greedy] ProviderLocationCreateController sut,
+            int ukprn,
+            CreateProviderLocationCommand command)
+        {
+            var response = await sut.CreateLocation(ukprn, command);
+
+            mediatorMock.Verify(m => m.Send(command, It.IsAny<CancellationToken>()), Times.Never);
+            var result = (BadRequestObjectResult)response;
+            result.Should().NotBeNull();
         }
     }
 }
