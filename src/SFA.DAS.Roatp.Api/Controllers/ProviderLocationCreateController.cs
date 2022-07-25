@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation;
 using System.Threading.Tasks;
 
@@ -24,12 +23,14 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [Route("/providers/{ukprn}/locations")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
-        public async Task<IActionResult> CreateLocation([FromRoute] int ukprn, ProviderLocationCreateModel model)
+        public async Task<IActionResult> CreateLocation([FromRoute] int ukprn, CreateProviderLocationCommand command)
         {
-            _logger.LogInformation("Request to save Provider Location {locationName} for Ukprn {ukprn}", model.LocationName, ukprn);
+            _logger.LogInformation("Request to save Provider Location {locationName} for Ukprn {ukprn}", command.LocationName, ukprn);
 
-            var command = (CreateProviderLocationCommand)model;
-            command.Ukprn = ukprn;
+            if (ukprn != command.Ukprn)
+            {
+                return BadRequest($"Route ukprn: {ukprn} is different than request ukprn: {command.Ukprn}");
+            }
 
             await _mediator.Send(command);
 
