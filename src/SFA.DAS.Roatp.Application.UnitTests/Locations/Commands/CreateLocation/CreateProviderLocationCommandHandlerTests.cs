@@ -29,11 +29,14 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
 
             _command = fixture.Create<CreateProviderLocationCommand>();
             _provider = fixture.Create<Provider>();
+            var providerLocation = fixture.Create<ProviderLocation>();
 
             _providerReadRepositoryMock = new Mock<IProviderReadRepository>();
             _providerReadRepositoryMock.Setup(r => r.GetByUkprn(_command.Ukprn)).ReturnsAsync(_provider);
 
             _providerLocationsWriteRepositoryMock = new Mock<IProviderLocationWriteRepository>();
+            _providerLocationsWriteRepositoryMock.Setup(r => r.Create(It.IsAny<ProviderLocation>())).ReturnsAsync(providerLocation);
+
             _sut = new CreateProviderLocationCommandHandler(_providerReadRepositoryMock.Object, _providerLocationsWriteRepositoryMock.Object, Mock.Of<ILogger<CreateProviderLocationCommandHandler>>());
 
             await _sut.Handle(_command, new CancellationToken());

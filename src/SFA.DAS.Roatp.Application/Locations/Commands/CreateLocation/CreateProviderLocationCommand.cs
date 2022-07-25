@@ -5,7 +5,7 @@ using System;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
 {
-    public class CreateProviderLocationCommand : IRequest<Unit>, IUkprn
+    public class CreateProviderLocationCommand : IRequest<int>, IUkprn
     {
         public string UserId { get; set; }
         public int Ukprn { get; set; }

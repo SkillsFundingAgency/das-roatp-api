@@ -26,9 +26,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             var response = await sut.CreateLocation(ukprn, command);
 
             mediatorMock.Verify(m => m.Send(command, It.IsAny<CancellationToken>()));
-            var result = (StatusCodeResult)response;
+            var result = (CreatedResult)response;
             result.Should().NotBeNull();
-            result.StatusCode.Should().Be(StatusCodes.Status201Created);
         }
 
         [Test, MoqAutoData]
