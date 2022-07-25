@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
 {
-    public class CreateProviderLocationCommandHandler : IRequestHandler<CreateProviderLocationCommand, Unit>
+    public class CreateProviderLocationCommandHandler : IRequestHandler<CreateProviderLocationCommand, int>
     {
         private readonly IProviderReadRepository _providerReadRepository;
         private readonly IProviderLocationWriteRepository _providerLocationsWriteRepository;
@@ -20,14 +20,14 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
             _logger = logger;
         }
 
-        public async Task<Unit> Handle(CreateProviderLocationCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(CreateProviderLocationCommand request, CancellationToken cancellationToken)
         {
             var provider = await _providerReadRepository.GetByUkprn(request.Ukprn);
             _logger.LogInformation("Creating provider location by name {locationName} for ProviderId: {providerId}", request.LocationName, provider.Id, request.Ukprn);
             var providerLocation = (ProviderLocation)request;
             providerLocation.ProviderId = provider.Id;
-            await _providerLocationsWriteRepository.Create(providerLocation);
-            return Unit.Value;
+            var updatedProviderLocation = await _providerLocationsWriteRepository.Create(providerLocation);
+            return updatedProviderLocation.Id;
         }
     }
 }

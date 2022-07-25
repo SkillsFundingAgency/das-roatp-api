@@ -32,9 +32,9 @@ namespace SFA.DAS.Roatp.Api.Controllers
                 return BadRequest($"Route ukprn: {ukprn} is different than request ukprn: {command.Ukprn}");
             }
 
-            await _mediator.Send(command);
+            var response = await _mediator.Send(command);
 
-            return new StatusCodeResult(StatusCodes.Status201Created);
+            return Created("/providers/{ukprn}/locations", response);
         }
     }
 }
