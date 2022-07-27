@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
@@ -27,11 +28,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
             var result = await sut.Handle(query, cancellationToken);
 
             result.Should().NotBeNull();
-            result.Location.Should().BeEquivalentTo(location);
+            result.Location.Should().NotBeNull();
         }
 
         [Test, MoqAutoData()]
-        public async Task Handle_NoData_ReturnsNullResult(
+        public void  Handle_NoData_ReturnsException(
             [Frozen] Mock<IProviderLocationsReadRepository> repoMock,
             GetProviderLocationDetailsQuery query,
             GetProviderLocationDetailsQueryHandler sut,
@@ -39,10 +40,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         {
             repoMock.Setup(r => r.GetProviderLocation(query.Ukprn, query.Id)).ReturnsAsync((ProviderLocation)null);
 
-            var result = await sut.Handle(query, cancellationToken);
+            Assert.ThrowsAsync <NullReferenceException> (() => sut.Handle(query, cancellationToken));
 
-            result.Should().NotBeNull();
-            result.Location.Should().BeNull();
         }
     }
 }
