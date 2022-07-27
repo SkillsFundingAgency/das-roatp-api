@@ -2,7 +2,7 @@
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.Location.Queries.GetProviderLocationDetails
+namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails
 {
     public class GetProviderLocationDetailsQueryValidator : AbstractValidator<GetProviderLocationDetailsQuery>
     {

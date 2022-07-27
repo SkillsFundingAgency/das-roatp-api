@@ -2,7 +2,7 @@
 using SFA.DAS.Roatp.Application.Common;
 using System;
 
-namespace SFA.DAS.Roatp.Application.Location.Queries.GetProviderLocationDetails
+namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails
 {
     public class GetProviderLocationDetailsQuery : IRequest<GetProviderLocationDetailsQueryResult>, IUkprn
     {

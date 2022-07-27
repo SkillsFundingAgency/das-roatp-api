@@ -5,8 +5,8 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.Location.Queries.GetProviderLocationDetails;
-using SFA.DAS.Roatp.Application.Locations.Queries;
+using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails;
+using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         {
             _logger.LogInformation("Request received to get all locations for ukprn: {ukprn}", ukprn);
 
-            var result = await _mediator.Send(new ProviderLocationsQuery(ukprn));
+            var result = await _mediator.Send(new GetProviderLocationsQuery(ukprn));
 
             _logger.LogInformation("Found {locationCount} locations for {ukprn}", result.Locations.Count, ukprn);
 

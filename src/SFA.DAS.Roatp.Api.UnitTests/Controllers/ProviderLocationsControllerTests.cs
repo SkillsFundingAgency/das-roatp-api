@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
-using SFA.DAS.Roatp.Application.Locations.Queries;
+using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
@@ -20,9 +20,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProviderLocationsController sut,
             int ukprn,
-            ProviderLocationsQueryResult handlerResult)
+            GetProviderLocationsQueryResult handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<ProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
 
             var result = await sut.GetLocations(ukprn);
 

@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using SFA.DAS.Roatp.Application.Locations.Queries;
+using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.Location.Queries.GetProviderLocationDetails
+namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails
 {
     public class GetProviderLocationDetailsQueryHandler : IRequestHandler<GetProviderLocationDetailsQuery, GetProviderLocationDetailsQueryResult>
     {
