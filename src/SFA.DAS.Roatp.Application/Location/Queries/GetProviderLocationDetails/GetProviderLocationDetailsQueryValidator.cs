@@ -1,24 +1,26 @@
 ﻿using FluentValidation;
+using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Location.Queries.GetProviderLocationDetails
 {
     public class GetProviderLocationDetailsQueryValidator : AbstractValidator<GetProviderLocationDetailsQuery>
     {
-        public const string InvalidUkprnErrorMessage = "Invalid ukprn";
-        public const string ProviderNotFoundErrorMessage = "No provider found with given ukprn";
-        public GetProviderLocationDetailsQueryValidator(IProviderReadRepository providerReadRepository)
+        public const string InvalidIdErrorMessage = "Invalid id";
+        public const string ProviderLocationNotFoundErrorMessage = "No provider location found with given ukprn and id";
+        public GetProviderLocationDetailsQueryValidator(IProviderReadRepository providerReadRepository, IProviderLocationsReadRepository providerLocationsReadRepository)
         {
-            RuleFor(x => x.Ukprn)
-                .Cascade(CascadeMode.Stop)
-                .GreaterThan(10000000).WithMessage(InvalidUkprnErrorMessage)
-                .LessThan(99999999).WithMessage(InvalidUkprnErrorMessage)
-                .MustAsync(async (ukprn, cancellation) =>
-                {
-                    var provider = await providerReadRepository.GetByUkprn(ukprn);
-                    return provider != null;
-                })
-                .WithMessage(ProviderNotFoundErrorMessage);
+            Include(new UkprnValidator(providerReadRepository));
+
+            RuleFor(x => x.Id)
+               .Cascade(CascadeMode.Stop)
+               .NotEmpty().WithMessage(InvalidIdErrorMessage)
+               .MustAsync(async (model, id , cancellation) =>
+               {
+                   var providerLocation = await providerLocationsReadRepository.GetProviderLocation(model.Ukprn, id);
+                   return providerLocation != null;
+               })
+               .WithMessage(ProviderLocationNotFoundErrorMessage);
         }
     }
 }

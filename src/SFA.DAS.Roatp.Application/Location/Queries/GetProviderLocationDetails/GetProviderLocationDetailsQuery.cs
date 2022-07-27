@@ -1,9 +1,10 @@
 ﻿using MediatR;
+using SFA.DAS.Roatp.Application.Common;
 using System;
 
 namespace SFA.DAS.Roatp.Application.Location.Queries.GetProviderLocationDetails
 {
-    public class GetProviderLocationDetailsQuery : IRequest<GetProviderLocationDetailsQueryResult>
+    public class GetProviderLocationDetailsQuery : IRequest<GetProviderLocationDetailsQueryResult>, IUkprn
     {
         public int Ukprn { get; }
 
