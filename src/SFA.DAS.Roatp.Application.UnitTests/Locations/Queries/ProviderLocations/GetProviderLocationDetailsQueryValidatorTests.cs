@@ -1,10 +1,9 @@
-﻿using System;
+﻿using FluentValidation.TestHelper;
+using System;
 using System.Threading.Tasks;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails;
-using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocations
@@ -12,63 +11,40 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
     [TestFixture]
     public class GetProviderLocationDetailsQueryValidatorTests
     {
-        //[TestCase(10000001, "95C59C6D-F1CD-4F76-A8F5-4D30A3E1E18F", true)]
-        //[TestCase(10000000, "95C59C6D-F1CD-4F76-A8F5-4D30A3E1E18F", false)]
-        //[TestCase(100000000, "95C59C6D-F1CD-4F76-A8F5-4D30A3E1E18F", false)]
-        public async Task Validate_AcceptsEightDigitNumbersOnly(int ukprn, Guid id, bool expectedResult)
+        [Test]
+        public async Task ValidateUkprn_InValid_ReturnsError()
         {
-            var query = new GetProviderLocationDetailsQuery(ukprn, id);
-            var repoMock = new Mock<IProviderReadRepository>();
-            var repoMockProviderLocations = new Mock<IProviderLocationsReadRepository>();
-            repoMock.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
-            var sut = new GetProviderLocationDetailsQueryValidator(repoMock.Object,  repoMockProviderLocations.Object);
+            var query = new GetProviderLocationDetailsQuery(10012002, Guid.NewGuid());
+    
+            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
 
-            var result = await sut.ValidateAsync(query);
+            var result = await sut.TestValidateAsync(query);
 
-            Assert.AreEqual(expectedResult, result.IsValid);
+            result.ShouldHaveValidationErrorFor(c => c.Ukprn);
         }
 
-        
-        public async Task Validate_InvalidUkprnLarsCode()
+        [Test]
+        public async Task ValidateId_InvalidId_ReturnsError()
         {
-            int ukprn = 1;
-            Guid id = Guid.Empty;
-            int expectedTimesRepoIsInvoked = 0;
-            string expectedErrorMessage1 = UkprnValidator.InvalidUkprnErrorMessage;
-            string expectedErrorMessage2 = LarsCodeValidator.InvalidLarsCodeErrorMessage;
-            var query = new GetProviderLocationDetailsQuery(ukprn, id);
-            var repoMock = new Mock<IProviderReadRepository>();
-            var repoMockProviderLocations = new Mock<IProviderLocationsReadRepository>();
-            var sut = new GetProviderLocationDetailsQueryValidator(repoMock.Object, repoMockProviderLocations.Object);
+            var query = new GetProviderLocationDetailsQuery(10012002, Guid.Empty);
 
-            var result = await sut.ValidateAsync(query);
+            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
 
-            repoMock.Verify(x => x.GetByUkprn(It.IsAny<int>()), Times.Exactly(expectedTimesRepoIsInvoked));
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 2);
-            Assert.AreEqual(expectedErrorMessage1, result.Errors[0].ErrorMessage);
-            Assert.AreEqual(expectedErrorMessage2, result.Errors[1].ErrorMessage);
+            var result = await sut.TestValidateAsync(query);
+
+            result.ShouldHaveValidationErrorFor(c => c.Id);
         }
 
-      
+        [Test]
         public async Task Validate_InvalidUkprnLarsCode_CourseDataNotFound()
         {
-            int ukprn = 10012002;
-            Guid id = Guid.NewGuid();
-            int expectedTimesRepoIsInvoked = 2;
-            string expectedErrorMessage1 = LarsCodeValidator.ProviderCourseNotFoundErrorMessage;
-            var query = new GetProviderLocationDetailsQuery(ukprn, id);
-            var repoMock = new Mock<IProviderReadRepository>();
-            var repoMockProviderLocations = new Mock<IProviderLocationsReadRepository>();
-            repoMock.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
-            var sut = new GetProviderLocationDetailsQueryValidator(repoMock.Object, repoMockProviderLocations.Object);
+            var query = new GetProviderLocationDetailsQuery(10012002, Guid.NewGuid());
 
-            var result = await sut.ValidateAsync(query);
+            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
 
-            repoMock.Verify(x => x.GetByUkprn(It.IsAny<int>()), Times.Exactly(expectedTimesRepoIsInvoked));
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(expectedErrorMessage1, result.Errors[0].ErrorMessage);
+            var result = await sut.TestValidateAsync(query);
+
+            result.ShouldHaveValidationErrorFor(c => c.Id);
         }
     }
 }

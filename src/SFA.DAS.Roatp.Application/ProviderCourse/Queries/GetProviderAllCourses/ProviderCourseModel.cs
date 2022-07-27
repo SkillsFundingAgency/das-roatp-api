@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses
+﻿namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses
 {
     public class ProviderCourseModel
     {

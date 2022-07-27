@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using FluentValidation.Validators;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.Locations.Queries;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses
