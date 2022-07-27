@@ -25,8 +25,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpPatch] 
         public async Task<IActionResult> PatchProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, [FromBody] JsonPatchDocument<PatchProviderCourse> request)
         {
-            var userId = "here"; // request.UserId;
-            _logger.LogInformation("Inner API: Request to patch course contact details for ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, larsCode, userId);
+            _logger.LogInformation("Inner API: Request to patch course contact details for ukprn: {ukprn} larscode: {larscode}", ukprn, larsCode);
 
             await _mediator.Send(new PatchProviderCourseCommand
             {
