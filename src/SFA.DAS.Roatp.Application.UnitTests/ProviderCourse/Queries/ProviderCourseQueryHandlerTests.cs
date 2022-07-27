@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
 {
     [TestFixture]
     public class ProviderCourseQueryHandlerTests

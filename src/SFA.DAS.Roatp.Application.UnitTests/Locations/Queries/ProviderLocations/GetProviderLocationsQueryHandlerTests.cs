@@ -12,7 +12,7 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocations
 {
     [TestFixture]
-    public class ProviderLocationsQueryHandlerTests
+    public class GetProviderLocationsQueryHandlerTests
     {
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_ReturnsResult(

@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
 {
     [TestFixture]
     public class ProviderAllCoursesQueryValidatorTests
