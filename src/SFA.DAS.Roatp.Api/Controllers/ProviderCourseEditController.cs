@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Models;
-using SFA.DAS.Roatp.Application.ProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateProviderCourse;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers

@@ -1,4 +1,4 @@
-﻿using SFA.DAS.Roatp.Application.ProviderCourse;
+﻿using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateProviderCourse;
 
 namespace SFA.DAS.Roatp.Api.Models
 {

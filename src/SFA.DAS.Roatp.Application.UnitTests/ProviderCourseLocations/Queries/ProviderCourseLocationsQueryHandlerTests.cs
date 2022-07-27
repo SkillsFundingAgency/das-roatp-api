@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries;
+using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderCourseLocations;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
@@ -22,8 +22,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             [Frozen] Mock<IProviderReadRepository> repoMockProvider,
             [Frozen] Mock<IProviderCourseReadRepository> repoMockProviderCourse,
             [Frozen]Mock<IProviderCourseLocationReadRepository> repoMockProviderCourseLocation,
-            ProviderCourseLocationsQuery query,
-            ProviderCourseLocationsQueryHandler sut,
+            GetProviderCourseLocationsQuery query,
+            GetProviderCourseLocationsQueryHandler sut,
             CancellationToken cancellationToken)
         {
             repoMockProvider.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
@@ -47,8 +47,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
            [Frozen] Mock<IProviderReadRepository> repoMockProvider,
            [Frozen] Mock<IProviderCourseReadRepository> repoMockProviderCourse,
            [Frozen] Mock<IProviderCourseLocationReadRepository> repoMockProviderCourseLocation,
-           ProviderCourseLocationsQuery query,
-           ProviderCourseLocationsQueryHandler sut,
+           GetProviderCourseLocationsQuery query,
+           GetProviderCourseLocationsQueryHandler sut,
            CancellationToken cancellationToken)
         {
             var locations = new List<ProviderCourseLocation>();

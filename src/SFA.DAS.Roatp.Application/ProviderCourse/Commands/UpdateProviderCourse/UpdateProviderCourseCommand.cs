@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 
-namespace SFA.DAS.Roatp.Application.ProviderCourse
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateProviderCourse
 {
     public class UpdateProviderCourseCommand : IRequest, IUkprn, ILarsCode
     {

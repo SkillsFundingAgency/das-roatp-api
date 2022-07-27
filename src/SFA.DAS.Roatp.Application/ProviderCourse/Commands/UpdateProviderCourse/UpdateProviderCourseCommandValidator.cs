@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using static SFA.DAS.Roatp.Application.Constants;
 
-namespace SFA.DAS.Roatp.Application.ProviderCourse
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateProviderCourse
 {
     public class UpdateProviderCourseCommandValidator : AbstractValidator<UpdateProviderCourseCommand>
     {

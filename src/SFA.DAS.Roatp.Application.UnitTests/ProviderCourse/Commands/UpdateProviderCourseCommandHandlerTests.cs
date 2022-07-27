@@ -2,7 +2,7 @@
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.ProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateProviderCourse;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 using System;

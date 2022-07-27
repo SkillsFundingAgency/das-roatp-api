@@ -7,7 +7,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
 using SFA.DAS.Roatp.Api.Models;
-using SFA.DAS.Roatp.Application.ProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateProviderCourse;
 using System.Threading;
 using System.Threading.Tasks;
 

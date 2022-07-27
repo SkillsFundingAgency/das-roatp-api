@@ -5,7 +5,7 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.Application.ProviderCourse
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateProviderCourse
 {
     public class UpdateProviderCourseCommandHandler : IRequestHandler<UpdateProviderCourseCommand, Unit>
     {
