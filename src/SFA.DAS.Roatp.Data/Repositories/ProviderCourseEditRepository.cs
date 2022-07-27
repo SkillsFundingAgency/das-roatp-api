@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = context;
         }
 
-        public async Task UpdateProviderCourse(ProviderCourse updatedProviderCourseEntity)
+        public async Task<ProviderCourse> PatchProviderCourse(ProviderCourse updatedProviderCourseEntity)
         {
             var providerCourse = await _roatpDataContext
                 .ProviderCourses
@@ -28,6 +28,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
             providerCourse.IsApprovedByRegulator = updatedProviderCourseEntity.IsApprovedByRegulator;
 
             await _roatpDataContext.SaveChangesAsync();
+
+            return providerCourse;
         }
     }
 }

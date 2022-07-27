@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -80,12 +81,18 @@ namespace SFA.DAS.Roatp.Api
             services
                 .AddControllers(o =>
                 {
-                    if (!IsEnvironmentLocalOrDev) o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
+                    if (!IsEnvironmentLocalOrDev)
+                        o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
                 })
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 });
+
+            services.AddMvc()
+                .AddNewtonsoftJson()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_3_0);
+
 
             services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
 
