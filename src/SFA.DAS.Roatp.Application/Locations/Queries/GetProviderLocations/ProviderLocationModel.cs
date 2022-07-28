@@ -5,6 +5,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations
 {
     public class ProviderLocationModel
     {
+        public int ProviderLocationId { get; set; }
         public Guid NavigationId { get; set; }
         public int? RegionId { get; set; }
         public string LocationName { get; set; }
@@ -24,6 +25,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations
         public static implicit operator ProviderLocationModel(ProviderLocation source) =>
             new ProviderLocationModel
             {
+                ProviderLocationId =  source.Id,
                 NavigationId = source.NavigationId,
                 RegionId = source.RegionId,
                 LocationName = source.LocationName,
