@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         }
 
         [Test]
-        public async Task Validate_InvalidUkprnLarsCode_CourseDataNotFound()
+        public async Task Validate_InvalidUkprnId_ProviderLocationNotFound()
         {
             var query = new GetProviderLocationDetailsQuery(10012002, Guid.NewGuid());
 
