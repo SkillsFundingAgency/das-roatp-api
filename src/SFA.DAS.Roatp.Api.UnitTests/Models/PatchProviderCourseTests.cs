@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using AutoFixture.NUnit3;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Models
 {
@@ -22,7 +17,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
             var contactUsPhoneNumber = "1234567890";
             var standardInfoUrl = "http://www.test.com";
 
-            var entity = new Domain.Entities.ProviderCourse
+            var entity = new ProviderCourse
             {
                 ContactUsEmail = contactUsEmail,
                 ContactUsPageUrl = contactUsPageUrl,
@@ -31,7 +26,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
                 IsApprovedByRegulator = isApprovedByRegulator
             };
 
-            var patchProviderCourse = new PatchProviderCourse
+            var patchProviderCourse = new Domain.Entities.ProviderCourse
             {
                 ContactUsEmail = contactUsEmail,
                 ContactUsPageUrl = contactUsPageUrl,
@@ -40,7 +35,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
                 IsApprovedByRegulator = isApprovedByRegulator
             };
 
-            var expectedPatchProvider = (PatchProviderCourse)entity;
+            var expectedPatchProvider = (ProviderCourse)entity;
 
             expectedPatchProvider.Should().BeEquivalentTo(patchProviderCourse);
         }

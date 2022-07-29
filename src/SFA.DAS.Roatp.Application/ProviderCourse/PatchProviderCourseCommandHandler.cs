@@ -35,7 +35,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
 
             command.Patch.ApplyTo(patchedProviderCourse);
             
-
             providerCourse.IsApprovedByRegulator = patchedProviderCourse.IsApprovedByRegulator;
             providerCourse.ContactUsEmail = patchedProviderCourse.ContactUsEmail;
             providerCourse.ContactUsPageUrl = patchedProviderCourse.ContactUsPageUrl;
