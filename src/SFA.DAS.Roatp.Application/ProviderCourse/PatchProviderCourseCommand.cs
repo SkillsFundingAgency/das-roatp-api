@@ -1,5 +1,4 @@
-﻿using System;
-using System.Linq;
+﻿using System.Linq;
 using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using SFA.DAS.Roatp.Application.Common;

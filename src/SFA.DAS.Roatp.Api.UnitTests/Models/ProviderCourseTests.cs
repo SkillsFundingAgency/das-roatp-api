@@ -35,9 +35,14 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
                 IsApprovedByRegulator = isApprovedByRegulator
             };
 
-            var expectedPatchProvider = (ProviderCourse)entity;
+            var expectedPatchProvider = (Domain.Models.ProviderCourse)entity;
 
-            expectedPatchProvider.Should().BeEquivalentTo(patchProviderCourse);
+            expectedPatchProvider.Should().BeEquivalentTo(patchProviderCourse, c=>c
+                .Excluding(s => s.Id)
+                .Excluding(s => s.ProviderId)
+                .Excluding(s => s.Provider)
+                .Excluding(s => s.Locations)
+                .Excluding(s => s.Versions));
         }
     }
 }
