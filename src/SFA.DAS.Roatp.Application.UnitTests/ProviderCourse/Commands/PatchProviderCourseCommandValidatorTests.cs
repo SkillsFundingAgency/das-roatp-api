@@ -41,7 +41,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [TestCase(100000000, false)]
         public async Task Validate_Ukprn(int ukprn, bool isValid)
         {
-                       
             var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
 
              var result =  await validator.TestValidateAsync(new PatchProviderCourseCommand { Ukprn = ukprn, Patch = new JsonPatchDocument<PatchProviderCourse>()});
@@ -86,7 +85,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
                 Operations =
                 {
                     new Operation<PatchProviderCourse>
-                        { op = Replace, path = IsApprovedByRegulator, value = true }
+                        { op = Replace, path = IsApprovedByRegulator, value = "True" }
                 }
             };
 
@@ -94,6 +93,48 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
 
             result.ShouldNotHaveAnyValidationErrors();
             Assert.IsTrue(result.IsValid);
+        }
+
+        [TestCase("True",true)]
+        [TestCase("False", true)]
+        [TestCase("true", true)]
+        [TestCase("false", true)]
+        [TestCase("not boolean", false)]
+        [TestCase("2", false)]
+        public async Task Validate_Patch_IsApprovedByRegulator_VariousFieldValues_MatchingErrors(string isApprovedByRegulatorValue, bool isNoErrorExpected)
+        {
+            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var ukprn = 10000001;
+            var larsCode = 1;
+
+            var command = new PatchProviderCourseCommand
+            {
+                Ukprn = ukprn,
+                LarsCode = larsCode,
+                Patch = new JsonPatchDocument<PatchProviderCourse>()
+            };
+
+            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            {
+                Operations =
+                {
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = IsApprovedByRegulator, value = isApprovedByRegulatorValue }
+                }
+            };
+
+            var result = await validator.TestValidateAsync(command);
+            if (isNoErrorExpected)
+            {
+                result.ShouldNotHaveAnyValidationErrors();
+                Assert.IsTrue(result.IsValid);
+            }
+            else
+            {
+                Assert.IsFalse(result.IsValid);
+                Assert.IsTrue(result.Errors.Count == 1);
+                Assert.AreEqual(PatchProviderCourseCommandValidator.IsApprovedByRegulatorIsNotABooleanErrorMessage, result.Errors[0].ErrorMessage);
+            }
         }
 
         [Test]
@@ -121,7 +162,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
                     new Operation<PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = "test@test.com" },
                     new Operation<PatchProviderCourse>
-                        { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" }
+                        { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" },
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = IsApprovedByRegulator, value = "True" }
                 }
             };
 
@@ -129,6 +172,46 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
 
             result.ShouldNotHaveAnyValidationErrors();
             Assert.IsTrue(result.IsValid);
+        }
+
+        [Test]
+        public async Task Validate_Patch_ContactDetails_MatchingOperationsWithUnavailableFieldOperation_UnavailableFieldErrorMessage()
+        {
+            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var ukprn = 10000001;
+            var larsCode = 1;
+
+            var command = new PatchProviderCourseCommand
+            {
+                Ukprn = ukprn,
+                LarsCode = larsCode,
+                Patch = new JsonPatchDocument<PatchProviderCourse>()
+            };
+
+            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            {
+                Operations =
+                {
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = StandardInfoUrl, value = "http://www.test.com" },
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = ContactUsEmail, value = "test@test.com" },
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" },
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = IsApprovedByRegulator, value = "True" },
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = "unexpectedField", value = "field" }
+                }
+            };
+            
+            var result = await validator.TestValidateAsync(command);
+
+            Assert.IsFalse(result.IsValid);
+            Assert.IsTrue(result.Errors.Count == 1);
+            Assert.AreEqual(PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableFieldErrorMessage, result.Errors[0].ErrorMessage);
         }
 
         [Test]
@@ -151,136 +234,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             Assert.IsFalse(result.IsValid);
             Assert.IsTrue(result.Errors.Count == 1);
             Assert.AreEqual(PatchProviderCourseCommandValidator.NoPatchOperationsPresentErrorMessage, result.Errors[0].ErrorMessage);
-        }
-
-        [Test]
-        public async Task Validate_Patch_IsApprovedByRegulatorNotPresent_OneOperation_ErrorMessage()
-        {
-            var validator =
-                new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
-            var ukprn = 10000001;
-            var larsCode = 1;
-
-            var command = new PatchProviderCourseCommand
-            {
-                Ukprn = ukprn,
-                LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
-            };
-
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
-            {
-                Operations =
-                {
-                    new Operation<PatchProviderCourse>
-                        { op = Replace, path = "somethingElse", value = true }
-                }
-            };
-
-            var result = await validator.TestValidateAsync(command);
-            Assert.IsTrue(result.Errors.Count == 1);
-            result.ShouldHaveValidationErrorFor(c => c.IsPresentIsApprovedByRegulator);
-        }
-
-        [Test]
-        public async Task Validate_Patch_TwoOperations_ErrorMessageAboutTwoOperations()
-        {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
-            var ukprn = 10000001;
-            var larsCode = 1;
-
-            var command = new PatchProviderCourseCommand
-            {
-                Ukprn = ukprn,
-                LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
-            };
-
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
-            {
-                Operations =
-                {
-                    new Operation<PatchProviderCourse>
-                        { op = Replace, path = IsApprovedByRegulator, value = true },
-                    new Operation<PatchProviderCourse>
-                        { op = Replace, path = "SomethingElse", value = "test" }
-                }
-            };
-
-            var result = await validator.TestValidateAsync(command);
-
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.TwoPatchOperationsPresentErrorMessage, result.Errors[0].ErrorMessage);
-        }
-
-        [Test]
-        public async Task Validate_Patch_ThreeOperations_ErrorMessageAboutThreeOperations()
-        {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
-            var ukprn = 10000001;
-            var larsCode = 1;
-
-            var command = new PatchProviderCourseCommand
-            {
-                Ukprn = ukprn,
-                LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
-            };
-
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
-            {
-                Operations =
-                {
-                    new Operation<PatchProviderCourse>
-                        { op = Replace, path = IsApprovedByRegulator, value = true },
-                    new Operation<PatchProviderCourse>
-                        { op = Replace, path = "SomethingElse", value = "test" },
-                    new Operation<PatchProviderCourse>
-                        { op = Replace, path = "SomethingElseAgain", value = "again" }
-                }
-            };
-
-            var result = await validator.TestValidateAsync(command);
-
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.ThreePatchOperationsPresentErrorMessage, result.Errors[0].ErrorMessage);
-        }
-
-        [TestCase(5)]
-        [TestCase(6)]
-        [TestCase(7)]
-        [TestCase(8)]
-        [TestCase(9)]
-        [TestCase(10)]
-        public async Task Validate_Patch_MoreThanFourOperations_ErrorMessageAboutMoreThanFourOperations(int numberOfOperations)
-        {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
-            var ukprn = 10000001;
-            var larsCode = 1;
-
-            var command = new PatchProviderCourseCommand
-            {
-                Ukprn = ukprn,
-                LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
-            };
-
-            var patch = new JsonPatchDocument<PatchProviderCourse>();
-
-            for (var i = 0; i < numberOfOperations; i++)
-            {
-                patch.Operations.Add(new Operation<PatchProviderCourse> {op=Replace,path=$"Field{i}",value=i.ToString()});
-            }
-
-            command.Patch = patch;
-
-            var result = await validator.TestValidateAsync(command);
-
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.MoreThanFourPatchOperationsPresentErrorMessage, result.Errors[0].ErrorMessage);
         }
 
         [Test]

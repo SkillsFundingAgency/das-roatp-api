@@ -5,7 +5,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 namespace SFA.DAS.Roatp.Api.UnitTests.Models
 {
     [TestFixture]
-    public class PatchProviderCourseTests
+    public class ProviderCourseTests
     {
         [TestCase(true)]
         [TestCase(false)]
