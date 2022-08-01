@@ -12,12 +12,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
 
         public const string IsApprovedByRegulatorIsNotABooleanErrorMessage =
             "The patch contains an update for IsApprovedByRegulator that is not a boolean value";
-
-        // public const string NoPatchOperationsForIsApprovedByRegulatorErrorMessage = "There is an issue with the patch, the expected patch for IsApprovedByRegulator has more patch operations than expected";
-        // public const string TwoPatchOperationsPresentErrorMessage = "There are an invalid number of patch operations in this call (2)";
-        // public const string ThreePatchOperationsPresentErrorMessage = "There are an invalid number of patch operations in this call (3)";
-        // public const string MoreThanFourPatchOperationsPresentErrorMessage = "There are an invalid number of patch operations in this call (more than 4)";
-        // public const string ContactDetailsPatchErrorMessage = "There is an issue with the contact details patch";
+        
         public const string EmailAddressTooLong = "Email address is too long, must be 256 characters or fewer";
         public const string EmailAddressWrongFormat = "Email address must be in the correct format, like name@example.com";
         public const string PhoneNumberWrongLength = "Telephone number must be between 10 and 50 characters";
