@@ -44,5 +44,13 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
                 .Excluding(s => s.Locations)
                 .Excluding(s => s.Versions));
         }
+
+
+        [Test]
+        public void ImplicitOperator_NullEntityReturnsNull()
+        {
+            var expectedPatchProvider = (Domain.Models.ProviderCourse)null;
+            Assert.IsNull(expectedPatchProvider);
+        }
     }
 }

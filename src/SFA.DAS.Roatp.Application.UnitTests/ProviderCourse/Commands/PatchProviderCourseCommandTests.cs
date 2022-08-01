@@ -115,5 +115,31 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             Assert.AreEqual(true, command.IsApprovedByRegulator);
             Assert.IsTrue(command.IsPresentIsApprovedByRegulator);
         }
+
+        [Test]
+        public void Command_PatchContainsNoDetails_FieldsAreNotSet()
+        {
+            var ukprn = 10000001;
+            var larsCode = 1;
+            var patchCommand = new JsonPatchDocument<PatchProviderCourse>();
+           
+            var command = new PatchProviderCourseCommand
+            {
+                Ukprn = ukprn,
+                LarsCode = larsCode,
+                Patch = patchCommand
+            };
+
+            Assert.AreEqual(null,command.IsApprovedByRegulator);
+            Assert.IsFalse(command.IsPresentIsApprovedByRegulator);
+            Assert.AreEqual(null, command.ContactUsEmail);
+            Assert.IsFalse(command.IsPresentContactUsEmail);
+            Assert.AreEqual(null, command.ContactUsPageUrl);
+            Assert.IsFalse(command.IsPresentContactUsPageUrl);
+            Assert.AreEqual(null, command.ContactUsPhoneNumber);
+            Assert.IsFalse(command.IsPresentContactUsPhoneNumber);
+            Assert.AreEqual(null, command.StandardInfoUrl);
+            Assert.IsFalse(command.IsPresentStandardInfoUrl);
+        }
     }
 }
