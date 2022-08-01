@@ -18,22 +18,5 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public virtual Provider Provider { get; set; }
         public virtual List<ProviderCourseLocation> Locations { get; set; } = new List<ProviderCourseLocation>();
         public virtual List<ProviderCourseVersion> Versions { get; set; } = new List<ProviderCourseVersion>();
-
-        public static implicit operator ProviderCourse(Models.ProviderCourse source)
-        {
-            return new ProviderCourse
-            {
-                Id = source.Id,
-                IsApprovedByRegulator = source.IsApprovedByRegulator,
-                ProviderId = source.ProviderId,
-                LarsCode = source.LarsCode,
-                StandardInfoUrl = source.StandardInfoUrl,
-                ContactUsEmail = source.ContactUsEmail,
-                ContactUsPageUrl = source.ContactUsPageUrl,
-                ContactUsPhoneNumber = source.ContactUsPhoneNumber,
-                IsImported = source.IsImported,
-                HasPortableFlexiJobOption = source.HasPortableFlexiJobOption
-            };
-        }
     }
 }
