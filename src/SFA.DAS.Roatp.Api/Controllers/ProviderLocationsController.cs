@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.Locations.Queries;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]/")]
-    public class ProviderLocationsController : Controller
+    public class ProviderLocationsController : ControllerBase
     {
         private readonly ILogger<ProviderLocationsController> _logger;
         private readonly IMediator _mediator;
