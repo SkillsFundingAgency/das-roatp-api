@@ -7,7 +7,5 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations
         public int Ukprn { get; }
 
         public GetProviderLocationsQuery(int ukprn) => Ukprn = ukprn;
-
-        public GetProviderLocationsQuery() { }
     }
 }
