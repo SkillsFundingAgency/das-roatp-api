@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         private const string ContactUsPageUrl = "ContactUsPageUrl";
         private const string StandardInfoUrl = "StandardInfoUrl";
 
-        private const string Replace = "Replace";
+        private const string Replace = "replace";
 
         [SetUp]
         public void Before_each_test()

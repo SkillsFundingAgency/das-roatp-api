@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
     [TestFixture]
     public class PatchProviderCourseCommandTests
     {
-        private const string Replace = "Replace";
+        private const string Replace = "replace";
         private const string ContactUsEmail = "ContactUsEmail";
         private const string ContactUsPhoneNumber = "ContactUsPhoneNumber";
         private const string ContactUsPageUrl = "ContactUsPageUrl";
