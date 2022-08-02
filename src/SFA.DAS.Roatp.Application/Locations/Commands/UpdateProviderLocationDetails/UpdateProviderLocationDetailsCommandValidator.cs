@@ -1,6 +1,9 @@
 ﻿using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System;
+using System.Linq;
 using static SFA.DAS.Roatp.Application.Constants;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDetails
@@ -9,6 +12,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
     {
         public const string InvalidIdErrorMessage = "Invalid id";
         public const string ProviderLocationNotFoundErrorMessage = "No provider location found with given ukprn and id";
+        public const string LocationNameAlreadyUsedMessage = "The location name should be distinct.";
         public UpdateProviderLocationDetailsCommandValidator(IProviderReadRepository providerReadRepository, IProviderLocationsReadRepository providerLocationsReadRepository)
         {
             Include(new UkprnValidator(providerReadRepository));
@@ -22,17 +26,30 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
                    return providerLocation != null;
                })
                .WithMessage(ProviderLocationNotFoundErrorMessage);
+
             RuleFor(c => c.UserId)
                 .NotEmpty();
+
             RuleFor(p => p.LocationName)
+                .Cascade(CascadeMode.Stop)
                 .NotEmpty()
-                .MaximumLength(250);
+                .MaximumLength(50)
+                .MustAsync(async (model, locationName, _) =>
+                {
+                    var locations = await providerLocationsReadRepository.GetAllProviderLocations(model.Ukprn);
+                    var result = locations.Where(a => a.NavigationId != model.Id).Any(l => l.LocationType == LocationType.Provider && l.LocationName.Equals(locationName, StringComparison.OrdinalIgnoreCase));
+                    return !result;
+                })
+                .WithMessage(LocationNameAlreadyUsedMessage);
+
             RuleFor(p => p.Email)
-                .MaximumLength(300)
+                .MaximumLength(256)
                 .Matches(RegularExpressions.EmailRegex);
+
             RuleFor(p => p.Phone)
                 .MinimumLength(10)
                 .MaximumLength(50);
+
             RuleFor(p => p.Website)
                 .MaximumLength(500)
                 .Matches(RegularExpressions.UrlRegex);

@@ -20,5 +20,6 @@
     [LocationType] INT NOT NULL, 
     CONSTRAINT PK_ProviderLocation PRIMARY KEY (Id),
     CONSTRAINT UK_ProviderLocation_NavigationId UNIQUE ([NavigationId]),
-    CONSTRAINT FK_ProviderLocation_Provider FOREIGN KEY (ProviderId) REFERENCES [Provider] (Id)
+    CONSTRAINT FK_ProviderLocation_Provider FOREIGN KEY (ProviderId) REFERENCES [Provider] (Id),
+    CONSTRAINT UK_ProviderLocation_ProviderId__LocationType_LocationName UNIQUE ([ProviderId], [LocationType], [LocationName])
 )
