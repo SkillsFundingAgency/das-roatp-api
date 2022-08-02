@@ -211,8 +211,49 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
 
             Assert.IsFalse(result.IsValid);
             Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableFieldErrorMessage, result.Errors[0].ErrorMessage);
+            Assert.AreEqual(PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableFieldOrOperationErrorMessage, result.Errors[0].ErrorMessage);
         }
+
+        [Test]
+        public async Task Validate_Patch_ContactDetails_MatchingOperationsWithUnavailableOperation_UnavailableFieldErrorMessage()
+        {
+            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var ukprn = 10000001;
+            var larsCode = 1;
+
+            var command = new PatchProviderCourseCommand
+            {
+                Ukprn = ukprn,
+                LarsCode = larsCode,
+                Patch = new JsonPatchDocument<PatchProviderCourse>()
+            };
+
+            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            {
+                Operations =
+                {
+                    new Operation<PatchProviderCourse>
+                        { op = "Add", path = StandardInfoUrl, value = "http://www.test.com" },
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = ContactUsEmail, value = "test@test.com" },
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" },
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = IsApprovedByRegulator, value = "True" },
+                    new Operation<PatchProviderCourse>
+                        { op = Replace, path = "unexpectedField", value = "field" }
+                }
+            };
+
+            var result = await validator.TestValidateAsync(command);
+
+            Assert.IsFalse(result.IsValid);
+            Assert.IsTrue(result.Errors.Count == 1);
+            Assert.AreEqual(PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableFieldOrOperationErrorMessage, result.Errors[0].ErrorMessage);
+        }
+        
 
         [Test]
         public async Task Validate_Patch_NoOperations_ErrorMessage()

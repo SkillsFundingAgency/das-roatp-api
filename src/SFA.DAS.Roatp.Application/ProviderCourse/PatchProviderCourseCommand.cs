@@ -21,26 +21,26 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
 
         public string StandardInfoUrl =>
             Patch.Operations.FirstOrDefault(x =>
-                x.path == StandardInfoUrlIdentifier)?.value.ToString();
+                x.path == StandardInfoUrlIdentifier && x.op==Replace)?.value.ToString();
 
         public string ContactUsPhoneNumber =>
             Patch.Operations.FirstOrDefault(x =>
-                x.path == ContactUsPhoneNumberIdentifier)?.value.ToString();
+                x.path == ContactUsPhoneNumberIdentifier && x.op == Replace)?.value.ToString();
 
         public string ContactUsEmail =>
             Patch.Operations.FirstOrDefault(x =>
-                x.path == ContactUsEmailIdentifier)?.value.ToString();
+                x.path == ContactUsEmailIdentifier && x.op == Replace)?.value.ToString();
 
         public string ContactUsPageUrl =>
             Patch.Operations.FirstOrDefault(x =>
-                x.path == ContactUsPageUrlIdentifier)?.value.ToString();
+                x.path == ContactUsPageUrlIdentifier && x.op == Replace)?.value.ToString();
 
         public bool? IsApprovedByRegulator
         {
             get
             {
                 var isApprovedByRegulator = Patch.Operations.FirstOrDefault(x =>
-                    x.path == IsApprovedByRegulatorIdentifier)?.value;
+                    x.path == IsApprovedByRegulatorIdentifier && x.op == Replace)?.value;
                 
                 if (bool.TryParse(isApprovedByRegulator?.ToString(), out var result))
                     return result;

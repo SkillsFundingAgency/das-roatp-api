@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
     public class PatchProviderCourseCommandValidator : AbstractValidator<PatchProviderCourseCommand>
     {
         public const string NoPatchOperationsPresentErrorMessage = "There are no patch operations in this call";
-        public const string PatchOperationContainsUnavailableFieldErrorMessage = "This patch operation contains an unexpected field and will not continue";
+        public const string PatchOperationContainsUnavailableFieldOrOperationErrorMessage = "This patch operation contains an unexpected field or operation and will not continue";
 
         public const string IsApprovedByRegulatorIsNotABooleanErrorMessage =
             "The patch contains an update for IsApprovedByRegulator that is not a boolean value";
@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
                     o.path != IsApprovedByRegulator && o.path != ContactUsEmail && o.path != ContactUsPhoneNumber &&
                     o.path != StandardInfoUrl && o.path != ContactUsPageUrl))
                 .Equal(0)
-                .WithMessage(PatchOperationContainsUnavailableFieldErrorMessage);
+                .WithMessage(PatchOperationContainsUnavailableFieldOrOperationErrorMessage);
             
             RuleFor(c => c.IsApprovedByRegulator != null)
                 .Equal(true)
