@@ -33,8 +33,12 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         public async Task ValidateUkprn_InValid_ReturnsError()
         {
             var query = new GetProviderLocationDetailsQuery(10012002, Guid.NewGuid());
-    
-            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
+
+            var repoMockProviderReadRepository = new Mock<IProviderReadRepository>();
+
+            repoMockProviderReadRepository.Setup(x => x.GetByUkprn(query.Ukprn)).ReturnsAsync((Provider)null);
+
+            var sut = new GetProviderLocationDetailsQueryValidator(repoMockProviderReadRepository.Object, Mock.Of<IProviderLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(query);
 
@@ -58,7 +62,12 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         {
             var query = new GetProviderLocationDetailsQuery(10012002, Guid.NewGuid());
 
-            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
+            var repoMockProviderLocationsRead = new Mock<IProviderLocationsReadRepository>();
+
+            repoMockProviderLocationsRead.Setup(x => x.GetProviderLocation(query.Ukprn, query.Id)).ReturnsAsync((ProviderLocation) null);
+
+
+            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProviderReadRepository>(), repoMockProviderLocationsRead.Object);
 
             var result = await sut.TestValidateAsync(query);
 
