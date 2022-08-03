@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
         {
             Include(new UkprnValidator(providerReadRepository));
 
-            RuleFor(x => x.Id)
+            RuleFor(p => p.Id)
                .Cascade(CascadeMode.Stop)
                .NotEmpty().WithMessage(InvalidIdErrorMessage)
                .MustAsync(async (model, id, cancellation) =>
@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
                })
                .WithMessage(ProviderLocationNotFoundErrorMessage);
 
-            RuleFor(c => c.UserId)
+            RuleFor(p => p.UserId)
                 .NotEmpty();
 
             RuleFor(p => p.LocationName)
@@ -43,14 +43,17 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
                 .WithMessage(LocationNameAlreadyUsedMessage);
 
             RuleFor(p => p.Email)
+                .NotEmpty()
                 .MaximumLength(256)
                 .Matches(RegularExpressions.EmailRegex);
 
             RuleFor(p => p.Phone)
+                .NotEmpty()
                 .MinimumLength(10)
                 .MaximumLength(50);
 
             RuleFor(p => p.Website)
+                .NotEmpty()
                 .MaximumLength(500)
                 .Matches(RegularExpressions.UrlRegex);
         }
