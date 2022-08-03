@@ -12,6 +12,23 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
     [TestFixture]
     public class GetProviderLocationDetailsQueryValidatorTests
     {
+        public const string InvalidUkprnErrorMessage = "Invalid ukprn";
+        public const string ProviderNotFoundErrorMessage = "No provider found with given ukprn";
+        public const string InvalidIdErrorMessage = "Invalid id";
+        public const string ProviderLocationNotFoundErrorMessage = "No provider location found with given ukprn and id";
+
+        [Test]
+        public async Task ValidateUkprn_InValidNumber_ReturnsError()
+        {
+            var query = new GetProviderLocationDetailsQuery(10000000, Guid.NewGuid());
+
+            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
+
+            var result = await sut.TestValidateAsync(query);
+
+            result.ShouldHaveValidationErrorFor(c => c.Ukprn).WithErrorMessage(InvalidUkprnErrorMessage);
+        }
+
         [Test]
         public async Task ValidateUkprn_InValid_ReturnsError()
         {
@@ -21,7 +38,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
 
             var result = await sut.TestValidateAsync(query);
 
-            result.ShouldHaveValidationErrorFor(c => c.Ukprn);
+            result.ShouldHaveValidationErrorFor(c => c.Ukprn).WithErrorMessage(ProviderNotFoundErrorMessage);
         }
 
         [Test]
@@ -33,7 +50,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
 
             var result = await sut.TestValidateAsync(query);
 
-            result.ShouldHaveValidationErrorFor(c => c.Id);
+            result.ShouldHaveValidationErrorFor(c => c.Id).WithErrorMessage(InvalidIdErrorMessage);
         }
 
         [Test]
@@ -45,7 +62,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
 
             var result = await sut.TestValidateAsync(query);
 
-            result.ShouldHaveValidationErrorFor(c => c.Id);
+            result.ShouldHaveValidationErrorFor(c => c.Id).WithErrorMessage(ProviderLocationNotFoundErrorMessage);
         }
 
         [Test]
