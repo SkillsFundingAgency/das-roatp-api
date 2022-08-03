@@ -211,7 +211,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
 
             Assert.IsFalse(result.IsValid);
             Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableFieldOrOperationErrorMessage, result.Errors[0].ErrorMessage);
+            Assert.AreEqual(PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableFieldErrorMessage, result.Errors[0].ErrorMessage);
         }
 
         [Test]
@@ -241,9 +241,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
                     new Operation<PatchProviderCourse>
                         { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" },
                     new Operation<PatchProviderCourse>
-                        { op = Replace, path = IsApprovedByRegulator, value = "True" },
-                    new Operation<PatchProviderCourse>
-                        { op = Replace, path = "unexpectedField", value = "field" }
+                        { op = Replace, path = IsApprovedByRegulator, value = "True" }
                 }
             };
 
@@ -251,7 +249,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
 
             Assert.IsFalse(result.IsValid);
             Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableFieldOrOperationErrorMessage, result.Errors[0].ErrorMessage);
+            Assert.AreEqual(PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableOperationErrorMessage, result.Errors[0].ErrorMessage);
         }
         
 

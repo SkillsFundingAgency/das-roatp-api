@@ -1,4 +1,7 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
 using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -7,11 +10,12 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
 {
     public class PatchProviderCourseCommandValidator : AbstractValidator<PatchProviderCourseCommand>
     {
+        public const string Replace = "replace";
         public const string NoPatchOperationsPresentErrorMessage = "There are no patch operations in this call";
-        public const string PatchOperationContainsUnavailableFieldOrOperationErrorMessage = "This patch operation contains an unexpected field or operation and will not continue";
+        public const string PatchOperationContainsUnavailableFieldErrorMessage = "This patch operation contains an unexpected field and will not continue";
+        public const string PatchOperationContainsUnavailableOperationErrorMessage = "This patch operation contains an unexpected operation and will not continue";
 
-        public const string IsApprovedByRegulatorIsNotABooleanErrorMessage =
-            "The patch contains an update for IsApprovedByRegulator that is not a boolean value";
+        public const string IsApprovedByRegulatorIsNotABooleanErrorMessage = "The patch contains an update for IsApprovedByRegulator that is not a boolean value";
         
         public const string EmailAddressTooLong = "Email address is too long, must be 256 characters or fewer";
         public const string EmailAddressWrongFormat = "Email address must be in the correct format, like name@example.com";
@@ -21,11 +25,15 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
         public const string StandardInfoUrlTooLong = "Website address is too long, must be 500 characters or fewer";
         public const string StandardInfoUrlWrongFormat = "Werbsite address must be in the correct format, like www.example.com";
 
-        private const string ContactUsEmail = "ContactUsEmail";
-        private const string ContactUsPhoneNumber = "ContactUsPhoneNumber";
-        private const string ContactUsPageUrl = "ContactUsPageUrl";
-        private const string StandardInfoUrl = "StandardInfoUrl";
-        private const string IsApprovedByRegulator = "IsApprovedByRegulator";
+        public static readonly IList<string> PatchFields = new ReadOnlyCollection<string>(
+                new List<string>
+                {
+                    "ContactUsEmail",
+                    "ContactUsPhoneNumber",
+                    "ContactUsPageUrl",
+                     "StandardInfoUrl",
+                    "IsApprovedByRegulator"
+                }) ;
 
         public PatchProviderCourseCommandValidator(IProviderReadRepository providerReadRepository,
             IProviderCourseReadRepository providerCourseReadRepository)
@@ -36,12 +44,14 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
 
             RuleFor(c => c.Patch.Operations.Count).GreaterThan(0).WithMessage(NoPatchOperationsPresentErrorMessage);
 
-            RuleFor(c => c.Patch.Operations.Count(o =>
-                    o.path != IsApprovedByRegulator && o.path != ContactUsEmail && o.path != ContactUsPhoneNumber &&
-                    o.path != StandardInfoUrl && o.path != ContactUsPageUrl))
+            RuleFor(c => c.Patch.Operations.Count(operation=>!PatchFields.Contains(operation.path)))
                 .Equal(0)
-                .WithMessage(PatchOperationContainsUnavailableFieldOrOperationErrorMessage);
-            
+                .WithMessage(PatchOperationContainsUnavailableFieldErrorMessage);
+
+            RuleFor(c => c.Patch.Operations.Count(operation => !operation.op.Equals(Replace, StringComparison.CurrentCultureIgnoreCase)))
+                .Equal(0)
+                .WithMessage(PatchOperationContainsUnavailableOperationErrorMessage);
+
             RuleFor(c => c.IsApprovedByRegulator != null)
                 .Equal(true)
                 .When(c => c.IsPresentIsApprovedByRegulator)
