@@ -30,18 +30,5 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
             result.Should().NotBeNull();
             result.Location.Should().NotBeNull();
         }
-
-        [Test, MoqAutoData()]
-        public void  Handle_NoData_ReturnsException(
-            [Frozen] Mock<IProviderLocationsReadRepository> repoMock,
-            GetProviderLocationDetailsQuery query,
-            GetProviderLocationDetailsQueryHandler sut,
-            CancellationToken cancellationToken)
-        {
-            repoMock.Setup(r => r.GetProviderLocation(query.Ukprn, query.Id)).ReturnsAsync((ProviderLocation)null);
-
-            Assert.ThrowsAsync <NullReferenceException> (() => sut.Handle(query, cancellationToken));
-
-        }
     }
 }

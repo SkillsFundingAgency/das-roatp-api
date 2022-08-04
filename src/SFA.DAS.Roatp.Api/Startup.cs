@@ -80,13 +80,15 @@ namespace SFA.DAS.Roatp.Api
             services
                 .AddControllers(o =>
                 {
-                    if (!IsEnvironmentLocalOrDev) o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
+                    if (!IsEnvironmentLocalOrDev)
+                        o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
                 })
                 .AddJsonOptions(options =>
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                });
-
+                })
+                .AddNewtonsoftJson();
+            
             services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
 
             services.AddSwaggerGen(options =>

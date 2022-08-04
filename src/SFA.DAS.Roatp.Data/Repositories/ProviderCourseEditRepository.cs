@@ -15,19 +15,21 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = context;
         }
 
-        public async Task UpdateProviderCourse(ProviderCourse updatedProviderCourseEntity)
+        public async Task<ProviderCourse> PatchProviderCourse(ProviderCourse patchedProviderCourseEntity)
         {
             var providerCourse = await _roatpDataContext
                 .ProviderCourses
-                .FindAsync(updatedProviderCourseEntity.Id);
+                .FindAsync(patchedProviderCourseEntity.Id);
 
-            providerCourse.ContactUsEmail = updatedProviderCourseEntity.ContactUsEmail;
-            providerCourse.ContactUsPageUrl = updatedProviderCourseEntity.ContactUsPageUrl;
-            providerCourse.ContactUsPhoneNumber = updatedProviderCourseEntity.ContactUsPhoneNumber;
-            providerCourse.StandardInfoUrl = updatedProviderCourseEntity.StandardInfoUrl;
-            providerCourse.IsApprovedByRegulator = updatedProviderCourseEntity.IsApprovedByRegulator;
+            providerCourse.ContactUsEmail = patchedProviderCourseEntity.ContactUsEmail;
+            providerCourse.ContactUsPageUrl = patchedProviderCourseEntity.ContactUsPageUrl;
+            providerCourse.ContactUsPhoneNumber = patchedProviderCourseEntity.ContactUsPhoneNumber;
+            providerCourse.StandardInfoUrl = patchedProviderCourseEntity.StandardInfoUrl;
+            providerCourse.IsApprovedByRegulator = patchedProviderCourseEntity.IsApprovedByRegulator;
 
             await _roatpDataContext.SaveChangesAsync();
+
+            return providerCourse;
         }
     }
 }

@@ -1,32 +1,36 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
+﻿using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
-using SFA.DAS.Roatp.Api.Models;
-using SFA.DAS.Roatp.Application.ProviderCourse.Commands.UpdateProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.JsonPatch;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {
     [TestFixture]
     public class ProviderCourseEditControllerTests
     {
-        [Test, AutoData]
-        public async Task Save_InvokesCommand(int ukprn, int larsCode, ProviderCourseEditModel model)
+        [Test]
+        public async Task PathProviderCourse_InvokesRequest()
         {
+            var ukprn = 10000001;
+            var  larsCode = 1;
+            var request = new JsonPatchDocument<PatchProviderCourse>();
+
             var mediatorMock = new Mock<IMediator>();
             var sut = new ProviderCourseEditController(mediatorMock.Object, Mock.Of<ILogger<ProviderCourseEditController>>());
 
-            var result = await sut.Save(ukprn, larsCode, model);
+            var result = await sut.PatchProviderCourse(ukprn, larsCode, request);
 
             (result as NoContentResult).Should().NotBeNull();
 
-            mediatorMock.Verify(m => m.Send(It.Is<UpdateProviderCourseCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode), It.IsAny<CancellationToken>()));
+            mediatorMock.Verify(m => m.Send(It.Is<PatchProviderCourseCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode), It.IsAny<CancellationToken>()));
         }
     }
 }
