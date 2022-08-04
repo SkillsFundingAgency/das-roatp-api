@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -28,10 +29,10 @@ namespace SFA.DAS.Roatp.Data.Repositories
             await _roatpDataContext.SaveChangesAsync();
         }
 
-        public async Task Delete(int providerCourseLocationId)
+        public async Task Delete(Guid navigationId)
         {
             var location = await _roatpDataContext.ProviderCoursesLocations
-                .Where(l => l.Id == providerCourseLocationId)
+                .Where(l => l.NavigationId == navigationId)
                 .SingleAsync();
 
             _roatpDataContext.Remove(location);

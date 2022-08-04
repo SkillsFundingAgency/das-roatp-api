@@ -5,7 +5,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
 {
     public class ProviderCourseLocationModel
     {
-        public int Id { get; set; }
         public Guid NavigationId { get; set; }
         public int ProviderCourseId { get; set; }
         public int? ProviderLocationId { get; set; }
@@ -20,7 +19,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries
         public static implicit operator ProviderCourseLocationModel(ProviderCourseLocation source) =>
             new ProviderCourseLocationModel
             {
-                Id = source.Id,
                 NavigationId = source.NavigationId,
                 ProviderCourseId = source.ProviderCourseId,
                 ProviderLocationId = source.ProviderLocationId,

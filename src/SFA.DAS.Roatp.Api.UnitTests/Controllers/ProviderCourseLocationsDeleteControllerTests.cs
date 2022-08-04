@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.Api.Controllers;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete;
 using SFA.DAS.Testing.AutoFixture;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -65,7 +66,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task DeleteProviderCourseLocation_CallsHandler(
            [Frozen] Mock<IMediator> _mediatorMock,
            [Greedy] ProviderCourseLocationsDeleteController sut,
-           int ukprn, int larsCode, int id, string userId)
+           int ukprn, int larsCode, Guid id, string userId)
         {
             await sut.DeleteProviderCourseLocation(ukprn, larsCode, id, userId);
 
@@ -76,7 +77,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task DeleteProviderCourseLocation_ZeroResults_ReturnsNoContentResponse(
             [Frozen] Mock<IMediator> _mediatorMock,
             [Greedy] ProviderCourseLocationsDeleteController sut,
-            int ukprn, int larsCode, int id, string userId)
+            int ukprn, int larsCode, Guid id, string userId)
         {
             _mediatorMock.Setup(m => m.Send(It.Is<DeleteProviderCourseLocationCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.Id == id), It.IsAny<CancellationToken>())).ReturnsAsync(Unit.Value);
 

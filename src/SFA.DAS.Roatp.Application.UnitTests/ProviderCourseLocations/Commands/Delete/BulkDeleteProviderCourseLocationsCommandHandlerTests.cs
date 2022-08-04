@@ -7,6 +7,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
             var result = await _sut.Handle(request, new CancellationToken());
 
             result.Should().Be(Unit.Value);
-            _providerCourseLocationDeleteRepositoryMock.Verify(d => d.Delete(It.IsAny<int>()), Times.Once);
+            _providerCourseLocationDeleteRepositoryMock.Verify(d => d.Delete(It.IsAny<Guid>()), Times.Once);
         }
     }
 }

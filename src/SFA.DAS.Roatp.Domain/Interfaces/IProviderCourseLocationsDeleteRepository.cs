@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
@@ -6,6 +7,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     public interface IProviderCourseLocationsDeleteRepository
     {
         Task BulkDelete(IEnumerable<int> providerCourseLocationIds);
-        Task Delete(int providerCourseLocationId);
+        Task Delete(Guid navigationId);
     }
 }
