@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
 
             var result = await sut.TestValidateAsync(command);
 
-            result.ShouldHaveValidationErrorFor(c => c.Id);
+            result.ShouldHaveValidationErrorFor(c => c.LocationId);
         }
 
        
