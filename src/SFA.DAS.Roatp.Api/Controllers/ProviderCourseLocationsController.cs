@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries;
+using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderCourseLocations;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         {
             _logger.LogInformation("Request received to get all provider Course Locations for ukprn: {ukprn}, larsCode : {larsCode}", ukprn, larsCode);
 
-            var result = await _mediator.Send(new ProviderCourseLocationsQuery(ukprn, larsCode));
+            var result = await _mediator.Send(new GetProviderCourseLocationsQuery(ukprn, larsCode));
 
             _logger.LogInformation("Found {locationCount} locations for ukprn: {ukprn}, larsCode : {larsCode}", result.ProviderCourseLocations.Count, ukprn, larsCode);
 

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Locations.Queries;
+using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
@@ -12,14 +12,14 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocations
 {
     [TestFixture]
-    public class ProviderLocationsQueryHandlerTests
+    public class GetProviderLocationsQueryHandlerTests
     {
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_ReturnsResult(
             List<ProviderLocation> locations, 
             [Frozen]Mock<IProviderLocationsReadRepository> repoMock, 
-            ProviderLocationsQuery query, 
-            ProviderLocationsQueryHandler sut,
+            GetProviderLocationsQuery query, 
+            GetProviderLocationsQueryHandler sut,
             CancellationToken cancellationToken)
         {
             repoMock.Setup(r => r.GetAllProviderLocations(query.Ukprn)).ReturnsAsync(locations);
@@ -33,8 +33,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         [Test, MoqAutoData()]
         public async Task Handle_NoData_ReturnsEmptyResult(
             [Frozen] Mock<IProviderLocationsReadRepository> repoMock,
-            ProviderLocationsQuery query,
-            ProviderLocationsQueryHandler sut,
+            GetProviderLocationsQuery query,
+            GetProviderLocationsQueryHandler sut,
             CancellationToken cancellationToken)
         {
             repoMock.Setup(r => r.GetAllProviderLocations(query.Ukprn)).ReturnsAsync(new List<ProviderLocation>());

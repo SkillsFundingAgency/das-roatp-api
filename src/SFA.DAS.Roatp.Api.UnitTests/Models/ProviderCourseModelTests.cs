@@ -1,5 +1,6 @@
 ﻿using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses;
 using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Models

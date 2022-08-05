@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries;
+using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderCourseLocations;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
 

@@ -2,7 +2,7 @@
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Common;
-using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries;
+using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderCourseLocations;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
@@ -16,12 +16,12 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
         [TestCase(100000000, 1, false)]
         public async Task Validate_AcceptsEightDigitNumbersOnly(int ukprn, int larsCode, bool expectedResult)
         {
-            var query = new ProviderCourseLocationsQuery(ukprn, larsCode);
+            var query = new GetProviderCourseLocationsQuery(ukprn, larsCode);
             var repoMock = new Mock<IProviderReadRepository>();
             var repoMockProvideCourse = new Mock<IProviderCourseReadRepository>();
             repoMock.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
             repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
-            var sut = new ProviderCourseLocationsQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
+            var sut = new GetProviderCourseLocationsQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
 
             var result = await sut.ValidateAsync(query);
 
@@ -36,10 +36,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             int expectedTimesRepoIsInvoked = 0;
             string expectedErrorMessage1 = UkprnValidator.InvalidUkprnErrorMessage;
             string expectedErrorMessage2 = LarsCodeValidator.InvalidLarsCodeErrorMessage;
-            var query = new ProviderCourseLocationsQuery(ukprn, larsCode);
+            var query = new GetProviderCourseLocationsQuery(ukprn, larsCode);
             var repoMockProvideCourse = new Mock<IProviderCourseReadRepository>();
             var repoMock = new Mock<IProviderReadRepository>();
-            var sut = new ProviderCourseLocationsQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
+            var sut = new GetProviderCourseLocationsQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
 
             var result = await sut.ValidateAsync(query);
 
@@ -57,12 +57,12 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             int larsCode = 1;
             int expectedTimesRepoIsInvoked = 2;
             string expectedErrorMessage1 = LarsCodeValidator.ProviderCourseNotFoundErrorMessage;
-            var query = new ProviderCourseLocationsQuery(ukprn, larsCode);
+            var query = new GetProviderCourseLocationsQuery(ukprn, larsCode);
             var repoMockProvideCourse = new Mock<IProviderCourseReadRepository>();
             var repoMock = new Mock<IProviderReadRepository>();
             repoMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
             repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync((Domain.Entities.ProviderCourse)null);
-            var sut = new ProviderCourseLocationsQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
+            var sut = new GetProviderCourseLocationsQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
 
             var result = await sut.ValidateAsync(query);
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using SFA.DAS.Roatp.Domain.Entities;
 
-namespace SFA.DAS.Roatp.Application.Locations.Queries
+namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations
 {
     public class ProviderLocationModel
     {
