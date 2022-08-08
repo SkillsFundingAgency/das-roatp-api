@@ -18,4 +18,10 @@ CREATE UNIQUE NONCLUSTERED INDEX UK_ProviderLocation_ProviderId_RegionId
 ON providerLocation([ProviderId], [RegionId])
 WHERE RegionId IS NOT NULL
 GO
+
+GO
+IF OBJECT_ID('[UK_ProviderLocation_ProviderId_LocationName]', 'UQ') IS NOT NULL 
+ALTER TABLE [dbo].[ProviderLocation] DROP CONSTRAINT [UK_ProviderLocation_ProviderId_LocationName]
+GO
+
 :r .\PostDeploymentScripts\PopulateRegionData.sql
