@@ -20,7 +20,7 @@ WHERE RegionId IS NOT NULL
 GO
 
 GO
-IF OBJECT_ID('[UK_ProviderLocation_ProviderId_LocationName]', 'UQ') IS NOT NULL 
+IF Exists(SELECT * from sys.indexes where name = 'UK_ProviderLocation_ProviderId_LocationName')
 ALTER TABLE [dbo].[ProviderLocation] DROP CONSTRAINT [UK_ProviderLocation_ProviderId_LocationName]
 GO
 
