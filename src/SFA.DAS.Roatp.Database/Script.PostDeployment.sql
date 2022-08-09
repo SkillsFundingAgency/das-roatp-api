@@ -9,13 +9,10 @@ Post-Deployment Script Template
                SELECT * FROM [$(TableName)]					
 --------------------------------------------------------------------------------------
 */
+
 GO
-CREATE UNIQUE NONCLUSTERED INDEX UK_ProviderLocation_ProviderId_LocationName
-ON providerLocation([ProviderId], [LocationName])
-WHERE LocationName IS NOT NULL
+IF Exists(SELECT * from sys.indexes where name = 'UK_ProviderLocation_ProviderId_LocationName')
+ALTER TABLE [dbo].[ProviderLocation] DROP CONSTRAINT [UK_ProviderLocation_ProviderId_LocationName]
 GO
-CREATE UNIQUE NONCLUSTERED INDEX UK_ProviderLocation_ProviderId_RegionId
-ON providerLocation([ProviderId], [RegionId])
-WHERE RegionId IS NOT NULL
-GO
+
 :r .\PostDeploymentScripts\PopulateRegionData.sql
