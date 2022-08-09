@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -25,6 +26,15 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .Where(p => p.Provider.Ukprn == ukprn)
                 .AsNoTracking()
                 .ToListAsync();
+        }
+
+        public async Task<ProviderLocation> GetProviderLocation(int ukprn, Guid id)
+        {
+            return await _roatpDataContext
+                .ProviderLocations
+                .Where(p => p.Provider.Ukprn == ukprn && p.NavigationId == id)
+                .AsNoTracking()
+                .SingleOrDefaultAsync();
         }
     }
 }

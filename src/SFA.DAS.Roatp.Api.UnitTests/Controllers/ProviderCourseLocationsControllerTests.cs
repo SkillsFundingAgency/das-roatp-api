@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
-using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries;
+using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderCourseLocations;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,9 +21,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Greedy] ProviderCourseLocationsController sut,
             int ukprn,
             int larsCode,
-            ProviderCourseLocationsQueryResult handlerResult)
+            GetProviderCourseLocationsQueryResult handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<ProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
 
             var result = await sut.GetProviderCourseLocations(ukprn, larsCode);
 
