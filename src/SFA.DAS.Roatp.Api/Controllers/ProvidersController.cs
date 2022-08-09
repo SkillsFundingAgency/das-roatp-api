@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.Provider.Queries.GetProvider;
+using SFA.DAS.Roatp.Application.Providers.Queries.GetProvider;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {

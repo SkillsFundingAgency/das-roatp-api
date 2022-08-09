@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Roatp.Application.Provider.Queries.GetProvider
+﻿namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProvider
 {
     public class GetProviderQueryResult
     {
