@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 
             var result = await sut.GetProvider(ukprn);
 
-            (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.Provider);
+            (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
         }
     }
 }

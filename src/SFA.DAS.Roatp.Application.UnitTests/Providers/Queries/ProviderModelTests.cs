@@ -7,14 +7,15 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries
 {
     [TestFixture]
-    public class ProviderModelTests
+    public class GetProviderQueryResultTests
     {
         [Test, RecursiveMoqAutoData]
         public void Operator_PopulatesModelFromEntity(Provider provider)
         {
-            var model = (ProviderModel)provider;
+            var model = (GetProviderQueryResult)provider;
 
             model.Should().BeEquivalentTo(provider, c => c
+                .Excluding(s => s.Id)
                  .Excluding(s => s.Locations)
                  .Excluding(s => s.Courses)
             );

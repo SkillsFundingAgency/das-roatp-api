@@ -20,8 +20,8 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProvider
         public async Task<GetProviderQueryResult> Handle(GetProviderQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Getting provider for ukprn [{ukprn}]", request.Ukprn);
-            ProviderModel provider = await _providerReadRepository.GetByUkprn(request.Ukprn);
-            return new GetProviderQueryResult { Provider = provider };
+            var provider = await _providerReadRepository.GetByUkprn(request.Ukprn);
+            return provider;
         }
     }
 }

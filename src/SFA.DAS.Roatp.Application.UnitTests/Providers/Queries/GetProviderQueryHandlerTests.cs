@@ -5,7 +5,6 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProvider;
-using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -27,7 +26,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries
             var result = await sut.Handle(query, cancellationToken);
 
             result.Should().NotBeNull();
-            result.Provider.Should().NotBeNull();
         }
     }
 }
