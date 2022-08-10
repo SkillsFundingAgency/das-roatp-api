@@ -16,8 +16,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries
 
             model.Should().BeEquivalentTo(provider, c => c
                 .Excluding(s => s.Id)
-                 .Excluding(s => s.Locations)
-                 .Excluding(s => s.Courses)
+                .Excluding(s => s.Locations)
+                .Excluding(s => s.Courses)
                 .Excluding(s=>s.EmployerSatisfaction)
                 .Excluding(s=>s.LearnerSatisfaction)
             );
