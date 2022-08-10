@@ -9,8 +9,6 @@
         public string Phone { get; set; }
         public string Website { get; set; }
         public string MarketingInfo { get; set; }
-        public decimal? EmployerSatisfaction { get; set; }
-        public decimal? LearnerSatisfaction { get; set; }
         public bool IsImported { get; set; } = false;
 
         public static implicit operator GetProviderQueryResult(Domain.Entities.Provider source) =>
@@ -23,8 +21,6 @@
                 Phone = source.Phone,
                 Website = source.Website,
                 MarketingInfo = source.MarketingInfo,
-                EmployerSatisfaction = source.EmployerSatisfaction,
-                LearnerSatisfaction = source.LearnerSatisfaction,
                 IsImported = source.IsImported
             };
     }
