@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.Api.Controllers;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete;
 using SFA.DAS.Testing.AutoFixture;
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -65,24 +66,24 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task DeleteProviderCourseLocation_CallsHandler(
            [Frozen] Mock<IMediator> _mediatorMock,
            [Greedy] ProviderCourseLocationsDeleteController sut,
-           int ukprn, int larsCode, int id, string userId)
+           int ukprn, int larsCode, Guid id, string userId)
         {
             await sut.DeleteProviderCourseLocation(ukprn, larsCode, id, userId);
 
-            _mediatorMock.Verify(m => m.Send(It.Is<DeleteProviderCourseLocationCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.Id == id), It.IsAny<CancellationToken>()));
+            _mediatorMock.Verify(m => m.Send(It.Is<DeleteProviderCourseLocationCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.LocationId == id), It.IsAny<CancellationToken>()));
         }
 
         [Test, MoqAutoData]
         public async Task DeleteProviderCourseLocation_ZeroResults_ReturnsNoContentResponse(
             [Frozen] Mock<IMediator> _mediatorMock,
             [Greedy] ProviderCourseLocationsDeleteController sut,
-            int ukprn, int larsCode, int id, string userId)
+            int ukprn, int larsCode, Guid id, string userId)
         {
-            _mediatorMock.Setup(m => m.Send(It.Is<DeleteProviderCourseLocationCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.Id == id), It.IsAny<CancellationToken>())).ReturnsAsync(Unit.Value);
+            _mediatorMock.Setup(m => m.Send(It.Is<DeleteProviderCourseLocationCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.LocationId == id), It.IsAny<CancellationToken>())).ReturnsAsync(Unit.Value);
 
             var result = await sut.DeleteProviderCourseLocation(ukprn, larsCode, id, userId);
 
-            _mediatorMock.Verify(m => m.Send(It.Is<DeleteProviderCourseLocationCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.Id == id), It.IsAny<CancellationToken>()));
+            _mediatorMock.Verify(m => m.Send(It.Is<DeleteProviderCourseLocationCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.LocationId == id), It.IsAny<CancellationToken>()));
 
             var statusCodeResult = (NoContentResult)result;
 

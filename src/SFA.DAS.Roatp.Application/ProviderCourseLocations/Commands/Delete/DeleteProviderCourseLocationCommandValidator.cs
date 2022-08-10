@@ -6,8 +6,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete
 {
     public class DeleteProviderCourseLocationCommandValidator : AbstractValidator<DeleteProviderCourseLocationCommand>
     {
-        public const string InvalidProviderCourseLocationIdErrorMessage = "Invalid larsCode";
-        public const string ProviderCourseLocationNotFoundErrorMessage = "No provider course location found with given ProviderCourseLocationId";
+        public const string InvalidProviderCourseLocationIdErrorMessage = "Invalid location id";
+        public const string ProviderCourseLocationNotFoundErrorMessage = "Location details not found for given location id";
         public DeleteProviderCourseLocationCommandValidator(IProviderReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository, IProviderCourseLocationReadRepository providerCourseLocationReadRepository)
         {
             Include(new UkprnValidator(providerReadRepository));
@@ -16,13 +16,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete
 
             RuleFor(c => c.UserId).NotEmpty();
 
-            RuleFor(c => c.Id).
+            RuleFor(c => c.LocationId).
                 Cascade(CascadeMode.Stop).
-                GreaterThan(0).WithMessage(InvalidProviderCourseLocationIdErrorMessage)
-                .MustAsync(async (model, providerCourseLocationId, cancellation) =>
+                NotEmpty().WithMessage(InvalidProviderCourseLocationIdErrorMessage)
+                .MustAsync(async (model, navigationId, cancellation) =>
                 {
                     var providerCourseLocations = await providerCourseLocationReadRepository.GetAllProviderCourseLocations(model.Ukprn, model.LarsCode);
-                    return providerCourseLocations.Exists(l=>l.Id == providerCourseLocationId);
+                    return providerCourseLocations.Exists(l=>l.NavigationId == navigationId);
                 })
                .WithMessage(ProviderCourseLocationNotFoundErrorMessage);
         }
