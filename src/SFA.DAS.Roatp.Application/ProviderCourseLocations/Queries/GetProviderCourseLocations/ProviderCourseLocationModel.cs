@@ -14,6 +14,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderC
         public string LocationName { get; set; }
         public LocationType LocationType { get; set; }
         public string RegionName { get; set; }
+        public string SubregionName { get; set; }
         public int? RegionId { get; set; }
 
         public static implicit operator ProviderCourseLocationModel(ProviderCourseLocation source) =>
@@ -28,6 +29,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderC
                 LocationName = source.Location.LocationName,
                 LocationType = source.Location.LocationType,
                 RegionName = source.Location.Region?.RegionName,
+                SubregionName = source.Location.Region?.SubregionName,
                 RegionId = source.Location.Region?.Id
             };
     }
