@@ -13,7 +13,6 @@
         public string ContactUsPageUrl { get; set; }
         public bool? IsApprovedByRegulator { get; set; }
         public bool IsImported { get; set; } = false;
-        public bool? IsConfirmed { get; set; } //required if imported
         public bool? HasNationalDeliveryOption { get; set; }
         public bool? HasHundredPercentEmployerDeliveryOption { get; set; }
        public bool HasPortableFlexiJobOption { get; set; }
@@ -41,7 +40,7 @@
            
             return model;
         }
-        public void UpdateCourseDetails(string ifateRefNum, int level, string title, string version, string approvalBody)
+        public void AttachCourseDetails(string ifateRefNum, int level, string title, string version, string approvalBody)
         {
             IfateReferenceNumber = ifateRefNum;
             Level = level;

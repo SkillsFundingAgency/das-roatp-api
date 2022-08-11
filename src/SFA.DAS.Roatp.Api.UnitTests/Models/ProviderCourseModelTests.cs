@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
                 ApprovalBody = "ABC"
             };
             
-            model.UpdateCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level,standardLookup.Title, standardLookup.Version,standardLookup.ApprovalBody);
+            model.AttachCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level,standardLookup.Title, standardLookup.Version,standardLookup.ApprovalBody);
 
             Assert.That(model, Is.Not.Null);
             Assert.AreEqual(standardLookup.Title,model.CourseName);

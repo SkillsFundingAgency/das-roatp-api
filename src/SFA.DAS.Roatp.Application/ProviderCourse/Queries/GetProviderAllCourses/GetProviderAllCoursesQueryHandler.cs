@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses
             foreach (var p in providerCourseModels)
             {
                 var course = standardsLookup.Single(c => c.LarsCode == p.LarsCode);
-                p.UpdateCourseDetails(course.IfateReferenceNumber, course.Level, course.Title, course.Version, course.ApprovalBody);
+                p.AttachCourseDetails(course.IfateReferenceNumber, course.Level, course.Title, course.Version, course.ApprovalBody);
             }
 
             return new GetProviderAllCoursesQueryResult
