@@ -1,6 +1,4 @@
-﻿using AutoFixture;
-using AutoFixture.NUnit3;
-using FluentAssertions;
+﻿using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
