@@ -33,7 +33,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
             await sut.Handle(command, new CancellationToken());
 
             providerCourseLocationWriteRepositoryMock.Verify(p => p.Create(It.IsAny<ProviderCourseLocation>()), Times.Once);
-            providerCourseLocationWriteRepositoryMock.Verify(m => m.Create(It.Is<ProviderCourseLocation>(l => l.ProviderLocationId == providerLocation.Id && l.ProviderCourseId == providerCourse.Id)));
+            providerCourseLocationWriteRepositoryMock.Verify(m => m.Create(It.Is<ProviderCourseLocation>(l => l.ProviderLocationId == providerLocation.Id && l.ProviderCourseId == providerCourse.Id && l.HasDayReleaseDeliveryOption == command.HasDayReleaseDeliveryOption && l.HasBlockReleaseDeliveryOption == command.HasBlockReleaseDeliveryOption)));
         }
     }
 }
