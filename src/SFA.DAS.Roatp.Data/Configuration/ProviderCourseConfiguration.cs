@@ -17,6 +17,16 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.Property(p => p.ContactUsEmail).HasMaxLength(500);
             builder.Property(p => p.ContactUsPhoneNumber).HasMaxLength(20);
             builder.Property(p => p.IsImported).IsRequired();
+
+            builder.HasMany(c => c.Locations)
+                .WithOne(l => l.ProviderCourse)
+                .HasPrincipalKey(c => c.Id)
+                .HasForeignKey(l => l.ProviderCourseId);
+
+            builder.HasMany(c => c.Versions)
+                .WithOne(l => l.ProviderCourse)
+                .HasPrincipalKey(c => c.Id)
+                .HasForeignKey(l => l.ProviderCourseId);
         }
     }
 }

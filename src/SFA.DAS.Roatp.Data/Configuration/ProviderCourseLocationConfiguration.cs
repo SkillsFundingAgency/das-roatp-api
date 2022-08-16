@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.Data.Configuration
                 .WithMany(p => p.ProviderCourseLocations)
                 .HasForeignKey(p => p.ProviderLocationId);
 
-            builder.HasOne(p => p.Course)
+            builder.HasOne(p => p.ProviderCourse)
                 .WithMany(p => p.Locations)
                 .HasForeignKey(p => p.ProviderCourseId);
         }

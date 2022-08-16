@@ -239,7 +239,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                         providerCourseLocations.Add(new ProviderCourseLocation
                         {
                             NavigationId = Guid.NewGuid(),
-                            Course = newProviderCourse,
+                            ProviderCourse = newProviderCourse,
                             Location = providerLocation,
                             HasDayReleaseDeliveryOption = dayRelease,
                             HasBlockReleaseDeliveryOption = blockRelease,

@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public bool? HasDayReleaseDeliveryOption { get; set; }
         public bool? HasBlockReleaseDeliveryOption { get; set; }
         public bool IsImported { get; set; } = false;
-        public virtual ProviderCourse Course { get; set; }
+        public virtual ProviderCourse ProviderCourse { get; set; }
         public virtual ProviderLocation Location { get; set; }
     }
 }

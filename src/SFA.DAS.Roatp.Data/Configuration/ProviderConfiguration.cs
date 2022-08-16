@@ -29,7 +29,6 @@ namespace SFA.DAS.Roatp.Data.Configuration
                 .WithOne(c => c.Provider)
                 .HasPrincipalKey(p => p.Id)
                 .HasForeignKey(p => p.ProviderId);
-
         }
     }
 }
