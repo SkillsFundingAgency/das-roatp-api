@@ -89,7 +89,7 @@ namespace SFA.DAS.Roatp.Api
                 })
                 .AddNewtonsoftJson();
             
-            services.AddApplicationInsightsTelemetry(Configuration["APPINSIGHTS_INSTRUMENTATIONKEY"]);
+            services.AddApplicationInsightsTelemetry();
 
             services.AddSwaggerGen(options =>
             {
