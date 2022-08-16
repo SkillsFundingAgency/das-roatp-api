@@ -210,7 +210,7 @@
                     "logAnalyticsWorkspaceId": {
                         "value": "[resourceId(parameters('logAnalyticsSubscriptionId'),parameters('sharedManagementResourceGroup'),'Microsoft.OperationalInsights/workspaces',parameters('logAnalyticsWorkspaceName'))]"
                     }
-                }    
+                }
             },
             "dependsOn": [
                 "[variables('resourceGroupName')]"
