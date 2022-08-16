@@ -31,5 +31,14 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
             return providerCourse;
         }
+
+        public async Task<ProviderCourse> CreateProviderCourse(ProviderCourse providerCourse)
+        {
+            await _roatpDataContext.ProviderCourses.AddAsync(providerCourse);
+
+            await _roatpDataContext.SaveChangesAsync();
+
+            return providerCourse;
+        }
     }
 }

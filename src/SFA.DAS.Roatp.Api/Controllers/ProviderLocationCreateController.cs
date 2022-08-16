@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
 
             var response = await _mediator.Send(command);
 
-            return Created("/providers/{ukprn}/locations", response);
+            return Created($"/providers/{ukprn}/locations", response);
         }
     }
 }
