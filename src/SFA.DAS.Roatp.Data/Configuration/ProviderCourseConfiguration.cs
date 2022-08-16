@@ -23,12 +23,14 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.HasMany(c => c.Locations)
                 .WithOne(l => l.ProviderCourse)
                 .HasPrincipalKey(c => c.Id)
-                .HasForeignKey(l => l.ProviderCourseId);
+                .HasForeignKey(l => l.ProviderCourseId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(c => c.Versions)
                 .WithOne(l => l.ProviderCourse)
                 .HasPrincipalKey(c => c.Id)
-                .HasForeignKey(l => l.ProviderCourseId);
+                .HasForeignKey(l => l.ProviderCourseId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
