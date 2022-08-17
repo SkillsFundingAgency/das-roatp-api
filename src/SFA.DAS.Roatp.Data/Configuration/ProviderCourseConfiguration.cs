@@ -1,11 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.Roatp.Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Data.Configuration
 {
     public class ProviderCourseConfiguration : IEntityTypeConfiguration<ProviderCourse>
     {
+        [ExcludeFromCodeCoverage]
         public void Configure(EntityTypeBuilder<ProviderCourse> builder)
         {
             builder.ToTable(nameof(ProviderCourse));

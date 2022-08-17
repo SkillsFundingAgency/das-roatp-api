@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -22,6 +23,7 @@ using SFA.DAS.Roatp.Data.Extensions;
 
 namespace SFA.DAS.Roatp.Api
 {
+    [ExcludeFromCodeCoverage]
     public class Startup
     {
         private readonly string _initialEnvironment;

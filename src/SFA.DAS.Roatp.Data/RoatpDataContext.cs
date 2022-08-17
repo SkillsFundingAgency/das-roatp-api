@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Data
 {
+    [ExcludeFromCodeCoverage]
     public class RoatpDataContext : DbContext
     {
         public DbSet<Standard> Standards { get; set; }
