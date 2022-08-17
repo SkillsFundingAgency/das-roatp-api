@@ -3,6 +3,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse;
 
 namespace SFA.DAS.Roatp.Api.Controllers
@@ -30,6 +31,12 @@ namespace SFA.DAS.Roatp.Api.Controllers
             await _mediator.Send(command);
 
             _logger.LogInformation("Deleted provider course for Ukprn:{ukprn} LarsCode:{larscode}", ukprn, larsCode);
+
+            var commandDeleteProviderLocations = new BulkDeleteProviderLocationsCommand(ukprn, larsCode, userId);
+            var result = await _mediator.Send(commandDeleteProviderLocations);
+
+            _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn} LarsCode:{larscode}", result, ukprn, larsCode);
+
 
             return NoContent();
         }
