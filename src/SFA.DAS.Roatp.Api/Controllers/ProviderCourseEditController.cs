@@ -5,6 +5,9 @@ using SFA.DAS.Roatp.Application.ProviderCourse;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
 using SFA.DAS.Roatp.Domain.Models;
+using System;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
+using SFA.DAS.Roatp.Api.Models;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -34,6 +37,21 @@ namespace SFA.DAS.Roatp.Api.Controllers
             });
             
             return NoContent();
+        }
+
+        [Route("/providers/{ukprn}/courses/{larsCode}")]
+        [HttpPost]
+        public async Task<IActionResult> CreateProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, ProviderCourseAddModel providerCourseAddModel)
+        {
+            _logger.LogInformation("Inner API: Received command to add course: {larscode} to provider: {ukprn}", larsCode, ukprn);
+
+            CreateProviderCourseCommand command = providerCourseAddModel;
+            command.Ukprn = ukprn;
+            command.LarsCode = larsCode;
+
+            var result = await _mediator.Send(command);
+
+            return Created($"/providers/{ukprn}/courses", result);
         }
     }
 }
