@@ -16,14 +16,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
         public const string PatchOperationContainsUnavailableOperationErrorMessage = "This patch operation contains an unexpected operation and will not continue";
 
         public const string IsApprovedByRegulatorIsNotABooleanErrorMessage = "The patch contains an update for IsApprovedByRegulator that is not a boolean value";
-        
-        public const string EmailAddressTooLong = "Email address is too long, must be 256 characters or fewer";
-        public const string EmailAddressWrongFormat = "Email address must be in the correct format, like name@example.com";
-        public const string PhoneNumberWrongLength = "Telephone number must be between 10 and 50 characters";
-        public const string ContactUsPageUrlTooLong = "Contact page address is too long, must be 500 characters or fewer";
-        public const string ContactUsPageUrlWrongFormat = "Contact page address must be in the correct format, like www.example.com";
-        public const string StandardInfoUrlTooLong = "Website address is too long, must be 500 characters or fewer";
-        public const string StandardInfoUrlWrongFormat = "Werbsite address must be in the correct format, like www.example.com";
 
         public static readonly IList<string> PatchFields = new ReadOnlyCollection<string>(
                 new List<string>
@@ -33,7 +25,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
                     "ContactUsPageUrl",
                      "StandardInfoUrl",
                     "IsApprovedByRegulator"
-                }) ;
+                });
 
         public PatchProviderCourseCommandValidator(IProviderReadRepository providerReadRepository,
             IProviderCourseReadRepository providerCourseReadRepository)
@@ -44,7 +36,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
 
             RuleFor(c => c.Patch.Operations.Count).GreaterThan(0).WithMessage(NoPatchOperationsPresentErrorMessage);
 
-            RuleFor(c => c.Patch.Operations.Count(operation=>!PatchFields.Contains(operation.path)))
+            RuleFor(c => c.Patch.Operations.Count(operation => !PatchFields.Contains(operation.path)))
                 .Equal(0)
                 .WithMessage(PatchOperationContainsUnavailableFieldErrorMessage);
 
@@ -58,32 +50,20 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
                 .WithMessage(IsApprovedByRegulatorIsNotABooleanErrorMessage);
 
             RuleFor(c => c.ContactUsEmail)
-                .MaximumLength(256)
-                .WithMessage(EmailAddressTooLong)
-                .Matches(Constants.RegularExpressions.EmailRegex)
-                .When(c=>c.IsPresentContactUsEmail)
-                .WithMessage(EmailAddressWrongFormat);
+                .MustBeValidEmail()
+                .When(c => c.IsPresentContactUsEmail);
 
             RuleFor(c => c.ContactUsPhoneNumber)
-                 .MinimumLength(10)
-                .WithMessage(PhoneNumberWrongLength)
-                 .MaximumLength(50)
-                 .WithMessage(PhoneNumberWrongLength)
-                 .When(c => c.IsPresentContactUsPhoneNumber);
+                .MustBeValidPhoneNumber()
+                .When(c => c.IsPresentContactUsPhoneNumber);
 
             RuleFor(c => c.ContactUsPageUrl)
-                .MaximumLength(500)
-                .WithMessage(ContactUsPageUrlTooLong)
-                .Matches(Constants.RegularExpressions.UrlRegex)
-                .When(c => c.IsPresentContactUsPageUrl)
-                .WithMessage(ContactUsPageUrlWrongFormat);
+                .MustBeValidUrl("Contact page")
+                .When(c => c.IsPresentContactUsPageUrl);
 
             RuleFor(c => c.StandardInfoUrl)
-                .MaximumLength(500)
-                .WithMessage(StandardInfoUrlTooLong)
-                .Matches(Constants.RegularExpressions.UrlRegex)
-                .When(c => c.IsPresentStandardInfoUrl)
-                .WithMessage(StandardInfoUrlWrongFormat);
+                .MustBeValidUrl("Website")
+                .When(c => c.IsPresentStandardInfoUrl);
         }
     }
 }
