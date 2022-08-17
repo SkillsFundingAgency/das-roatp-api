@@ -43,6 +43,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
             {
                 _logger.LogInformation("Creating national location for Ukprn: {ukprn}", request.Ukprn);
                 nationalLocation = ProviderLocation.CreateNationalLocation(provider.Id);
+                await _providerLocationWriteRepository.Create(nationalLocation);
             }
 
             var providerCourse = await _providerCourseReadRepository.GetProviderCourse(provider.Id, request.LarsCode);
