@@ -2,6 +2,7 @@
 {
     public static class ValidationMessages
     {
+        public static string IsRequired (string fieldName) => $"{fieldName} is required";
         public static class EmailValidationMessages
         {
             public const string EmailAddressTooLong = "Email address is too long, must be 256 characters or fewer";
