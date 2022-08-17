@@ -19,7 +19,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
         public async Task Delete(int ukprn, int larscode)
         {
             var providerCourse = await _roatpDataContext.ProviderCourses
-                .Where(l => l.LarsCode == larscode && l.Provider.Ukprn == ukprn).Include(a=>a.Locations).Include(a=>a.Versions)
+                .Where(l => l.LarsCode == larscode && l.Provider.Ukprn == ukprn)
+                .Include(l=>l.Locations).Include(l=>l.Versions)
                 .SingleAsync();
 
             _roatpDataContext.Remove(providerCourse);
