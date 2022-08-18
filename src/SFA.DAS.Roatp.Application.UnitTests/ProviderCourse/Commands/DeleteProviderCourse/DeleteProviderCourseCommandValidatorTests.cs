@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.DeleteProv
         private readonly int _ukprn = 10012002;
         private readonly int _larsCode = 123;
         [Test]
-        public async Task ValidateUkprn_InValid_ReturnsError()
+        public async Task Validates_Ukprn_ReturnsError()
         {
             var command = new DeleteProviderCourseCommand(10012002, _larsCode, _userId);
 
@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.DeleteProv
         }
 
         [Test]
-        public async Task ValidateLarsCode_InValid_ReturnsError()
+        public async Task Validates_LarsCode_ReturnsError()
         {
             var command = new DeleteProviderCourseCommand(_ukprn, _larsCode, _userId);
             var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderCourseReadRepository>());

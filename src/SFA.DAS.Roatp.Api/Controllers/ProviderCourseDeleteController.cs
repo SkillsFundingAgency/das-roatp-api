@@ -36,8 +36,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
             var result = await _mediator.Send(commandDeleteProviderLocations);
 
             _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn} LarsCode:{larscode}", result, ukprn, larsCode);
-
-
+            
             return NoContent();
         }
     }
