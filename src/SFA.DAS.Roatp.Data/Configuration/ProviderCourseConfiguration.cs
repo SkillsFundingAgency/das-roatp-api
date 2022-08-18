@@ -5,6 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Data.Configuration
 {
+    [ExcludeFromCodeCoverage]
     public class ProviderCourseConfiguration : IEntityTypeConfiguration<ProviderCourse>
     {
         [ExcludeFromCodeCoverage]
