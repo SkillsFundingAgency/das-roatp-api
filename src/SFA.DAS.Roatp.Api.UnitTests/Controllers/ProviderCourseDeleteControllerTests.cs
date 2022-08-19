@@ -26,8 +26,6 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 
             _mediatorMock.Verify(m => m.Send(It.Is<DeleteProviderCourseCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode), It.IsAny<CancellationToken>()));
 
-            _mediatorMock.Verify(m => m.Send(It.Is<BulkDeleteProviderLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode), It.IsAny<CancellationToken>()));
-
             var statusCodeResult = (NoContentResult)result;
 
             statusCodeResult.Should().NotBeNull();
