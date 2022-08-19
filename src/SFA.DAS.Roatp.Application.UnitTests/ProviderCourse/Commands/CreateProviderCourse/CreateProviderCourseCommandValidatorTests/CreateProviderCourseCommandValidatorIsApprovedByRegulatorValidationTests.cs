@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests
 {
     [TestFixture]
-    public class CreateProviderCourseCommandValidatorIsApprovedByRegulatorValidation : CreateProviderCourseCommandValidatorTestBase
+    public class CreateProviderCourseCommandValidatorIsApprovedByRegulatorValidationTests : CreateProviderCourseCommandValidatorTestBase
     {
         [TestCase(RegulatedLarsCode, true, true, "")]
         [TestCase(RegulatedLarsCode, false, false, CreateProviderCourseCommandValidator.RegulatedStandardMustBeApprovedMessage)]

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests
 {
     [TestFixture]
-    public class CreateProviderCourseCommandValidatorContactDetailsValidation : CreateProviderCourseCommandValidatorTestBase
+    public class CreateProviderCourseCommandValidatorContactDetailsValidationTests : CreateProviderCourseCommandValidatorTestBase
     {
         [TestCase("ab.cd@ef.com", true)]
         [TestCase("", false)]

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests
 {
     [TestFixture]
-    public class CreateProviderCourseCommandValidatorLarsCodeValidation : CreateProviderCourseCommandValidatorTestBase
+    public class CreateProviderCourseCommandValidatorLarsCodeValidationTests : CreateProviderCourseCommandValidatorTestBase
     {
         [TestCase(0, false, LarsCodeValidatorV2.InvalidMessage)]
         [TestCase(1, false, LarsCodeValidatorV2.NotFoundMessage)]

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests
 {
     [TestFixture]
-    public class CreateProviderCourseCommandValidatorLocationsValidation : CreateProviderCourseCommandValidatorTestBase
+    public class CreateProviderCourseCommandValidatorLocationsValidationTests : CreateProviderCourseCommandValidatorTestBase
     {
         [TestCase(true, true, false, false, "SubregionIds", CreateProviderCourseCommandValidator.EitherNationalOrRegionalMessage)]
         [TestCase(true, false, false, true, "", "")]

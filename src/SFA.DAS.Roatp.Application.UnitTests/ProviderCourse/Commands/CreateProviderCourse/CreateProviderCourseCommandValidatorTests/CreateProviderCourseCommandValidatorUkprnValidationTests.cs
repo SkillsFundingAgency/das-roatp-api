@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests
 {
     [TestFixture]
-    public class CreateProviderCourseCommandValidatorUkprnValidation : CreateProviderCourseCommandValidatorTestBase
+    public class CreateProviderCourseCommandValidatorUkprnValidationTests : CreateProviderCourseCommandValidatorTestBase
     {
         [TestCase(0, false)]
         [TestCase(ValidUkprn, true)]
