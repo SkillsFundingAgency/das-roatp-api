@@ -6,5 +6,7 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     public interface IProviderCourseEditRepository
     {
         Task<ProviderCourse> PatchProviderCourse(ProviderCourse patchedProviderCourseEntity);
+
+        Task<ProviderCourse> CreateProviderCourse(ProviderCourse providerCourse);
     }
 }

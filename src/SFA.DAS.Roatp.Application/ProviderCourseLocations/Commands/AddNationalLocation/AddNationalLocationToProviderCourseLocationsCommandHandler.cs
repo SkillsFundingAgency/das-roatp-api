@@ -6,7 +6,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using static SFA.DAS.Roatp.Domain.Constants;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNationalLocation
 {
@@ -43,14 +42,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
             if (nationalLocation == null)
             {
                 _logger.LogInformation("Creating national location for Ukprn: {ukprn}", request.Ukprn);
-                nationalLocation = await _providerLocationWriteRepository.Create(new ProviderLocation
-                {
-                    NavigationId = Guid.NewGuid(),
-                    ProviderId = provider.Id,
-                    Latitude = NationalLatLong.NationalLatitude,
-                    Longitude = NationalLatLong.NationalLongitude,
-                    LocationType = LocationType.National
-                });
+                nationalLocation = ProviderLocation.CreateNationalLocation(provider.Id);
+                await _providerLocationWriteRepository.Create(nationalLocation);
             }
 
             var providerCourse = await _providerCourseReadRepository.GetProviderCourse(provider.Id, request.LarsCode);

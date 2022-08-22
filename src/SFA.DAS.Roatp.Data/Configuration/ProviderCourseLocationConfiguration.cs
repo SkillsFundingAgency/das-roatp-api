@@ -1,9 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.Roatp.Domain.Entities;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Data.Configuration
 {
+    [ExcludeFromCodeCoverage]
     public class ProviderCourseLocationConfiguration : IEntityTypeConfiguration<ProviderCourseLocation>
     {
         public void Configure(EntityTypeBuilder<ProviderCourseLocation> builder)
@@ -20,7 +22,7 @@ namespace SFA.DAS.Roatp.Data.Configuration
                 .WithMany(p => p.ProviderCourseLocations)
                 .HasForeignKey(p => p.ProviderLocationId);
 
-            builder.HasOne(p => p.Course)
+            builder.HasOne(p => p.ProviderCourse)
                 .WithMany(p => p.Locations)
                 .HasForeignKey(p => p.ProviderCourseId);
         }

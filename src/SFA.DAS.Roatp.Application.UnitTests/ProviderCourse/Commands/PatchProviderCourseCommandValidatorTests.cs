@@ -9,6 +9,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
+using static SFA.DAS.Roatp.Application.Common.ValidationMessages;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
 {
@@ -308,7 +309,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
 
             Assert.IsFalse(result.IsValid);
             Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.EmailAddressWrongFormat, result.Errors[0].ErrorMessage);
+            Assert.AreEqual(EmailValidationMessages.EmailAddressWrongFormat, result.Errors[0].ErrorMessage);
         }
 
         [Test]
@@ -344,7 +345,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
 
             Assert.IsFalse(result.IsValid);
             Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.EmailAddressTooLong, result.Errors[0].ErrorMessage);
+            Assert.AreEqual(EmailValidationMessages.EmailAddressTooLong, result.Errors[0].ErrorMessage);
         }
 
         [Test]
@@ -380,8 +381,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
 
             Assert.IsFalse(result.IsValid);
             Assert.IsTrue(result.Errors.Count == 2);
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage==PatchProviderCourseCommandValidator.EmailAddressTooLong));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == PatchProviderCourseCommandValidator.EmailAddressWrongFormat));
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage== EmailValidationMessages.EmailAddressTooLong));
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == EmailValidationMessages.EmailAddressWrongFormat));
         }
 
         [TestCase(1,true)]
@@ -434,7 +435,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             if (isErrorExpected)
             {
                 Assert.IsTrue(result.Errors.Count == 1);
-                Assert.AreEqual(PatchProviderCourseCommandValidator.PhoneNumberWrongLength,
+                Assert.AreEqual(PhoneNumberValidationMessages.PhoneNumberWrongLength,
                     result.Errors[0].ErrorMessage);
             }
             else
@@ -462,7 +463,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
                 Operations =
                 {
                     new Operation<PatchProviderCourse>
-                        { op = Replace, path = StandardInfoUrl, value = "http://www.test.com" },
+                        { op = Replace, path = StandardInfoUrl, value = "wrongformat" },
                     new Operation<PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
                     new Operation<PatchProviderCourse>
@@ -475,8 +476,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             var result = await validator.TestValidateAsync(command);
 
             Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.ContactUsPageUrlWrongFormat, result.Errors[0].ErrorMessage);
+            Assert.IsTrue(result.Errors.Count == 2);
+            result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage(UrlValidationMessages.UrlWrongFormat("Website"));
+            result.ShouldHaveValidationErrorFor(c => c.ContactUsPageUrl).WithErrorMessage(UrlValidationMessages.UrlWrongFormat("Contact page"));
         }
 
         [Test]
@@ -485,6 +487,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
+            var longUrl = new string('x', 497) + ".com";
 
             var command = new PatchProviderCourseCommand
             {
@@ -498,21 +501,22 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
                 Operations =
                 {
                     new Operation<PatchProviderCourse>
-                        { op = Replace, path = StandardInfoUrl, value = "http://www.test.com" },
+                        { op = Replace, path = StandardInfoUrl, value = longUrl },
                     new Operation<PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
                     new Operation<PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value="test@test.com"},
                     new Operation<PatchProviderCourse>
-                        { op = Replace, path = ContactUsPageUrl,  value = new string('x',497) + ".com" }
+                        { op = Replace, path = ContactUsPageUrl,  value =  longUrl}
                 }
             };
 
             var result = await validator.TestValidateAsync(command);
 
             Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.ContactUsPageUrlTooLong, result.Errors[0].ErrorMessage);
+            Assert.IsTrue(result.Errors.Count == 2);
+            result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage(UrlValidationMessages.UrlTooLong("Website"));
+            result.ShouldHaveValidationErrorFor(c => c.ContactUsPageUrl).WithErrorMessage(UrlValidationMessages.UrlTooLong("Contact page"));
         }
     }
 }

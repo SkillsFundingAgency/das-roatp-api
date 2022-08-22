@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                     .ProviderCoursesLocations
                     .Include(l => l.Location)
                     .ThenInclude(r => r.Region)
-                    .Where(p => p.Course.Provider.Ukprn == ukprn && p.Course.LarsCode == larsCode)
+                    .Where(p => p.ProviderCourse.Provider.Ukprn == ukprn && p.ProviderCourse.LarsCode == larsCode)
                     .AsNoTracking()
                     .ToListAsync();
         }
@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .ProviderCoursesLocations
                     .Include(l => l.Location)
                     .ThenInclude(r => r.Region)
-                    .Where(p => p.Course.Provider.Ukprn == ukprn)
+                    .Where(p => p.ProviderCourse.Provider.Ukprn == ukprn)
                     .AsNoTracking()
                     .ToListAsync();
         }

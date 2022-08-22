@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using static SFA.DAS.Roatp.Domain.Constants;
 
 namespace SFA.DAS.Roatp.Domain.Entities
 {
@@ -26,5 +27,13 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public virtual Provider Provider { get; set; }
         public virtual Region Region { get; set; }
         public virtual List<ProviderCourseLocation> ProviderCourseLocations { get; set; } = new List<ProviderCourseLocation>();
+        public static ProviderLocation CreateNationalLocation(int providerId) => new ProviderLocation
+        {
+            NavigationId = Guid.NewGuid(),
+            ProviderId = providerId,
+            Latitude = NationalLatLong.NationalLatitude,
+            Longitude = NationalLatLong.NationalLongitude,
+            LocationType = LocationType.National
+        };
     }
 }
