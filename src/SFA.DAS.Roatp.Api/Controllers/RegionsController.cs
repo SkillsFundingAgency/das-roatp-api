@@ -4,7 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.Region.Queries;
+using SFA.DAS.Roatp.Application.Regions.Queries;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {

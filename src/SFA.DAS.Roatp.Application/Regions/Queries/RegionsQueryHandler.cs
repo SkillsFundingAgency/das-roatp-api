@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.Region.Queries
+namespace SFA.DAS.Roatp.Application.Regions.Queries
 {
     public class RegionsQueryHandler : IRequestHandler<RegionsQuery, RegionsQueryResult>
     {
