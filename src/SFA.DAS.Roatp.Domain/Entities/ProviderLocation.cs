@@ -33,7 +33,19 @@ namespace SFA.DAS.Roatp.Domain.Entities
             ProviderId = providerId,
             Latitude = NationalLatLong.NationalLatitude,
             Longitude = NationalLatLong.NationalLongitude,
-            LocationType = LocationType.National
+            LocationType = LocationType.National,
+            IsImported = false
+        };
+
+        public static ProviderLocation CreateRegionalLocation(int providerId, Region region) => new ProviderLocation
+        {
+            NavigationId = Guid.NewGuid(),
+            ProviderId = providerId,
+            RegionId = region.Id,
+            Latitude = region.Latitude,
+            Longitude = region.Longitude,
+            LocationType = LocationType.Regional,
+            IsImported = false
         };
     }
 }
