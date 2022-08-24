@@ -59,7 +59,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                                 return !providerLocations.Any(providerLocation => locations.All(l => l.NavigationId != providerLocation.ProviderLocationId));
                             })
                         .WithMessage(LocationIdNotFoundMessage);
-                    ;
                 });
             });
 
