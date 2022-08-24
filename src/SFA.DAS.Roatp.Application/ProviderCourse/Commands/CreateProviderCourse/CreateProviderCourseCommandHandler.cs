@@ -65,7 +65,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         {
             var allRegions = await _regionReadRepository.GetAllRegions();
 
-            request.SubregionIds.ForEach(async regionId => 
+            request.SubregionIds.ForEach(regionId => 
             {
                 var providerLocation = allProviderLocations.FirstOrDefault(l => l.RegionId == regionId);
                 if (providerLocation == null)

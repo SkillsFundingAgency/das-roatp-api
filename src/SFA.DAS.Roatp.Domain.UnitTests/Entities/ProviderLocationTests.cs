@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
         }
 
         [Test, RecursiveMoqAutoData]
-        public void CreateRegionalLocation_ReturnsNationalLocationInstance(Region region, int providerId)
+        public void CreateRegionalLocation_ReturnsRegionalLocationInstance(Region region, int providerId)
         {
             var actualNationalLocation = ProviderLocation.CreateRegionalLocation(providerId, region);
 

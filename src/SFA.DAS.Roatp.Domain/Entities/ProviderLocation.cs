@@ -36,7 +36,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
             LocationType = LocationType.National,
             IsImported = false
         };
-
         public static ProviderLocation CreateRegionalLocation(int providerId, Region region) => new ProviderLocation
         {
             NavigationId = Guid.NewGuid(),
