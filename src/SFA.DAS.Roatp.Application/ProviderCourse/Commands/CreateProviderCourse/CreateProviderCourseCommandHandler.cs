@@ -69,7 +69,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                         allProviderLocations.First(x => x.NavigationId == providerLocation.ProviderLocationId);
                     providerCourse.Locations.Add(new ProviderCourseLocation
                     {
-                        NavigationId = Guid.NewGuid(), ProviderLocationId = providerLocationToAdd.Id,
+                        NavigationId = Guid.NewGuid(), 
+                        ProviderLocationId = providerLocationToAdd.Id,
                         HasBlockReleaseDeliveryOption = providerLocation.HasBlockReleaseDeliveryOption,
                         HasDayReleaseDeliveryOption = providerLocation.HasDayReleaseDeliveryOption
                     });
