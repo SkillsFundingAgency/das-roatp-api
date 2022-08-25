@@ -29,8 +29,14 @@ namespace SFA.DAS.Roatp.Api.Controllers
             
             var command = new DeleteProviderCourseCommand(ukprn, larsCode,  userId);
             await _mediator.Send(command);
-
             _logger.LogInformation("Deleted provider course for Ukprn:{ukprn} LarsCode:{larscode}", ukprn, larsCode);
+
+
+            var bulkDeleteRegionsCommand = new BulkDeleteRegionLocationsCommand(ukprn, userId);
+            var result = await _mediator.Send(bulkDeleteRegionsCommand);
+
+            _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn}", result, ukprn);
+
 
             return NoContent();
         }
