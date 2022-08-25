@@ -13,11 +13,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
         protected Mock<IProviderCourseReadRepository> ProviderCourseReadRepositoryMock;
         protected Mock<IStandardReadRepository> StandardReadRepositoryMock;
         protected Mock<IProviderLocationsReadRepository> ProviderLocationsReadRepositoryMock;
+        protected Mock<IRegionReadRepository> RegionReadRepositoryMock;
         public const int ValidUkprn = 10012002;
         protected const int ValidComboLarsCode = 321;
         protected const int RegulatedLarsCode = 123;
         protected const int NonRegulatedLarsCode = 111;
         public static Guid NavigationId = new Guid("f26bac30-23a8-11ed-861d-0242ac120002");
+        protected const int ValidRegionId = 9;
 
         protected CreateProviderCourseCommandValidator GetSut()
         {
@@ -37,8 +39,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
             ProviderLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
             ProviderLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(ValidUkprn)).ReturnsAsync(new List<ProviderLocation> {new ProviderLocation {NavigationId = NavigationId}});
+            RegionReadRepositoryMock = new Mock<IRegionReadRepository>();
+            RegionReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(new List<Region> { new Region { Id = ValidRegionId } });
 
-            return new CreateProviderCourseCommandValidator(ProviderReadRepositoryMock.Object, StandardReadRepositoryMock.Object, ProviderCourseReadRepositoryMock.Object,ProviderLocationsReadRepositoryMock.Object);
+            return new CreateProviderCourseCommandValidator(ProviderReadRepositoryMock.Object, StandardReadRepositoryMock.Object, ProviderCourseReadRepositoryMock.Object,ProviderLocationsReadRepositoryMock.Object, RegionReadRepositoryMock.Object);
         }
     }
 }

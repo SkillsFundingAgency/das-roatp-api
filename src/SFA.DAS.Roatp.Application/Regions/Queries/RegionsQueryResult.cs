@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace SFA.DAS.Roatp.Application.Region.Queries
+namespace SFA.DAS.Roatp.Application.Regions.Queries
 {
     public class RegionsQueryResult
     {

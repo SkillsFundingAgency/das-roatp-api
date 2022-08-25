@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Region.Queries;
+using SFA.DAS.Roatp.Application.Regions.Queries;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocations

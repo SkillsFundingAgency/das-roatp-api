@@ -1,6 +1,7 @@
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Testing.AutoFixture;
 using static SFA.DAS.Roatp.Domain.Constants;
 
 namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
@@ -23,6 +24,22 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
             var actualNationalLocation = ProviderLocation.CreateNationalLocation(providerId);
 
             actualNationalLocation.Should().BeEquivalentTo(expectedNationalLocation, option => option.Excluding(c => c.NavigationId));
+            actualNationalLocation.LocationName.Should().BeNull();
+            actualNationalLocation.IsImported.Should().BeFalse();
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public void CreateRegionalLocation_ReturnsRegionalLocationInstance(Region region, int providerId)
+        {
+            var actualNationalLocation = ProviderLocation.CreateRegionalLocation(providerId, region);
+
+            actualNationalLocation.LocationName.Should().BeNull();
+            actualNationalLocation.NavigationId.Should().NotBeEmpty();
+            actualNationalLocation.LocationType.Should().Be(LocationType.Regional);
+            actualNationalLocation.Latitude.Should().Be(region.Latitude);
+            actualNationalLocation.Longitude.Should().Be(region.Longitude);
+            actualNationalLocation.IsImported.Should().BeFalse();
+            actualNationalLocation.ProviderId = providerId;
         }
     }
 }

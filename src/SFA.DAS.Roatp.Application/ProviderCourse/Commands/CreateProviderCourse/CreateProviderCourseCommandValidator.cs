@@ -2,6 +2,7 @@
 using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
@@ -13,12 +14,14 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         public const string EitherNationalOrRegionalMessage = "If the national delivery option is available, then the sub-regions are not required";
         public const string AtleastOneLocationIsRequiredMessage = "National delivery option is not set and there are no regions or provider locations either. Any one of these is required.";
         public const string LocationIdNotFoundMessage = "At least one of the location ids was not found";
+        public const string RegionIdNotFoundMessage = "At least one of the region id was not found";
 
         public CreateProviderCourseCommandValidator(
             IProviderReadRepository providerReadRepository,
             IStandardReadRepository standardReadRepository,
             IProviderCourseReadRepository providerCourseReadRepository,
-            IProviderLocationsReadRepository providerLocationsReadRepository)
+            IProviderLocationsReadRepository providerLocationsReadRepository,
+            IRegionReadRepository regionReadRepository)
         {
             Include(new UkprnValidator(providerReadRepository));
 
@@ -59,6 +62,16 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                                 return !providerLocations.Any(providerLocation => locations.All(l => l.NavigationId != providerLocation.ProviderLocationId));
                             })
                         .WithMessage(LocationIdNotFoundMessage);
+                })
+                .Otherwise(() => 
+                {
+                    RuleFor((c) => c.SubregionIds)
+                        .MustAsync(async (subregionIds, cancellation) =>
+                        {
+                            var regions = await regionReadRepository.GetAllRegions();
+                            return subregionIds.All(id => regions.Any(r => r.Id == id));
+                        })
+                        .WithMessage(RegionIdNotFoundMessage);
                 });
             });
 
