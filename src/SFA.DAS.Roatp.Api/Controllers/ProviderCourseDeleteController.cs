@@ -32,8 +32,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
             _logger.LogInformation("Deleted provider course for Ukprn:{ukprn} LarsCode:{larscode}", ukprn, larsCode);
 
 
-            var deleteUnmatchedRegionsCommand = new DeleteUnmatchedRegionalProviderLocationsCommand(ukprn, userId);
-            var result = await _mediator.Send(deleteUnmatchedRegionsCommand);
+            var bulkDeleteProviderLocationsCommand = new BulkDeleteProviderLocationsCommand(ukprn, userId);
+            var result = await _mediator.Send(bulkDeleteProviderLocationsCommand);
 
             _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn}", result, ukprn);
 

@@ -6,7 +6,6 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,13 +23,15 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
             BulkDeleteProviderLocationsCommandHandler sut,
             CancellationToken cancellationToken)
         {
-            var provider = new Provider { Id = 1, Ukprn = command.Ukprn };
-            var providerLocations = new List<ProviderLocation> { new ProviderLocation { Id = 1, ProviderId = 1} };
-            var providerCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation { Id = 1, ProviderCourseId = 2, ProviderLocationId=2 } };
+            var providerLocations = new List<ProviderLocation>
+            {
+                new ProviderLocation { Id = 1, ProviderId = 1, LocationType = LocationType.Provider},
+                new ProviderLocation { Id = 2, ProviderId = 1, LocationType = LocationType.Regional}
+            };
+            var providerCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation { Id = 1, ProviderCourseId = 2, ProviderLocationId=1 } };
 
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
             providerCourseLocationReadRepositoryMock.Setup(r => r.GetProviderCourseLocationsByUkprn(It.IsAny<int>())).ReturnsAsync(providerCourseLocations);
-
 
             var result = await sut.Handle(command, cancellationToken);
 
@@ -48,8 +49,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
             BulkDeleteProviderLocationsCommandHandler sut,
             CancellationToken cancellationToken)
         {
-            var provider = new Provider { Id = 1, Ukprn = command.Ukprn };
-            var providerLocations = new List<ProviderLocation> { new ProviderLocation { Id = 1, ProviderId = 1 } };
+            var providerLocations = new List<ProviderLocation> { new ProviderLocation { Id = 1, ProviderId = 1, LocationType = LocationType.Provider} };
             var providerCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation { Id = 1, ProviderCourseId = 1, ProviderLocationId = 1 } };
 
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
