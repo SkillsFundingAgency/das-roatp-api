@@ -31,13 +31,10 @@ namespace SFA.DAS.Roatp.Api.Controllers
             await _mediator.Send(command);
             _logger.LogInformation("Deleted provider course for Ukprn:{ukprn} LarsCode:{larscode}", ukprn, larsCode);
 
-
             var bulkDeleteProviderLocationsCommand = new BulkDeleteProviderLocationsCommand(ukprn, userId);
             var result = await _mediator.Send(bulkDeleteProviderLocationsCommand);
 
             _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn}", result, ukprn);
-
-
             return NoContent();
         }
     }
