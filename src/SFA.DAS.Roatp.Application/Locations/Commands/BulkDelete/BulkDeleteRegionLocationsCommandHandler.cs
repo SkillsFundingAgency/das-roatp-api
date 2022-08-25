@@ -1,10 +1,52 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
 {
-    class BulkDeleteRegionLocationsCommandHandler
+    public class DeleteUnmatchedRegionalProviderLocationsCommandHandler : IRequestHandler<DeleteUnmatchedRegionalProviderLocationsCommand, int>
     {
+        private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
+        private readonly IProviderCourseLocationReadRepository _providerCourseLocationReadRepository;
+        private readonly IProviderLocationsDeleteRepository _providerLocationsDeleteRepository;
+        private readonly ILogger<DeleteUnmatchedRegionalProviderLocationsCommandHandler> _logger;
+
+        public DeleteUnmatchedRegionalProviderLocationsCommandHandler(IProviderLocationsReadRepository providerLocationsReadRepository,
+            IProviderLocationsDeleteRepository providerLocationsDeleteRepository,
+            IProviderCourseLocationReadRepository providerCourseLocationReadRepository,
+            ILogger<DeleteUnmatchedRegionalProviderLocationsCommandHandler> logger)
+        {
+            _providerLocationsReadRepository = providerLocationsReadRepository;
+            _providerLocationsDeleteRepository = providerLocationsDeleteRepository;
+            _providerCourseLocationReadRepository = providerCourseLocationReadRepository;
+            _logger = logger;
+        }
+
+        public async Task<int> Handle(DeleteUnmatchedRegionalProviderLocationsCommand command, CancellationToken cancellationToken)
+        {
+            var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
+            var providerCourseLocations = await _providerCourseLocationReadRepository.GetProviderCourseLocationsByUkprn(command.Ukprn);
+
+            var providerLocationIdsToDelete = new List<int>();
+            foreach (var providerLocationId in providerLocations.Where(l=> l.LocationType==LocationType.Regional).Select(providerLocation => providerLocation.Id))
+            {
+                if (providerCourseLocations.All(a => a.ProviderLocationId != providerLocationId))
+                {
+                    providerLocationIdsToDelete.Add(providerLocationId);
+                }
+            }
+            
+            if (providerLocationIdsToDelete.Any())
+            {
+                _logger.LogInformation("{count} unmatched Regional locations will be deleted for Ukprn:{ukprn}", providerLocationIdsToDelete.Count, command.Ukprn);
+                await _providerLocationsDeleteRepository.BulkDelete(providerLocationIdsToDelete);
+            }
+            return providerLocationIdsToDelete.Count;
+        }
     }
 }

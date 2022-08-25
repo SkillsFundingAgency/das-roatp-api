@@ -4,9 +4,9 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
 {
-    public class BulkDeleteRegionLocationsCommandValidator : AbstractValidator<BulkDeleteRegionLocationsCommand>
+    public class DeleteUnmatchedRegionalProviderLocationsCommandValidator : AbstractValidator<DeleteUnmatchedRegionalProviderLocationsCommand>
     {
-        public BulkDeleteRegionLocationsCommandValidator(IProviderReadRepository providerReadRepository)
+        public DeleteUnmatchedRegionalProviderLocationsCommandValidator(IProviderReadRepository providerReadRepository)
         {
             Include(new UkprnValidator(providerReadRepository));
 

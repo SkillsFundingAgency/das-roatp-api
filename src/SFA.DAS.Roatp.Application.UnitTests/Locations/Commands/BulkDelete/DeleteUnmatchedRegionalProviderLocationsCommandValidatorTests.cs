@@ -8,15 +8,15 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
 {
     [TestFixture]
-    public class BulkDeleteProviderLocationsCommandValidatorTests
+    public class DeleteUnmatchedRegionalProviderLocationsCommandValidatorTests
     {
         private readonly string _userId = "userid";
         [Test]
         public async Task ValidateUkprn_InValid_ReturnsError()
         {
-            var command = new BulkDeleteProviderLocationsCommand(10012002,  _userId);
+            var command = new DeleteUnmatchedRegionalProviderLocationsCommand(10012002, _userId);
 
-            var sut = new BulkDeleteProviderLocationsCommandValidator(Mock.Of<IProviderReadRepository>());
+            var sut = new DeleteUnmatchedRegionalProviderLocationsCommandValidator(Mock.Of<IProviderReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -28,8 +28,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
         [TestCase(" ")]
         public async Task ValidateUserId_Empty_ReturnsError(string userId)
         {
-            var command = new BulkDeleteProviderLocationsCommand(10012002, userId);
-            var sut = new BulkDeleteProviderLocationsCommandValidator(Mock.Of<IProviderReadRepository>());
+            var command = new DeleteUnmatchedRegionalProviderLocationsCommand(10012002, userId);
+            var sut = new DeleteUnmatchedRegionalProviderLocationsCommandValidator(Mock.Of<IProviderReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
