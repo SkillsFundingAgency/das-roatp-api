@@ -3,6 +3,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests
 {
@@ -11,10 +12,12 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
         protected Mock<IProviderReadRepository> ProviderReadRepositoryMock;
         protected Mock<IProviderCourseReadRepository> ProviderCourseReadRepositoryMock;
         protected Mock<IStandardReadRepository> StandardReadRepositoryMock;
-        protected const int ValidUkprn = 10012002;
+        protected Mock<IProviderLocationsReadRepository> ProviderLocationsReadRepositoryMock;
+        public const int ValidUkprn = 10012002;
         protected const int ValidComboLarsCode = 321;
         protected const int RegulatedLarsCode = 123;
         protected const int NonRegulatedLarsCode = 111;
+        public static Guid NavigationId = new Guid("f26bac30-23a8-11ed-861d-0242ac120002");
 
         protected CreateProviderCourseCommandValidator GetSut()
         {
@@ -32,7 +35,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
             ProviderCourseReadRepositoryMock = new Mock<IProviderCourseReadRepository>();
             ProviderCourseReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(ValidUkprn, ValidComboLarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
-            return new CreateProviderCourseCommandValidator(ProviderReadRepositoryMock.Object, StandardReadRepositoryMock.Object, ProviderCourseReadRepositoryMock.Object);
+            ProviderLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
+            ProviderLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(ValidUkprn)).ReturnsAsync(new List<ProviderLocation> {new ProviderLocation {NavigationId = NavigationId}});
+
+            return new CreateProviderCourseCommandValidator(ProviderReadRepositoryMock.Object, StandardReadRepositoryMock.Object, ProviderCourseReadRepositoryMock.Object,ProviderLocationsReadRepositoryMock.Object);
         }
     }
 }

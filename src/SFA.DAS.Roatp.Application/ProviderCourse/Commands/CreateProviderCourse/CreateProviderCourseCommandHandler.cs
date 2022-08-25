@@ -50,10 +50,32 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                 }
             }
 
-            await _providerCourseEditRepository.CreateProviderCourse(providerCourse);
+            await ProcessProviderLocations(request, providerCourse);
 
+            await _providerCourseEditRepository.CreateProviderCourse(providerCourse);
+            
             _logger.LogInformation("Added course:{larscode} with id:{providercourseid} for provider: {ukprn}", request.LarsCode, providerCourse.Id, request.Ukprn);
             return providerCourse.Id;
+        }
+
+        private async Task ProcessProviderLocations(CreateProviderCourseCommand request, Domain.Entities.ProviderCourse providerCourse)
+        {
+            if (request.ProviderLocations != null && request.ProviderLocations.Any())
+            {
+                var allProviderLocations = await _providerLocationsReadRepository.GetAllProviderLocations(request.Ukprn);
+                foreach (var providerLocation in request.ProviderLocations)
+                {
+                    var providerLocationToAdd =
+                        allProviderLocations.First(x => x.NavigationId == providerLocation.ProviderLocationId);
+                    providerCourse.Locations.Add(new ProviderCourseLocation
+                    {
+                        NavigationId = Guid.NewGuid(), 
+                        ProviderLocationId = providerLocationToAdd.Id,
+                        HasBlockReleaseDeliveryOption = providerLocation.HasBlockReleaseDeliveryOption,
+                        HasDayReleaseDeliveryOption = providerLocation.HasDayReleaseDeliveryOption
+                    });
+                }
+            }
         }
     }
 }
