@@ -32,15 +32,11 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
             var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
             var providerCourseLocations = await _providerCourseLocationReadRepository.GetProviderCourseLocationsByUkprn(command.Ukprn);
 
-            var providerLocationIdsToDelete = new List<int>();
-            foreach (var providerLocationId in providerLocations.Where(l=> l.LocationType==LocationType.Regional).Select(providerLocation => providerLocation.Id))
-            {
-                if (providerCourseLocations.All(a => a.ProviderLocationId != providerLocationId))
-                {
-                    providerLocationIdsToDelete.Add(providerLocationId);
-                }
-            }
-            
+            var providerLocationIdsToDelete = providerLocations
+                .Where(l => l.LocationType == LocationType.Regional)
+                .Select(providerLocation => providerLocation.Id)
+                .Where(providerLocationId => providerCourseLocations.All(a => a.ProviderLocationId != providerLocationId)).ToList();
+
             if (providerLocationIdsToDelete.Any())
             {
                 _logger.LogInformation("{count} unmatched Regional locations will be deleted for Ukprn:{ukprn}", providerLocationIdsToDelete.Count, command.Ukprn);
