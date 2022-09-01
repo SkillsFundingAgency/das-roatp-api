@@ -80,4 +80,4 @@ In addition, you will need the following repo set up and running for the jobs to
 - Set SFA.DAS.RoATP.Jobs as the startup project
 - Publish the database project SFA.DAS.RoATP.Database to your local SQL Server instance
 - Run an instance of course management outer api with full setup (see https://github.com/SkillsFundingAgency/das-apim-endpoints/ 'Local Running > Course Management')
-- Running the solution will launch the API in your browser
+- Running the solution will launch the reload standards and reload provider registration details, and will make available the load course directory endpoint (see above for details)
