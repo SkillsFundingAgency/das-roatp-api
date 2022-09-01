@@ -4,13 +4,12 @@
 
 <img src="https://avatars.githubusercontent.com/u/9841374?s=200&v=4" align="right" alt="UK Government logo">
 
-_Update these badges with the correct information for this project. These give the status of the project at a glance and also sign-post developers to the appropriate resources they will need to get up and running_
 
 ## About
 
-das-roatp-api is the inner api for roatp course management data.  It stores provider, provider course,  provider locations, various other details about providers and courses, as well as lookup tables for standards and subregions that map to course directory data.  It is used by the course management web solution (https://github.com/SkillsFundingAgency/das-roatp-coursemanagement-web) which communicates with it via the outer api layer (https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/RoatpCourseManagement)
+das-roatp-api is the inner api for roatp course management data.  It contains CRUD calls to provider, provider course,  provider locations, various other details about providers and courses, as well as lookup tables for standards and subregions that map to course directory data.  It is used by the course management web solution (https://github.com/SkillsFundingAgency/das-roatp-coursemanagement-web) which communicates with it via the outer api layer (https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/RoatpCourseManagement)
 
-In addition the solutions contains a SFA.DAS.Roatp.Jobs project that contains functions to reload standards, reload provider details, and reload course directory data.
+In addition, the solution contains a SFA.DAS.Roatp.Jobs project that contains functions to reload standards, reload provider details, and load course directory data.
 
 > **Note:**  
 > The job to load course directory data also uses configuration values from an external library, das-roatp-coursemanagement-web (see https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-roatp-course-management-web/SFA.DAS.Roatp.CourseManagement.Web.json), to manage a small list of providers for beta testing. This will be removed once the project proceeds past beta testing
@@ -20,19 +19,19 @@ In addition the solutions contains a SFA.DAS.Roatp.Jobs project that contains fu
 
 # API
 
-Once the full installation is done (below), you can run the API but running the SFA.DAS.Roatp.Api project and you will see a web interface for all available endpoints (via swagger)
+Once the full installation is done (below), you can run the API by running the SFA.DAS.Roatp.Api project and you will see a web interface for all available endpoints (via swagger)
 
 
 # Jobs
 
-Once the full installation is done (below), you will need to be running the SFA.DAS.Roatp.Jobs project
+Once the full installation is done (below), you will need to run the SFA.DAS.Roatp.Jobs project
 
 In addition, you will need the following repo set up and running for the jobs to run:
 * das-apim-endpoints, CourseManagement solution (see https://github.com/SkillsFundingAgency/das-apim-endpoints/)
 
 
 1) Reload Standards Cache will run when you first start the application - this will populate/refresh the 'Standard' table
-2) Reload Provider Registration Details will run when you first start the application - this will populate/refresh the ProvderRegistrationDetail table
+2) Reload Provider Registration Details will run when you first start the application - this will populate/refresh the 'ProviderRegistrationDetail' table
 3) Load Course Directory - this has to be run manually, using an API tool such as POSTMAN, using the following details: POST http://localhost:7071/api/load-course-directory This will load all pilot and beta providers only (expect around 14 or 28, depending on configuration used).  Alternatively you can load all data from course directory using http://localhost:7071/api/load-course-directory?betaAndPilotOnly=false, in which case you will get 1400+ providers loaded.  This populates several tables, including provider, provider Course, provider Location etc
 
 
