@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,16 +31,12 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
             var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
             var providerCourseLocations = await _providerCourseLocationReadRepository.GetProviderCourseLocationsByUkprn(command.Ukprn);
 
-            var providerLocationIdsToDelete = new List<int>();
-            foreach (var providerLocationId in providerLocations.Select(providerLocation => providerLocation.Id))
-            {
-                var hasProviderCourseLocations = providerCourseLocations.Any(a => a.ProviderLocationId == providerLocationId);
-                if (!hasProviderCourseLocations)
-                {
-                    providerLocationIdsToDelete.Add(providerLocationId);
-                }
-            }
-            if(providerLocationIdsToDelete.Any())
+            var providerLocationIdsToDelete = providerLocations
+                .Where(l => l.LocationType == LocationType.Regional)
+                .Select(providerLocation => providerLocation.Id)
+                .Where(providerLocationId => providerCourseLocations.All(a => a.ProviderLocationId != providerLocationId)).ToList();
+
+            if (providerLocationIdsToDelete.Any())
             {
                 _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn}", providerLocationIdsToDelete.Count, LocationType.Regional, command.Ukprn);
                 await _providerLocationsDeleteRepository.BulkDelete(providerLocationIdsToDelete);

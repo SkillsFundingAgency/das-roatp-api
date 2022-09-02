@@ -20,16 +20,16 @@ namespace SFA.DAS.Roatp.Api.Controllers
         }
 
         [HttpDelete]
-        [Route("/providers/{ukprn}/locations/{LarsCode}/cleanup")]
+        [Route("/providers/{ukprn}/locations/cleanup")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> BulkDeleteProviderLocations([FromRoute] int ukprn, [FromRoute] int larsCode, [FromQuery] string userId)
+        public async Task<ActionResult> BulkDeleteProviderLocations([FromRoute] int ukprn, [FromQuery] string userId)
         {
-            _logger.LogInformation("Inner API: Request received to bulk delete provider locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, larsCode, userId);
+            _logger.LogInformation("Inner API: Request received to bulk delete provider locations ukprn: {ukprn}  userid:{userid}", ukprn, userId);
             
-            var command = new BulkDeleteProviderLocationsCommand(ukprn, larsCode,  userId);
+            var command = new BulkDeleteProviderLocationsCommand(ukprn, userId);
             var result = await _mediator.Send(command);
 
-            _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn} LarsCode:{larscode}", result, ukprn, larsCode);
+            _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn}", result, ukprn);
 
             return NoContent();
         }
