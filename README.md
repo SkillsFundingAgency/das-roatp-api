@@ -4,6 +4,8 @@
 
 <img src="https://avatars.githubusercontent.com/u/9841374?s=200&v=4" align="right" alt="UK Government logo">
 
+[![Build Status](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_apis/build/status/SkillsFundingAgency_das-roatp-api?branchName=master)](https://dev.azure.com/sfa-gov-uk/Digital%20Apprenticeship%20Service/_build/latest?definitionId=SkillsFundingAgency_das-roatp-api&branchName=master)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SkillsFundingAgency_das-roatp-api&metric=alert_status)](https://sonarcloud.io/project/overview?id=SkillsFundingAgency_das-roatp-api)
 
 ## About
 
@@ -27,7 +29,7 @@ Once the full installation is done (below), you can run the API by running the S
 Once the full installation is done (below), you will need to run the SFA.DAS.Roatp.Jobs project
 
 In addition, you will need the following repo set up and running for the jobs to run:
-* das-apim-endpoints, CourseManagement solution (see https://github.com/SkillsFundingAgency/das-apim-endpoints/)
+* das-apim-endpoints, CourseManagement solution (see https://github.com/SkillsFundingAgency/das-apim-endpoints/src/RoatpCourseManagement)
 
 
 1) Reload Standards Cache will run when you first start the application - this will populate/refresh the 'Standard' table
@@ -64,7 +66,7 @@ In addition, you will need the following repo set up and running for the jobs to
   - Data: {The contents of the local config json file}
 
 
-##### Open the API solution
+##### Open the API project within the solution
 
 - Open Visual studio as an administrator
 - Open the solution
@@ -72,7 +74,7 @@ In addition, you will need the following repo set up and running for the jobs to
 - Publish the database project SFA.DAS.RoATP.Database to your local SQL Server instance
 - Running the solution will launch the API in your browser
 
-##### Open the Jobs solution
+##### Open the Jobs project within the solution
 
 - Open Visual studio as an administrator
 - Open the solution
