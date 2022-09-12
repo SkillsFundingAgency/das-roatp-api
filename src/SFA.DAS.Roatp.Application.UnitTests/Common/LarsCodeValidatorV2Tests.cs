@@ -11,8 +11,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Common
     [TestFixture]
     public class LarsCodeValidatorV2Tests
     {
-        Mock<IStandardsReadRepository> _standardReadRepositoryMock;
-        Mock<IProviderCoursesReadRepository> _providerCourseReadRepositoryMock;
+        Mock<IStandardsReadRepository> _standardsReadRepositoryMock;
+        Mock<IProviderCoursesReadRepository> _providerCoursesReadRepositoryMock;
         LarsCodeValidatorV2 _sut;
         const int ValidComboLarsCode = 123;
         const int ValidLarsCode = 321;
@@ -21,11 +21,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Common
         [SetUp]
         public void Before_Each_Test()
         {
-            _standardReadRepositoryMock = new Mock<IStandardsReadRepository>();
-            _standardReadRepositoryMock.Setup(r => r.GetStandard(It.Is<int>(i => i == ValidComboLarsCode || i == ValidLarsCode))).ReturnsAsync(new Standard());
+            _standardsReadRepositoryMock = new Mock<IStandardsReadRepository>();
+            _standardsReadRepositoryMock.Setup(r => r.GetStandard(It.Is<int>(i => i == ValidComboLarsCode || i == ValidLarsCode))).ReturnsAsync(new Standard());
 
-            _providerCourseReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
-            _providerCourseReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(ValidUkprn, ValidComboLarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
+            _providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
+            _providerCoursesReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(ValidUkprn, ValidComboLarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
         }
 
         [TestCase(0, LarsCodeValidatorV2.InvalidMessage, false)]
@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Common
         [TestCase(ValidComboLarsCode, "", true)]
         public async Task LarsCode_ProviderCourseComboToExist_Validation(int larsCode, string expectedErrorMessage, bool isValid)
         {
-            _sut = new LarsCodeValidatorV2(_standardReadRepositoryMock.Object, _providerCourseReadRepositoryMock.Object, true);
+            _sut = new LarsCodeValidatorV2(_standardsReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, true);
             var testObj = new UkprnValidatorTestObject(ValidUkprn, larsCode);
 
             var result = await _sut.TestValidateAsync(testObj);
@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Common
         [TestCase(ValidLarsCode, "", true)]
         public async Task LarsCode_ProviderCourseComboToNotExist_PassesValidation(int larsCode, string expectedErrorMessage, bool isValid)
         {
-            _sut = new LarsCodeValidatorV2(_standardReadRepositoryMock.Object, _providerCourseReadRepositoryMock.Object, false);
+            _sut = new LarsCodeValidatorV2(_standardsReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, false);
             var testObj = new UkprnValidatorTestObject(ValidUkprn, larsCode);
 
             var result = await _sut.TestValidateAsync(testObj);
@@ -65,7 +65,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Common
         [Test]
         public async Task LarsCode_ProviderCourseComboToNotExist_FailsValidation()
         {
-            _sut = new LarsCodeValidatorV2(_standardReadRepositoryMock.Object, _providerCourseReadRepositoryMock.Object, false);
+            _sut = new LarsCodeValidatorV2(_standardsReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, false);
             var testObj = new UkprnValidatorTestObject(ValidUkprn, ValidComboLarsCode);
 
             var result = await _sut.TestValidateAsync(testObj);

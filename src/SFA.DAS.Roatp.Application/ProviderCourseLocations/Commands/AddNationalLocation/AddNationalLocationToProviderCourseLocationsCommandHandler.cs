@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
         private readonly IProviderLocationsWriteRepository _providerLocationsWriteRepository;
         private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
         private readonly IProviderCourseLocationsWriteRepository _providerCourseLocationsWriteRepository;
-        private readonly IProvidersReadRepository _providerReadRepository;
+        private readonly IProvidersReadRepository _providersReadRepository;
         private readonly ILogger<AddNationalLocationToProviderCourseLocationsCommandHandler> _logger;
 
         public AddNationalLocationToProviderCourseLocationsCommandHandler(
@@ -30,13 +30,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
             _providerLocationsWriteRepository = providerLocationsWriteRepository;
             _providerCoursesReadRepository = providerCoursesReadRepository;
             _providerCourseLocationsWriteRepository = providerCourseLocationsWriteRepository;
-            _providerReadRepository = providersReadRepository;
+            _providersReadRepository = providersReadRepository;
             _logger = logger;
         }
 
         public async Task<ProviderCourseLocation> Handle(AddNationalLocationToProviderCourseLocationsCommand request, CancellationToken cancellationToken)
         {
-            var provider = await _providerReadRepository.GetByUkprn(request.Ukprn);
+            var provider = await _providersReadRepository.GetByUkprn(request.Ukprn);
             var allLocations = await _providerLocationsReadRepository.GetAllProviderLocations(request.Ukprn);
             var nationalLocation = allLocations.SingleOrDefault(l => l.LocationType == LocationType.National);
             if (nationalLocation == null)

@@ -12,10 +12,10 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 {
     public class CreateProviderCourseCommandHandler : IRequestHandler<CreateProviderCourseCommand, int>
     {
-        private readonly IProvidersReadRepository _providerReadRepository;
+        private readonly IProvidersReadRepository _providersReadRepository;
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
-        private readonly IProviderCoursesWriteRepository _providerCourseEditRepository;
-        private readonly IRegionsReadRepository _regionReadRepository;
+        private readonly IProviderCoursesWriteRepository _providerCoursesWriteRepository;
+        private readonly IRegionsReadRepository _regionsReadRepository;
         private readonly ILogger<CreateProviderCourseCommandHandler> _logger;
 
         public CreateProviderCourseCommandHandler(
@@ -26,15 +26,15 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
             IRegionsReadRepository regionReadRepository)
         {
             _providerLocationsReadRepository = providerLocationsReadRepository;
-            _providerReadRepository = providerReadRepository;
-            _providerCourseEditRepository = providerCourseEditRepository;
+            _providersReadRepository = providerReadRepository;
+            _providerCoursesWriteRepository = providerCourseEditRepository;
             _logger = logger;
-            _regionReadRepository = regionReadRepository;
+            _regionsReadRepository = regionReadRepository;
         }
 
         public async Task<int> Handle(CreateProviderCourseCommand request, CancellationToken cancellationToken)
         {
-            var provider = await _providerReadRepository.GetByUkprn(request.Ukprn);
+            var provider = await _providersReadRepository.GetByUkprn(request.Ukprn);
 
             _logger.LogInformation("Adding course: {larscode} to provider: {ukprn} with id:{providerid}", request.LarsCode, request.Ukprn, provider.Id);
 
@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 
             await ProcessProviderLocations(request, providerCourse);
 
-            await _providerCourseEditRepository.CreateProviderCourse(providerCourse);
+            await _providerCoursesWriteRepository.CreateProviderCourse(providerCourse);
 
             _logger.LogInformation("Added course:{larscode} with id:{providercourseid} for provider: {ukprn}", request.LarsCode, providerCourse.Id, request.Ukprn);
             return providerCourse.Id;
@@ -63,7 +63,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 
         private async Task AddRegionalLocationsToProviderCourse(CreateProviderCourseCommand request, int providerId, List<ProviderLocation> allProviderLocations, Domain.Entities.ProviderCourse providerCourse)
         {
-            var allRegions = await _regionReadRepository.GetAllRegions();
+            var allRegions = await _regionsReadRepository.GetAllRegions();
 
             request.SubregionIds.ForEach(regionId => 
             {

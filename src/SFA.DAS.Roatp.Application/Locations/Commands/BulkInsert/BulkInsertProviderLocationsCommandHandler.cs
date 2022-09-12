@@ -11,25 +11,25 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 {
     public class BulkInsertProviderLocationsCommandHandler : IRequestHandler<BulkInsertProviderLocationsCommand, int>
     {
-        private readonly IRegionsReadRepository _regionReadRepository;
-        private readonly IProvidersReadRepository _providerReadRepository;
+        private readonly IRegionsReadRepository _regionsReadRepository;
+        private readonly IProvidersReadRepository _providersReadRepository;
         private readonly IProviderLocationsBulkRepository _providerLocationsBulkRepository;
         private readonly ILogger<BulkInsertProviderLocationsCommandHandler> _logger;
 
-        public BulkInsertProviderLocationsCommandHandler(IRegionsReadRepository regionReadRepository, IProvidersReadRepository providerReadRepository,
+        public BulkInsertProviderLocationsCommandHandler(IRegionsReadRepository regionsReadRepository, IProvidersReadRepository providersReadRepository,
             IProviderLocationsBulkRepository providerLocationsBulkRepository,
             ILogger<BulkInsertProviderLocationsCommandHandler> logger)
         {
-            _regionReadRepository = regionReadRepository;
-            _providerReadRepository = providerReadRepository;
+            _regionsReadRepository = regionsReadRepository;
+            _providersReadRepository = providersReadRepository;
             _providerLocationsBulkRepository = providerLocationsBulkRepository;
             _logger = logger;
         }
 
         public async Task<int> Handle(BulkInsertProviderLocationsCommand command, CancellationToken cancellationToken)
         {
-            var provider = await _providerReadRepository.GetByUkprn(command.Ukprn);
-            var regions = await _regionReadRepository.GetAllRegions();
+            var provider = await _providersReadRepository.GetByUkprn(command.Ukprn);
+            var regions = await _regionsReadRepository.GetAllRegions();
 
             List<ProviderLocation> locationsToInsert = new List<ProviderLocation>();
             foreach (var selectedSubregionId in command.SelectedSubregionIds)

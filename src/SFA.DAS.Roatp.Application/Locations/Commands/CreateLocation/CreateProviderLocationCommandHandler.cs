@@ -9,20 +9,20 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
 {
     public class CreateProviderLocationCommandHandler : IRequestHandler<CreateProviderLocationCommand, int>
     {
-        private readonly IProvidersReadRepository _providerReadRepository;
+        private readonly IProvidersReadRepository _providersReadRepository;
         private readonly IProviderLocationsWriteRepository _providerLocationsWriteRepository;
         private readonly ILogger<CreateProviderLocationCommandHandler> _logger;
 
-        public CreateProviderLocationCommandHandler(IProvidersReadRepository providerReadRepository, IProviderLocationsWriteRepository providerLocationsWriteRepository, ILogger<CreateProviderLocationCommandHandler> logger)
+        public CreateProviderLocationCommandHandler(IProvidersReadRepository providersReadRepository, IProviderLocationsWriteRepository providerLocationsWriteRepository, ILogger<CreateProviderLocationCommandHandler> logger)
         {
-            _providerReadRepository = providerReadRepository;
+            _providersReadRepository = providersReadRepository;
             _providerLocationsWriteRepository = providerLocationsWriteRepository;
             _logger = logger;
         }
 
         public async Task<int> Handle(CreateProviderLocationCommand request, CancellationToken cancellationToken)
         {
-            var provider = await _providerReadRepository.GetByUkprn(request.Ukprn);
+            var provider = await _providersReadRepository.GetByUkprn(request.Ukprn);
             _logger.LogInformation("Creating provider location by name {locationName} for ProviderId: {providerId}", request.LocationName, provider.Id, request.Ukprn);
             var providerLocation = (ProviderLocation)request;
             providerLocation.ProviderId = provider.Id;

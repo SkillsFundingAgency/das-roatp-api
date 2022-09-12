@@ -6,9 +6,9 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
 {
     public class BulkDeleteProviderLocationsCommandValidator : AbstractValidator<BulkDeleteProviderLocationsCommand>
     {
-        public BulkDeleteProviderLocationsCommandValidator(IProvidersReadRepository providerReadRepository)
+        public BulkDeleteProviderLocationsCommandValidator(IProvidersReadRepository providersReadRepository)
         {
-            Include(new UkprnValidator(providerReadRepository));
+            Include(new UkprnValidator(providersReadRepository));
 
             RuleFor(c => c.UserId).NotEmpty();
         }

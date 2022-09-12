@@ -13,9 +13,9 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
         public const string InvalidIdErrorMessage = "Invalid id";
         public const string ProviderLocationNotFoundErrorMessage = "No provider location found with given ukprn and id";
         public const string LocationNameAlreadyUsedMessage = "The location name should be distinct.";
-        public UpdateProviderLocationDetailsCommandValidator(IProvidersReadRepository providerReadRepository, IProviderLocationsReadRepository providerLocationsReadRepository)
+        public UpdateProviderLocationDetailsCommandValidator(IProvidersReadRepository providersReadRepository, IProviderLocationsReadRepository providerLocationsReadRepository)
         {
-            Include(new UkprnValidator(providerReadRepository));
+            Include(new UkprnValidator(providersReadRepository));
 
             RuleFor(p => p.Id)
                .Cascade(CascadeMode.Stop)

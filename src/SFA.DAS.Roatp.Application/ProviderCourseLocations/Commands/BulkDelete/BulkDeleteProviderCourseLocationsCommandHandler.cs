@@ -12,19 +12,19 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
     public class BulkDeleteProviderCourseLocationsCommandHandler : IRequestHandler<BulkDeleteProviderCourseLocationsCommand, int>
     {
         private readonly IProviderCourseLocationsBulkRepository _providerCourseLocationsBulkRepository;
-        private readonly IProviderCourseLocationsReadRepository _providerCourseLocationReadRepository;
+        private readonly IProviderCourseLocationsReadRepository _providerCourseLocationsReadRepository;
         private readonly ILogger<BulkDeleteProviderCourseLocationsCommandHandler> _logger;
 
-        public BulkDeleteProviderCourseLocationsCommandHandler(IProviderCourseLocationsBulkRepository providerCourseLocationsBulkRepository, IProviderCourseLocationsReadRepository providerCourseLocationReadRepository, ILogger<BulkDeleteProviderCourseLocationsCommandHandler> logger)
+        public BulkDeleteProviderCourseLocationsCommandHandler(IProviderCourseLocationsBulkRepository providerCourseLocationsBulkRepository, IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository, ILogger<BulkDeleteProviderCourseLocationsCommandHandler> logger)
         {
             _providerCourseLocationsBulkRepository = providerCourseLocationsBulkRepository;
-            _providerCourseLocationReadRepository = providerCourseLocationReadRepository;
+            _providerCourseLocationsReadRepository = providerCourseLocationsReadRepository;
             _logger = logger;
         }
 
         public async Task<int> Handle(BulkDeleteProviderCourseLocationsCommand request, CancellationToken cancellationToken)
         {
-            var courseLocations = await _providerCourseLocationReadRepository.GetAllProviderCourseLocations(request.Ukprn, request.LarsCode);
+            var courseLocations = await _providerCourseLocationsReadRepository.GetAllProviderCourseLocations(request.Ukprn, request.LarsCode);
 
             if (!courseLocations.Any())
             {
