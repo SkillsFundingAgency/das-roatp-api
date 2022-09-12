@@ -96,9 +96,9 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 
         }
 
-        private async Task<bool> IsStandardRegulated(int larsCode, IStandardsReadRepository standardReadRepository)
+        private async Task<bool> IsStandardRegulated(int larsCode, IStandardsReadRepository standardsReadRepository)
         {
-            var standard = await standardReadRepository.GetStandard(larsCode);
+            var standard = await standardsReadRepository.GetStandard(larsCode);
             var result = !string.IsNullOrEmpty(standard?.ApprovalBody);
             return result;
         }

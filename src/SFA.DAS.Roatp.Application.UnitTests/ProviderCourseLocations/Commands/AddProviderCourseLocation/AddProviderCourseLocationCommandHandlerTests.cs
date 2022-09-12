@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         [Test, RecursiveMoqAutoData]
         public async Task Handle_CreatesProviderCourseLocation(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCoursesReadRepository> providerCourseReadRepositoryMock,
+            [Frozen] Mock<IProviderCoursesReadRepository> providerCoursesReadRepositoryMock,
             [Frozen] Mock<IProviderCourseLocationsWriteRepository> providerCourseLocationsWriteRepositoryMock,
             AddProviderCourseLocationCommandHandler sut,
             ProviderLocation providerLocation,
@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         {
             providerLocation.LocationType = LocationType.Provider;
             providerLocationsReadRepositoryMock.Setup(m => m.GetProviderLocation(It.IsAny<int>(), It.IsAny<Guid>())).ReturnsAsync(providerLocation);
-            providerCourseReadRepositoryMock.Setup(m => m.GetProviderCourseByUkprn(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
+            providerCoursesReadRepositoryMock.Setup(m => m.GetProviderCourseByUkprn(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
 
 
             await sut.Handle(command, new CancellationToken());

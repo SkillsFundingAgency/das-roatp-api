@@ -13,10 +13,10 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse
         private readonly IStandardsReadRepository _standardsReadRepository;
         private readonly ILogger<GetProviderCourseQueryHandler> _logger;
 
-        public GetProviderCourseQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository,  IStandardsReadRepository standardReadRepository, ILogger<GetProviderCourseQueryHandler> logger)
+        public GetProviderCourseQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository,  IStandardsReadRepository standardsReadRepository, ILogger<GetProviderCourseQueryHandler> logger)
         {
             _providerCoursesReadRepository = providerCoursesReadRepository;
-            _standardsReadRepository = standardReadRepository;
+            _standardsReadRepository = standardsReadRepository;
             _logger = logger;
         }
 

@@ -37,8 +37,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         [Test, RecursiveMoqAutoData]
         public async Task Handle_NationalLocationEsits_CreatesNationalLocation(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderLocationsWriteRepository> providerLocationWriteRepositoryMock,
-            [Frozen] Mock<IProviderCoursesReadRepository> providerCourseReadRepositoryMock,
+            [Frozen] Mock<IProviderLocationsWriteRepository> providerLocationsWriteRepositoryMock,
+            [Frozen] Mock<IProviderCoursesReadRepository> providerCoursesReadRepositoryMock,
             [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
             [Frozen] Mock<IProviderCourseLocationsWriteRepository> providerCourseLocationsWriteRepositoryMock,
             AddNationalLocationToProviderCourseLocationsCommandHandler sut,
@@ -53,11 +53,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
 
             providersReadRepositoryMock.Setup(m => m.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
             providerLocationsReadRepositoryMock.Setup(m => m.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
-            providerCourseReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
+            providerCoursesReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
 
             await sut.Handle(command, new CancellationToken());
 
-            providerLocationWriteRepositoryMock.Verify(p => p.Create(It.IsAny<ProviderLocation>()), Times.Never);
+            providerLocationsWriteRepositoryMock.Verify(p => p.Create(It.IsAny<ProviderLocation>()), Times.Never);
             providerCourseLocationsWriteRepositoryMock.Verify(m => m.Create(It.Is<ProviderCourseLocation>(l => l.ProviderLocationId == providerLocation.Id && !l.IsImported && l.ProviderCourseId == providerCourse.Id)));
         }
     }
