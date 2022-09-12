@@ -23,13 +23,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
             IProvidersReadRepository providersReadRepository,
             IProviderCoursesWriteRepository providerCoursesWriteRepository,
             ILogger<CreateProviderCourseCommandHandler> logger,
-            IRegionsReadRepository regionReadRepository)
+            IRegionsReadRepository regionsReadRepository)
         {
             _providerLocationsReadRepository = providerLocationsReadRepository;
             _providersReadRepository = providersReadRepository;
             _providerCoursesWriteRepository = providerCoursesWriteRepository;
             _logger = logger;
-            _regionsReadRepository = regionReadRepository;
+            _regionsReadRepository = regionsReadRepository;
         }
 
         public async Task<int> Handle(CreateProviderCourseCommand request, CancellationToken cancellationToken)

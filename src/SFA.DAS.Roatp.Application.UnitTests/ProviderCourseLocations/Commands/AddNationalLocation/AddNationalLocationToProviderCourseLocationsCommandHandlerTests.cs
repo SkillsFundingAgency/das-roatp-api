@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsWriteRepository> providerLocationWriteRepositoryMock,
             [Frozen] Mock<IProviderCoursesReadRepository> providerCourseReadRepositoryMock,
-            [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
+            [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
             [Frozen] Mock<IProviderCourseLocationsWriteRepository> providerCourseLocationsWriteRepositoryMock,
             AddNationalLocationToProviderCourseLocationsCommandHandler sut,
             Provider provider,
@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
             providerLocation.LocationType = LocationType.National;
             var providerLocations = new List<ProviderLocation> { providerLocation };
 
-            providerReadRepositoryMock.Setup(m => m.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
+            providersReadRepositoryMock.Setup(m => m.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
             providerLocationsReadRepositoryMock.Setup(m => m.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
             providerCourseReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
 

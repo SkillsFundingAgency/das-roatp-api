@@ -17,17 +17,17 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         private readonly IGetCourseDirectoryDataService _getCourseDirectoryDataService;
         private readonly ICourseDirectoryDataProcessingService _courseDirectoryDataProcessingService;
         private readonly IStandardsReadRepository _standardReadRepository;
-        private readonly IRegionsReadRepository _regionReadRepository;
+        private readonly IRegionsReadRepository _regionsReadRepository;
         private readonly ILoadProviderRepository _loadProvider;
 
         private readonly ILogger<LoadCourseDirectoryDataService> _logger;
 
-        public LoadCourseDirectoryDataService(IGetCourseDirectoryDataService getCourseDirectoryDataService,   ICourseDirectoryDataProcessingService courseDirectoryDataProcessingService,   IStandardsReadRepository standardReadRepository, IRegionsReadRepository regionReadRepository, ILogger<LoadCourseDirectoryDataService> logger, ILoadProviderRepository loadProvider)
+        public LoadCourseDirectoryDataService(IGetCourseDirectoryDataService getCourseDirectoryDataService,   ICourseDirectoryDataProcessingService courseDirectoryDataProcessingService,   IStandardsReadRepository standardReadRepository, IRegionsReadRepository regionsReadRepository, ILogger<LoadCourseDirectoryDataService> logger, ILoadProviderRepository loadProvider)
         {
             _getCourseDirectoryDataService = getCourseDirectoryDataService;
             _courseDirectoryDataProcessingService = courseDirectoryDataProcessingService;
             _standardReadRepository = standardReadRepository;
-            _regionReadRepository = regionReadRepository;
+            _regionsReadRepository = regionsReadRepository;
             _logger = logger;
             _loadProvider = loadProvider;
         }
@@ -113,7 +113,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
         private async Task<List<Region>> GetRegions()
         {
-            var regions = await _regionReadRepository.GetAllRegions();
+            var regions = await _regionsReadRepository.GetAllRegions();
             if (regions == null || regions.Count == 0)
             {
                 var errorMessage = "No regions could be retrieved from the regions table";

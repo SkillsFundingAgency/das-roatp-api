@@ -21,10 +21,10 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         private readonly IGetBetaProvidersService _getBetaProvidersService;
         private readonly ILogger<CourseDirectoryDataProcessingService> _logger;
 
-        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProvidersReadRepository providerReadRepository, IGetBetaProvidersService getBetaProvidersService)
+        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProvidersReadRepository providersReadRepository, IGetBetaProvidersService getBetaProvidersService)
         {
             _getActiveProviderRegistrationsRepository = getActiveProviderRegistrationsRepository;
-            _providersReadRepository = providerReadRepository;
+            _providersReadRepository = providersReadRepository;
             _getBetaProvidersService = getBetaProvidersService;
             _logger = logger;
         }

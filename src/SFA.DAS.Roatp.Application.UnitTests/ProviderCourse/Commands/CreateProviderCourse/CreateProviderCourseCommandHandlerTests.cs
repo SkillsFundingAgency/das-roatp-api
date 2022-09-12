@@ -59,7 +59,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
         [Test, RecursiveMoqAutoData]
         public async Task Handle_HasProviderLocationsOnly_AddProviderLocations(
-            [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
+            [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
             [Frozen] Mock<IProviderCoursesWriteRepository> providerCourseEditRepositoryMock,
             CreateProviderCourseCommandHandler sut,
@@ -68,7 +68,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
         {
             command.HasNationalDeliveryOption = false;
             command.SubregionIds = null;
-            providerReadRepositoryMock.Setup(p => p.GetByUkprn(command.Ukprn)).ReturnsAsync(provider);
+            providersReadRepositoryMock.Setup(p => p.GetByUkprn(command.Ukprn)).ReturnsAsync(provider);
             providerLocationsReadRepositoryMock.Setup(p => p.GetAllProviderLocations(command.Ukprn)).ReturnsAsync(provider.Locations);
 
             command.ProviderLocations = new List<ProviderCourseLocationCommandModel>();
