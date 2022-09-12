@@ -11,12 +11,12 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
 {
     public class BulkInsertProviderCourseLocationsCommandHandler : IRequestHandler<BulkInsertProviderCourseLocationsCommand, int>
     {
-        private readonly IProviderCourseLocationsInsertRepository _providerCourseLocationsInsertRepository;
+        private readonly IProviderCourseLocationsBulkRepository _providerCourseLocationsInsertRepository;
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
         private readonly IProviderCourseReadRepository _providerCourseReadRepository;
         private readonly ILogger<BulkInsertProviderCourseLocationsCommandHandler> _logger;
 
-        public BulkInsertProviderCourseLocationsCommandHandler(IProviderCourseLocationsInsertRepository providerCourseLocationsInsertRepository,
+        public BulkInsertProviderCourseLocationsCommandHandler(IProviderCourseLocationsBulkRepository providerCourseLocationsInsertRepository,
             IProviderLocationsReadRepository providerLocationsReadRepository,
             IProviderCourseReadRepository providerCourseReadRepository,
             ILogger<BulkInsertProviderCourseLocationsCommandHandler> logger)

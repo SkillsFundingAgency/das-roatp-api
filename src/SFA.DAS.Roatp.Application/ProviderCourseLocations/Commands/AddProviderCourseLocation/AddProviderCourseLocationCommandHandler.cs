@@ -9,12 +9,12 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
 {
     public class AddProviderCourseLocationCommandHandler : IRequestHandler<AddProviderCourseLocationCommand, int>
     {
-        private readonly IProviderCourseLocationWriteRepository _providerCourseLocationWriteRepository;
+        private readonly IProviderCourseLocationsWriteRepository _providerCourseLocationWriteRepository;
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
         private readonly IProviderCourseReadRepository _providerCourseReadRepository;
         private readonly ILogger<AddProviderCourseLocationCommandHandler> _logger;
 
-        public AddProviderCourseLocationCommandHandler(IProviderCourseLocationWriteRepository providerCourseLocationWriteRepository,
+        public AddProviderCourseLocationCommandHandler(IProviderCourseLocationsWriteRepository providerCourseLocationWriteRepository,
             IProviderLocationsReadRepository providerLocationsReadRepository,
             IProviderCourseReadRepository providerCourseReadRepository,
             ILogger<AddProviderCourseLocationCommandHandler> logger)

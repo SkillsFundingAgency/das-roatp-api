@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
             (IProvidersReadRepository providerReadRepository, 
              IProviderCourseReadRepository providerCourseReadRepository, 
              IProviderLocationsReadRepository providerLocationsReadRepository,
-             IProviderCourseLocationReadRepository providerCourseLocationReadRepository)
+             IProviderCourseLocationsReadRepository providerCourseLocationReadRepository)
         {
             Include(new UkprnValidator(providerReadRepository));
 

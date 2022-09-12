@@ -15,20 +15,20 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
     [TestFixture]
     public class AddNationalLocationToProviderCourseLocationsCommandValidatorTests
     {
-        private Mock<IProvidersReadRepository> _providerReadRepositoryMock;
-        private Mock<IProviderCourseReadRepository> _providerCourseReadRepositoryMock;
+        private Mock<IProvidersReadRepository> _providersReadRepositoryMock;
+        private Mock<IProviderCourseReadRepository> _providerCoursesReadRepositoryMock;
         private AddNationalLocationToProviderCourseLocationsCommand _command;
 
         [SetUp]
         public void Before_Each_Test()
         {
-            _providerReadRepositoryMock = new Mock<IProvidersReadRepository>();
-            _providerReadRepositoryMock
+            _providersReadRepositoryMock = new Mock<IProvidersReadRepository>();
+            _providersReadRepositoryMock
                 .Setup(x => x.GetByUkprn(It.IsAny<int>()))
                 .ReturnsAsync(new Provider());
 
-            _providerCourseReadRepositoryMock = new Mock<IProviderCourseReadRepository>();
-            _providerCourseReadRepositoryMock
+            _providerCoursesReadRepositoryMock = new Mock<IProviderCourseReadRepository>();
+            _providerCoursesReadRepositoryMock
                 .Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(new Domain.Entities.ProviderCourse());
 
@@ -39,9 +39,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         public async Task Validate_NationalAddressExists_ReturnsInvalid(List<ProviderCourseLocation> providerCourseLocations)
         {
             providerCourseLocations.First().Location.LocationType = LocationType.National;
-            var providerCourseLocationRepoMock = new Mock<IProviderCourseLocationReadRepository>();
-            providerCourseLocationRepoMock.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourseLocations);
-            var sut = new AddNationalLocationToProviderCourseLocationsCommandValidator(_providerReadRepositoryMock.Object, _providerCourseReadRepositoryMock.Object, providerCourseLocationRepoMock.Object);
+            var providerCourseLocationsRepoMock = new Mock<IProviderCourseLocationsReadRepository>();
+            providerCourseLocationsRepoMock.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourseLocations);
+            var sut = new AddNationalLocationToProviderCourseLocationsCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, providerCourseLocationsRepoMock.Object);
 
             var result = await sut.TestValidateAsync(_command);
 
@@ -53,9 +53,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         public async Task Validate_NationalAddressNotExists_ReturnsValid(List<ProviderCourseLocation> providerCourseLocations)
         {
             providerCourseLocations.ForEach(l => l.Location.LocationType = LocationType.Provider);
-            var providerCourseLocationRepoMock = new Mock<IProviderCourseLocationReadRepository>();
-            providerCourseLocationRepoMock.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourseLocations);
-            var sut = new AddNationalLocationToProviderCourseLocationsCommandValidator(_providerReadRepositoryMock.Object, _providerCourseReadRepositoryMock.Object, providerCourseLocationRepoMock.Object);
+            var providerCourseLocationsRepoMock = new Mock<IProviderCourseLocationsReadRepository>();
+            providerCourseLocationsRepoMock.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourseLocations);
+            var sut = new AddNationalLocationToProviderCourseLocationsCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, providerCourseLocationsRepoMock.Object);
 
             var result = await sut.ValidateAsync(_command);
 

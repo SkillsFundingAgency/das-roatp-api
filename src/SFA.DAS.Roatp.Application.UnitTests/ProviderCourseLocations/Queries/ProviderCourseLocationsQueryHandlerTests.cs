@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             List<ProviderCourseLocation> locations,
             [Frozen] Mock<IProvidersReadRepository> repoMockProvider,
             [Frozen] Mock<IProviderCourseReadRepository> repoMockProviderCourse,
-            [Frozen]Mock<IProviderCourseLocationReadRepository> repoMockProviderCourseLocation,
+            [Frozen]Mock<IProviderCourseLocationsReadRepository> repoMockProviderCourseLocation,
             GetProviderCourseLocationsQuery query,
             GetProviderCourseLocationsQueryHandler sut,
             CancellationToken cancellationToken)
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
            Domain.Entities.ProviderCourse providerCourse,
            [Frozen] Mock<IProvidersReadRepository> repoMockProvider,
            [Frozen] Mock<IProviderCourseReadRepository> repoMockProviderCourse,
-           [Frozen] Mock<IProviderCourseLocationReadRepository> repoMockProviderCourseLocation,
+           [Frozen] Mock<IProviderCourseLocationsReadRepository> repoMockProviderCourseLocation,
            GetProviderCourseLocationsQuery query,
            GetProviderCourseLocationsQueryHandler sut,
            CancellationToken cancellationToken)

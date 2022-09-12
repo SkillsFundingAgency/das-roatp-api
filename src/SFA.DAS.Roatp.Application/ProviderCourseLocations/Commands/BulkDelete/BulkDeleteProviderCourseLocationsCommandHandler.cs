@@ -11,13 +11,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
 {
     public class BulkDeleteProviderCourseLocationsCommandHandler : IRequestHandler<BulkDeleteProviderCourseLocationsCommand, int>
     {
-        private readonly IProviderCourseLocationsDeleteRepository _providerCourseLocationsDeleteRepository;
-        private readonly IProviderCourseLocationReadRepository _providerCourseLocationReadRepository;
+        private readonly IProviderCourseLocationsBulkRepository _providerCourseLocationsBulkRepository;
+        private readonly IProviderCourseLocationsReadRepository _providerCourseLocationReadRepository;
         private readonly ILogger<BulkDeleteProviderCourseLocationsCommandHandler> _logger;
 
-        public BulkDeleteProviderCourseLocationsCommandHandler(IProviderCourseLocationsDeleteRepository providerCourseLocationsDeleteRepository, IProviderCourseLocationReadRepository providerCourseLocationReadRepository, ILogger<BulkDeleteProviderCourseLocationsCommandHandler> logger)
+        public BulkDeleteProviderCourseLocationsCommandHandler(IProviderCourseLocationsBulkRepository providerCourseLocationsBulkRepository, IProviderCourseLocationsReadRepository providerCourseLocationReadRepository, ILogger<BulkDeleteProviderCourseLocationsCommandHandler> logger)
         {
-            _providerCourseLocationsDeleteRepository = providerCourseLocationsDeleteRepository;
+            _providerCourseLocationsBulkRepository = providerCourseLocationsBulkRepository;
             _providerCourseLocationReadRepository = providerCourseLocationReadRepository;
             _logger = logger;
         }
@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
             }
 
             _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn} and LarsCode:{larscode}", count, locationType, request.Ukprn, request.LarsCode);
-            await _providerCourseLocationsDeleteRepository.BulkDelete(locationsToDelete.Select(l => l.Id));
+            await _providerCourseLocationsBulkRepository.BulkDelete(locationsToDelete.Select(l => l.Id));
 
             return count;
         }

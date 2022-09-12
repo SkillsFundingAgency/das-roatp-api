@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
         {
             var command = new DeleteProviderCourseLocationCommand(10012002, 123, Guid.Empty, _userId);
 
-            var sut = new DeleteProviderCourseLocationCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseReadRepository>(), Mock.Of<IProviderCourseLocationReadRepository>());
+            var sut = new DeleteProviderCourseLocationCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseReadRepository>(), Mock.Of<IProviderCourseLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
             var id = Guid.NewGuid();
             var command = new DeleteProviderCourseLocationCommand(10012002, 123, id, _userId);
 
-            var _providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationReadRepository>();
+            var _providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationsReadRepository>();
             _providerCourseLocationReadRepositoryMock
                 .Setup(x => x.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(new System.Collections.Generic.List<Domain.Entities.ProviderCourseLocation> { new Domain.Entities.ProviderCourseLocation { NavigationId = id } });
@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
             var id = Guid.NewGuid();
             var command = new DeleteProviderCourseLocationCommand(10012002, 123, id, _userId);
 
-            var _providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationReadRepository>();
+            var _providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationsReadRepository>();
             _providerCourseLocationReadRepositoryMock
                 .Setup(x => x.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(new System.Collections.Generic.List<Domain.Entities.ProviderCourseLocation> { new Domain.Entities.ProviderCourseLocation { NavigationId = id } });
@@ -69,7 +69,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
             var id = Guid.NewGuid();
             var command = new DeleteProviderCourseLocationCommand(10012002, 123, id, userId);
 
-            var _providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationReadRepository>();
+            var _providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationsReadRepository>();
             _providerCourseLocationReadRepositoryMock
                 .Setup(x => x.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(new System.Collections.Generic.List<Domain.Entities.ProviderCourseLocation> { new Domain.Entities.ProviderCourseLocation { NavigationId = id } });

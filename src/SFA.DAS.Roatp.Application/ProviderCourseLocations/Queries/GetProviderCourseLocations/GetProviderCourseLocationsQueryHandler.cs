@@ -8,16 +8,16 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderC
 {
     public class GetProviderCourseLocationsQueryHandler : IRequestHandler<GetProviderCourseLocationsQuery, GetProviderCourseLocationsQueryResult>
     {
-        private readonly IProviderCourseLocationReadRepository _providerCourseLocationReadRepository;
+        private readonly IProviderCourseLocationsReadRepository _providerCourseLocationsReadRepository;
 
-        public GetProviderCourseLocationsQueryHandler(IProviderCourseLocationReadRepository providerCourseLocationReadRepository)
+        public GetProviderCourseLocationsQueryHandler(IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository)
         {
-            _providerCourseLocationReadRepository = providerCourseLocationReadRepository;
+            _providerCourseLocationsReadRepository = providerCourseLocationsReadRepository;
         }
 
         public async Task<GetProviderCourseLocationsQueryResult> Handle(GetProviderCourseLocationsQuery request, CancellationToken cancellationToken)
         {
-            var providerCourseLocations = await _providerCourseLocationReadRepository.GetAllProviderCourseLocations(request.Ukprn, request.LarsCode);
+            var providerCourseLocations = await _providerCourseLocationsReadRepository.GetAllProviderCourseLocations(request.Ukprn, request.LarsCode);
             var result = new GetProviderCourseLocationsQueryResult
             {
                 ProviderCourseLocations = providerCourseLocations.Select(x => (ProviderCourseLocationModel)x).ToList()

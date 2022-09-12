@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
         public AddNationalLocationToProviderCourseLocationsCommandValidator(
             IProvidersReadRepository providerReadRepository, 
             IProviderCourseReadRepository providerCourseReadRepository,
-            IProviderCourseLocationReadRepository providerCourseLocationReadRepository)
+            IProviderCourseLocationsReadRepository providerCourseLocationReadRepository)
         {
             Include(new UkprnValidator(providerReadRepository));
 

@@ -50,13 +50,13 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IProviderLocationsReadRepository, ProviderLocationsReadRepository>();
             services.AddTransient<IProviderLocationsBulkRepository, ProviderLocationsBulkRepository>();
             services.AddTransient<IReloadProviderRegistrationDetailsRepository, ReloadProviderRegistrationDetailsRepository>();
-            services.AddTransient<IProviderCourseLocationReadRepository, ProviderCourseLocationReadRepository>();
-            services.AddTransient<IProviderCourseLocationsDeleteRepository, ProviderCourseLocationsDeleteRepository>();
-            services.AddTransient<IProviderCourseLocationsInsertRepository, ProviderCourseLocationsInsertRepository>();
+            services.AddTransient<IProviderCourseLocationsReadRepository, ProviderCourseLocationsReadRepository>();
+            services.AddTransient<IProviderCourseLocationsWriteRepository, ProviderCourseLocationsWriteRepository>();
+            services.AddTransient<IProviderCourseLocationsBulkRepository, ProviderCourseLocationsBulkRepository>();
             services.AddTransient<ILoadProviderRepository, LoadProviderRepository>();
             services.AddTransient<IGetActiveProviderRegistrationsRepository, GetActiveProviderRegistrationsRepository>();
             services.AddTransient<IProviderLocationsWriteRepository, ProviderLocationsWriteRepository>();
-            services.AddTransient<IProviderCourseLocationWriteRepository, ProviderCourseLocationWriteRepository>();
+            services.AddTransient<IProviderCourseLocationsWriteRepository, ProviderCourseLocationsWriteRepository>();
         }
 
         public static async Task<string> GenerateTokenAsync()

@@ -18,8 +18,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_Inserts_Records(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock, 
-            [Frozen] Mock<IProviderCourseLocationsInsertRepository> providerCourseLocationsInsertRepositoryMock, 
+            [Frozen] Mock<IProviderCourseReadRepository> providerCoursesReadRepositoryMock, 
+            [Frozen] Mock<IProviderCourseLocationsBulkRepository> providerCourseLocationsBulkRepositoryMock, 
             BulkInsertProviderCourseLocationsCommand command,
             BulkInsertProviderCourseLocationsCommandHandler sut,
             CancellationToken cancellationToken)
@@ -29,13 +29,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
 
-            providerCourseReadRepositoryMock.Setup(r => r.GetAllProviderCourses(It.IsAny<int>())).ReturnsAsync(providerCourse);
+            providerCoursesReadRepositoryMock.Setup(r => r.GetAllProviderCourses(It.IsAny<int>())).ReturnsAsync(providerCourse);
 
             command.SelectedSubregionIds = new List<int> { providerLocations.FirstOrDefault(a => a.RegionId.HasValue).RegionId.Value };
 
             var result = await sut.Handle(command, cancellationToken);
 
-            providerCourseLocationsInsertRepositoryMock.Verify(d => d.BulkInsert(It.IsAny<IEnumerable<ProviderCourseLocation>>()), Times.Once);
+            providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkInsert(It.IsAny<IEnumerable<ProviderCourseLocation>>()), Times.Once);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.EqualTo(1));

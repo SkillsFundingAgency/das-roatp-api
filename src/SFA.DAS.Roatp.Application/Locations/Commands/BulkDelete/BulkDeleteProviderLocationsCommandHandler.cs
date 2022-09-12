@@ -11,25 +11,25 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
     public class BulkDeleteProviderLocationsCommandHandler : IRequestHandler<BulkDeleteProviderLocationsCommand, int>
     {
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
-        private readonly IProviderCourseLocationReadRepository _providerCourseLocationReadRepository;
+        private readonly IProviderCourseLocationsReadRepository _providerCourseLocationsReadRepository;
         private readonly IProviderLocationsBulkRepository _providerLocationsBulkRepository;
         private readonly ILogger<BulkDeleteProviderLocationsCommandHandler> _logger;
 
         public BulkDeleteProviderLocationsCommandHandler(IProviderLocationsReadRepository providerLocationsReadRepository,
             IProviderLocationsBulkRepository providerLocationsBulkRepository,
-            IProviderCourseLocationReadRepository providerCourseLocationReadRepository,
+            IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository,
             ILogger<BulkDeleteProviderLocationsCommandHandler> logger)
         {
             _providerLocationsReadRepository = providerLocationsReadRepository;
             _providerLocationsBulkRepository = providerLocationsBulkRepository;
-            _providerCourseLocationReadRepository = providerCourseLocationReadRepository;
+            _providerCourseLocationsReadRepository = providerCourseLocationsReadRepository;
             _logger = logger;
         }
 
         public async Task<int> Handle(BulkDeleteProviderLocationsCommand command, CancellationToken cancellationToken)
         {
             var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
-            var providerCourseLocations = await _providerCourseLocationReadRepository.GetProviderCourseLocationsByUkprn(command.Ukprn);
+            var providerCourseLocations = await _providerCourseLocationsReadRepository.GetProviderCourseLocationsByUkprn(command.Ukprn);
 
             var providerLocationIdsToDelete = providerLocations
                 .Where(l => l.LocationType == LocationType.Regional)

@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
             [Frozen] Mock<IProviderLocationsWriteRepository> providerLocationWriteRepositoryMock,
             [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock,
             [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseLocationWriteRepository> providerCourseLocationWriteRepositoryMock,
+            [Frozen] Mock<IProviderCourseLocationsWriteRepository> providerCourseLocationsWriteRepositoryMock,
             AddNationalLocationToProviderCourseLocationsCommandHandler sut,
             Provider provider,
             AddNationalLocationToProviderCourseLocationsCommand command,
@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
             await sut.Handle(command, new CancellationToken());
 
             providerLocationWriteRepositoryMock.Verify(p => p.Create(It.IsAny<ProviderLocation>()), Times.Never);
-            providerCourseLocationWriteRepositoryMock.Verify(m => m.Create(It.Is<ProviderCourseLocation>(l => l.ProviderLocationId == providerLocation.Id && !l.IsImported && l.ProviderCourseId == providerCourse.Id)));
+            providerCourseLocationsWriteRepositoryMock.Verify(m => m.Create(It.Is<ProviderCourseLocation>(l => l.ProviderLocationId == providerLocation.Id && !l.IsImported && l.ProviderCourseId == providerCourse.Id)));
         }
     }
 }
