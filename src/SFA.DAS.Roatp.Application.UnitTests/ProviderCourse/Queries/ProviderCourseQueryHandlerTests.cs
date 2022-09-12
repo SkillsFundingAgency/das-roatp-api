@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_ReturnsResult(
             Domain.Entities.ProviderCourse course,
-            [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock,
+            [Frozen] Mock<IProviderCoursesReadRepository> providerCourseReadRepositoryMock,
             [Frozen] Mock<IStandardsReadRepository> standardReadRepositoryMock,
             GetProviderCourseQuery query,
             GetProviderCourseQueryHandler sut,

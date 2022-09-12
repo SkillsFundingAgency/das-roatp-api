@@ -12,25 +12,25 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
     public class AddNationalLocationToProviderCourseLocationsCommandHandler : IRequestHandler<AddNationalLocationToProviderCourseLocationsCommand, ProviderCourseLocation>
     {
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
-        private readonly IProviderLocationsWriteRepository _providerLocationWriteRepository;
-        private readonly IProviderCourseReadRepository _providerCourseReadRepository;
-        private readonly IProviderCourseLocationsWriteRepository _providerCourseLocationWriteRepository;
+        private readonly IProviderLocationsWriteRepository _providerLocationsWriteRepository;
+        private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
+        private readonly IProviderCourseLocationsWriteRepository _providerCourseLocationsWriteRepository;
         private readonly IProvidersReadRepository _providerReadRepository;
         private readonly ILogger<AddNationalLocationToProviderCourseLocationsCommandHandler> _logger;
 
         public AddNationalLocationToProviderCourseLocationsCommandHandler(
             IProviderLocationsReadRepository providerLocationsReadRepository,
-            IProviderLocationsWriteRepository providerLocationWriteRepository,
-            IProviderCourseReadRepository providerCourseReadRepository,
-            IProviderCourseLocationsWriteRepository providerCourseLocationWriteRepository,
-            IProvidersReadRepository providerReadRepository,
+            IProviderLocationsWriteRepository providerLocationsWriteRepository,
+            IProviderCoursesReadRepository providerCoursesReadRepository,
+            IProviderCourseLocationsWriteRepository providerCourseLocationsWriteRepository,
+            IProvidersReadRepository providersReadRepository,
             ILogger<AddNationalLocationToProviderCourseLocationsCommandHandler> logger)
         {
             _providerLocationsReadRepository = providerLocationsReadRepository;
-            _providerLocationWriteRepository = providerLocationWriteRepository;
-            _providerCourseReadRepository = providerCourseReadRepository;
-            _providerCourseLocationWriteRepository = providerCourseLocationWriteRepository;
-            _providerReadRepository = providerReadRepository;
+            _providerLocationsWriteRepository = providerLocationsWriteRepository;
+            _providerCoursesReadRepository = providerCoursesReadRepository;
+            _providerCourseLocationsWriteRepository = providerCourseLocationsWriteRepository;
+            _providerReadRepository = providersReadRepository;
             _logger = logger;
         }
 
@@ -43,10 +43,10 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
             {
                 _logger.LogInformation("Creating national location for Ukprn: {ukprn}", request.Ukprn);
                 nationalLocation = ProviderLocation.CreateNationalLocation(provider.Id);
-                await _providerLocationWriteRepository.Create(nationalLocation);
+                await _providerLocationsWriteRepository.Create(nationalLocation);
             }
 
-            var providerCourse = await _providerCourseReadRepository.GetProviderCourse(provider.Id, request.LarsCode);
+            var providerCourse = await _providerCoursesReadRepository.GetProviderCourse(provider.Id, request.LarsCode);
 
             var providerCourseLocation = new ProviderCourseLocation
             {
@@ -57,7 +57,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
 
             _logger.LogInformation($"Associating national location for ProviderCourse:{providerCourse.Id}");
 
-            return await _providerCourseLocationWriteRepository.Create(providerCourseLocation);
+            return await _providerCourseLocationsWriteRepository.Create(providerCourseLocation);
         }
     }
 }

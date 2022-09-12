@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         [Test, RecursiveMoqAutoData]
         public async Task Handle_CreatesProviderCourseLocation(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock,
+            [Frozen] Mock<IProviderCoursesReadRepository> providerCourseReadRepositoryMock,
             [Frozen] Mock<IProviderCourseLocationsWriteRepository> providerCourseLocationsWriteRepositoryMock,
             AddProviderCourseLocationCommandHandler sut,
             ProviderLocation providerLocation,

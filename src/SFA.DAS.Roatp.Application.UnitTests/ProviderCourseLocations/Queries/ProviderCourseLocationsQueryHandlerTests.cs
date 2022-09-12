@@ -19,22 +19,22 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             Provider provider,
             Domain.Entities.ProviderCourse providerCourse,
             List<ProviderCourseLocation> locations,
-            [Frozen] Mock<IProvidersReadRepository> repoMockProvider,
-            [Frozen] Mock<IProviderCourseReadRepository> repoMockProviderCourse,
-            [Frozen]Mock<IProviderCourseLocationsReadRepository> repoMockProviderCourseLocation,
+            [Frozen] Mock<IProvidersReadRepository> repoMockProviders,
+            [Frozen] Mock<IProviderCoursesReadRepository> repoMockProviderCourses,
+            [Frozen]Mock<IProviderCourseLocationsReadRepository> repoMockProviderCourseLocations,
             GetProviderCourseLocationsQuery query,
             GetProviderCourseLocationsQueryHandler sut,
             CancellationToken cancellationToken)
         {
-            repoMockProvider.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
+            repoMockProviders.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
 
-            repoMockProviderCourse.Setup(r => r.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
+            repoMockProviderCourses.Setup(r => r.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
 
-            repoMockProviderCourseLocation.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(locations);
+            repoMockProviderCourseLocations.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(locations);
 
             var result = await sut.Handle(query, cancellationToken);
 
-            repoMockProviderCourseLocation.Verify(d => d.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
+            repoMockProviderCourseLocations.Verify(d => d.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result.ProviderCourseLocations.Count, Is.EqualTo(locations.Count));
@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
            Provider provider,
            Domain.Entities.ProviderCourse providerCourse,
            [Frozen] Mock<IProvidersReadRepository> repoMockProvider,
-           [Frozen] Mock<IProviderCourseReadRepository> repoMockProviderCourse,
+           [Frozen] Mock<IProviderCoursesReadRepository> repoMockProviderCourse,
            [Frozen] Mock<IProviderCourseLocationsReadRepository> repoMockProviderCourseLocation,
            GetProviderCourseLocationsQuery query,
            GetProviderCourseLocationsQueryHandler sut,

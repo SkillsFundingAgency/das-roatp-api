@@ -10,19 +10,19 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
     {
         public const string NationalLocationAlreadyExists = "A national location is already associated with this course";
         public AddNationalLocationToProviderCourseLocationsCommandValidator(
-            IProvidersReadRepository providerReadRepository, 
-            IProviderCourseReadRepository providerCourseReadRepository,
-            IProviderCourseLocationsReadRepository providerCourseLocationReadRepository)
+            IProvidersReadRepository providersReadRepository, 
+            IProviderCoursesReadRepository providerCoursesReadRepository,
+            IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository)
         {
-            Include(new UkprnValidator(providerReadRepository));
+            Include(new UkprnValidator(providersReadRepository));
 
-            Include(new LarsCodeValidator(providerReadRepository, providerCourseReadRepository));
+            Include(new LarsCodeValidator(providersReadRepository, providerCoursesReadRepository));
 
             RuleFor(c => c.UserId).NotEmpty();
 
             RuleFor(c => c).MustAsync(async (command, cancellationToken) => 
             {
-                var allLocations = await providerCourseLocationReadRepository.GetAllProviderCourseLocations(command.Ukprn, command.LarsCode);
+                var allLocations = await providerCourseLocationsReadRepository.GetAllProviderCourseLocations(command.Ukprn, command.LarsCode);
                 return !allLocations.Any(l => l.Location.LocationType == LocationType.National);
             })
             .WithMessage(NationalLocationAlreadyExists);

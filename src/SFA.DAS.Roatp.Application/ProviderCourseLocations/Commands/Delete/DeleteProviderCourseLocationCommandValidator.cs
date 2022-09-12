@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete
     {
         public const string InvalidProviderCourseLocationIdErrorMessage = "Invalid location id";
         public const string ProviderCourseLocationNotFoundErrorMessage = "Location details not found for given location id";
-        public DeleteProviderCourseLocationCommandValidator(IProvidersReadRepository providersReadRepository, IProviderCourseReadRepository providerCourseReadRepository, IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository)
+        public DeleteProviderCourseLocationCommandValidator(IProvidersReadRepository providersReadRepository, IProviderCoursesReadRepository providerCourseReadRepository, IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository)
         {
             Include(new UkprnValidator(providersReadRepository));
 

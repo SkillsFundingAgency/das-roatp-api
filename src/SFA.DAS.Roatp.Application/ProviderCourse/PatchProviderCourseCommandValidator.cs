@@ -27,12 +27,12 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
                     "IsApprovedByRegulator"
                 });
 
-        public PatchProviderCourseCommandValidator(IProvidersReadRepository providerReadRepository,
-            IProviderCourseReadRepository providerCourseReadRepository)
+        public PatchProviderCourseCommandValidator(IProvidersReadRepository providersReadRepository,
+            IProviderCoursesReadRepository providerCoursesReadRepository)
         {
-            Include(new UkprnValidator(providerReadRepository));
+            Include(new UkprnValidator(providersReadRepository));
 
-            Include(new LarsCodeValidator(providerReadRepository, providerCourseReadRepository));
+            Include(new LarsCodeValidator(providersReadRepository, providerCoursesReadRepository));
 
             RuleFor(c => c.Patch.Operations.Count).GreaterThan(0).WithMessage(NoPatchOperationsPresentErrorMessage);
 

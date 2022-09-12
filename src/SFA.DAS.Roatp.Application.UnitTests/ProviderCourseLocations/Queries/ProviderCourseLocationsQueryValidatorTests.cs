@@ -18,10 +18,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
         {
             var query = new GetProviderCourseLocationsQuery(ukprn, larsCode);
             var repoMock = new Mock<IProvidersReadRepository>();
-            var repoMockProvideCourse = new Mock<IProviderCourseReadRepository>();
+            var repoMockProvideCourses = new Mock<IProviderCoursesReadRepository>();
             repoMock.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
-            repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
-            var sut = new GetProviderCourseLocationsQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
+            repoMockProvideCourses.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
+            var sut = new GetProviderCourseLocationsQueryValidator(repoMock.Object, repoMockProvideCourses.Object);
 
             var result = await sut.ValidateAsync(query);
 
@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             string expectedErrorMessage1 = UkprnValidator.InvalidUkprnErrorMessage;
             string expectedErrorMessage2 = LarsCodeValidator.InvalidLarsCodeErrorMessage;
             var query = new GetProviderCourseLocationsQuery(ukprn, larsCode);
-            var repoMockProvideCourse = new Mock<IProviderCourseReadRepository>();
+            var repoMockProvideCourse = new Mock<IProviderCoursesReadRepository>();
             var repoMock = new Mock<IProvidersReadRepository>();
             var sut = new GetProviderCourseLocationsQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
 
@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             int expectedTimesRepoIsInvoked = 2;
             string expectedErrorMessage1 = LarsCodeValidator.ProviderCourseNotFoundErrorMessage;
             var query = new GetProviderCourseLocationsQuery(ukprn, larsCode);
-            var repoMockProvideCourse = new Mock<IProviderCourseReadRepository>();
+            var repoMockProvideCourse = new Mock<IProviderCoursesReadRepository>();
             var repoMock = new Mock<IProvidersReadRepository>();
             repoMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
             repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync((Domain.Entities.ProviderCourse)null);

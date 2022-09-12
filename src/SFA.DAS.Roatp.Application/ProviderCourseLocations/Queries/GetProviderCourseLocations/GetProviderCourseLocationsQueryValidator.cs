@@ -6,7 +6,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderC
 {
     public class GetProviderCourseLocationsQueryValidator : AbstractValidator<GetProviderCourseLocationsQuery>
     {
-        public GetProviderCourseLocationsQueryValidator(IProvidersReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository)
+        public GetProviderCourseLocationsQueryValidator(IProvidersReadRepository providerReadRepository, IProviderCoursesReadRepository providerCourseReadRepository)
         {
             Include(new UkprnValidator(providerReadRepository));
 

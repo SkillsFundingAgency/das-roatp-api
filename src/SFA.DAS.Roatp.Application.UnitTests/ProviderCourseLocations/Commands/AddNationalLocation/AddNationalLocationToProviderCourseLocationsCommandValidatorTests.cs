@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
     public class AddNationalLocationToProviderCourseLocationsCommandValidatorTests
     {
         private Mock<IProvidersReadRepository> _providersReadRepositoryMock;
-        private Mock<IProviderCourseReadRepository> _providerCoursesReadRepositoryMock;
+        private Mock<IProviderCoursesReadRepository> _providerCoursesReadRepositoryMock;
         private AddNationalLocationToProviderCourseLocationsCommand _command;
 
         [SetUp]
@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
                 .Setup(x => x.GetByUkprn(It.IsAny<int>()))
                 .ReturnsAsync(new Provider());
 
-            _providerCoursesReadRepositoryMock = new Mock<IProviderCourseReadRepository>();
+            _providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
             _providerCoursesReadRepositoryMock
                 .Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(new Domain.Entities.ProviderCourse());

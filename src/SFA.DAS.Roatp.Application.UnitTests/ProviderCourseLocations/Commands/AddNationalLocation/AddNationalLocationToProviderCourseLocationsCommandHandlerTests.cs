@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         public async Task Handle_NationalLocationEsits_CreatesNationalLocation(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsWriteRepository> providerLocationWriteRepositoryMock,
-            [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock,
+            [Frozen] Mock<IProviderCoursesReadRepository> providerCourseReadRepositoryMock,
             [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
             [Frozen] Mock<IProviderCourseLocationsWriteRepository> providerCourseLocationsWriteRepositoryMock,
             AddNationalLocationToProviderCourseLocationsCommandHandler sut,

@@ -10,19 +10,19 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses
 {
     public class GetProviderAllCoursesQueryHandler : IRequestHandler<GetProviderAllCoursesQuery, GetProviderAllCoursesQueryResult>
     {
-        private readonly IProviderCourseReadRepository _providerCourseReadRepository;
-        private readonly IStandardsReadRepository _standardReadRepository;
+        private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
+        private readonly IStandardsReadRepository _standardsReadRepository;
         private readonly ILogger<GetProviderAllCoursesQueryHandler> _logger;
-        public GetProviderAllCoursesQueryHandler(IProviderCourseReadRepository providerCourseReadRepository, IStandardsReadRepository standardReadRepository, ILogger<GetProviderAllCoursesQueryHandler> logger)
+        public GetProviderAllCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetProviderAllCoursesQueryHandler> logger)
         {
-            _providerCourseReadRepository = providerCourseReadRepository;
-            _standardReadRepository = standardReadRepository;
+            _providerCoursesReadRepository = providerCoursesReadRepository;
+            _standardsReadRepository = standardsReadRepository;
             _logger = logger;
         }
 
         public async  Task<GetProviderAllCoursesQueryResult> Handle(GetProviderAllCoursesQuery request, CancellationToken cancellationToken)
         {
-            var providerCourses = await _providerCourseReadRepository.GetAllProviderCourses(request.Ukprn);
+            var providerCourses = await _providerCoursesReadRepository.GetAllProviderCourses(request.Ukprn);
 
             if (!providerCourses.Any())
             {
@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses
             }
 
             var providerCourseModels = providerCourses.Select(p => (ProviderCourseModel)p).ToList();
-            var standardsLookup = await _standardReadRepository.GetAllStandards();
+            var standardsLookup = await _standardsReadRepository.GetAllStandards();
             
             foreach (var p in providerCourseModels)
             {

@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         {
             var command = new BulkDeleteProviderCourseLocationsCommand(10012002, 123, DeleteProviderCourseLocationOption.None, _userId);
 
-            var sut = new BulkDeleteProviderCourseLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseReadRepository>());
+            var sut = new BulkDeleteProviderCourseLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         {
             var command = new BulkDeleteProviderCourseLocationsCommand(10012002, 123, options, _userId);
 
-            var sut = new BulkDeleteProviderCourseLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseReadRepository>());
+            var sut = new BulkDeleteProviderCourseLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -41,7 +41,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         {
             var command = new BulkDeleteProviderCourseLocationsCommand(10012002, 123, DeleteProviderCourseLocationOption.DeleteProviderLocations, _userId);
 
-            var sut = new BulkDeleteProviderCourseLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseReadRepository>());
+            var sut = new BulkDeleteProviderCourseLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -53,7 +53,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         {
             var command = new BulkDeleteProviderCourseLocationsCommand(10012002, 123, DeleteProviderCourseLocationOption.DeleteProviderLocations, _userId);
 
-            var sut = new BulkDeleteProviderCourseLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseReadRepository>());
+            var sut = new BulkDeleteProviderCourseLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -67,7 +67,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         {
             var command = new BulkDeleteProviderCourseLocationsCommand(10012002, 123, DeleteProviderCourseLocationOption.DeleteProviderLocations, userId);
 
-            var sut = new BulkDeleteProviderCourseLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseReadRepository>());
+            var sut = new BulkDeleteProviderCourseLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 

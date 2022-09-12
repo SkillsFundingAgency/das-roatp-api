@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
                 UserId = _userId
             };
 
-            var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
+            var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -41,7 +41,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
                 LarsCode = 123,
                 UserId = _userId
             };
-            var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
+            var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -59,7 +59,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
                 LarsCode = 123,
                 UserId = userId
             };
-            var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
+            var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -82,7 +82,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             Mock<IProvidersReadRepository> providerReadRepositoryMock = new Mock<IProvidersReadRepository>();
             providerReadRepositoryMock.Setup(p => p.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
 
-            Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock = new Mock<IProviderCourseReadRepository>();
+            Mock<IProviderCoursesReadRepository> providerCourseReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
             providerCourseReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), command.LarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
             Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
@@ -112,7 +112,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             Mock<IProvidersReadRepository> providerReadRepositoryMock = new Mock<IProvidersReadRepository>();
             providerReadRepositoryMock.Setup(p => p.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
 
-            Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock = new Mock<IProviderCourseReadRepository>();
+            Mock<IProviderCoursesReadRepository> providerCourseReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
             providerCourseReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), command.LarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
             Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();

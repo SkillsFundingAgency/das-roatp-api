@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
     public class AddProviderCourseLocationCommandValidatorTests
     {
         private Mock<IProvidersReadRepository> _providerReadRepositoryMock;
-        private Mock<IProviderCourseReadRepository> _providerCourseReadRepositoryMock;
+        private Mock<IProviderCoursesReadRepository> _providerCourseReadRepositoryMock;
         private Mock<IProviderLocationsReadRepository> _providerLocationsReadRepositoryMock;
         private Mock<IProviderCourseLocationsReadRepository> _providerCourseLocationsReadRepositoryMock;
         private int ukprn = 10012002;
@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
                 .Setup(x => x.GetByUkprn(It.IsAny<int>()))
                 .ReturnsAsync(new Provider());
 
-            _providerCourseReadRepositoryMock = new Mock<IProviderCourseReadRepository>();
+            _providerCourseReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
             _providerCourseReadRepositoryMock
                 .Setup(x => x.GetProviderCourseByUkprn(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(new Domain.Entities.ProviderCourse());

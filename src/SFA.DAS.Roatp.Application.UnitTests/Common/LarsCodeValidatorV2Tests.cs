@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Common
     public class LarsCodeValidatorV2Tests
     {
         Mock<IStandardsReadRepository> _standardReadRepositoryMock;
-        Mock<IProviderCourseReadRepository> _providerCourseReadRepositoryMock;
+        Mock<IProviderCoursesReadRepository> _providerCourseReadRepositoryMock;
         LarsCodeValidatorV2 _sut;
         const int ValidComboLarsCode = 123;
         const int ValidLarsCode = 321;
@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Common
             _standardReadRepositoryMock = new Mock<IStandardsReadRepository>();
             _standardReadRepositoryMock.Setup(r => r.GetStandard(It.Is<int>(i => i == ValidComboLarsCode || i == ValidLarsCode))).ReturnsAsync(new Standard());
 
-            _providerCourseReadRepositoryMock = new Mock<IProviderCourseReadRepository>();
+            _providerCourseReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
             _providerCourseReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(ValidUkprn, ValidComboLarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
         }
 

@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         private const string SelectedSubregionIdsNotExistsinProviderLocationsErrorMessage = "Provider locations does not have any or some of the sub-regions being added on the course. It is required to add sub regions to the provider locations before associating them with a course";
         private const string SelectedSubregionIdsAlreadyExistsinProviderCourseLocationsErrorMessage = "All or some of the sub-regions are associated to the provider course. It is required that there are no national or regional locations associated to the course";
         Mock<IProvidersReadRepository> providerReadRepositoryMock;
-        Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock;
+        Mock<IProviderCoursesReadRepository> providerCourseReadRepositoryMock;
         Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock;
         Mock<IProviderCourseLocationsReadRepository> providerCourseLocationsReadRepositoryMock;
 
@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             providerReadRepositoryMock = new Mock<IProvidersReadRepository>();
             providerReadRepositoryMock.Setup(p => p.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
 
-            providerCourseReadRepositoryMock = new Mock<IProviderCourseReadRepository>();
+            providerCourseReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
             providerCourseReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
             providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();

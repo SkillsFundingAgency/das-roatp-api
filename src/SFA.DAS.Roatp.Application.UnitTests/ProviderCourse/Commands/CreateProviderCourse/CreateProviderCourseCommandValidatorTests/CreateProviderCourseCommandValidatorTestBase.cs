@@ -10,7 +10,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
     public abstract class CreateProviderCourseCommandValidatorTestBase
     {
         protected Mock<IProvidersReadRepository> ProviderReadRepositoryMock;
-        protected Mock<IProviderCourseReadRepository> ProviderCourseReadRepositoryMock;
+        protected Mock<IProviderCoursesReadRepository> ProviderCourseReadRepositoryMock;
         protected Mock<IStandardsReadRepository> StandardReadRepositoryMock;
         protected Mock<IProviderLocationsReadRepository> ProviderLocationsReadRepositoryMock;
         protected Mock<IRegionsReadRepository> RegionReadRepositoryMock;
@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
                 .Setup(r => r.GetStandard(It.Is<int>(i => i == RegulatedLarsCode)))
                 .ReturnsAsync(new Standard { ApprovalBody = Guid.NewGuid().ToString() });
 
-            ProviderCourseReadRepositoryMock = new Mock<IProviderCourseReadRepository>();
+            ProviderCourseReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
             ProviderCourseReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(ValidUkprn, ValidComboLarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
             ProviderLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();

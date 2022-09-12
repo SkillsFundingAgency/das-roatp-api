@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [Test, MoqAutoData]
         public async Task Handle_NoDataFound_ThrowsInvalidOperationException(
             [Frozen] Mock<IProviderCoursesWriteRepository> editRepoMock,
-            [Frozen] Mock<IProviderCourseReadRepository> readRepoMock,
+            [Frozen] Mock<IProviderCoursesReadRepository> readRepoMock,
             PatchProviderCourseCommandHandler sut,
             PatchProviderCourseCommand command,
             CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
 
         [Test, RecursiveMoqAutoData]
         public async Task Handle_DataFound_Patch(
-            [Frozen] Mock<IProviderCourseReadRepository> readRepoMock,
+            [Frozen] Mock<IProviderCoursesReadRepository> readRepoMock,
             [Frozen] Mock<IProviderCoursesWriteRepository> editRepoMock,
             PatchProviderCourseCommandHandler sut,
             PatchProviderCourse patch,
