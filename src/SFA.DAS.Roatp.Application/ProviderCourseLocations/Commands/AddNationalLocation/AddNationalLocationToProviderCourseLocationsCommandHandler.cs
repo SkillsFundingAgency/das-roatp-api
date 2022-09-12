@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
     public class AddNationalLocationToProviderCourseLocationsCommandHandler : IRequestHandler<AddNationalLocationToProviderCourseLocationsCommand, ProviderCourseLocation>
     {
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
-        private readonly IProviderLocationWriteRepository _providerLocationWriteRepository;
+        private readonly IProviderLocationsWriteRepository _providerLocationWriteRepository;
         private readonly IProviderCourseReadRepository _providerCourseReadRepository;
         private readonly IProviderCourseLocationWriteRepository _providerCourseLocationWriteRepository;
         private readonly IProvidersReadRepository _providerReadRepository;
@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
 
         public AddNationalLocationToProviderCourseLocationsCommandHandler(
             IProviderLocationsReadRepository providerLocationsReadRepository,
-            IProviderLocationWriteRepository providerLocationWriteRepository,
+            IProviderLocationsWriteRepository providerLocationWriteRepository,
             IProviderCourseReadRepository providerCourseReadRepository,
             IProviderCourseLocationWriteRepository providerCourseLocationWriteRepository,
             IProvidersReadRepository providerReadRepository,

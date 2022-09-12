@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.UpdateProviderL
         [Test, RecursiveMoqAutoData]
         public async Task Handle_DataFound_SaveChanges(
             [Frozen] Mock<IProviderLocationsReadRepository> readRepoMock,
-            [Frozen] Mock<IProviderLocationEditRepository> editRepoMock,
+            [Frozen] Mock<IProviderLocationsWriteRepository> editRepoMock,
             UpdateProviderLocationDetailsCommandHandler sut,
             UpdateProviderLocationDetailsCommand command,
             CancellationToken cancellationToken,

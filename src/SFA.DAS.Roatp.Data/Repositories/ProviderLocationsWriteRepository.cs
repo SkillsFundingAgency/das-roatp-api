@@ -6,13 +6,20 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class ProviderLocationEditRepository : IProviderLocationEditRepository
+    internal class ProviderLocationsWriteRepository : IProviderLocationsWriteRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
-        public ProviderLocationEditRepository(RoatpDataContext context)
+        public ProviderLocationsWriteRepository(RoatpDataContext roatpDataContext)
         {
-            _roatpDataContext = context;
+            _roatpDataContext = roatpDataContext;
+        }
+
+        public async Task<ProviderLocation> Create(ProviderLocation location)
+        {
+            _roatpDataContext.ProviderLocations.Add(location);
+            await _roatpDataContext.SaveChangesAsync();
+            return location;
         }
 
         public async Task UpdateProviderlocation(ProviderLocation updatedProviderLocationEntity)

@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         [Test, RecursiveMoqAutoData]
         public async Task Handle_NationalLocationMissing_CreatesNationalLocation(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderLocationWriteRepository> providerLocationWriteRepositoryMock,
+            [Frozen] Mock<IProviderLocationsWriteRepository> providerLocationWriteRepositoryMock,
             [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
             AddNationalLocationToProviderCourseLocationsCommandHandler sut,
             Provider provider,
@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         [Test, RecursiveMoqAutoData]
         public async Task Handle_NationalLocationEsits_CreatesNationalLocation(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderLocationWriteRepository> providerLocationWriteRepositoryMock,
+            [Frozen] Mock<IProviderLocationsWriteRepository> providerLocationWriteRepositoryMock,
             [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock,
             [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
             [Frozen] Mock<IProviderCourseLocationWriteRepository> providerCourseLocationWriteRepositoryMock,

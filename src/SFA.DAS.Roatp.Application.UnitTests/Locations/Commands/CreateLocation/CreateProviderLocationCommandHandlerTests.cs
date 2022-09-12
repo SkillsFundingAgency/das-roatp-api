@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
     public class CreateProviderLocationCommandHandlerTests
     {
         private Mock<IProvidersReadRepository> _providerReadRepositoryMock;
-        private Mock<IProviderLocationWriteRepository> _providerLocationsWriteRepositoryMock;
+        private Mock<IProviderLocationsWriteRepository> _providerLocationsWriteRepositoryMock;
         private CreateProviderLocationCommandHandler _sut;
         private CreateProviderLocationCommand _command;
         private Provider _provider;
@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
             _providerReadRepositoryMock = new Mock<IProvidersReadRepository>();
             _providerReadRepositoryMock.Setup(r => r.GetByUkprn(_command.Ukprn)).ReturnsAsync(_provider);
 
-            _providerLocationsWriteRepositoryMock = new Mock<IProviderLocationWriteRepository>();
+            _providerLocationsWriteRepositoryMock = new Mock<IProviderLocationsWriteRepository>();
             _providerLocationsWriteRepositoryMock.Setup(r => r.Create(It.IsAny<ProviderLocation>())).ReturnsAsync(providerLocation);
 
             _sut = new CreateProviderLocationCommandHandler(_providerReadRepositoryMock.Object, _providerLocationsWriteRepositoryMock.Object, Mock.Of<ILogger<CreateProviderLocationCommandHandler>>());
