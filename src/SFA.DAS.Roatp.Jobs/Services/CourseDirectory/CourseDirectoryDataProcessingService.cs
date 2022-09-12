@@ -17,11 +17,11 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
     public class CourseDirectoryDataProcessingService : ICourseDirectoryDataProcessingService
     {
         private readonly IGetActiveProviderRegistrationsRepository _getActiveProviderRegistrationsRepository;
-        private readonly IProviderReadRepository _providerReadRepository;
+        private readonly IProvidersReadRepository _providerReadRepository;
         private readonly IGetBetaProvidersService _getBetaProvidersService;
         private readonly ILogger<CourseDirectoryDataProcessingService> _logger;
 
-        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProviderReadRepository providerReadRepository, IGetBetaProvidersService getBetaProvidersService)
+        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProvidersReadRepository providerReadRepository, IGetBetaProvidersService getBetaProvidersService)
         {
             _getActiveProviderRegistrationsRepository = getActiveProviderRegistrationsRepository;
             _providerReadRepository = providerReadRepository;

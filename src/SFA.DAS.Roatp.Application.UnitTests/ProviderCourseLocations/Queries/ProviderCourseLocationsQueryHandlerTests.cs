@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             Provider provider,
             Domain.Entities.ProviderCourse providerCourse,
             List<ProviderCourseLocation> locations,
-            [Frozen] Mock<IProviderReadRepository> repoMockProvider,
+            [Frozen] Mock<IProvidersReadRepository> repoMockProvider,
             [Frozen] Mock<IProviderCourseReadRepository> repoMockProviderCourse,
             [Frozen]Mock<IProviderCourseLocationReadRepository> repoMockProviderCourseLocation,
             GetProviderCourseLocationsQuery query,
@@ -44,7 +44,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
         public async Task Handle_NoData_ReturnsEmptyList(
            Provider provider,
            Domain.Entities.ProviderCourse providerCourse,
-           [Frozen] Mock<IProviderReadRepository> repoMockProvider,
+           [Frozen] Mock<IProvidersReadRepository> repoMockProvider,
            [Frozen] Mock<IProviderCourseReadRepository> repoMockProviderCourse,
            [Frozen] Mock<IProviderCourseLocationReadRepository> repoMockProviderCourseLocation,
            GetProviderCourseLocationsQuery query,

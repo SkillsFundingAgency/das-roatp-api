@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
         public const string TrainingVenueErrorMessage = "Venue must be provided";
         public const string DeliveryMethodErrorMessage = "Delivery method must be provided";
         public AddProviderCourseLocationCommandValidator
-            (IProviderReadRepository providerReadRepository, 
+            (IProvidersReadRepository providerReadRepository, 
              IProviderCourseReadRepository providerCourseReadRepository, 
              IProviderLocationsReadRepository providerLocationsReadRepository,
              IProviderCourseLocationReadRepository providerCourseLocationReadRepository)

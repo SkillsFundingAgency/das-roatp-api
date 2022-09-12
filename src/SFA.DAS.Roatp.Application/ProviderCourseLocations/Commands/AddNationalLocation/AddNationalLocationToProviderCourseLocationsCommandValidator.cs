@@ -10,7 +10,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
     {
         public const string NationalLocationAlreadyExists = "A national location is already associated with this course";
         public AddNationalLocationToProviderCourseLocationsCommandValidator(
-            IProviderReadRepository providerReadRepository, 
+            IProvidersReadRepository providerReadRepository, 
             IProviderCourseReadRepository providerCourseReadRepository,
             IProviderCourseLocationReadRepository providerCourseLocationReadRepository)
         {

@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class CreateProviderRepository : ICreateProviderRepository
+    internal class ProvidersWriteRepository : IProvidersWriteRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
-        public CreateProviderRepository(RoatpDataContext roatpDataContext)
+        public ProvidersWriteRepository(RoatpDataContext roatpDataContext)
         {
             _roatpDataContext = roatpDataContext;
         }

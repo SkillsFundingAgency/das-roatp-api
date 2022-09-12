@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
     [TestFixture]
     public class PatchProviderCourseCommandValidatorTests
     {
-        private Mock<IProviderReadRepository> _providerReadRepo;
+        private Mock<IProvidersReadRepository> _providerReadRepo;
         private Mock<IProviderCourseReadRepository> _providerCourseReadRepo;
 
         private const string IsApprovedByRegulator = "IsApprovedByRegulator";
@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [SetUp]
         public void Before_each_test()
         {
-            _providerReadRepo = new Mock<IProviderReadRepository>();
+            _providerReadRepo = new Mock<IProvidersReadRepository>();
             _providerCourseReadRepo = new Mock<IProviderCourseReadRepository>();
             _providerReadRepo.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
             _providerCourseReadRepo.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());

@@ -9,11 +9,11 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
 {
     public class CreateProviderLocationCommandHandler : IRequestHandler<CreateProviderLocationCommand, int>
     {
-        private readonly IProviderReadRepository _providerReadRepository;
+        private readonly IProvidersReadRepository _providerReadRepository;
         private readonly IProviderLocationWriteRepository _providerLocationsWriteRepository;
         private readonly ILogger<CreateProviderLocationCommandHandler> _logger;
 
-        public CreateProviderLocationCommandHandler(IProviderReadRepository providerReadRepository, IProviderLocationWriteRepository providerLocationsWriteRepository, ILogger<CreateProviderLocationCommandHandler> logger)
+        public CreateProviderLocationCommandHandler(IProvidersReadRepository providerReadRepository, IProviderLocationWriteRepository providerLocationsWriteRepository, ILogger<CreateProviderLocationCommandHandler> logger)
         {
             _providerReadRepository = providerReadRepository;
             _providerLocationsWriteRepository = providerLocationsWriteRepository;

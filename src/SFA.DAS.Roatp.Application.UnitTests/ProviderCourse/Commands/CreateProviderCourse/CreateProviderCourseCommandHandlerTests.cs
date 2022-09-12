@@ -17,9 +17,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
     {
         [Test, RecursiveMoqAutoData]
         public async Task Handle_HasNationalDeliveryOptionOnly_AddsNewNationalLocation(
-            [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
+            [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseEditRepository> providerCourseEditRepositoryMock,
+            [Frozen] Mock<IProviderCoursesWriteRepository> providerCourseEditRepositoryMock,
             CreateProviderCourseCommandHandler sut,
             CreateProviderCourseCommand command,
             Provider provider)
@@ -37,9 +37,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
         [Test, RecursiveMoqAutoData]
         public async Task Handle_HasNationalDeliveryOptionOnly_AssociatesExistingNationalLocation(
-            [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
+            [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseEditRepository> providerCourseEditRepositoryMock,
+            [Frozen] Mock<IProviderCoursesWriteRepository> providerCourseEditRepositoryMock,
             CreateProviderCourseCommandHandler sut,
             CreateProviderCourseCommand command,
             Provider provider,
@@ -59,9 +59,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
         [Test, RecursiveMoqAutoData]
         public async Task Handle_HasProviderLocationsOnly_AddProviderLocations(
-            [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
+            [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseEditRepository> providerCourseEditRepositoryMock,
+            [Frozen] Mock<IProviderCoursesWriteRepository> providerCourseEditRepositoryMock,
             CreateProviderCourseCommandHandler sut,
             CreateProviderCourseCommand command,
             Provider provider)

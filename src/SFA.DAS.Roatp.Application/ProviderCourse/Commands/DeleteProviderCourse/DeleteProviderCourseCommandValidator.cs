@@ -6,7 +6,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse
 {
     public class DeleteProviderCourseCommandValidator : AbstractValidator<DeleteProviderCourseCommand>
     {
-        public DeleteProviderCourseCommandValidator(IProviderReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository)
+        public DeleteProviderCourseCommandValidator(IProvidersReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository)
         {
             Include(new UkprnValidator(providerReadRepository));
 

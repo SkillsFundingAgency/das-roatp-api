@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
     [TestFixture]
     public class CreateProviderLocationCommandHandlerTests
     {
-        private Mock<IProviderReadRepository> _providerReadRepositoryMock;
+        private Mock<IProvidersReadRepository> _providerReadRepositoryMock;
         private Mock<IProviderLocationWriteRepository> _providerLocationsWriteRepositoryMock;
         private CreateProviderLocationCommandHandler _sut;
         private CreateProviderLocationCommand _command;
@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
             _provider = fixture.Create<Provider>();
             var providerLocation = fixture.Create<ProviderLocation>();
 
-            _providerReadRepositoryMock = new Mock<IProviderReadRepository>();
+            _providerReadRepositoryMock = new Mock<IProvidersReadRepository>();
             _providerReadRepositoryMock.Setup(r => r.GetByUkprn(_command.Ukprn)).ReturnsAsync(_provider);
 
             _providerLocationsWriteRepositoryMock = new Mock<IProviderLocationWriteRepository>();

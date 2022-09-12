@@ -11,9 +11,9 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses
     public class GetProviderAllCoursesQueryHandler : IRequestHandler<GetProviderAllCoursesQuery, GetProviderAllCoursesQueryResult>
     {
         private readonly IProviderCourseReadRepository _providerCourseReadRepository;
-        private readonly IStandardReadRepository _standardReadRepository;
+        private readonly IStandardsReadRepository _standardReadRepository;
         private readonly ILogger<GetProviderAllCoursesQueryHandler> _logger;
-        public GetProviderAllCoursesQueryHandler(IProviderCourseReadRepository providerCourseReadRepository, IStandardReadRepository standardReadRepository, ILogger<GetProviderAllCoursesQueryHandler> logger)
+        public GetProviderAllCoursesQueryHandler(IProviderCourseReadRepository providerCourseReadRepository, IStandardsReadRepository standardReadRepository, ILogger<GetProviderAllCoursesQueryHandler> logger)
         {
             _providerCourseReadRepository = providerCourseReadRepository;
             _standardReadRepository = standardReadRepository;

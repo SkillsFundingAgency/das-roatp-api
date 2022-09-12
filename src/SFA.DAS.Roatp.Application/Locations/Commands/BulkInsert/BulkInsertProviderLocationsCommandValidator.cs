@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
     {
         public const string EmptptySubregionIdsErrorMessage = "SubregionsIds is required";
         public const string SubRegionsAlreadyExistsErrorMessage = "All or some of the sub-regions already exist on the provider locations";
-        public BulkInsertProviderLocationsCommandValidator(IProviderReadRepository providerReadRepository, 
+        public BulkInsertProviderLocationsCommandValidator(IProvidersReadRepository providerReadRepository, 
             IProviderCourseReadRepository providerCourseReadRepository, IProviderLocationsReadRepository providerLocationsReadRepository)
         {
             Include(new UkprnValidator(providerReadRepository));

@@ -8,10 +8,10 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProvider
 {
     public class GetProviderQueryHandler : IRequestHandler<GetProviderQuery, GetProviderQueryResult>
     {
-        private readonly IProviderReadRepository _providerReadRepository;
+        private readonly IProvidersReadRepository _providerReadRepository;
         private readonly ILogger<GetProviderQueryHandler> _logger;
 
-        public GetProviderQueryHandler(IProviderReadRepository providerReadRepository,  ILogger<GetProviderQueryHandler> logger)
+        public GetProviderQueryHandler(IProvidersReadRepository providerReadRepository,  ILogger<GetProviderQueryHandler> logger)
         {
             _providerReadRepository = providerReadRepository;
             _logger = logger;

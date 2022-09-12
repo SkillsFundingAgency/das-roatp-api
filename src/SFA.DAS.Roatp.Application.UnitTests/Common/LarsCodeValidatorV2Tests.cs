@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Common
     [TestFixture]
     public class LarsCodeValidatorV2Tests
     {
-        Mock<IStandardReadRepository> _standardReadRepositoryMock;
+        Mock<IStandardsReadRepository> _standardReadRepositoryMock;
         Mock<IProviderCourseReadRepository> _providerCourseReadRepositoryMock;
         LarsCodeValidatorV2 _sut;
         const int ValidComboLarsCode = 123;
@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Common
         [SetUp]
         public void Before_Each_Test()
         {
-            _standardReadRepositoryMock = new Mock<IStandardReadRepository>();
+            _standardReadRepositoryMock = new Mock<IStandardsReadRepository>();
             _standardReadRepositoryMock.Setup(r => r.GetStandard(It.Is<int>(i => i == ValidComboLarsCode || i == ValidLarsCode))).ReturnsAsync(new Standard());
 
             _providerCourseReadRepositoryMock = new Mock<IProviderCourseReadRepository>();

@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries
         public async Task Validate_AcceptsEightDigitNumbersOnly(int ukprn, bool expectedResult)
         {
             var query = new GetProviderQuery(ukprn);
-            var repoMock = new Mock<IProviderReadRepository>();
+            var repoMock = new Mock<IProvidersReadRepository>();
             repoMock.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider()); 
             var sut = new GetProviderQueryValidator(repoMock.Object);
 

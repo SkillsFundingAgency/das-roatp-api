@@ -2,7 +2,6 @@
 using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
@@ -17,11 +16,11 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         public const string RegionIdNotFoundMessage = "At least one of the region id was not found";
 
         public CreateProviderCourseCommandValidator(
-            IProviderReadRepository providerReadRepository,
-            IStandardReadRepository standardReadRepository,
+            IProvidersReadRepository providerReadRepository,
+            IStandardsReadRepository standardReadRepository,
             IProviderCourseReadRepository providerCourseReadRepository,
             IProviderLocationsReadRepository providerLocationsReadRepository,
-            IRegionReadRepository regionReadRepository)
+            IRegionsReadRepository regionReadRepository)
         {
             Include(new UkprnValidator(providerReadRepository));
 
@@ -97,7 +96,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 
         }
 
-        private async Task<bool> IsStandardRegulated(int larsCode, IStandardReadRepository standardReadRepository)
+        private async Task<bool> IsStandardRegulated(int larsCode, IStandardsReadRepository standardReadRepository)
         {
             var standard = await standardReadRepository.GetStandard(larsCode);
             var result = !string.IsNullOrEmpty(standard?.ApprovalBody);

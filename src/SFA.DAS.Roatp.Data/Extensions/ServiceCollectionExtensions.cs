@@ -39,19 +39,18 @@ namespace SFA.DAS.Roatp.Data.Extensions
 
         private static void RegisterServices(IServiceCollection services)
         {
-            services.AddTransient<IStandardReadRepository, StandardReadRepository>();
-            services.AddTransient<IProviderReadRepository, ProviderReadRepository>();
+            services.AddTransient<IStandardsReadRepository, StandardsReadRepository>();
+            services.AddTransient<IProvidersReadRepository, ProvidersReadRepository>();
             services.AddTransient<IProviderCourseReadRepository, ProviderCourseReadRepository>();
-            services.AddTransient<IProviderCourseDeleteRepository, ProviderCourseDeleteRepository>();
-            services.AddTransient<IRegionReadRepository, RegionReadRepository>();
-            services.AddTransient<ICreateProviderRepository, CreateProviderRepository>();
+            services.AddTransient<IProviderCoursesWriteRepository, ProviderCoursesWriteRepository>();
+            services.AddTransient<IRegionsReadRepository, RegionsReadRepository>();
+            services.AddTransient<IProvidersWriteRepository, ProvidersWriteRepository>();
             services.AddTransient<IReloadStandardsRepository, ReloadStandardsRepository>();
             services.AddTransient<IGetStandardsCountRepository, GetStandardsCountRepository>();
             services.AddTransient<IProviderLocationsReadRepository, ProviderLocationsReadRepository>();
             services.AddTransient<IProviderLocationEditRepository, ProviderLocationEditRepository>();
             services.AddTransient<IProviderLocationsDeleteRepository, ProviderLocationsDeleteRepository>();
             services.AddTransient<IProviderLocationsInsertRepository, ProviderLocationsInsertRepository>();
-            services.AddTransient<IProviderCourseEditRepository, ProviderCourseEditRepository>();
             services.AddTransient<IReloadProviderRegistrationDetailsRepository, ReloadProviderRegistrationDetailsRepository>();
             services.AddTransient<IProviderCourseLocationReadRepository, ProviderCourseLocationReadRepository>();
             services.AddTransient<IProviderCourseLocationsDeleteRepository, ProviderCourseLocationsDeleteRepository>();

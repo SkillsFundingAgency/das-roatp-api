@@ -15,14 +15,14 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
     [TestFixture]
     public class AddNationalLocationToProviderCourseLocationsCommandValidatorTests
     {
-        private Mock<IProviderReadRepository> _providerReadRepositoryMock;
+        private Mock<IProvidersReadRepository> _providerReadRepositoryMock;
         private Mock<IProviderCourseReadRepository> _providerCourseReadRepositoryMock;
         private AddNationalLocationToProviderCourseLocationsCommand _command;
 
         [SetUp]
         public void Before_Each_Test()
         {
-            _providerReadRepositoryMock = new Mock<IProviderReadRepository>();
+            _providerReadRepositoryMock = new Mock<IProvidersReadRepository>();
             _providerReadRepositoryMock
                 .Setup(x => x.GetByUkprn(It.IsAny<int>()))
                 .ReturnsAsync(new Provider());

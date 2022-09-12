@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
         public async Task Handle_ReturnsResult(
             Domain.Entities.ProviderCourse course,
             [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock,
-            [Frozen] Mock<IStandardReadRepository> standardReadRepositoryMock,
+            [Frozen] Mock<IStandardsReadRepository> standardReadRepositoryMock,
             GetProviderCourseQuery query,
             GetProviderCourseQueryHandler sut,
             CancellationToken cancellationToken)

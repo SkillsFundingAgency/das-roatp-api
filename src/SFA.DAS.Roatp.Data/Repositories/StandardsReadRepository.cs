@@ -8,11 +8,11 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class StandardReadRepository : IStandardReadRepository
+    internal class StandardsReadRepository : IStandardsReadRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
-        public StandardReadRepository(RoatpDataContext roatpDataContext)
+        public StandardsReadRepository(RoatpDataContext roatpDataContext)
         {
             _roatpDataContext = roatpDataContext;
         }

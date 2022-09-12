@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_ReturnsResult(
             List<Domain.Entities.Region> regions, 
-            [Frozen]Mock<IRegionReadRepository> repoMock, 
+            [Frozen]Mock<IRegionsReadRepository> repoMock, 
             RegionsQuery query,
             RegionsQueryHandler sut,
             CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
 
         [Test, MoqAutoData()]
         public async Task Handle_NoData_ReturnsEmptyResult(
-            [Frozen] Mock<IRegionReadRepository> repoMock,
+            [Frozen] Mock<IRegionsReadRepository> repoMock,
             RegionsQuery query,
             RegionsQueryHandler sut,
             CancellationToken cancellationToken)

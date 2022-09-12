@@ -9,11 +9,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 {
     public abstract class CreateProviderCourseCommandValidatorTestBase
     {
-        protected Mock<IProviderReadRepository> ProviderReadRepositoryMock;
+        protected Mock<IProvidersReadRepository> ProviderReadRepositoryMock;
         protected Mock<IProviderCourseReadRepository> ProviderCourseReadRepositoryMock;
-        protected Mock<IStandardReadRepository> StandardReadRepositoryMock;
+        protected Mock<IStandardsReadRepository> StandardReadRepositoryMock;
         protected Mock<IProviderLocationsReadRepository> ProviderLocationsReadRepositoryMock;
-        protected Mock<IRegionReadRepository> RegionReadRepositoryMock;
+        protected Mock<IRegionsReadRepository> RegionReadRepositoryMock;
         public const int ValidUkprn = 10012002;
         protected const int ValidComboLarsCode = 321;
         protected const int RegulatedLarsCode = 123;
@@ -23,10 +23,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
         protected CreateProviderCourseCommandValidator GetSut()
         {
-            ProviderReadRepositoryMock = new Mock<IProviderReadRepository>();
+            ProviderReadRepositoryMock = new Mock<IProvidersReadRepository>();
             ProviderReadRepositoryMock.Setup(p => p.GetByUkprn(ValidUkprn)).ReturnsAsync(new Provider { Ukprn = ValidUkprn });
 
-            StandardReadRepositoryMock = new Mock<IStandardReadRepository>();
+            StandardReadRepositoryMock = new Mock<IStandardsReadRepository>();
             StandardReadRepositoryMock
                 .Setup(r => r.GetStandard(It.Is<int>(i => i == ValidComboLarsCode || i == NonRegulatedLarsCode)))
                 .ReturnsAsync(new Standard());
@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
             ProviderLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
             ProviderLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(ValidUkprn)).ReturnsAsync(new List<ProviderLocation> {new ProviderLocation {NavigationId = NavigationId}});
-            RegionReadRepositoryMock = new Mock<IRegionReadRepository>();
+            RegionReadRepositoryMock = new Mock<IRegionsReadRepository>();
             RegionReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(new List<Region> { new Region { Id = ValidRegionId } });
 
             return new CreateProviderCourseCommandValidator(ProviderReadRepositoryMock.Object, StandardReadRepositoryMock.Object, ProviderCourseReadRepositoryMock.Object,ProviderLocationsReadRepositoryMock.Object, RegionReadRepositoryMock.Object);

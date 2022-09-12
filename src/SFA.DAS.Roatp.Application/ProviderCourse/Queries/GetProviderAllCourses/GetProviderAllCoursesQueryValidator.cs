@@ -6,7 +6,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses
 {
     public class GetProviderAllCoursesQueryValidator : AbstractValidator<GetProviderAllCoursesQuery>
     {
-        public GetProviderAllCoursesQueryValidator(IProviderReadRepository providerReadRepository)
+        public GetProviderAllCoursesQueryValidator(IProvidersReadRepository providerReadRepository)
         {
             Include(new UkprnValidator(providerReadRepository));
         }

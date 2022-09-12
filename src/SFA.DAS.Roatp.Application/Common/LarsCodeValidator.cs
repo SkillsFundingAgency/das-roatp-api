@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.Application.Common
     {
         public const string InvalidLarsCodeErrorMessage = "Invalid larsCode";
         public const string ProviderCourseNotFoundErrorMessage = "No provider course found with given ukprn and larsCode";
-        public LarsCodeValidator(IProviderReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository)
+        public LarsCodeValidator(IProvidersReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository)
         {
             RuleFor(x => x.LarsCode)
                .Cascade(CascadeMode.Stop)

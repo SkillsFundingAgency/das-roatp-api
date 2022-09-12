@@ -12,18 +12,18 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 {
     public class CreateProviderCourseCommandHandler : IRequestHandler<CreateProviderCourseCommand, int>
     {
-        private readonly IProviderReadRepository _providerReadRepository;
+        private readonly IProvidersReadRepository _providerReadRepository;
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
-        private readonly IProviderCourseEditRepository _providerCourseEditRepository;
-        private readonly IRegionReadRepository _regionReadRepository;
+        private readonly IProviderCoursesWriteRepository _providerCourseEditRepository;
+        private readonly IRegionsReadRepository _regionReadRepository;
         private readonly ILogger<CreateProviderCourseCommandHandler> _logger;
 
         public CreateProviderCourseCommandHandler(
             IProviderLocationsReadRepository providerLocationsReadRepository,
-            IProviderReadRepository providerReadRepository,
-            IProviderCourseEditRepository providerCourseEditRepository,
+            IProvidersReadRepository providerReadRepository,
+            IProviderCoursesWriteRepository providerCourseEditRepository,
             ILogger<CreateProviderCourseCommandHandler> logger,
-            IRegionReadRepository regionReadRepository)
+            IRegionsReadRepository regionReadRepository)
         {
             _providerLocationsReadRepository = providerLocationsReadRepository;
             _providerReadRepository = providerReadRepository;

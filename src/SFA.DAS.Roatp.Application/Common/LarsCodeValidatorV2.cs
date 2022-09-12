@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.Application.Common
         public const string NotFoundMessage = "Larscode not found";
         public const string CombinationAlreadyExistsMessage = "Ukprn and LarsCode combination already exists";
         public const string CombinationNotFoundErrorMessage = "Invalid Ukprn and LarsCode, combination not found";
-        public LarsCodeValidatorV2(IStandardReadRepository standardReadRepository, IProviderCourseReadRepository providerCourseReadRepository, bool expectProviderCourseToExist = false)
+        public LarsCodeValidatorV2(IStandardsReadRepository standardReadRepository, IProviderCourseReadRepository providerCourseReadRepository, bool expectProviderCourseToExist = false)
         {
             RuleFor(x => x.LarsCode)
                 .Cascade(CascadeMode.Stop)

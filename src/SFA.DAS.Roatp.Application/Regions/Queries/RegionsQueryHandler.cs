@@ -8,9 +8,9 @@ namespace SFA.DAS.Roatp.Application.Regions.Queries
 {
     public class RegionsQueryHandler : IRequestHandler<RegionsQuery, RegionsQueryResult>
     {
-        private readonly IRegionReadRepository _regionReadRepository;
+        private readonly IRegionsReadRepository _regionReadRepository;
 
-        public RegionsQueryHandler(IRegionReadRepository regionReadRepository)
+        public RegionsQueryHandler(IRegionsReadRepository regionReadRepository)
         {
             _regionReadRepository = regionReadRepository;
         }

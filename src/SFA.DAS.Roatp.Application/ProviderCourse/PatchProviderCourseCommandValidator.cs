@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
                     "IsApprovedByRegulator"
                 });
 
-        public PatchProviderCourseCommandValidator(IProviderReadRepository providerReadRepository,
+        public PatchProviderCourseCommandValidator(IProvidersReadRepository providerReadRepository,
             IProviderCourseReadRepository providerCourseReadRepository)
         {
             Include(new UkprnValidator(providerReadRepository));

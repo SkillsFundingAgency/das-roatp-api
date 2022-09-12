@@ -16,9 +16,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
     {
         [Test, RecursiveMoqAutoData]
         public async Task Handle_HasSelectedExistingSubregions_UsesExistingProviderLocationId(
-        [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
+        [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
         [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-        [Frozen] Mock<IProviderCourseEditRepository> providerCourseEditRepositoryMock,
+        [Frozen] Mock<IProviderCoursesWriteRepository> providerCourseEditRepositoryMock,
         CreateProviderCourseCommandHandler sut,
         CreateProviderCourseCommand command,
         Provider provider,
@@ -38,10 +38,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
         [Test, RecursiveMoqAutoData]
         public async Task Handle_HasSelectedNonExistingSubregions_CreatesNewProviderLocation(
-            [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
+            [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseEditRepository> providerCourseEditRepositoryMock,
-            [Frozen] Mock<IRegionReadRepository> regionReadRepositoryMock,
+            [Frozen] Mock<IProviderCoursesWriteRepository> providerCourseEditRepositoryMock,
+            [Frozen] Mock<IRegionsReadRepository> regionReadRepositoryMock,
             CreateProviderCourseCommandHandler sut,
             CreateProviderCourseCommand command,
             Provider provider,

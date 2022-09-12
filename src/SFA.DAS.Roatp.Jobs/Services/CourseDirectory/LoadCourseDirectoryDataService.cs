@@ -16,13 +16,13 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
     {
         private readonly IGetCourseDirectoryDataService _getCourseDirectoryDataService;
         private readonly ICourseDirectoryDataProcessingService _courseDirectoryDataProcessingService;
-        private readonly IStandardReadRepository _standardReadRepository;
-        private readonly IRegionReadRepository _regionReadRepository;
+        private readonly IStandardsReadRepository _standardReadRepository;
+        private readonly IRegionsReadRepository _regionReadRepository;
         private readonly ILoadProviderRepository _loadProvider;
 
         private readonly ILogger<LoadCourseDirectoryDataService> _logger;
 
-        public LoadCourseDirectoryDataService(IGetCourseDirectoryDataService getCourseDirectoryDataService,   ICourseDirectoryDataProcessingService courseDirectoryDataProcessingService,   IStandardReadRepository standardReadRepository, IRegionReadRepository regionReadRepository, ILogger<LoadCourseDirectoryDataService> logger, ILoadProviderRepository loadProvider)
+        public LoadCourseDirectoryDataService(IGetCourseDirectoryDataService getCourseDirectoryDataService,   ICourseDirectoryDataProcessingService courseDirectoryDataProcessingService,   IStandardsReadRepository standardReadRepository, IRegionsReadRepository regionReadRepository, ILogger<LoadCourseDirectoryDataService> logger, ILoadProviderRepository loadProvider)
         {
             _getCourseDirectoryDataService = getCourseDirectoryDataService;
             _courseDirectoryDataProcessingService = courseDirectoryDataProcessingService;

@@ -17,8 +17,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
     {
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_Inserts_Records(
-            [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
-            [Frozen] Mock<IRegionReadRepository> regionReadRepositoryMock,
+            [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
+            [Frozen] Mock<IRegionsReadRepository> regionReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsInsertRepository> providerLocationsInsertRepositoryMock,
             BulkInsertProviderLocationsCommand command,
             BulkInsertProviderLocationsCommandHandler sut,

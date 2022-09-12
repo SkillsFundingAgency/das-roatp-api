@@ -9,11 +9,11 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
 {
     public class PatchProviderCourseCommandHandler : IRequestHandler<PatchProviderCourseCommand, Unit>
     {
-         private readonly IProviderCourseEditRepository _providerCourseEditRepository;
+         private readonly IProviderCoursesWriteRepository _providerCourseEditRepository;
          private readonly IProviderCourseReadRepository _providerCourseReadRepository;
          private readonly ILogger<PatchProviderCourseCommandHandler> _logger;
 
-         public PatchProviderCourseCommandHandler(IProviderCourseEditRepository providerCourseEditRepository, IProviderCourseReadRepository providerCourseReadRepository, ILogger<PatchProviderCourseCommandHandler> logger)
+         public PatchProviderCourseCommandHandler(IProviderCoursesWriteRepository providerCourseEditRepository, IProviderCourseReadRepository providerCourseReadRepository, ILogger<PatchProviderCourseCommandHandler> logger)
          {
              _providerCourseEditRepository = providerCourseEditRepository;
              _providerCourseReadRepository = providerCourseReadRepository;

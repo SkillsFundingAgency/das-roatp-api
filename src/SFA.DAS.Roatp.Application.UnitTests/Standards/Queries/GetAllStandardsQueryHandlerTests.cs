@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries
         [Test, AutoData]
         public async Task Handle_ReturnsListOfStandards(List<Standard> standards)
         {
-            var repositoryMock = new Mock<IStandardReadRepository>();
+            var repositoryMock = new Mock<IStandardsReadRepository>();
             repositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
             var sut = new GetAllStandardsQueryHandler(repositoryMock.Object, Mock.Of<ILogger<GetAllStandardsQueryHandler>>());
 

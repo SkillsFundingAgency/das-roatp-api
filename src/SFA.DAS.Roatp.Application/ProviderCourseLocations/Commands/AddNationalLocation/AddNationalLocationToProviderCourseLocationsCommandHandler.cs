@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
         private readonly IProviderLocationWriteRepository _providerLocationWriteRepository;
         private readonly IProviderCourseReadRepository _providerCourseReadRepository;
         private readonly IProviderCourseLocationWriteRepository _providerCourseLocationWriteRepository;
-        private readonly IProviderReadRepository _providerReadRepository;
+        private readonly IProvidersReadRepository _providerReadRepository;
         private readonly ILogger<AddNationalLocationToProviderCourseLocationsCommandHandler> _logger;
 
         public AddNationalLocationToProviderCourseLocationsCommandHandler(
@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
             IProviderLocationWriteRepository providerLocationWriteRepository,
             IProviderCourseReadRepository providerCourseReadRepository,
             IProviderCourseLocationWriteRepository providerCourseLocationWriteRepository,
-            IProviderReadRepository providerReadRepository,
+            IProvidersReadRepository providerReadRepository,
             ILogger<AddNationalLocationToProviderCourseLocationsCommandHandler> logger)
         {
             _providerLocationsReadRepository = providerLocationsReadRepository;
