@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
         public async Task Handle_Inserts_Records(
             [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
             [Frozen] Mock<IRegionsReadRepository> regionReadRepositoryMock,
-            [Frozen] Mock<IProviderLocationsInsertRepository> providerLocationsInsertRepositoryMock,
+            [Frozen] Mock<IProviderLocationsBulkRepository> providerLocationsBulkRepositoryMock,
             BulkInsertProviderLocationsCommand command,
             BulkInsertProviderLocationsCommandHandler sut,
             CancellationToken cancellationToken)
@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             command.SelectedSubregionIds = new List<int> { providerLocations.FirstOrDefault(a => a.RegionId.HasValue).RegionId.Value };
 
             var result = await sut.Handle(command, cancellationToken);
-            providerLocationsInsertRepositoryMock.Verify(d => d.BulkInsert(It.IsAny<IEnumerable<ProviderLocation>>()), Times.Once);
+            providerLocationsBulkRepositoryMock.Verify(d => d.BulkInsert(It.IsAny<IEnumerable<ProviderLocation>>()), Times.Once);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.EqualTo(1));

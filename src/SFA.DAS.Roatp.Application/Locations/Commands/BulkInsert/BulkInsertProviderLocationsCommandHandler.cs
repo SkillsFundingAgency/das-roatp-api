@@ -13,16 +13,16 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
     {
         private readonly IRegionsReadRepository _regionReadRepository;
         private readonly IProvidersReadRepository _providerReadRepository;
-        private readonly IProviderLocationsInsertRepository _providerLocationsInsertRepository;
+        private readonly IProviderLocationsBulkRepository _providerLocationsBulkRepository;
         private readonly ILogger<BulkInsertProviderLocationsCommandHandler> _logger;
 
         public BulkInsertProviderLocationsCommandHandler(IRegionsReadRepository regionReadRepository, IProvidersReadRepository providerReadRepository,
-            IProviderLocationsInsertRepository providerLocationsInsertRepository,
+            IProviderLocationsBulkRepository providerLocationsBulkRepository,
             ILogger<BulkInsertProviderLocationsCommandHandler> logger)
         {
             _regionReadRepository = regionReadRepository;
             _providerReadRepository = providerReadRepository;
-            _providerLocationsInsertRepository = providerLocationsInsertRepository;
+            _providerLocationsBulkRepository = providerLocationsBulkRepository;
             _logger = logger;
         }
 
@@ -50,7 +50,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
             if(locationsToInsert.Any())
             {
                 _logger.LogInformation("{count} {locationType} locations will be inserted for Ukprn:{ukprn}", locationsToInsert.Count, LocationType.Regional, command.Ukprn);
-                await _providerLocationsInsertRepository.BulkInsert(locationsToInsert);
+                await _providerLocationsBulkRepository.BulkInsert(locationsToInsert);
             }
             return locationsToInsert.Count;
         }

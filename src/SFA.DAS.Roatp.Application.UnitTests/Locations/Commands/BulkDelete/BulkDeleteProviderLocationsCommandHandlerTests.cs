@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
         public async Task Handle_Deletes_Records(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
             [Frozen] Mock<IProviderCourseLocationReadRepository> providerCourseLocationReadRepositoryMock,
-            [Frozen] Mock<IProviderLocationsDeleteRepository> providerLocationsDeleteRepositoryMock,
+            [Frozen] Mock<IProviderLocationsBulkRepository> providerLocationsBulkRepositoryMock,
             BulkDeleteProviderLocationsCommand command,
             BulkDeleteProviderLocationsCommandHandler sut,
             CancellationToken cancellationToken)
@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
 
             var result = await sut.Handle(command, cancellationToken);
 
-            providerLocationsDeleteRepositoryMock.Verify(d => d.BulkDelete(It.Is<IEnumerable<int>>(x=>x.Contains(regionalLocationId))), Times.Once);
+            providerLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.Is<IEnumerable<int>>(x=>x.Contains(regionalLocationId))), Times.Once);
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.EqualTo(1));
         }
@@ -48,7 +48,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
         public async Task Handle_Deletes_NoRecords(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
             [Frozen] Mock<IProviderCourseLocationReadRepository> providerCourseLocationReadRepositoryMock,
-            [Frozen] Mock<IProviderLocationsDeleteRepository> providerLocationsDeleteRepositoryMock,
+            [Frozen] Mock<IProviderLocationsBulkRepository> providerLocationsDeleteRepositoryMock,
             BulkDeleteProviderLocationsCommand command,
             BulkDeleteProviderLocationsCommandHandler sut,
             CancellationToken cancellationToken)
