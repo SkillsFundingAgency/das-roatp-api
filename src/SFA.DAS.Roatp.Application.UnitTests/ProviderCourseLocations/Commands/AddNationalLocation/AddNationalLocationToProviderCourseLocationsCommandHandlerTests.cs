@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         public async Task Handle_NationalLocationMissing_CreatesNationalLocation(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsWriteRepository> providerLocationWriteRepositoryMock,
-            [Frozen] Mock<IProvidersReadRepository> providerReadRepositoryMock,
+            [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
             AddNationalLocationToProviderCourseLocationsCommandHandler sut,
             Provider provider,
             List<ProviderLocation> providerLocations,
@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
             )
         {
             providerLocations.ForEach(p => p.LocationType = LocationType.Provider);
-            providerReadRepositoryMock.Setup(m => m.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
+            providersReadRepositoryMock.Setup(m => m.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
             providerLocationsReadRepositoryMock.Setup(m => m.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
 
             await sut.Handle(command, new CancellationToken());

@@ -18,9 +18,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.UpdateProviderL
         public async Task Validates_Ukprn(int ukprn, bool isValid)
         {
             var command = new UpdateProviderLocationDetailsCommand { Ukprn = ukprn };
-            var providerReadRepositoryMock = new Mock<IProvidersReadRepository>();
-            providerReadRepositoryMock.Setup(r => r.GetByUkprn(10012002)).ReturnsAsync(new Provider());
-            var sut = new UpdateProviderLocationDetailsCommandValidator(providerReadRepositoryMock.Object, Mock.Of<IProviderLocationsReadRepository>());
+            var providersReadRepositoryMock = new Mock<IProvidersReadRepository>();
+            providersReadRepositoryMock.Setup(r => r.GetByUkprn(10012002)).ReturnsAsync(new Provider());
+            var sut = new UpdateProviderLocationDetailsCommandValidator(providersReadRepositoryMock.Object, Mock.Of<IProviderLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -74,11 +74,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.UpdateProviderL
         public async Task Validate_LocationNameUnqiue_IsInvalid()
         {
             var command = new UpdateProviderLocationDetailsCommand { Id = Guid.NewGuid(), LocationName = "unique name" };
-            var providerReadRepositoryMock = new Mock<IProvidersReadRepository>();
-            providerReadRepositoryMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
+            var providersReadRepositoryMock = new Mock<IProvidersReadRepository>();
+            providersReadRepositoryMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
             var providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(new List<ProviderLocation> { new ProviderLocation { NavigationId = command.Id, LocationName = "unique name", LocationType = LocationType.Provider } });
-            var sut = new UpdateProviderLocationDetailsCommandValidator(providerReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object);
+            var sut = new UpdateProviderLocationDetailsCommandValidator(providersReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object);
 
             var result = await sut.TestValidateAsync(command);
 
@@ -89,11 +89,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.UpdateProviderL
         public async Task Validate_LocationNameDuplicate_IsInvalid()
         {
             var command = new UpdateProviderLocationDetailsCommand { Id = Guid.NewGuid(), LocationName = "Duplicate name" };
-            var providerReadRepositoryMock = new Mock<IProvidersReadRepository>();
-            providerReadRepositoryMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
+            var providersReadRepositoryMock = new Mock<IProvidersReadRepository>();
+            providersReadRepositoryMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
             var providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(new List<ProviderLocation> { new ProviderLocation { NavigationId = Guid.NewGuid(), LocationName = "Duplicate name", LocationType = LocationType.Provider } });
-            var sut = new UpdateProviderLocationDetailsCommandValidator(providerReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object);
+            var sut = new UpdateProviderLocationDetailsCommandValidator(providersReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object);
 
             var result = await sut.TestValidateAsync(command);
 

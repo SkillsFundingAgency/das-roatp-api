@@ -9,11 +9,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 {
     public abstract class CreateProviderCourseCommandValidatorTestBase
     {
-        protected Mock<IProvidersReadRepository> ProviderReadRepositoryMock;
-        protected Mock<IProviderCoursesReadRepository> ProviderCourseReadRepositoryMock;
-        protected Mock<IStandardsReadRepository> StandardReadRepositoryMock;
-        protected Mock<IProviderLocationsReadRepository> ProviderLocationsReadRepositoryMock;
-        protected Mock<IRegionsReadRepository> RegionReadRepositoryMock;
+        protected Mock<IProvidersReadRepository> providersReadRepositoryMock;
+        protected Mock<IProviderCoursesReadRepository> providerCoursesReadRepositoryMock;
+        protected Mock<IStandardsReadRepository> standardsReadRepositoryMock;
+        protected Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock;
+        protected Mock<IRegionsReadRepository> regionsReadRepositoryMock;
         public const int ValidUkprn = 10012002;
         protected const int ValidComboLarsCode = 321;
         protected const int RegulatedLarsCode = 123;
@@ -23,26 +23,26 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
         protected CreateProviderCourseCommandValidator GetSut()
         {
-            ProviderReadRepositoryMock = new Mock<IProvidersReadRepository>();
-            ProviderReadRepositoryMock.Setup(p => p.GetByUkprn(ValidUkprn)).ReturnsAsync(new Provider { Ukprn = ValidUkprn });
+            providersReadRepositoryMock = new Mock<IProvidersReadRepository>();
+            providersReadRepositoryMock.Setup(p => p.GetByUkprn(ValidUkprn)).ReturnsAsync(new Provider { Ukprn = ValidUkprn });
 
-            StandardReadRepositoryMock = new Mock<IStandardsReadRepository>();
-            StandardReadRepositoryMock
+            standardsReadRepositoryMock = new Mock<IStandardsReadRepository>();
+            standardsReadRepositoryMock
                 .Setup(r => r.GetStandard(It.Is<int>(i => i == ValidComboLarsCode || i == NonRegulatedLarsCode)))
                 .ReturnsAsync(new Standard());
-            StandardReadRepositoryMock
+            standardsReadRepositoryMock
                 .Setup(r => r.GetStandard(It.Is<int>(i => i == RegulatedLarsCode)))
                 .ReturnsAsync(new Standard { ApprovalBody = Guid.NewGuid().ToString() });
 
-            ProviderCourseReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
-            ProviderCourseReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(ValidUkprn, ValidComboLarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
+            providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
+            providerCoursesReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(ValidUkprn, ValidComboLarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
-            ProviderLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
-            ProviderLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(ValidUkprn)).ReturnsAsync(new List<ProviderLocation> {new ProviderLocation {NavigationId = NavigationId}});
-            RegionReadRepositoryMock = new Mock<IRegionsReadRepository>();
-            RegionReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(new List<Region> { new Region { Id = ValidRegionId } });
+            providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
+            providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(ValidUkprn)).ReturnsAsync(new List<ProviderLocation> {new ProviderLocation {NavigationId = NavigationId}});
+            regionsReadRepositoryMock = new Mock<IRegionsReadRepository>();
+            regionsReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(new List<Region> { new Region { Id = ValidRegionId } });
 
-            return new CreateProviderCourseCommandValidator(ProviderReadRepositoryMock.Object, StandardReadRepositoryMock.Object, ProviderCourseReadRepositoryMock.Object,ProviderLocationsReadRepositoryMock.Object, RegionReadRepositoryMock.Object);
+            return new CreateProviderCourseCommandValidator(providersReadRepositoryMock.Object, standardsReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object,providerLocationsReadRepositoryMock.Object, regionsReadRepositoryMock.Object);
         }
     }
 }
