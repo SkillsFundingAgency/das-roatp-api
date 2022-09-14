@@ -12,7 +12,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
             ImportType = importType;
         }
 
-
         public int Id { get; set; }
         public DateTime TimeStarted { get; set; }
         public DateTime TimeFinished { get; set; }
@@ -25,12 +24,5 @@ namespace SFA.DAS.Roatp.Domain.Entities
         CourseDirectory, 
         ProviderRegistrationDetails, 
         Standards
-    }
-
-    public static class ImportTypes
-    {
-        public static string CourseDirectory => ImportType.CourseDirectory.ToString();
-        public static string ProviderRegistrationDetails => ImportType.ProviderRegistrationDetails.ToString();
-        public static string Standards => ImportType.Standards.ToString();
     }
 }
