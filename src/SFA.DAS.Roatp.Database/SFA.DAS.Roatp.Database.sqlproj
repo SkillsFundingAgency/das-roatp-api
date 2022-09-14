@@ -71,6 +71,7 @@
     <Build Include="Tables\Region.sql" />
     <None Include="PostDeploymentScripts\PopulateRegionData.sql" />
     <Build Include="Tables\ProvderRegistrationDetail.sql" />
+    <Build Include="Tables\ImportAudit.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />

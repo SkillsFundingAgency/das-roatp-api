@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Threading.Tasks;
@@ -19,10 +20,11 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         private readonly IStandardReadRepository _standardReadRepository;
         private readonly IRegionReadRepository _regionReadRepository;
         private readonly ILoadProviderRepository _loadProvider;
+        private readonly IImportAuditInsertRepository _importAuditInsertRepository;
 
         private readonly ILogger<LoadCourseDirectoryDataService> _logger;
 
-        public LoadCourseDirectoryDataService(IGetCourseDirectoryDataService getCourseDirectoryDataService,   ICourseDirectoryDataProcessingService courseDirectoryDataProcessingService,   IStandardReadRepository standardReadRepository, IRegionReadRepository regionReadRepository, ILogger<LoadCourseDirectoryDataService> logger, ILoadProviderRepository loadProvider)
+        public LoadCourseDirectoryDataService(IGetCourseDirectoryDataService getCourseDirectoryDataService,   ICourseDirectoryDataProcessingService courseDirectoryDataProcessingService,   IStandardReadRepository standardReadRepository, IRegionReadRepository regionReadRepository, ILogger<LoadCourseDirectoryDataService> logger, ILoadProviderRepository loadProvider, IImportAuditInsertRepository importAuditInsertRepository)
         {
             _getCourseDirectoryDataService = getCourseDirectoryDataService;
             _courseDirectoryDataProcessingService = courseDirectoryDataProcessingService;
@@ -30,6 +32,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             _regionReadRepository = regionReadRepository;
             _logger = logger;
             _loadProvider = loadProvider;
+            _importAuditInsertRepository = importAuditInsertRepository;
         }
 
         public async Task<CourseDirectoryImportMetrics> LoadCourseDirectoryData(bool betaAndPilotProvidersOnly)
@@ -40,6 +43,8 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 LarsCodeDuplicationMetrics = new LarsCodeDuplicationMetrics(),
                 BetaAndPilotProvidersOnly = betaAndPilotProvidersOnly
             };
+            
+            var timeStarted = DateTime.UtcNow;
 
             var standards = await GetStandards();
             loadMetrics.TotalStandardsInCache = standards.Count;
@@ -91,7 +96,9 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                     }
                 }
             }
-            
+
+            await _importAuditInsertRepository.Insert(new ImportAudit(timeStarted, loadMetrics.NumberOfProvidersLoadedSuccessfully, ImportType.CourseDirectory));
+            _logger.LogInformation("Course Directory audit record written");
             return loadMetrics;
         }
 

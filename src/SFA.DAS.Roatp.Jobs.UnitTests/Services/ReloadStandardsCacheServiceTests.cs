@@ -10,6 +10,7 @@ using SFA.DAS.Testing.AutoFixture;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
 {
@@ -21,6 +22,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
         public async Task ReloadStandardsCache_GetsDataFromOuterApi_CallsRepositoryToSaveIt(
             [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock, 
             [Frozen] Mock<IReloadStandardsRepository> repositoryMock,
+            [Frozen] Mock<IImportAuditInsertRepository> auditRepositoryMock,
             [Greedy] ReloadStandardsCacheService sut,
             StandardList data)
         {
@@ -30,6 +32,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             await sut.ReloadStandardsCache();
 
             repositoryMock.Verify(r => r.ReloadStandards(It.Is<List<Domain.Entities.Standard>>(list => list.Count == data.Standards.Count)));
+            auditRepositoryMock.Verify(x => x.Insert(It.IsAny<ImportAudit>()));
         }
 
         [Test]
@@ -37,6 +40,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
         public async Task ReloadStandardsCache_GetsNoDataFromOuterApi_CallsRepositoryToSaveIt(
             [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
             [Frozen] Mock<IReloadStandardsRepository> repositoryMock,
+            [Frozen] Mock<IImportAuditInsertRepository> auditRepositoryMock,
             [Greedy] ReloadStandardsCacheService sut)
         {
             apiClientMock.Setup(c => c.Get<StandardList>(It.IsAny<string>())).ReturnsAsync((true, new StandardList()));
@@ -46,6 +50,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             await action.Should().ThrowAsync<InvalidOperationException>();
 
             repositoryMock.Verify(r => r.ReloadStandards(It.IsAny<List<Domain.Entities.Standard>>()), Times.Never);
+            auditRepositoryMock.Verify(x => x.Insert(It.IsAny<ImportAudit>()),Times.Never);
         }
 
         [Test]
@@ -53,6 +58,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
         public async Task ReloadStandardsCache_GetUnsuccessfulResponseFromOuterApi_CallsRepositoryToSaveIt(
             [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
             [Frozen] Mock<IReloadStandardsRepository> repositoryMock,
+            [Frozen] Mock<IImportAuditInsertRepository> auditRepositoryMock,
             [Greedy] ReloadStandardsCacheService sut)
         {
             apiClientMock.Setup(c => c.Get<StandardList>(It.IsAny<string>())).ReturnsAsync((false, null));
@@ -62,6 +68,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             await action.Should().ThrowAsync<InvalidOperationException>();
 
             repositoryMock.Verify(r => r.ReloadStandards(It.IsAny<List<Domain.Entities.Standard>>()), Times.Never);
+            auditRepositoryMock.Verify(x => x.Insert(It.IsAny<ImportAudit>()), Times.Never);
         }
     }
 }
