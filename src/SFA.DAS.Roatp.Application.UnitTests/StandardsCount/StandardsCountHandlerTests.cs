@@ -11,13 +11,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.StandardsCount
     [TestFixture]
     public class Tests
     {
-        private Mock<IGetStandardsCountRepository> _repository;
+        private Mock<IStandardsReadRepository> _repository;
         private StandardsCountHandler _handler;
 
         [SetUp]
         public void Before_each_test()
         {
-            _repository = new Mock<IGetStandardsCountRepository>();
+            _repository = new Mock<IStandardsReadRepository>();
             _handler = new StandardsCountHandler(_repository.Object,
                 Mock.Of<ILogger<StandardsCountHandler>>());
         }

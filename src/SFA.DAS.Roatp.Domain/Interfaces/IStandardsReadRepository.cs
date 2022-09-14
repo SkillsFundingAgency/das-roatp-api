@@ -8,5 +8,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     {
         Task<List<Standard>> GetAllStandards();
         Task<Standard> GetStandard(int larsCode);
+        Task<int> GetStandardsCount();
     }
 }

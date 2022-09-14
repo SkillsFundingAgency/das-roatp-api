@@ -46,7 +46,6 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IRegionsReadRepository, RegionsReadRepository>();
             services.AddTransient<IProvidersWriteRepository, ProvidersWriteRepository>();
             services.AddTransient<IReloadStandardsRepository, ReloadStandardsRepository>();
-            services.AddTransient<IGetStandardsCountRepository, GetStandardsCountRepository>();
             services.AddTransient<IProviderLocationsReadRepository, ProviderLocationsReadRepository>();
             services.AddTransient<IProviderLocationsBulkRepository, ProviderLocationsBulkRepository>();
             services.AddTransient<IReloadProviderRegistrationDetailsRepository, ReloadProviderRegistrationDetailsRepository>();
