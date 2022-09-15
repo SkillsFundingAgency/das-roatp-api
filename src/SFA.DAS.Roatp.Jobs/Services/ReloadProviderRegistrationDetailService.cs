@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
             }
             _logger.LogInformation($"Reloading {providerRegistrationDetails.Count} provider registration details");
             await _repository.ReloadRegisteredProviders(providerRegistrationDetails);
-            await _importAuditInsertRepository.Insert(new ImportAudit(timeStarted, providerRegistrationDetails !=null? providerRegistrationDetails.Count:0, ImportType.ProviderRegistrationDetails));
+            await _importAuditInsertRepository.Insert(new ImportAudit(timeStarted, providerRegistrationDetails.Count, ImportType.ProviderRegistrationDetails));
             _logger.LogInformation("Provider Registration Details audit record written");
         }
     }

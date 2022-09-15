@@ -17,15 +17,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = roatpDataContext;
         }
 
-        public ImportAudit GetLastImportByType(string importType)
-        {
-            return  _roatpDataContext
-                    .ImportAudits
-                    .AsEnumerable()
-                    .OrderByDescending(c => c.TimeStarted)
-                    .Where(c => c.ImportType.ToString() == importType).ToList().FirstOrDefault();
-        }
-
         public async Task<ImportAudit> GetLastImportByType(ImportType importType)
         {
            return await _roatpDataContext
