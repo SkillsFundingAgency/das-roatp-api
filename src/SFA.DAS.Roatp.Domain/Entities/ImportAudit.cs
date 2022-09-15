@@ -8,13 +8,11 @@ namespace SFA.DAS.Roatp.Domain.Entities
         {
             TimeStarted = timeStarted;
             RowsImported = rowsImported;
-            TimeFinished = DateTime.UtcNow;
             ImportType = importType;
         }
 
         public int Id { get; set; }
         public DateTime TimeStarted { get; set; }
-        public DateTime TimeFinished { get; set; }
         public int RowsImported { get; set; }
         public ImportType ImportType { get; set; }
     }

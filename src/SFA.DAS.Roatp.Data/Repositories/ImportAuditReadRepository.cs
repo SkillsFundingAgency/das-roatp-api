@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -17,12 +18,14 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = roatpDataContext;
         }
 
-        public async Task<ImportAudit> GetLastImportByType(ImportType importType)
+        public async Task<DateTime> GetLastImportedDateByImportType(ImportType importType)
         {
            return await _roatpDataContext
                 .ImportAudits
-                .OrderByDescending(c => c.TimeStarted)
-                .FirstOrDefaultAsync(c => c.ImportType == importType);
+                .Where(i=>i.ImportType==importType)
+                .OrderByDescending(i => i.TimeStarted)
+                .Select(i=>i.TimeStarted)
+                .FirstOrDefaultAsync();
         }
     }
 }

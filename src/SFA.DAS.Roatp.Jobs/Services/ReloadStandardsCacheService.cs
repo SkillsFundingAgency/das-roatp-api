@@ -13,15 +13,15 @@ namespace SFA.DAS.Roatp.Jobs.Services
     {
         private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
         private readonly IReloadStandardsRepository _reloadStandardsRepository;
-        private readonly IImportAuditInsertRepository _importAuditInsertRepository;
+        private readonly IImportAuditWriteRepository _importAuditWriteRepository;
         private readonly ILogger<ReloadStandardsCacheService> _logger;
 
-        public ReloadStandardsCacheService(ILogger<ReloadStandardsCacheService> logger, ICourseManagementOuterApiClient courseManagementOuterApiClient, IReloadStandardsRepository reloadStandardsRepository, IImportAuditInsertRepository importAuditInsertRepository)
+        public ReloadStandardsCacheService(ILogger<ReloadStandardsCacheService> logger, ICourseManagementOuterApiClient courseManagementOuterApiClient, IReloadStandardsRepository reloadStandardsRepository, IImportAuditWriteRepository importAuditWriteRepository)
         {
             _logger = logger;
             _courseManagementOuterApiClient = courseManagementOuterApiClient;
             _reloadStandardsRepository = reloadStandardsRepository;
-            _importAuditInsertRepository = importAuditInsertRepository;
+            _importAuditWriteRepository = importAuditWriteRepository;
         }
 
         public async Task ReloadStandardsCache()
@@ -39,9 +39,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
             await _reloadStandardsRepository.ReloadStandards(standardsToReload);
 
             _logger.LogInformation("Standards reload complete");
-            await _importAuditInsertRepository.Insert(new ImportAudit(timeStarted, standardsToReload.Count, ImportType.Standards));
-            _logger.LogInformation("Standards reload audit record written");
-
+            await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, standardsToReload.Count, ImportType.Standards));
         }
     }
 }

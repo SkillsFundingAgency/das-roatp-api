@@ -3,7 +3,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface IImportAuditInsertRepository
+    public interface IImportAuditWriteRepository
     {
         Task Insert(ImportAudit importAudit);
     }

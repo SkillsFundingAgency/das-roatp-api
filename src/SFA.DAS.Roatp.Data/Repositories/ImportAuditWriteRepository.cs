@@ -7,11 +7,11 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class ImportAuditInsertRepository : IImportAuditInsertRepository
+    internal class ImportAuditWriteRepository : IImportAuditWriteRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
-        public ImportAuditInsertRepository(RoatpDataContext roatpDataContext)
+        public ImportAuditWriteRepository(RoatpDataContext roatpDataContext)
         {
             _roatpDataContext = roatpDataContext;
         }

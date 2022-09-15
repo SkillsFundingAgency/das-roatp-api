@@ -13,11 +13,10 @@ namespace SFA.DAS.Roatp.Data.Configuration
         {
             builder.ToTable(nameof(ImportAudit));
             builder.HasKey(p => p.Id);
-            builder.Property(p => p.ImportType).IsRequired();
             builder.Property(p => p.RowsImported).IsRequired();
             builder.Property(p => p.TimeStarted).IsRequired();
-            builder.Property(p => p.TimeFinished).IsRequired();
             builder.Property(e => e.ImportType)
+                .IsRequired()
                 .HasConversion(
                 e => e.ToString(),
                 e => (ImportType)Enum.Parse(typeof(ImportType), e));

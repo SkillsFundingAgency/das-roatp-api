@@ -13,12 +13,12 @@ namespace SFA.DAS.Roatp.Jobs.Services
         private readonly IReloadProviderRegistrationDetailsRepository _repository;
         private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
         private readonly ILogger<ReloadProviderRegistrationDetailService> _logger;
-        private readonly IImportAuditInsertRepository _importAuditInsertRepository;
-        public ReloadProviderRegistrationDetailService(IReloadProviderRegistrationDetailsRepository repository, ICourseManagementOuterApiClient courseManagementOuterApiClient, IImportAuditInsertRepository importAuditInsertRepository, ILogger<ReloadProviderRegistrationDetailService> logger)
+        private readonly IImportAuditWriteRepository _importAuditWriteRepository;
+        public ReloadProviderRegistrationDetailService(IReloadProviderRegistrationDetailsRepository repository, ICourseManagementOuterApiClient courseManagementOuterApiClient, IImportAuditWriteRepository importAuditWriteRepository, ILogger<ReloadProviderRegistrationDetailService> logger)
         {
             _repository = repository;
             _courseManagementOuterApiClient = courseManagementOuterApiClient;
-            _importAuditInsertRepository = importAuditInsertRepository;
+            _importAuditWriteRepository = importAuditWriteRepository;
             _logger = logger;
         }
 
@@ -34,8 +34,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
             }
             _logger.LogInformation($"Reloading {providerRegistrationDetails.Count} provider registration details");
             await _repository.ReloadRegisteredProviders(providerRegistrationDetails);
-            await _importAuditInsertRepository.Insert(new ImportAudit(timeStarted, providerRegistrationDetails.Count, ImportType.ProviderRegistrationDetails));
-            _logger.LogInformation("Provider Registration Details audit record written");
+            await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, providerRegistrationDetails.Count, ImportType.ProviderRegistrationDetails));
         }
     }
 }

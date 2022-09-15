@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IGetActiveProviderRegistrationsRepository, GetActiveProviderRegistrationsRepository>();
             services.AddTransient<IProviderLocationWriteRepository, ProviderLocationWriteRepository>();
             services.AddTransient<IProviderCourseLocationWriteRepository, ProviderCourseLocationWriteRepository>();
-            services.AddTransient<IImportAuditInsertRepository, ImportAuditInsertRepository>();
+            services.AddTransient<IImportAuditWriteRepository, ImportAuditWriteRepository>();
             services.AddTransient<IImportAuditReadRepository, ImportAuditReadRepository>();
         }
 

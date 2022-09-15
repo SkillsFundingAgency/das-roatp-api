@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
         public async Task ReloadStandardsCache_GetsDataFromOuterApi_CallsRepositoryToSaveIt(
             [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock, 
             [Frozen] Mock<IReloadStandardsRepository> repositoryMock,
-            [Frozen] Mock<IImportAuditInsertRepository> auditRepositoryMock,
+            [Frozen] Mock<IImportAuditWriteRepository> auditRepositoryMock,
             [Greedy] ReloadStandardsCacheService sut,
             StandardList data)
         {
@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
         public async Task ReloadStandardsCache_GetsNoDataFromOuterApi_CallsRepositoryToSaveIt(
             [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
             [Frozen] Mock<IReloadStandardsRepository> repositoryMock,
-            [Frozen] Mock<IImportAuditInsertRepository> auditRepositoryMock,
+            [Frozen] Mock<IImportAuditWriteRepository> auditRepositoryMock,
             [Greedy] ReloadStandardsCacheService sut)
         {
             apiClientMock.Setup(c => c.Get<StandardList>(It.IsAny<string>())).ReturnsAsync((true, new StandardList()));
@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
         public async Task ReloadStandardsCache_GetUnsuccessfulResponseFromOuterApi_CallsRepositoryToSaveIt(
             [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
             [Frozen] Mock<IReloadStandardsRepository> repositoryMock,
-            [Frozen] Mock<IImportAuditInsertRepository> auditRepositoryMock,
+            [Frozen] Mock<IImportAuditWriteRepository> auditRepositoryMock,
             [Greedy] ReloadStandardsCacheService sut)
         {
             apiClientMock.Setup(c => c.Get<StandardList>(It.IsAny<string>())).ReturnsAsync((false, null));

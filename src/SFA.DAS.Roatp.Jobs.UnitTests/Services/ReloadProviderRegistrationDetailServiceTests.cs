@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
         [MoqAutoData]
         public async Task ReloadProviderRegistrationDetails_OnApiSuccess_CallsRepositoryReloadMethod(
             [Frozen] Mock<IReloadProviderRegistrationDetailsRepository> repositoryMock,
-            [Frozen] Mock<IImportAuditInsertRepository> auditRepositoryMock,
+            [Frozen] Mock<IImportAuditWriteRepository> auditRepositoryMock,
             [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
             [Greedy] ReloadProviderRegistrationDetailService sut,
             List<ProviderRegistrationDetail> data)
