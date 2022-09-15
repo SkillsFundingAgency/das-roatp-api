@@ -16,18 +16,18 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
     {
         private readonly IGetCourseDirectoryDataService _getCourseDirectoryDataService;
         private readonly ICourseDirectoryDataProcessingService _courseDirectoryDataProcessingService;
-        private readonly IStandardReadRepository _standardReadRepository;
-        private readonly IRegionReadRepository _regionReadRepository;
+        private readonly IStandardsReadRepository _standardsReadRepository;
+        private readonly IRegionsReadRepository _regionsReadRepository;
         private readonly ILoadProviderRepository _loadProvider;
 
         private readonly ILogger<LoadCourseDirectoryDataService> _logger;
 
-        public LoadCourseDirectoryDataService(IGetCourseDirectoryDataService getCourseDirectoryDataService,   ICourseDirectoryDataProcessingService courseDirectoryDataProcessingService,   IStandardReadRepository standardReadRepository, IRegionReadRepository regionReadRepository, ILogger<LoadCourseDirectoryDataService> logger, ILoadProviderRepository loadProvider)
+        public LoadCourseDirectoryDataService(IGetCourseDirectoryDataService getCourseDirectoryDataService,   ICourseDirectoryDataProcessingService courseDirectoryDataProcessingService,   IStandardsReadRepository standardsReadRepository, IRegionsReadRepository regionsReadRepository, ILogger<LoadCourseDirectoryDataService> logger, ILoadProviderRepository loadProvider)
         {
             _getCourseDirectoryDataService = getCourseDirectoryDataService;
             _courseDirectoryDataProcessingService = courseDirectoryDataProcessingService;
-            _standardReadRepository = standardReadRepository;
-            _regionReadRepository = regionReadRepository;
+            _standardsReadRepository = standardsReadRepository;
+            _regionsReadRepository = regionsReadRepository;
             _logger = logger;
             _loadProvider = loadProvider;
         }
@@ -113,7 +113,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
         private async Task<List<Region>> GetRegions()
         {
-            var regions = await _regionReadRepository.GetAllRegions();
+            var regions = await _regionsReadRepository.GetAllRegions();
             if (regions == null || regions.Count == 0)
             {
                 var errorMessage = "No regions could be retrieved from the regions table";
@@ -127,7 +127,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
         private async Task<List<Standard>> GetStandards()
         {
-            var standards = await _standardReadRepository.GetAllStandards();
+            var standards = await _standardsReadRepository.GetAllStandards();
             if (standards == null || standards.Count == 0)
             {
                 var errorMessage = "No standards could be retrieved from the standards cache";

@@ -11,12 +11,12 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public class GetActiveProviderRegistrationsRepository: IGetActiveProviderRegistrationsRepository
+    public class ProviderRegistrationDetailsReadRepository: IProviderRegistrationDetailsReadRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
-        private readonly ILogger<GetActiveProviderRegistrationsRepository> _logger;
+        private readonly ILogger<ProviderRegistrationDetailsReadRepository> _logger;
 
-        public GetActiveProviderRegistrationsRepository(RoatpDataContext roatpDataContext, ILogger<GetActiveProviderRegistrationsRepository> logger)
+        public ProviderRegistrationDetailsReadRepository(RoatpDataContext roatpDataContext, ILogger<ProviderRegistrationDetailsReadRepository> logger)
         {
             _roatpDataContext = roatpDataContext;
             _logger = logger;

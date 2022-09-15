@@ -17,8 +17,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
         public async Task Validate_AcceptsEightDigitNumbersOnly(int ukprn, int larsCode, bool expectedResult)
         {
             var query = new GetProviderCourseQuery(ukprn, larsCode);
-            var repoMock = new Mock<IProviderReadRepository>();
-            var repoMockProvideCourse = new Mock<IProviderCourseReadRepository>();
+            var repoMock = new Mock<IProvidersReadRepository>();
+            var repoMockProvideCourse = new Mock<IProviderCoursesReadRepository>();
             repoMock.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
             repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
             var sut = new GetProviderCourseQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
@@ -37,8 +37,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             string expectedErrorMessage1 = UkprnValidator.InvalidUkprnErrorMessage;
             string expectedErrorMessage2 = LarsCodeValidator.InvalidLarsCodeErrorMessage;
             var query = new GetProviderCourseQuery(ukprn, larsCode);
-            var repoMockProvideCourse = new Mock<IProviderCourseReadRepository>();
-            var repoMock = new Mock<IProviderReadRepository>();
+            var repoMockProvideCourse = new Mock<IProviderCoursesReadRepository>();
+            var repoMock = new Mock<IProvidersReadRepository>();
             var sut = new GetProviderCourseQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
         
             var result = await sut.ValidateAsync(query);
@@ -58,8 +58,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             int expectedTimesRepoIsInvoked = 2;
             string expectedErrorMessage1 = LarsCodeValidator.ProviderCourseNotFoundErrorMessage;
             var query = new GetProviderCourseQuery(ukprn, larsCode);
-            var repoMockProvideCourse = new Mock<IProviderCourseReadRepository>();
-            var repoMock = new Mock<IProviderReadRepository>();
+            var repoMockProvideCourse = new Mock<IProviderCoursesReadRepository>();
+            var repoMock = new Mock<IProvidersReadRepository>();
             repoMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
             repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync((Domain.Entities.ProviderCourse)null);
             var sut = new GetProviderCourseQueryValidator(repoMock.Object, repoMockProvideCourse.Object);

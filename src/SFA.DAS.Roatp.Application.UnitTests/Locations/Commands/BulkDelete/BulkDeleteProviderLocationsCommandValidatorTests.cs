@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
         {
             var command = new BulkDeleteProviderLocationsCommand(10012002,  _userId);
 
-            var sut = new BulkDeleteProviderLocationsCommandValidator(Mock.Of<IProviderReadRepository>());
+            var sut = new BulkDeleteProviderLocationsCommandValidator(Mock.Of<IProvidersReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
         public async Task ValidateUserId_Empty_ReturnsError(string userId)
         {
             var command = new BulkDeleteProviderLocationsCommand(10012002, userId);
-            var sut = new BulkDeleteProviderLocationsCommandValidator(Mock.Of<IProviderReadRepository>());
+            var sut = new BulkDeleteProviderLocationsCommandValidator(Mock.Of<IProvidersReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 

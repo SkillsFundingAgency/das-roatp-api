@@ -9,25 +9,25 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
 {
     public class AddProviderCourseLocationCommandHandler : IRequestHandler<AddProviderCourseLocationCommand, int>
     {
-        private readonly IProviderCourseLocationWriteRepository _providerCourseLocationWriteRepository;
+        private readonly IProviderCourseLocationsWriteRepository _providerCourseLocationsWriteRepository;
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
-        private readonly IProviderCourseReadRepository _providerCourseReadRepository;
+        private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
         private readonly ILogger<AddProviderCourseLocationCommandHandler> _logger;
 
-        public AddProviderCourseLocationCommandHandler(IProviderCourseLocationWriteRepository providerCourseLocationWriteRepository,
+        public AddProviderCourseLocationCommandHandler(IProviderCourseLocationsWriteRepository providerCourseLocationWriteRepository,
             IProviderLocationsReadRepository providerLocationsReadRepository,
-            IProviderCourseReadRepository providerCourseReadRepository,
+            IProviderCoursesReadRepository providerCoursesReadRepository,
             ILogger<AddProviderCourseLocationCommandHandler> logger)
         {
-            _providerCourseLocationWriteRepository = providerCourseLocationWriteRepository;
+            _providerCourseLocationsWriteRepository = providerCourseLocationWriteRepository;
             _logger = logger;
             _providerLocationsReadRepository = providerLocationsReadRepository;
-            _providerCourseReadRepository = providerCourseReadRepository;
+            _providerCoursesReadRepository = providerCoursesReadRepository;
         }
 
         public async Task<int> Handle(AddProviderCourseLocationCommand command, CancellationToken cancellationToken)
         {
-            var providerCourse = await _providerCourseReadRepository.GetProviderCourseByUkprn(command.Ukprn, command.LarsCode);
+            var providerCourse = await _providerCoursesReadRepository.GetProviderCourseByUkprn(command.Ukprn, command.LarsCode);
             var providerLocation = await _providerLocationsReadRepository.GetProviderLocation(command.Ukprn, command.LocationNavigationId);
 
             var providerCourseLocation = new ProviderCourseLocation
@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
                 HasBlockReleaseDeliveryOption = command.HasBlockReleaseDeliveryOption
             };
             _logger.LogInformation("Creating provider course location for Ukprn: {ukprn} LarsCode: {larsCode}, ProviderLocationId: {Id}", command.Ukprn, command.LarsCode, providerLocation.Id);
-            var createdProviderCourseLocation = await _providerCourseLocationWriteRepository.Create(providerCourseLocation);
+            var createdProviderCourseLocation = await _providerCourseLocationsWriteRepository.Create(providerCourseLocation);
             return createdProviderCourseLocation.Id;
         }
     }

@@ -12,41 +12,41 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
     public class AddNationalLocationToProviderCourseLocationsCommandHandler : IRequestHandler<AddNationalLocationToProviderCourseLocationsCommand, ProviderCourseLocation>
     {
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
-        private readonly IProviderLocationWriteRepository _providerLocationWriteRepository;
-        private readonly IProviderCourseReadRepository _providerCourseReadRepository;
-        private readonly IProviderCourseLocationWriteRepository _providerCourseLocationWriteRepository;
-        private readonly IProviderReadRepository _providerReadRepository;
+        private readonly IProviderLocationsWriteRepository _providerLocationsWriteRepository;
+        private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
+        private readonly IProviderCourseLocationsWriteRepository _providerCourseLocationsWriteRepository;
+        private readonly IProvidersReadRepository _providersReadRepository;
         private readonly ILogger<AddNationalLocationToProviderCourseLocationsCommandHandler> _logger;
 
         public AddNationalLocationToProviderCourseLocationsCommandHandler(
             IProviderLocationsReadRepository providerLocationsReadRepository,
-            IProviderLocationWriteRepository providerLocationWriteRepository,
-            IProviderCourseReadRepository providerCourseReadRepository,
-            IProviderCourseLocationWriteRepository providerCourseLocationWriteRepository,
-            IProviderReadRepository providerReadRepository,
+            IProviderLocationsWriteRepository providerLocationsWriteRepository,
+            IProviderCoursesReadRepository providerCoursesReadRepository,
+            IProviderCourseLocationsWriteRepository providerCourseLocationsWriteRepository,
+            IProvidersReadRepository providersReadRepository,
             ILogger<AddNationalLocationToProviderCourseLocationsCommandHandler> logger)
         {
             _providerLocationsReadRepository = providerLocationsReadRepository;
-            _providerLocationWriteRepository = providerLocationWriteRepository;
-            _providerCourseReadRepository = providerCourseReadRepository;
-            _providerCourseLocationWriteRepository = providerCourseLocationWriteRepository;
-            _providerReadRepository = providerReadRepository;
+            _providerLocationsWriteRepository = providerLocationsWriteRepository;
+            _providerCoursesReadRepository = providerCoursesReadRepository;
+            _providerCourseLocationsWriteRepository = providerCourseLocationsWriteRepository;
+            _providersReadRepository = providersReadRepository;
             _logger = logger;
         }
 
         public async Task<ProviderCourseLocation> Handle(AddNationalLocationToProviderCourseLocationsCommand request, CancellationToken cancellationToken)
         {
-            var provider = await _providerReadRepository.GetByUkprn(request.Ukprn);
+            var provider = await _providersReadRepository.GetByUkprn(request.Ukprn);
             var allLocations = await _providerLocationsReadRepository.GetAllProviderLocations(request.Ukprn);
             var nationalLocation = allLocations.SingleOrDefault(l => l.LocationType == LocationType.National);
             if (nationalLocation == null)
             {
                 _logger.LogInformation("Creating national location for Ukprn: {ukprn}", request.Ukprn);
                 nationalLocation = ProviderLocation.CreateNationalLocation(provider.Id);
-                await _providerLocationWriteRepository.Create(nationalLocation);
+                await _providerLocationsWriteRepository.Create(nationalLocation);
             }
 
-            var providerCourse = await _providerCourseReadRepository.GetProviderCourse(provider.Id, request.LarsCode);
+            var providerCourse = await _providerCoursesReadRepository.GetProviderCourse(provider.Id, request.LarsCode);
 
             var providerCourseLocation = new ProviderCourseLocation
             {
@@ -57,7 +57,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
 
             _logger.LogInformation($"Associating national location for ProviderCourse:{providerCourse.Id}");
 
-            return await _providerCourseLocationWriteRepository.Create(providerCourseLocation);
+            return await _providerCourseLocationsWriteRepository.Create(providerCourseLocation);
         }
     }
 }

@@ -16,25 +16,25 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
         private const string EmptptySubregionIdsErrorMessage = "SubregionsIds is required";
         private const string SelectedSubregionIdsNotExistsinProviderLocationsErrorMessage = "Provider locations does not have any or some of the sub-regions being added on the course. It is required to add sub regions to the provider locations before associating them with a course";
         private const string SelectedSubregionIdsAlreadyExistsinProviderCourseLocationsErrorMessage = "All or some of the sub-regions are associated to the provider course. It is required that there are no national or regional locations associated to the course";
-        Mock<IProviderReadRepository> providerReadRepositoryMock;
-        Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock;
+        Mock<IProvidersReadRepository> providersReadRepositoryMock;
+        Mock<IProviderCoursesReadRepository> providerCoursesReadRepositoryMock;
         Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock;
-        Mock<IProviderCourseLocationReadRepository> providerCourseLocationReadRepositoryMock;
+        Mock<IProviderCourseLocationsReadRepository> providerCourseLocationsReadRepositoryMock;
 
         [SetUp]
         public void Setup()
         {
-            providerReadRepositoryMock = new Mock<IProviderReadRepository>();
-            providerReadRepositoryMock.Setup(p => p.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
+            providersReadRepositoryMock = new Mock<IProvidersReadRepository>();
+            providersReadRepositoryMock.Setup(p => p.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
 
-            providerCourseReadRepositoryMock = new Mock<IProviderCourseReadRepository>();
-            providerCourseReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
+            providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
+            providerCoursesReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
             providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(new List<ProviderLocation> { new ProviderLocation { Id = 1, RegionId = 1 } });
 
-            providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationReadRepository>();
-            providerCourseLocationReadRepositoryMock.Setup(l => l.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new List<ProviderCourseLocation> { new ProviderCourseLocation { Location = new ProviderLocation { LocationType = LocationType.Regional } } });
+            providerCourseLocationsReadRepositoryMock = new Mock<IProviderCourseLocationsReadRepository>();
+            providerCourseLocationsReadRepositoryMock.Setup(l => l.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new List<ProviderCourseLocation> { new ProviderCourseLocation { Location = new ProviderLocation { LocationType = LocationType.Regional } } });
         }
 
         [Test]
@@ -47,7 +47,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
                 UserId = _userId,
             };
 
-            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providerReadRepositoryMock.Object, providerCourseReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationReadRepositoryMock.Object);
+            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providersReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationsReadRepositoryMock.Object);
 
             var result = await sut.TestValidateAsync(command);
 
@@ -63,7 +63,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
                 LarsCode = 0,
                 UserId = _userId,
             };
-            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providerReadRepositoryMock.Object, providerCourseReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationReadRepositoryMock.Object);
+            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providersReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationsReadRepositoryMock.Object);
 
             var result = await sut.TestValidateAsync(command);
 
@@ -83,7 +83,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             };
 
 
-            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providerReadRepositoryMock.Object, providerCourseReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationReadRepositoryMock.Object);
+            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providersReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationsReadRepositoryMock.Object);
 
             var result = await sut.TestValidateAsync(command);
 
@@ -99,7 +99,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
                 LarsCode = 123,
                 UserId = _userId,
             };
-            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providerReadRepositoryMock.Object, providerCourseReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationReadRepositoryMock.Object);
+            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providersReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationsReadRepositoryMock.Object);
 
             var result = await sut.TestValidateAsync(command);
 
@@ -117,7 +117,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
                 UserId = _userId,
                 SelectedSubregionIds = new List<int> { 10 }
             };
-            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providerReadRepositoryMock.Object, providerCourseReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationReadRepositoryMock.Object);
+            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providersReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationsReadRepositoryMock.Object);
 
             var result = await sut.TestValidateAsync(command);
 
@@ -135,7 +135,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
                 UserId = _userId,
                 SelectedSubregionIds = new List<int> { 1 }
             };
-            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providerReadRepositoryMock.Object, providerCourseReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationReadRepositoryMock.Object);
+            var sut = new BulkInsertProviderCourseLocationsCommandValidator(providersReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationsReadRepositoryMock.Object);
 
             var result = await sut.TestValidateAsync(command);
 

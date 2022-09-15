@@ -11,9 +11,9 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
     public class CreateProviderLocationCommandValidator : AbstractValidator<CreateProviderLocationCommand>
     {
         public const string LocationNameAlreadyUsedMessage = "The location name should be distinct.";
-        public CreateProviderLocationCommandValidator(IProviderReadRepository providerReadRepository, IProviderLocationsReadRepository providerLocationsReadRepository)
+        public CreateProviderLocationCommandValidator(IProvidersReadRepository providersReadRepository, IProviderLocationsReadRepository providerLocationsReadRepository)
         {
-            Include(new UkprnValidator(providerReadRepository));
+            Include(new UkprnValidator(providersReadRepository));
 
             RuleFor(c => c.UserId).NotEmpty();
             RuleFor(c => c.LocationName)

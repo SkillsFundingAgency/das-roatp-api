@@ -16,8 +16,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
     [TestFixture]
     public class PatchProviderCourseCommandValidatorTests
     {
-        private Mock<IProviderReadRepository> _providerReadRepo;
-        private Mock<IProviderCourseReadRepository> _providerCourseReadRepo;
+        private Mock<IProvidersReadRepository> _providersReadRepo;
+        private Mock<IProviderCoursesReadRepository> _providerCoursesReadRepo;
 
         private const string IsApprovedByRegulator = "IsApprovedByRegulator";
         private const string ContactUsEmail = "ContactUsEmail";
@@ -30,10 +30,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [SetUp]
         public void Before_each_test()
         {
-            _providerReadRepo = new Mock<IProviderReadRepository>();
-            _providerCourseReadRepo = new Mock<IProviderCourseReadRepository>();
-            _providerReadRepo.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
-            _providerCourseReadRepo.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
+            _providersReadRepo = new Mock<IProvidersReadRepository>();
+            _providerCoursesReadRepo = new Mock<IProviderCoursesReadRepository>();
+            _providersReadRepo.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
+            _providerCoursesReadRepo.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
         }
 
@@ -42,7 +42,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [TestCase(100000000, false)]
         public async Task Validate_Ukprn(int ukprn, bool isValid)
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
 
              var result =  await validator.TestValidateAsync(new PatchProviderCourseCommand { Ukprn = ukprn, Patch = new JsonPatchDocument<PatchProviderCourse>()});
             
@@ -57,7 +57,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [TestCase(-1, false)]
         public async Task Validate_LarsCode(int larsCode, bool isValid)
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
 
             var result = await validator.TestValidateAsync(new PatchProviderCourseCommand { LarsCode = larsCode, Patch = new JsonPatchDocument<PatchProviderCourse>()});
         
@@ -70,7 +70,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [Test]
         public async Task Validate_Patch_IsApprovedByRegulator_MatchingOperations_NoErrorMessage()
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
 
@@ -104,7 +104,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [TestCase("2", false)]
         public async Task Validate_Patch_IsApprovedByRegulator_VariousFieldValues_MatchingErrors(string isApprovedByRegulatorValue, bool isNoErrorExpected)
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
 
@@ -141,7 +141,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [Test]
         public async Task Validate_Patch_ContactDetails_MatchingOperations_NoErrorMessage()
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
 
@@ -178,7 +178,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [Test]
         public async Task Validate_Patch_ContactDetails_MatchingOperationsWithUnavailableFieldOperation_UnavailableFieldErrorMessage()
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
 
@@ -218,7 +218,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [Test]
         public async Task Validate_Patch_ContactDetails_MatchingOperationsWithUnavailableOperation_UnavailableFieldErrorMessage()
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
 
@@ -257,7 +257,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [Test]
         public async Task Validate_Patch_NoOperations_ErrorMessage()
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
 
@@ -279,7 +279,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [Test]
         public async Task Validate_Patch_ContactDetails_InvalidEmailFormat_ExpectedErrorMessage()
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
 
@@ -315,7 +315,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [Test]
         public async Task Validate_Patch_ContactDetails_EmailAddressTooLong_ExpectedErrorMessage()
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
 
@@ -351,7 +351,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [Test]
         public async Task Validate_Patch_ContactDetails_EmailAddressWrongFormatAndTooLong()
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
 
@@ -403,7 +403,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [TestCase(100, true)]
         public async Task Validate_Patch_ContactDetails_ContactPhoneNumber_ExpectedErrorStatus(int phoneNumberLength, bool isErrorExpected)
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
 
@@ -447,7 +447,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [Test]
         public async Task Validate_Patch_ContactDetails_ContactUrlWrongFormat_ExpectedErrorMessage()
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
 
@@ -484,7 +484,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         [Test]
         public async Task Validate_Patch_ContactDetails_ContactUrlTooLong_ExpectedErrorMessage()
         {
-            var validator = new PatchProviderCourseCommandValidator(_providerReadRepo.Object, _providerCourseReadRepo.Object);
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
             var larsCode = 1;
             var longUrl = new string('x', 497) + ".com";

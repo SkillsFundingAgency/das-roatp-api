@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         {
             var query = new GetProviderLocationsQuery(10012002);
     
-            var sut = new GetProviderLocationsQueryValidator(Mock.Of<IProviderReadRepository>());
+            var sut = new GetProviderLocationsQueryValidator(Mock.Of<IProvidersReadRepository>());
 
             var result = await sut.TestValidateAsync(query);
 

@@ -8,16 +8,16 @@ namespace SFA.DAS.Roatp.Application.Regions.Queries
 {
     public class RegionsQueryHandler : IRequestHandler<RegionsQuery, RegionsQueryResult>
     {
-        private readonly IRegionReadRepository _regionReadRepository;
+        private readonly IRegionsReadRepository _regionsReadRepository;
 
-        public RegionsQueryHandler(IRegionReadRepository regionReadRepository)
+        public RegionsQueryHandler(IRegionsReadRepository regionsReadRepository)
         {
-            _regionReadRepository = regionReadRepository;
+            _regionsReadRepository = regionsReadRepository;
         }
 
         public async Task<RegionsQueryResult> Handle(RegionsQuery request, CancellationToken cancellationToken)
         {
-            var regions = await _regionReadRepository.GetAllRegions();
+            var regions = await _regionsReadRepository.GetAllRegions();
             var result = new RegionsQueryResult
             {
                 Regions = regions.Select(x => (RegionModel)x).ToList()

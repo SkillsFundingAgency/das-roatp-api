@@ -39,27 +39,23 @@ namespace SFA.DAS.Roatp.Data.Extensions
 
         private static void RegisterServices(IServiceCollection services)
         {
-            services.AddTransient<IStandardReadRepository, StandardReadRepository>();
-            services.AddTransient<IProviderReadRepository, ProviderReadRepository>();
-            services.AddTransient<IProviderCourseReadRepository, ProviderCourseReadRepository>();
-            services.AddTransient<IProviderCourseDeleteRepository, ProviderCourseDeleteRepository>();
-            services.AddTransient<IRegionReadRepository, RegionReadRepository>();
-            services.AddTransient<ICreateProviderRepository, CreateProviderRepository>();
+            services.AddTransient<IStandardsReadRepository, StandardsReadRepository>();
+            services.AddTransient<IProvidersReadRepository, ProvidersReadRepository>();
+            services.AddTransient<IProviderCoursesReadRepository, ProviderCoursesReadRepository>();
+            services.AddTransient<IProviderCoursesWriteRepository, ProviderCoursesWriteRepository>();
+            services.AddTransient<IRegionsReadRepository, RegionsReadRepository>();
+            services.AddTransient<IProvidersWriteRepository, ProvidersWriteRepository>();
             services.AddTransient<IReloadStandardsRepository, ReloadStandardsRepository>();
-            services.AddTransient<IGetStandardsCountRepository, GetStandardsCountRepository>();
             services.AddTransient<IProviderLocationsReadRepository, ProviderLocationsReadRepository>();
-            services.AddTransient<IProviderLocationEditRepository, ProviderLocationEditRepository>();
-            services.AddTransient<IProviderLocationsDeleteRepository, ProviderLocationsDeleteRepository>();
-            services.AddTransient<IProviderLocationsInsertRepository, ProviderLocationsInsertRepository>();
-            services.AddTransient<IProviderCourseEditRepository, ProviderCourseEditRepository>();
+            services.AddTransient<IProviderLocationsBulkRepository, ProviderLocationsBulkRepository>();
             services.AddTransient<IReloadProviderRegistrationDetailsRepository, ReloadProviderRegistrationDetailsRepository>();
-            services.AddTransient<IProviderCourseLocationReadRepository, ProviderCourseLocationReadRepository>();
-            services.AddTransient<IProviderCourseLocationsDeleteRepository, ProviderCourseLocationsDeleteRepository>();
-            services.AddTransient<IProviderCourseLocationsInsertRepository, ProviderCourseLocationsInsertRepository>();
+            services.AddTransient<IProviderCourseLocationsReadRepository, ProviderCourseLocationsReadRepository>();
+            services.AddTransient<IProviderCourseLocationsWriteRepository, ProviderCourseLocationsWriteRepository>();
+            services.AddTransient<IProviderCourseLocationsBulkRepository, ProviderCourseLocationsBulkRepository>();
             services.AddTransient<ILoadProviderRepository, LoadProviderRepository>();
-            services.AddTransient<IGetActiveProviderRegistrationsRepository, GetActiveProviderRegistrationsRepository>();
-            services.AddTransient<IProviderLocationWriteRepository, ProviderLocationWriteRepository>();
-            services.AddTransient<IProviderCourseLocationWriteRepository, ProviderCourseLocationWriteRepository>();
+            services.AddTransient<IProviderRegistrationDetailsReadRepository, ProviderRegistrationDetailsReadRepository>();
+            services.AddTransient<IProviderLocationsWriteRepository, ProviderLocationsWriteRepository>();
+            services.AddTransient<IProviderCourseLocationsWriteRepository, ProviderCourseLocationsWriteRepository>();
         }
 
         public static async Task<string> GenerateTokenAsync()

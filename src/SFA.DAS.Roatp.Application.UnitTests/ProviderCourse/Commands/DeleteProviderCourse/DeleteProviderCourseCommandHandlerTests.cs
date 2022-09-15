@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.DeleteProv
     {
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_Deletes_Records(
-            [Frozen] Mock<IProviderCourseDeleteRepository> providerCourseDeleteRepositoryyMock,
+            [Frozen] Mock<IProviderCoursesWriteRepository> providerCourseDeleteRepositoryyMock,
             DeleteProviderCourseCommand command,
             DeleteProviderCourseCommandHandler sut,
             CancellationToken cancellationToken)

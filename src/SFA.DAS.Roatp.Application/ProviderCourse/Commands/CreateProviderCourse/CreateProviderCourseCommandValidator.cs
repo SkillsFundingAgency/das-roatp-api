@@ -2,7 +2,6 @@
 using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
@@ -17,18 +16,18 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         public const string RegionIdNotFoundMessage = "At least one of the region id was not found";
 
         public CreateProviderCourseCommandValidator(
-            IProviderReadRepository providerReadRepository,
-            IStandardReadRepository standardReadRepository,
-            IProviderCourseReadRepository providerCourseReadRepository,
+            IProvidersReadRepository providersReadRepository,
+            IStandardsReadRepository standardsReadRepository,
+            IProviderCoursesReadRepository providerCoursesReadRepository,
             IProviderLocationsReadRepository providerLocationsReadRepository,
-            IRegionReadRepository regionReadRepository)
+            IRegionsReadRepository regionsReadRepository)
         {
-            Include(new UkprnValidator(providerReadRepository));
+            Include(new UkprnValidator(providersReadRepository));
 
-            Include(new LarsCodeValidatorV2(standardReadRepository, providerCourseReadRepository, false));
+            Include(new LarsCodeValidatorV2(standardsReadRepository, providerCoursesReadRepository, false));
 
             WhenAsync(
-                async (command, _) => await IsStandardRegulated(command.LarsCode, standardReadRepository),
+                async (command, _) => await IsStandardRegulated(command.LarsCode, standardsReadRepository),
                 () =>
                 {
                     RuleFor(c => c.IsApprovedByRegulator)
@@ -68,7 +67,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                     RuleFor((c) => c.SubregionIds)
                         .MustAsync(async (subregionIds, cancellation) =>
                         {
-                            var regions = await regionReadRepository.GetAllRegions();
+                            var regions = await regionsReadRepository.GetAllRegions();
                             return subregionIds.All(id => regions.Any(r => r.Id == id));
                         })
                         .WithMessage(RegionIdNotFoundMessage);
@@ -97,9 +96,9 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 
         }
 
-        private async Task<bool> IsStandardRegulated(int larsCode, IStandardReadRepository standardReadRepository)
+        private async Task<bool> IsStandardRegulated(int larsCode, IStandardsReadRepository standardsReadRepository)
         {
-            var standard = await standardReadRepository.GetStandard(larsCode);
+            var standard = await standardsReadRepository.GetStandard(larsCode);
             var result = !string.IsNullOrEmpty(standard?.ApprovalBody);
             return result;
         }

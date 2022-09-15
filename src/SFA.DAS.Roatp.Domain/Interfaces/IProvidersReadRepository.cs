@@ -4,8 +4,9 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface IGetActiveProviderRegistrationsRepository
+    public interface IProvidersReadRepository
     {
-        Task<List<ProviderRegistrationDetail>> GetActiveProviderRegistrations();
+        Task<Provider> GetByUkprn(int ukprn);
+        Task<List<Provider>> GetAllProviders();
     }
 }

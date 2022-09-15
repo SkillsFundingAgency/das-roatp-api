@@ -9,14 +9,14 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
 {
     public class UpdateProviderLocationDetailsCommandHandler : IRequestHandler<UpdateProviderLocationDetailsCommand, Unit>
     {
-        private readonly IProviderLocationEditRepository _providerLocationEditRepository;
+        private readonly IProviderLocationsWriteRepository _providerLocationsWriteRepository;
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
         private readonly ILogger<UpdateProviderLocationDetailsCommandHandler> _logger;
 
-        public UpdateProviderLocationDetailsCommandHandler(IProviderLocationsReadRepository providerLocationsReadRepository, IProviderLocationEditRepository providerLocationEditRepository, ILogger<UpdateProviderLocationDetailsCommandHandler> logger)
+        public UpdateProviderLocationDetailsCommandHandler(IProviderLocationsReadRepository providerLocationsReadRepository, IProviderLocationsWriteRepository providerLocationsWriteRepository, ILogger<UpdateProviderLocationDetailsCommandHandler> logger)
         {
             _providerLocationsReadRepository = providerLocationsReadRepository;
-            _providerLocationEditRepository = providerLocationEditRepository;
+            _providerLocationsWriteRepository = providerLocationsWriteRepository;
             _logger = logger;
         }
 
@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
             providerLocation.Email = request.Email;
             providerLocation.Phone = request.Phone;
 
-            await _providerLocationEditRepository.UpdateProviderlocation(providerLocation);
+            await _providerLocationsWriteRepository.UpdateProviderlocation(providerLocation);
 
             return Unit.Value;
         }

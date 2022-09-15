@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.Application.Common
         public const string InvalidUkprnErrorMessage = "Invalid ukprn";
         public const string ProviderNotFoundErrorMessage = "No provider found with given ukprn";
 
-        public UkprnValidator(IProviderReadRepository providerReadRepository)
+        public UkprnValidator(IProvidersReadRepository providersReadRepository)
         {
             RuleFor(x => x.Ukprn)
                 .Cascade(CascadeMode.Stop)
@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.Common
                 .LessThan(99999999).WithMessage(InvalidUkprnErrorMessage)
                 .MustAsync(async (ukprn, cancellation) =>
                 {
-                    var provider = await providerReadRepository.GetByUkprn(ukprn);
+                    var provider = await providersReadRepository.GetByUkprn(ukprn);
                     return provider != null;
                 })
                 .WithMessage(ProviderNotFoundErrorMessage);

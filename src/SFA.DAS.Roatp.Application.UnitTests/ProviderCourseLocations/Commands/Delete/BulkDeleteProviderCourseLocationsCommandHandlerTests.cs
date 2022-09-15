@@ -16,14 +16,14 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
     [TestFixture]
     public class DeleteProviderCourseLocationCommandHandlerTests
     {
-        private Mock<IProviderCourseLocationsDeleteRepository> _providerCourseLocationDeleteRepositoryMock;
+        private Mock<IProviderCourseLocationsWriteRepository> _providerCourseLocationsWriteRepositoryMock;
         private DeleteProviderCourseLocationCommandHandler _sut;
 
         [SetUp]
         public void Before_Each_Test()
         {
-            _providerCourseLocationDeleteRepositoryMock = new Mock<IProviderCourseLocationsDeleteRepository>();
-            _sut = new DeleteProviderCourseLocationCommandHandler(_providerCourseLocationDeleteRepositoryMock.Object, Mock.Of<ILogger<DeleteProviderCourseLocationCommandHandler>>());
+            _providerCourseLocationsWriteRepositoryMock = new Mock<IProviderCourseLocationsWriteRepository>();
+            _sut = new DeleteProviderCourseLocationCommandHandler(_providerCourseLocationsWriteRepositoryMock.Object, Mock.Of<ILogger<DeleteProviderCourseLocationCommandHandler>>());
         }
 
         [Test, AutoData]
@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
             var result = await _sut.Handle(request, new CancellationToken());
 
             result.Should().Be(Unit.Value);
-            _providerCourseLocationDeleteRepositoryMock.Verify(d => d.Delete(It.IsAny<Guid>()), Times.Once);
+            _providerCourseLocationsWriteRepositoryMock.Verify(d => d.Delete(It.IsAny<Guid>()), Times.Once);
         }
     }
 }

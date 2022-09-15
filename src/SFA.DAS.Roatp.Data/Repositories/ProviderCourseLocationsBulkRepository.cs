@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -9,15 +9,21 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class ProviderCourseLocationsDeleteRepository : IProviderCourseLocationsDeleteRepository
+    internal class ProviderCourseLocationsBulkRepository : IProviderCourseLocationsBulkRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
-        public ProviderCourseLocationsDeleteRepository(RoatpDataContext roatpDataContext)
+        public ProviderCourseLocationsBulkRepository(RoatpDataContext roatpDataContext)
         {
             _roatpDataContext = roatpDataContext;
         }
 
+        public async Task BulkInsert(IEnumerable<ProviderCourseLocation> providerCourseLocations)
+        {
+            await _roatpDataContext.ProviderCoursesLocations.AddRangeAsync(providerCourseLocations);
+
+            await _roatpDataContext.SaveChangesAsync();
+        }
         public async Task BulkDelete(IEnumerable<int> providerCourseLocationIds)
         {
             var providerCourseLocations = await _roatpDataContext.ProviderCoursesLocations
@@ -25,17 +31,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .ToListAsync();
 
             _roatpDataContext.ProviderCoursesLocations.RemoveRange(providerCourseLocations);
-
-            await _roatpDataContext.SaveChangesAsync();
-        }
-
-        public async Task Delete(Guid navigationId)
-        {
-            var location = await _roatpDataContext.ProviderCoursesLocations
-                .Where(l => l.NavigationId == navigationId)
-                .SingleAsync();
-
-            _roatpDataContext.Remove(location);
 
             await _roatpDataContext.SaveChangesAsync();
         }

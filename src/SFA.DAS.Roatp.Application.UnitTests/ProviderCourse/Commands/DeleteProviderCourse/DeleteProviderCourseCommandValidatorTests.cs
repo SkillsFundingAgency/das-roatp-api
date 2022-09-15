@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.DeleteProv
         {
             var command = new DeleteProviderCourseCommand(10012002, _larsCode, _userId);
 
-            var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderCourseReadRepository>());
+            var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.DeleteProv
         public async Task Validates_LarsCode_ReturnsError()
         {
             var command = new DeleteProviderCourseCommand(_ukprn, _larsCode, _userId);
-            var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderCourseReadRepository>());
+            var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
@@ -42,7 +42,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.DeleteProv
         public async Task ValidateUserId_Empty_ReturnsError(string userId)
         {
             var command = new DeleteProviderCourseCommand(_ukprn, _larsCode, userId);
-            var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderCourseReadRepository>());
+            var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 

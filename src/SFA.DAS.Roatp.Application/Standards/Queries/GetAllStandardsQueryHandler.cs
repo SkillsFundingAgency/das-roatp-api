@@ -8,10 +8,10 @@ namespace SFA.DAS.Roatp.Application.Standards.Queries
 {
     public class GetAllStandardsQueryHandler : IRequestHandler<GetAllStandardsQuery, GetAllStandardsQueryResult>
     {
-        private readonly IStandardReadRepository _standardsReadRepository;
+        private readonly IStandardsReadRepository _standardsReadRepository;
         private readonly ILogger<GetAllStandardsQueryHandler> _logger;
 
-        public GetAllStandardsQueryHandler(IStandardReadRepository standardsReadRepository, ILogger<GetAllStandardsQueryHandler> logger)
+        public GetAllStandardsQueryHandler(IStandardsReadRepository standardsReadRepository, ILogger<GetAllStandardsQueryHandler> logger)
         {
             _standardsReadRepository = standardsReadRepository;
             _logger = logger;

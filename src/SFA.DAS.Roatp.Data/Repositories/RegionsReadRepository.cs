@@ -8,11 +8,11 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class RegionReadRepository : IRegionReadRepository
+    internal class RegionsReadRepository : IRegionsReadRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
-        public RegionReadRepository(RoatpDataContext roatpDataContext)
+        public RegionsReadRepository(RoatpDataContext roatpDataContext)
         {
             _roatpDataContext = roatpDataContext;
         }

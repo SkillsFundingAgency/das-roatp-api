@@ -6,20 +6,19 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public class ProviderCourseLocationWriteRepository : IProviderCourseLocationWriteRepository
+    internal class ProvidersWriteRepository : IProvidersWriteRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
-        public ProviderCourseLocationWriteRepository(RoatpDataContext roatpDataContext)
+        public ProvidersWriteRepository(RoatpDataContext roatpDataContext)
         {
             _roatpDataContext = roatpDataContext;
         }
 
-        public async Task<ProviderCourseLocation> Create(ProviderCourseLocation providerCourseLocation)
+        public async Task Create(Provider provider)
         {
-            _roatpDataContext.ProviderCoursesLocations.Add(providerCourseLocation);
+            _roatpDataContext.Providers.Add(provider);
             await _roatpDataContext.SaveChangesAsync();
-            return providerCourseLocation;
         }
     }
 }

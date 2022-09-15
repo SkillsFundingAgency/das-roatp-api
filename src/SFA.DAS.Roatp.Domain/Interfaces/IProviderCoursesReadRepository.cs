@@ -4,7 +4,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface IProviderCourseReadRepository
+    public interface IProviderCoursesReadRepository
     {
         Task<ProviderCourse> GetProviderCourse(int providerId, int larsCode);
         Task<ProviderCourse> GetProviderCourseByUkprn(int ukprn, int larsCode);

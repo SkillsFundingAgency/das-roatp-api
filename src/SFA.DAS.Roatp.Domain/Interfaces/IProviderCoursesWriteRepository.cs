@@ -3,10 +3,12 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface IProviderCourseEditRepository
+    public interface IProviderCoursesWriteRepository
     {
         Task<ProviderCourse> PatchProviderCourse(ProviderCourse patchedProviderCourseEntity);
 
         Task<ProviderCourse> CreateProviderCourse(ProviderCourse providerCourse);
+
+        Task Delete(int ukprn, int larscode);
     }
 }

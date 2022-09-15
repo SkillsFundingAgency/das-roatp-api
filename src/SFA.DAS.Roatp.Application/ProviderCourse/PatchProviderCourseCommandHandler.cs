@@ -9,21 +9,21 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
 {
     public class PatchProviderCourseCommandHandler : IRequestHandler<PatchProviderCourseCommand, Unit>
     {
-         private readonly IProviderCourseEditRepository _providerCourseEditRepository;
-         private readonly IProviderCourseReadRepository _providerCourseReadRepository;
+         private readonly IProviderCoursesWriteRepository _providerCoursesWriteRepository;
+         private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
          private readonly ILogger<PatchProviderCourseCommandHandler> _logger;
 
-         public PatchProviderCourseCommandHandler(IProviderCourseEditRepository providerCourseEditRepository, IProviderCourseReadRepository providerCourseReadRepository, ILogger<PatchProviderCourseCommandHandler> logger)
+         public PatchProviderCourseCommandHandler(IProviderCoursesWriteRepository providerCoursesWriteRepository, IProviderCoursesReadRepository providerCoursesReadRepository, ILogger<PatchProviderCourseCommandHandler> logger)
          {
-             _providerCourseEditRepository = providerCourseEditRepository;
-             _providerCourseReadRepository = providerCourseReadRepository;
+             _providerCoursesWriteRepository = providerCoursesWriteRepository;
+             _providerCoursesReadRepository = providerCoursesReadRepository;
              _logger = logger;
          }
 
         public async Task<Unit> Handle(PatchProviderCourseCommand command, CancellationToken cancellationToken)
         {
             var providerCourse = await
-                _providerCourseReadRepository.GetProviderCourseByUkprn(command.Ukprn, command.LarsCode);
+                _providerCoursesReadRepository.GetProviderCourseByUkprn(command.Ukprn, command.LarsCode);
             
             if (providerCourse == null)
             {
@@ -41,7 +41,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
             providerCourse.ContactUsPhoneNumber = patchedProviderCourse.ContactUsPhoneNumber;
             providerCourse.StandardInfoUrl = patchedProviderCourse.StandardInfoUrl;
 
-            await _providerCourseEditRepository.PatchProviderCourse(providerCourse);
+            await _providerCoursesWriteRepository.PatchProviderCourse(providerCourse);
 
             return Unit.Value;
         }
