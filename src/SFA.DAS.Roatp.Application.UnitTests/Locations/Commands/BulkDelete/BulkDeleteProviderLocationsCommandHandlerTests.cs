@@ -18,8 +18,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_Deletes_Records(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseLocationReadRepository> providerCourseLocationReadRepositoryMock,
-            [Frozen] Mock<IProviderLocationsDeleteRepository> providerLocationsDeleteRepositoryMock,
+            [Frozen] Mock<IProviderCourseLocationsReadRepository> providerCourseLocationsReadRepositoryMock,
+            [Frozen] Mock<IProviderLocationsBulkRepository> providerLocationsBulkRepositoryMock,
             BulkDeleteProviderLocationsCommand command,
             BulkDeleteProviderLocationsCommandHandler sut,
             CancellationToken cancellationToken)
@@ -35,11 +35,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
             var providerCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation { Id = 1, ProviderCourseId = 2, ProviderLocationId=1 } };
 
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(command.Ukprn)).ReturnsAsync(providerLocations);
-            providerCourseLocationReadRepositoryMock.Setup(r => r.GetProviderCourseLocationsByUkprn(command.Ukprn)).ReturnsAsync(providerCourseLocations);
+            providerCourseLocationsReadRepositoryMock.Setup(r => r.GetProviderCourseLocationsByUkprn(command.Ukprn)).ReturnsAsync(providerCourseLocations);
 
             var result = await sut.Handle(command, cancellationToken);
 
-            providerLocationsDeleteRepositoryMock.Verify(d => d.BulkDelete(It.Is<IEnumerable<int>>(x=>x.Contains(regionalLocationId))), Times.Once);
+            providerLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.Is<IEnumerable<int>>(x=>x.Contains(regionalLocationId))), Times.Once);
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.EqualTo(1));
         }
@@ -47,8 +47,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_Deletes_NoRecords(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseLocationReadRepository> providerCourseLocationReadRepositoryMock,
-            [Frozen] Mock<IProviderLocationsDeleteRepository> providerLocationsDeleteRepositoryMock,
+            [Frozen] Mock<IProviderCourseLocationsReadRepository> providerCourseLocationsReadRepositoryMock,
+            [Frozen] Mock<IProviderLocationsBulkRepository> providerLocationsDeleteRepositoryMock,
             BulkDeleteProviderLocationsCommand command,
             BulkDeleteProviderLocationsCommandHandler sut,
             CancellationToken cancellationToken)
@@ -62,7 +62,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
             var providerCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation { Id = 1, ProviderCourseId = 1, ProviderLocationId = 1 } };
 
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
-            providerCourseLocationReadRepositoryMock.Setup(r => r.GetProviderCourseLocationsByUkprn(It.IsAny<int>())).ReturnsAsync(providerCourseLocations);
+            providerCourseLocationsReadRepositoryMock.Setup(r => r.GetProviderCourseLocationsByUkprn(It.IsAny<int>())).ReturnsAsync(providerCourseLocations);
 
             var result = await sut.Handle(command, cancellationToken);
 

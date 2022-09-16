@@ -11,25 +11,25 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 {
     public class BulkInsertProviderLocationsCommandHandler : IRequestHandler<BulkInsertProviderLocationsCommand, int>
     {
-        private readonly IRegionReadRepository _regionReadRepository;
-        private readonly IProviderReadRepository _providerReadRepository;
-        private readonly IProviderLocationsInsertRepository _providerLocationsInsertRepository;
+        private readonly IRegionsReadRepository _regionsReadRepository;
+        private readonly IProvidersReadRepository _providersReadRepository;
+        private readonly IProviderLocationsBulkRepository _providerLocationsBulkRepository;
         private readonly ILogger<BulkInsertProviderLocationsCommandHandler> _logger;
 
-        public BulkInsertProviderLocationsCommandHandler(IRegionReadRepository regionReadRepository, IProviderReadRepository providerReadRepository,
-            IProviderLocationsInsertRepository providerLocationsInsertRepository,
+        public BulkInsertProviderLocationsCommandHandler(IRegionsReadRepository regionsReadRepository, IProvidersReadRepository providersReadRepository,
+            IProviderLocationsBulkRepository providerLocationsBulkRepository,
             ILogger<BulkInsertProviderLocationsCommandHandler> logger)
         {
-            _regionReadRepository = regionReadRepository;
-            _providerReadRepository = providerReadRepository;
-            _providerLocationsInsertRepository = providerLocationsInsertRepository;
+            _regionsReadRepository = regionsReadRepository;
+            _providersReadRepository = providersReadRepository;
+            _providerLocationsBulkRepository = providerLocationsBulkRepository;
             _logger = logger;
         }
 
         public async Task<int> Handle(BulkInsertProviderLocationsCommand command, CancellationToken cancellationToken)
         {
-            var provider = await _providerReadRepository.GetByUkprn(command.Ukprn);
-            var regions = await _regionReadRepository.GetAllRegions();
+            var provider = await _providersReadRepository.GetByUkprn(command.Ukprn);
+            var regions = await _regionsReadRepository.GetAllRegions();
 
             List<ProviderLocation> locationsToInsert = new List<ProviderLocation>();
             foreach (var selectedSubregionId in command.SelectedSubregionIds)
@@ -50,7 +50,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
             if(locationsToInsert.Any())
             {
                 _logger.LogInformation("{count} {locationType} locations will be inserted for Ukprn:{ukprn}", locationsToInsert.Count, LocationType.Regional, command.Ukprn);
-                await _providerLocationsInsertRepository.BulkInsert(locationsToInsert);
+                await _providerLocationsBulkRepository.BulkInsert(locationsToInsert);
             }
             return locationsToInsert.Count;
         }

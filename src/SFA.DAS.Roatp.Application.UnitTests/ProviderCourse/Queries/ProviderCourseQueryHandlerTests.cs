@@ -16,15 +16,15 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_ReturnsResult(
             Domain.Entities.ProviderCourse course,
-            [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock,
-            [Frozen] Mock<IStandardReadRepository> standardReadRepositoryMock,
+            [Frozen] Mock<IProviderCoursesReadRepository> providerCoursesReadRepositoryMock,
+            [Frozen] Mock<IStandardsReadRepository> standardsReadRepositoryMock,
             GetProviderCourseQuery query,
             GetProviderCourseQueryHandler sut,
             CancellationToken cancellationToken)
         {
-            providerCourseReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(query.Ukprn, query.LarsCode)).ReturnsAsync(course);
+            providerCoursesReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(query.Ukprn, query.LarsCode)).ReturnsAsync(course);
             var standard =  new Standard { LarsCode = course.LarsCode };
-            standardReadRepositoryMock.Setup(r => r.GetStandard(course.LarsCode)).ReturnsAsync(standard);
+            standardsReadRepositoryMock.Setup(r => r.GetStandard(course.LarsCode)).ReturnsAsync(standard);
             var result = await sut.Handle(query, cancellationToken);
 
             Assert.That(result, Is.Not.Null);

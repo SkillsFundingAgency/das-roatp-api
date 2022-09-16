@@ -3,8 +3,9 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface IProviderLocationWriteRepository
+    public interface IProviderLocationsWriteRepository
     {
         Task<ProviderLocation> Create(ProviderLocation location);
+        Task UpdateProviderlocation(ProviderLocation updatedProviderLocationEntity);
     }
 }

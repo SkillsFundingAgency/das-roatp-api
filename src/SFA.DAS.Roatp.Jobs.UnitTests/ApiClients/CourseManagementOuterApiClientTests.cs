@@ -17,49 +17,44 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.ApiClients
     [TestFixture]
     public class CourseManagementOuterApiClientTests
     {
+        private readonly Person _model = new Person { Name = "person name" };
         [Test]
         public async Task Get_Successful_ReturnsResponse()
         {
-            var model = new Person { Name = "person name" };
-            var mockMessageHandler = new Mock<HttpMessageHandler>();
-            mockMessageHandler.Protected()
-                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.OK,
-                    Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json")
-                });
-            HttpClient httpClient = new HttpClient(mockMessageHandler.Object);
-            httpClient.BaseAddress = new Uri("https://test");
-            var sut = new CourseManagementOuterApiClient(httpClient, Mock.Of<ILogger<CourseManagementOuterApiClient>>());
+            var sut = new CourseManagementOuterApiClient(GetHttpClient(HttpStatusCode.OK), Mock.Of<ILogger<CourseManagementOuterApiClient>>());
 
             var (success, response) = await sut.Get<Person>("test");
 
             success.Should().BeTrue();
-            response.Should().BeEquivalentTo(model);
+            response.Should().BeEquivalentTo(_model);
         }
+
 
         [Test]
         public async Task Get_Unsuccessful_ReturnsFalseAndNull()
         {
-            var model = new Person { Name = "person name" };
-            var mockMessageHandler = new Mock<HttpMessageHandler>();
-            mockMessageHandler.Protected()
-                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
-                .ReturnsAsync(new HttpResponseMessage
-                {
-                    StatusCode = HttpStatusCode.BadRequest,
-                    Content = new StringContent(JsonSerializer.Serialize(model), Encoding.UTF8, "application/json"),
-                    RequestMessage = new HttpRequestMessage()
-                });
-            HttpClient httpClient = new HttpClient(mockMessageHandler.Object);
-            httpClient.BaseAddress = new Uri("https://test");
-            var sut = new CourseManagementOuterApiClient(httpClient, Mock.Of<ILogger<CourseManagementOuterApiClient>>());
+            var sut = new CourseManagementOuterApiClient(GetHttpClient(HttpStatusCode.BadRequest), Mock.Of<ILogger<CourseManagementOuterApiClient>>());
 
             var (success, response) = await sut.Get<Person>("test");
 
             success.Should().BeFalse();
             response.Should().BeNull();
+        }
+
+        private HttpClient GetHttpClient(HttpStatusCode httpStatus)
+        {
+            var mockMessageHandler = new Mock<HttpMessageHandler>();
+            mockMessageHandler.Protected()
+                .Setup<Task<HttpResponseMessage>>("SendAsync", ItExpr.IsAny<HttpRequestMessage>(), ItExpr.IsAny<CancellationToken>())
+                .ReturnsAsync(new HttpResponseMessage
+                {
+                    StatusCode = httpStatus,
+                    Content = new StringContent(JsonSerializer.Serialize(_model), Encoding.UTF8, "application/json"),
+                    RequestMessage = new HttpRequestMessage()
+                });
+            HttpClient httpClient = new HttpClient(mockMessageHandler.Object);
+            httpClient.BaseAddress = new Uri("https://test");
+            return httpClient;
         }
 
         class Person

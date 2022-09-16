@@ -17,9 +17,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
     {
         [Test, RecursiveMoqAutoData]
         public async Task Handle_HasNationalDeliveryOptionOnly_AddsNewNationalLocation(
-            [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
+            [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseEditRepository> providerCourseEditRepositoryMock,
+            [Frozen] Mock<IProviderCoursesWriteRepository> providerCoursesWriteRepositoryMock,
             CreateProviderCourseCommandHandler sut,
             CreateProviderCourseCommand command,
             Provider provider)
@@ -27,19 +27,19 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
             command.HasNationalDeliveryOption = true;
             command.ProviderLocations = null;
             command.SubregionIds = null;
-            providerReadRepositoryMock.Setup(p => p.GetByUkprn(command.Ukprn)).ReturnsAsync(provider);
+            providersReadRepositoryMock.Setup(p => p.GetByUkprn(command.Ukprn)).ReturnsAsync(provider);
             providerLocationsReadRepositoryMock.Setup(p => p.GetAllProviderLocations(command.Ukprn)).ReturnsAsync(new List<ProviderLocation>());
 
             await sut.Handle(command, new CancellationToken());
 
-            providerCourseEditRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == 1 && c.Locations.First().Location.LocationType == LocationType.National && c.Locations.First().ProviderLocationId == 0)));
+            providerCoursesWriteRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == 1 && c.Locations.First().Location.LocationType == LocationType.National && c.Locations.First().ProviderLocationId == 0)));
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Handle_HasNationalDeliveryOptionOnly_AssociatesExistingNationalLocation(
-            [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
+            [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseEditRepository> providerCourseEditRepositoryMock,
+            [Frozen] Mock<IProviderCoursesWriteRepository> providerCoursesWriteRepositoryMock,
             CreateProviderCourseCommandHandler sut,
             CreateProviderCourseCommand command,
             Provider provider,
@@ -49,26 +49,26 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
             command.HasNationalDeliveryOption = true;
             command.ProviderLocations = null;
             command.SubregionIds = null;
-            providerReadRepositoryMock.Setup(p => p.GetByUkprn(command.Ukprn)).ReturnsAsync(provider);
+            providersReadRepositoryMock.Setup(p => p.GetByUkprn(command.Ukprn)).ReturnsAsync(provider);
             providerLocationsReadRepositoryMock.Setup(p => p.GetAllProviderLocations(command.Ukprn)).ReturnsAsync(new List<ProviderLocation>() { providerLocation});
 
             await sut.Handle(command, new CancellationToken());
 
-            providerCourseEditRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == 1 && c.Locations.First().ProviderLocationId == providerLocation.Id)));
+            providerCoursesWriteRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == 1 && c.Locations.First().ProviderLocationId == providerLocation.Id)));
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task Handle_HasProviderLocationsOnly_AddProviderLocations(
-            [Frozen] Mock<IProviderReadRepository> providerReadRepositoryMock,
+            [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseEditRepository> providerCourseEditRepositoryMock,
+            [Frozen] Mock<IProviderCoursesWriteRepository> providerCourseEditRepositoryMock,
             CreateProviderCourseCommandHandler sut,
             CreateProviderCourseCommand command,
             Provider provider)
         {
             command.HasNationalDeliveryOption = false;
             command.SubregionIds = null;
-            providerReadRepositoryMock.Setup(p => p.GetByUkprn(command.Ukprn)).ReturnsAsync(provider);
+            providersReadRepositoryMock.Setup(p => p.GetByUkprn(command.Ukprn)).ReturnsAsync(provider);
             providerLocationsReadRepositoryMock.Setup(p => p.GetAllProviderLocations(command.Ukprn)).ReturnsAsync(provider.Locations);
 
             command.ProviderLocations = new List<ProviderCourseLocationCommandModel>();

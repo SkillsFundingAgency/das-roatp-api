@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.Application.Common
         public const string NotFoundMessage = "Larscode not found";
         public const string CombinationAlreadyExistsMessage = "Ukprn and LarsCode combination already exists";
         public const string CombinationNotFoundErrorMessage = "Invalid Ukprn and LarsCode, combination not found";
-        public LarsCodeValidatorV2(IStandardReadRepository standardReadRepository, IProviderCourseReadRepository providerCourseReadRepository, bool expectProviderCourseToExist = false)
+        public LarsCodeValidatorV2(IStandardsReadRepository standardsReadRepository, IProviderCoursesReadRepository providerCoursesReadRepository, bool expectProviderCourseToExist = false)
         {
             RuleFor(x => x.LarsCode)
                 .Cascade(CascadeMode.Stop)
@@ -17,20 +17,20 @@ namespace SFA.DAS.Roatp.Application.Common
                 .WithMessage(InvalidMessage)
                 .MustAsync(async (larsCode, cancellation) =>
                 {
-                    var standard = await standardReadRepository.GetStandard(larsCode);
+                    var standard = await standardsReadRepository.GetStandard(larsCode);
                     return standard != null;
                 })
                 .WithMessage(NotFoundMessage)
                 .MustAsync(async (model, larsCode, cancellation) =>
                 {
-                    var providerCourse = await providerCourseReadRepository.GetProviderCourseByUkprn(model.Ukprn, larsCode);
+                    var providerCourse = await providerCoursesReadRepository.GetProviderCourseByUkprn(model.Ukprn, larsCode);
                     return providerCourse != null;
                 })
                 .WithMessage(CombinationNotFoundErrorMessage)
                 .When(_ => expectProviderCourseToExist, ApplyConditionTo.CurrentValidator)
                 .MustAsync(async (model, larsCode, cancellation) =>
                 {
-                    var providerCourse = await providerCourseReadRepository.GetProviderCourseByUkprn(model.Ukprn, larsCode);
+                    var providerCourse = await providerCoursesReadRepository.GetProviderCourseByUkprn(model.Ukprn, larsCode);
                     return providerCourse == null;
                 })
                 .WithMessage(CombinationAlreadyExistsMessage)

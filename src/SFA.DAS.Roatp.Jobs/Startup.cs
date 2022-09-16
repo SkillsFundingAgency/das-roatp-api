@@ -4,21 +4,19 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
+using SFA.DAS.Authorization.ProviderFeatures.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
-using SFA.DAS.Roatp.CourseManagement.Jobs;
 using SFA.DAS.Roatp.Data.Extensions;
+using SFA.DAS.Roatp.Jobs;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.Configuration;
 using SFA.DAS.Roatp.Jobs.Services;
+using SFA.DAS.Roatp.Jobs.Services.CourseDirectory;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using SFA.DAS.Authorization.ProviderFeatures.Configuration;
-using SFA.DAS.Roatp.Data.Repositories;
-using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Jobs.Services.CourseDirectory;
 
 [assembly: FunctionsStartup(typeof(Startup))]
-namespace SFA.DAS.Roatp.CourseManagement.Jobs
+namespace SFA.DAS.Roatp.Jobs
 {
     [ExcludeFromCodeCoverage]
     internal class Startup : FunctionsStartup
@@ -31,7 +29,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Jobs
             AddNLog(builder);
         }
 
-        private void AddNLog(IFunctionsHostBuilder builder)
+        private static void AddNLog(IFunctionsHostBuilder builder)
         {
             builder.Services.AddLogging((options) =>
             {
@@ -86,6 +84,7 @@ namespace SFA.DAS.Roatp.CourseManagement.Jobs
         private void ConfigureHttpClient(IServiceCollection services)
         {
             var handlerLifeTime = TimeSpan.FromMinutes(5);
+            services.AddTransient<ICourseManagementOuterApiClient, CourseManagementOuterApiClient>();
             services.AddHttpClient<ICourseManagementOuterApiClient, CourseManagementOuterApiClient>(httpClient =>
             {
                 var apiConfig = _configuration

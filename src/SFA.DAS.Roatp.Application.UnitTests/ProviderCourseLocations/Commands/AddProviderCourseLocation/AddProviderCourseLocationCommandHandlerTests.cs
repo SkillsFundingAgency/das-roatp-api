@@ -17,8 +17,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         [Test, RecursiveMoqAutoData]
         public async Task Handle_CreatesProviderCourseLocation(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseReadRepository> providerCourseReadRepositoryMock,
-            [Frozen] Mock<IProviderCourseLocationWriteRepository> providerCourseLocationWriteRepositoryMock,
+            [Frozen] Mock<IProviderCoursesReadRepository> providerCoursesReadRepositoryMock,
+            [Frozen] Mock<IProviderCourseLocationsWriteRepository> providerCourseLocationsWriteRepositoryMock,
             AddProviderCourseLocationCommandHandler sut,
             ProviderLocation providerLocation,
             Domain.Entities.ProviderCourse providerCourse,
@@ -27,13 +27,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         {
             providerLocation.LocationType = LocationType.Provider;
             providerLocationsReadRepositoryMock.Setup(m => m.GetProviderLocation(It.IsAny<int>(), It.IsAny<Guid>())).ReturnsAsync(providerLocation);
-            providerCourseReadRepositoryMock.Setup(m => m.GetProviderCourseByUkprn(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
+            providerCoursesReadRepositoryMock.Setup(m => m.GetProviderCourseByUkprn(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
 
 
             await sut.Handle(command, new CancellationToken());
 
-            providerCourseLocationWriteRepositoryMock.Verify(p => p.Create(It.IsAny<ProviderCourseLocation>()), Times.Once);
-            providerCourseLocationWriteRepositoryMock.Verify(m => m.Create(It.Is<ProviderCourseLocation>(l => l.ProviderLocationId == providerLocation.Id && l.ProviderCourseId == providerCourse.Id && l.HasDayReleaseDeliveryOption == command.HasDayReleaseDeliveryOption && l.HasBlockReleaseDeliveryOption == command.HasBlockReleaseDeliveryOption)));
+            providerCourseLocationsWriteRepositoryMock.Verify(p => p.Create(It.IsAny<ProviderCourseLocation>()), Times.Once);
+            providerCourseLocationsWriteRepositoryMock.Verify(m => m.Create(It.Is<ProviderCourseLocation>(l => l.ProviderLocationId == providerLocation.Id && l.ProviderCourseId == providerCourse.Id && l.HasDayReleaseDeliveryOption == command.HasDayReleaseDeliveryOption && l.HasBlockReleaseDeliveryOption == command.HasBlockReleaseDeliveryOption)));
         }
     }
 }

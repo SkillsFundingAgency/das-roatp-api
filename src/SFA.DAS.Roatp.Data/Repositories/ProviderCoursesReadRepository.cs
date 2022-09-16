@@ -9,11 +9,11 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class ProviderCourseReadRepository : IProviderCourseReadRepository
+    internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
-        public ProviderCourseReadRepository(RoatpDataContext roatpDataContext)
+        public ProviderCoursesReadRepository(RoatpDataContext roatpDataContext)
         {
             _roatpDataContext = roatpDataContext;
         }

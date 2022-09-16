@@ -16,15 +16,15 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
     [ExcludeFromCodeCoverage]
     public class CourseDirectoryDataProcessingService : ICourseDirectoryDataProcessingService
     {
-        private readonly IGetActiveProviderRegistrationsRepository _getActiveProviderRegistrationsRepository;
-        private readonly IProviderReadRepository _providerReadRepository;
+        private readonly IProviderRegistrationDetailsReadRepository _getActiveProviderRegistrationsRepository;
+        private readonly IProvidersReadRepository _providersReadRepository;
         private readonly IGetBetaProvidersService _getBetaProvidersService;
         private readonly ILogger<CourseDirectoryDataProcessingService> _logger;
 
-        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IGetActiveProviderRegistrationsRepository getActiveProviderRegistrationsRepository, IProviderReadRepository providerReadRepository, IGetBetaProvidersService getBetaProvidersService)
+        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IProviderRegistrationDetailsReadRepository getActiveProviderRegistrationsRepository, IProvidersReadRepository providersReadRepository, IGetBetaProvidersService getBetaProvidersService)
         {
             _getActiveProviderRegistrationsRepository = getActiveProviderRegistrationsRepository;
-            _providerReadRepository = providerReadRepository;
+            _providersReadRepository = providersReadRepository;
             _getBetaProvidersService = getBetaProvidersService;
             _logger = logger;
         }
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         {
             const string focusText = "providers already present in roatp database";
             _logger.LogInformation("Gathering {focus}", focusText);
-            var currentProviders = await _providerReadRepository.GetAllProviders();
+            var currentProviders = await _providersReadRepository.GetAllProviders();
             _logger.LogInformation("{count} {focus}", currentProviders.Count, focusText);
             _logger.LogInformation("{count} CD providers before removing {focus}", providers.Count, focusText);
 

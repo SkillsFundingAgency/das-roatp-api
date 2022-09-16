@@ -8,17 +8,17 @@ namespace SFA.DAS.Roatp.Application.StandardsCount
 {
     public class StandardsCountHandler : IRequestHandler<StandardsCountRequest, int>
     {
-        private readonly IGetStandardsCountRepository _getStandardsCountRepository;
+        private readonly IStandardsReadRepository _standardsReadRepository;
         private readonly ILogger<StandardsCountHandler> _logger;
-        public StandardsCountHandler(IGetStandardsCountRepository getStandardsCountRepository, ILogger<StandardsCountHandler> logger)
+        public StandardsCountHandler(IStandardsReadRepository standardsReadRepository, ILogger<StandardsCountHandler> logger)
         {
-            _getStandardsCountRepository = getStandardsCountRepository;
+            _standardsReadRepository = standardsReadRepository;
             _logger = logger;
         }
 
         public async Task<int> Handle(StandardsCountRequest request, CancellationToken cancellationToken)
         {
-            var standardsCount = await _getStandardsCountRepository.GetStandardsCount();
+            var standardsCount = await _standardsReadRepository.GetStandardsCount();
             _logger.LogInformation("Gathering standards count:{standardsCount}", standardsCount);
             return standardsCount;
         }

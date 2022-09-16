@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         {
             var query = new GetProviderLocationDetailsQuery(10000000, Guid.NewGuid());
 
-            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
+            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(query);
 
@@ -34,11 +34,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         {
             var query = new GetProviderLocationDetailsQuery(10012002, Guid.NewGuid());
 
-            var repoMockProviderReadRepository = new Mock<IProviderReadRepository>();
+            var repoMockProvidersReadRepository = new Mock<IProvidersReadRepository>();
 
-            repoMockProviderReadRepository.Setup(x => x.GetByUkprn(query.Ukprn)).ReturnsAsync((Provider)null);
+            repoMockProvidersReadRepository.Setup(x => x.GetByUkprn(query.Ukprn)).ReturnsAsync((Provider)null);
 
-            var sut = new GetProviderLocationDetailsQueryValidator(repoMockProviderReadRepository.Object, Mock.Of<IProviderLocationsReadRepository>());
+            var sut = new GetProviderLocationDetailsQueryValidator(repoMockProvidersReadRepository.Object, Mock.Of<IProviderLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(query);
 
@@ -50,7 +50,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         {
             var query = new GetProviderLocationDetailsQuery(10012002, Guid.Empty);
 
-            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProviderReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
+            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(query);
 
@@ -67,7 +67,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
             repoMockProviderLocationsRead.Setup(x => x.GetProviderLocation(query.Ukprn, query.Id)).ReturnsAsync((ProviderLocation) null);
 
 
-            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProviderReadRepository>(), repoMockProviderLocationsRead.Object);
+            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProvidersReadRepository>(), repoMockProviderLocationsRead.Object);
 
             var result = await sut.TestValidateAsync(query);
 
@@ -79,11 +79,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         {
             var query = new GetProviderLocationDetailsQuery(10012002, Guid.NewGuid());
 
-            var repoMockProviderReadRepository = new Mock<IProviderReadRepository>();
+            var repoMockProvidersReadRepository = new Mock<IProvidersReadRepository>();
 
-            repoMockProviderReadRepository.Setup(x => x.GetByUkprn(query.Ukprn)).ReturnsAsync(new Provider());
+            repoMockProvidersReadRepository.Setup(x => x.GetByUkprn(query.Ukprn)).ReturnsAsync(new Provider());
 
-            var sut = new GetProviderLocationDetailsQueryValidator(repoMockProviderReadRepository.Object, Mock.Of<IProviderLocationsReadRepository>());
+            var sut = new GetProviderLocationDetailsQueryValidator(repoMockProvidersReadRepository.Object, Mock.Of<IProviderLocationsReadRepository>());
 
             var result = await sut.TestValidateAsync(query);
 
@@ -99,7 +99,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
 
             repoMockProviderLocationsRead.Setup(x => x.GetProviderLocation(query.Ukprn, query.Id)).ReturnsAsync(new ProviderLocation());
 
-            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProviderReadRepository>(), repoMockProviderLocationsRead.Object);
+            var sut = new GetProviderLocationDetailsQueryValidator(Mock.Of<IProvidersReadRepository>(), repoMockProviderLocationsRead.Object);
 
             var result = await sut.TestValidateAsync(query);
 

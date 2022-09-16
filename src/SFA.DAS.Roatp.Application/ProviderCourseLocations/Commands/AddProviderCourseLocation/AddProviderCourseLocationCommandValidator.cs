@@ -11,14 +11,14 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
         public const string TrainingVenueErrorMessage = "Venue must be provided";
         public const string DeliveryMethodErrorMessage = "Delivery method must be provided";
         public AddProviderCourseLocationCommandValidator
-            (IProviderReadRepository providerReadRepository, 
-             IProviderCourseReadRepository providerCourseReadRepository, 
+            (IProvidersReadRepository providersReadRepository, 
+             IProviderCoursesReadRepository providerCoursesReadRepository, 
              IProviderLocationsReadRepository providerLocationsReadRepository,
-             IProviderCourseLocationReadRepository providerCourseLocationReadRepository)
+             IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository)
         {
-            Include(new UkprnValidator(providerReadRepository));
+            Include(new UkprnValidator(providersReadRepository));
 
-            Include(new LarsCodeValidator(providerReadRepository, providerCourseReadRepository));
+            Include(new LarsCodeValidator(providersReadRepository, providerCoursesReadRepository));
 
             RuleFor(c => c.UserId).NotEmpty();
 
@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
                 .MustAsync(async (command, locationNavigationId, _) =>
                 {
                     var providerLocation = await providerLocationsReadRepository.GetProviderLocation(command.Ukprn, command.LocationNavigationId);
-                    var providerCourseLocations = await providerCourseLocationReadRepository.GetAllProviderCourseLocations(command.Ukprn, command.LarsCode);
+                    var providerCourseLocations = await providerCourseLocationsReadRepository.GetAllProviderCourseLocations(command.Ukprn, command.LarsCode);
                     return !providerCourseLocations.Exists(l => l.ProviderLocationId == providerLocation.Id);
                 })
                 .WithMessage(LocationAlreadyExistsErrorMessage);

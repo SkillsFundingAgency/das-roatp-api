@@ -14,8 +14,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
     [TestFixture]
     public class CreateProviderLocationCommandHandlerTests
     {
-        private Mock<IProviderReadRepository> _providerReadRepositoryMock;
-        private Mock<IProviderLocationWriteRepository> _providerLocationsWriteRepositoryMock;
+        private Mock<IProvidersReadRepository> _providersReadRepositoryMock;
+        private Mock<IProviderLocationsWriteRepository> _providerLocationsWriteRepositoryMock;
         private CreateProviderLocationCommandHandler _sut;
         private CreateProviderLocationCommand _command;
         private Provider _provider;
@@ -31,13 +31,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
             _provider = fixture.Create<Provider>();
             var providerLocation = fixture.Create<ProviderLocation>();
 
-            _providerReadRepositoryMock = new Mock<IProviderReadRepository>();
-            _providerReadRepositoryMock.Setup(r => r.GetByUkprn(_command.Ukprn)).ReturnsAsync(_provider);
+            _providersReadRepositoryMock = new Mock<IProvidersReadRepository>();
+            _providersReadRepositoryMock.Setup(r => r.GetByUkprn(_command.Ukprn)).ReturnsAsync(_provider);
 
-            _providerLocationsWriteRepositoryMock = new Mock<IProviderLocationWriteRepository>();
+            _providerLocationsWriteRepositoryMock = new Mock<IProviderLocationsWriteRepository>();
             _providerLocationsWriteRepositoryMock.Setup(r => r.Create(It.IsAny<ProviderLocation>())).ReturnsAsync(providerLocation);
 
-            _sut = new CreateProviderLocationCommandHandler(_providerReadRepositoryMock.Object, _providerLocationsWriteRepositoryMock.Object, Mock.Of<ILogger<CreateProviderLocationCommandHandler>>());
+            _sut = new CreateProviderLocationCommandHandler(_providersReadRepositoryMock.Object, _providerLocationsWriteRepositoryMock.Object, Mock.Of<ILogger<CreateProviderLocationCommandHandler>>());
 
             await _sut.Handle(_command, new CancellationToken());
         }
@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
         [Test]
         public void ThenGetsProviderUringUkprn()
         {
-            _providerReadRepositoryMock.Verify(r => r.GetByUkprn(_command.Ukprn));
+            _providersReadRepositoryMock.Verify(r => r.GetByUkprn(_command.Ukprn));
         }
 
         [Test]

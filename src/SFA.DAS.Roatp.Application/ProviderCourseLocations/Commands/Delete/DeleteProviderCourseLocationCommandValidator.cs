@@ -8,11 +8,11 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete
     {
         public const string InvalidProviderCourseLocationIdErrorMessage = "Invalid location id";
         public const string ProviderCourseLocationNotFoundErrorMessage = "Location details not found for given location id";
-        public DeleteProviderCourseLocationCommandValidator(IProviderReadRepository providerReadRepository, IProviderCourseReadRepository providerCourseReadRepository, IProviderCourseLocationReadRepository providerCourseLocationReadRepository)
+        public DeleteProviderCourseLocationCommandValidator(IProvidersReadRepository providersReadRepository, IProviderCoursesReadRepository providerCoursesReadRepository, IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository)
         {
-            Include(new UkprnValidator(providerReadRepository));
+            Include(new UkprnValidator(providersReadRepository));
 
-            Include(new LarsCodeValidator(providerReadRepository, providerCourseReadRepository));
+            Include(new LarsCodeValidator(providersReadRepository, providerCoursesReadRepository));
 
             RuleFor(c => c.UserId).NotEmpty();
 
@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete
                 NotEmpty().WithMessage(InvalidProviderCourseLocationIdErrorMessage)
                 .MustAsync(async (model, navigationId, cancellation) =>
                 {
-                    var providerCourseLocations = await providerCourseLocationReadRepository.GetAllProviderCourseLocations(model.Ukprn, model.LarsCode);
+                    var providerCourseLocations = await providerCourseLocationsReadRepository.GetAllProviderCourseLocations(model.Ukprn, model.LarsCode);
                     return providerCourseLocations.Exists(l=>l.NavigationId == navigationId);
                 })
                .WithMessage(ProviderCourseLocationNotFoundErrorMessage);

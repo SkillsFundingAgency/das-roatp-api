@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System.Collections.Generic;
@@ -10,11 +9,11 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-   internal class ProviderCourseLocationReadRepository : IProviderCourseLocationReadRepository
+   internal class ProviderCourseLocationsReadRepository : IProviderCourseLocationsReadRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
-        public ProviderCourseLocationReadRepository(RoatpDataContext roatpDataContext)
+        public ProviderCourseLocationsReadRepository(RoatpDataContext roatpDataContext)
         {
             _roatpDataContext = roatpDataContext;
         }
