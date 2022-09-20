@@ -13,6 +13,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
     public class LoadCourseDirectoryDataFunction
     {
         private readonly ILoadCourseDirectoryDataService _loadCourseDirectoryDataService;
+       
 
         [ExcludeFromCodeCoverage]
         public LoadCourseDirectoryDataFunction(ILoadCourseDirectoryDataService loadCourseDirectoryDataService)
@@ -23,7 +24,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         [FunctionName(nameof(LoadCourseDirectoryDataFunction))]
         public async Task<IActionResult> Run(
                 [HttpTrigger(AuthorizationLevel.Function,  "POST", Route = "load-course-directory")] HttpRequest req, ILogger log)
-        
+
         {
             var betaAndPilotProvidersOnlyParameter = req.Query["betaAndPilotOnly"];
 
@@ -38,6 +39,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
             var loadMetrics = await _loadCourseDirectoryDataService.LoadCourseDirectoryData(betaAndPilotProvidersOnly);
 
             log.LogInformation($"Course Directory load complete {JsonSerializer.Serialize(loadMetrics, new JsonSerializerOptions() { WriteIndented = true })}" );
+
             return new OkObjectResult(loadMetrics);
         }
     }
