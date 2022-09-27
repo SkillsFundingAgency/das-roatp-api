@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
             {
                 Age = source.Age,
                 SectorSubjectArea = source.SectorSubjectArea,
-                ApprenticeshipLevel = (int)source.ApprenticeshipLevel,
+                ApprenticeshipLevel = source.ApprenticeshipLevel,
                 OverallCohort = source.OverallCohort,
                 OverallAchievementRate = source.OverallAchievementRate,
             };

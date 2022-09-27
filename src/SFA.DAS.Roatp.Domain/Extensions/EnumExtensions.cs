@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.Domain.Extensions
     {
         public static int ToAge(this string value)
         {
-            switch (value.ToLower())
+            switch (value)
             {
                 case "SixteenToEighteen":
                     return (int)Age.SixteenToEighteen;
@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.Domain.Extensions
 
         public static int ToApprenticeshipLevel(this string value)
         {
-            switch (value.ToLower())
+            switch (value)
             {
                 case "Two":
                     return (int)ApprenticeshipLevel.Two;
