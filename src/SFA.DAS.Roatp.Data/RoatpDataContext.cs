@@ -16,7 +16,10 @@ namespace SFA.DAS.Roatp.Data
         public DbSet<ProviderCourseVersion> ProviderCoursesVersions { get; set; }
         public DbSet<ProviderRegistrationDetail> ProviderRegistrationDetails { get; set; }
         public DbSet<Region> Regions { get; set; }
-
+        public DbSet<NationalAchievementRate> NationalAchievementRates { get; set; }
+        public DbSet<NationalAchievementRate_Import> NationalAchievementRateImports { get; set; }
+        public DbSet<NationalAchievementRateOverall> NationalAchievementRateOverall { get; set; }
+        public DbSet<NationalAchievementRateOverall_Import> NationalAchievementRateOverallImports { get; set; }
         public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) {}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

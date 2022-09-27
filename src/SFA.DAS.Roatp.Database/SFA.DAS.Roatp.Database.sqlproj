@@ -72,6 +72,10 @@
     <None Include="PostDeploymentScripts\PopulateRegionData.sql" />
     <Build Include="Tables\ProvderRegistrationDetail.sql" />
     <Build Include="Tables\ImportAudit.sql" />
+    <Build Include="Tables\NationalAchievementRate.sql" />
+    <Build Include="Tables\NationalAchievementRate_Import.sql" />
+    <Build Include="Tables\NationalAchievementRateOverall.sql" />
+    <Build Include="Tables\NationalAchievementRateOverall_Import.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
