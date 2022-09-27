@@ -78,7 +78,8 @@ namespace SFA.DAS.Roatp.Jobs
             builder.Services.AddTransient<IGetCourseDirectoryDataService, GetCourseDirectoryDataService>();
             builder.Services.AddTransient<ICourseDirectoryDataProcessingService, CourseDirectoryDataProcessingService>();
             builder.Services.AddTransient<IGetBetaProvidersService, GetBetaProvidersService>();
-            
+            builder.Services.AddTransient<IReloadNationalAcheivementRatesService, ReloadNationalAcheivementRatesService>();
+
         }
 
         private void ConfigureHttpClient(IServiceCollection services)
