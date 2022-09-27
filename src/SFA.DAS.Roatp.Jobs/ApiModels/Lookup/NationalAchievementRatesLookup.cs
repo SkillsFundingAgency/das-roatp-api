@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using SFA.DAS.Roatp.Domain.Models;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup
 {
     public class NationalAchievementRatesLookup
     {
-        public List<NationalAchievementRate_Import> NationalAchievementRates { get; set; } = new List<NationalAchievementRate_Import>();
-        public List<NationalAchievementRateOverall_Import> OverallAchievementRates { get; set; } = new List<NationalAchievementRateOverall_Import>();
+        public List<NationalAchievementRatesApiImport> NationalAchievementRates { get; set; } = new List<NationalAchievementRatesApiImport>();
+        public List<NationalAchievementRatesOverallApiImport> OverallAchievementRates { get; set; } = new List<NationalAchievementRatesOverallApiImport>();
     }
 }

@@ -1,8 +1,9 @@
-namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup
+namespace SFA.DAS.Roatp.Domain.Models
 {
-    public class NationalAchievementRateOverall_Import
+    public class NationalAchievementRatesApiImport
     {
         public int Id { get; set; }
+        public int Ukprn { get; set; }
         public string Age { get; set; }
         public string SectorSubjectArea { get; set; }
         public string ApprenticeshipLevel { get; set; }
