@@ -14,6 +14,7 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
             var destination = (NationalAchievementRateOverall)source;
 
             destination.Should().BeEquivalentTo(source, c => c.Excluding(s => s.Id));
+            destination.Id.Should().Be(0);
         }
     }
 }
