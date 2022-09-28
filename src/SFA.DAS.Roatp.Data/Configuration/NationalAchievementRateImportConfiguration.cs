@@ -6,7 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace SFA.DAS.Roatp.Data.Configuration
 {
     [ExcludeFromCodeCoverage]
-    public class NationalAchievementRate_ImportConfiguration : IEntityTypeConfiguration<NationalAchievementRateImport>
+    public class NationalAchievementRateImportConfiguration : IEntityTypeConfiguration<NationalAchievementRateImport>
     {
         public void Configure(EntityTypeBuilder<NationalAchievementRateImport> builder)
         {
