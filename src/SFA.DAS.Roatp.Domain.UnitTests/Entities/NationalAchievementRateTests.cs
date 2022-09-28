@@ -9,9 +9,10 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
     public class NationalAchievementRateTests
     {
         [Test, AutoData]
-        public void ImplicitOperator_ConstructsObject(NationalAchievementRate_Import source)
+        public void ImplicitOperator_ConstructsObject(NationalAchievementRateImport source)
         {
             var destination = (NationalAchievementRate)source;
+
             destination.Should().BeEquivalentTo(source, c => c.Excluding(s => s.Id));
         }
     }

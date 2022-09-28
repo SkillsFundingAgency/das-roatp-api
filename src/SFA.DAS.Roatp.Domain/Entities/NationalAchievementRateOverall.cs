@@ -8,7 +8,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public int ApprenticeshipLevel { get; set; }
         public int? OverallCohort { get; set; }
         public decimal? OverallAchievementRate { get; set; }
-        public static implicit operator NationalAchievementRateOverall(NationalAchievementRateOverall_Import source)
+        public static implicit operator NationalAchievementRateOverall(NationalAchievementRateOverallImport source)
         {
             return new NationalAchievementRateOverall
             {

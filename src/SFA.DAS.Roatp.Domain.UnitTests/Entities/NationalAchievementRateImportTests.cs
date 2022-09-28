@@ -9,14 +9,16 @@ using SFA.DAS.Roatp.Domain.Models;
 namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
 {
     [TestFixture]
-    public class NationalAchievementRate_ImportTests
+    public class NationalAchievementRateImportTests
     {
         [Test, AutoData]
         public void ImplicitOperator_ConstructsObject(NationalAchievementRatesApiImport source)
         {
             source.Age = "SixteenToEighteen";
             source.ApprenticeshipLevel = "Two";
-            var destination = (NationalAchievementRate_Import)source;
+
+            var destination = (NationalAchievementRateImport)source;
+
             destination.Ukprn.Should().Be(source.Ukprn);
             destination.Age.Should().Be(source.Age.ToAge());
             destination.SectorSubjectArea.Should().Be(source.SectorSubjectArea);

@@ -34,11 +34,11 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
         [MoqAutoData]
         public async Task ReloadProviderRegistrationDetails_OnApiSuccess_CallsRepositoryReloadMethod(
             [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-            [Frozen] Mock<INationalAchievementRates_ImportWriteRepository> nationalAchievementRatesImportWriteRepositoryMock,
-            [Frozen] Mock<INationalAchievementRates_ImportReadRepository> nationalAchievementRatesImportReadRepositoryMock,
+            [Frozen] Mock<INationalAchievementRatesImportWriteRepository> nationalAchievementRatesImportWriteRepositoryMock,
+            [Frozen] Mock<INationalAchievementRatesImportReadRepository> nationalAchievementRatesImportReadRepositoryMock,
             [Frozen] Mock<INationalAchievementRatesWriteRepository> nationalAchievementRatesWriteRepositoryMock,
-            [Frozen] Mock<INationalAchievementRatesOverall_ImportWriteRepository> nationalAchievementRatesOverallImportWriteRepositoryMock,
-            [Frozen] Mock<INationalAchievementRatesOverall_ImportReadRepository> nationalAchievementRatesOverallImportReadRepositoryMock,
+            [Frozen] Mock<INationalAchievementRatesOverallImportWriteRepository> nationalAchievementRatesOverallImportWriteRepositoryMock,
+            [Frozen] Mock<INationalAchievementRatesOverallImportReadRepository> nationalAchievementRatesOverallImportReadRepositoryMock,
             [Frozen] Mock<INationalAchievementRatesOverallWriteRepository> nationalAchievementRatesOverallWriteRepositoryMock,
             [Frozen] Mock<IImportAuditWriteRepository> auditRepositoryMock,
             [Greedy] ReloadNationalAcheivementRatesService sut,
@@ -50,13 +50,13 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             await sut.ReloadNationalAcheivementRates();
 
             nationalAchievementRatesImportWriteRepositoryMock.Verify(r => r.DeleteAll());
-            nationalAchievementRatesImportWriteRepositoryMock.Verify(r => r.InsertMany(It.IsAny<List<NationalAchievementRate_Import>>()));
+            nationalAchievementRatesImportWriteRepositoryMock.Verify(r => r.InsertMany(It.IsAny<List<NationalAchievementRateImport>>()));
             nationalAchievementRatesImportReadRepositoryMock.Verify(r => r.GetAllWithAchievementData());
             nationalAchievementRatesWriteRepositoryMock.Verify(r => r.DeleteAll());
             nationalAchievementRatesWriteRepositoryMock.Verify(r => r.InsertMany(It.IsAny<List<NationalAchievementRate>>()));
 
             nationalAchievementRatesOverallImportWriteRepositoryMock.Verify(r => r.DeleteAll());
-            nationalAchievementRatesOverallImportWriteRepositoryMock.Verify(r => r.InsertMany(It.IsAny<List<NationalAchievementRateOverall_Import>>()));
+            nationalAchievementRatesOverallImportWriteRepositoryMock.Verify(r => r.InsertMany(It.IsAny<List<NationalAchievementRateOverallImport>>()));
             nationalAchievementRatesOverallImportReadRepositoryMock.Verify(r => r.GetAllWithAchievementData());
             nationalAchievementRatesOverallWriteRepositoryMock.Verify(r => r.DeleteAll());
             nationalAchievementRatesOverallWriteRepositoryMock.Verify(r => r.InsertMany(It.IsAny<List<NationalAchievementRateOverall>>()));

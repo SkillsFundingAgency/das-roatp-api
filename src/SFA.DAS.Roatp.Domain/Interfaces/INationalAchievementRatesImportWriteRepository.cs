@@ -4,9 +4,9 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
-    public interface INationalAchievementRatesOverall_ImportWriteRepository
+    public interface INationalAchievementRatesImportWriteRepository
     {
         Task DeleteAll();
-        Task InsertMany(List<NationalAchievementRateOverall_Import> items);
+        Task InsertMany(List<NationalAchievementRateImport> items);
     }
 }

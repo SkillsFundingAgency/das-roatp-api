@@ -7,24 +7,24 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class NationalAchievementRatesOverall_ImportWriteRepository : INationalAchievementRatesOverall_ImportWriteRepository
+    internal class NationalAchievementRatesImportWriteRepository : INationalAchievementRatesImportWriteRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
-        public NationalAchievementRatesOverall_ImportWriteRepository(RoatpDataContext roatpDataContext)
+        public NationalAchievementRatesImportWriteRepository(RoatpDataContext roatpDataContext)
         {
             _roatpDataContext = roatpDataContext;
         }
 
         public async Task DeleteAll()
         {
-            _roatpDataContext.NationalAchievementRateOverallImports.RemoveRange(_roatpDataContext.NationalAchievementRateOverallImports);
+            _roatpDataContext.NationalAchievementRateImports.RemoveRange(_roatpDataContext.NationalAchievementRateImports);
             await _roatpDataContext.SaveChangesAsync();
         }
 
-        public async Task InsertMany(List<NationalAchievementRateOverall_Import> items)
+        public async Task InsertMany(List<NationalAchievementRateImport> items)
         {
-            await _roatpDataContext.NationalAchievementRateOverallImports.AddRangeAsync(items);
+            await _roatpDataContext.NationalAchievementRateImports.AddRangeAsync(items);
             await _roatpDataContext.SaveChangesAsync();
         }
     }

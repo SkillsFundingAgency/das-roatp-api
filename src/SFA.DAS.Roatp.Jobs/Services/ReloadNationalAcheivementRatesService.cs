@@ -13,21 +13,21 @@ namespace SFA.DAS.Roatp.Jobs.Services
     {
         private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
         private readonly ILogger<ReloadNationalAcheivementRatesService> _logger;
-        private readonly INationalAchievementRates_ImportWriteRepository _nationalAchievementRatesImportWriteRepository;
-        private readonly INationalAchievementRates_ImportReadRepository _nationalAchievementRatesImportReadRepository;
+        private readonly INationalAchievementRatesImportWriteRepository _nationalAchievementRatesImportWriteRepository;
+        private readonly INationalAchievementRatesImportReadRepository _nationalAchievementRatesImportReadRepository;
         private readonly INationalAchievementRatesWriteRepository _nationalAchievementRatesWriteRepository;
-        private readonly INationalAchievementRatesOverall_ImportWriteRepository _nationalAchievementRatesOverallImportWriteRepository;
-        private readonly INationalAchievementRatesOverall_ImportReadRepository _nationalAchievementRatesOverallImportReadRepository;
+        private readonly INationalAchievementRatesOverallImportWriteRepository _nationalAchievementRatesOverallImportWriteRepository;
+        private readonly INationalAchievementRatesOverallImportReadRepository _nationalAchievementRatesOverallImportReadRepository;
         private readonly INationalAchievementRatesOverallWriteRepository _nationalAchievementRatesOverallWriteRepository;
         private readonly IImportAuditWriteRepository _importAuditWriteRepository;
 
         public ReloadNationalAcheivementRatesService(ICourseManagementOuterApiClient courseManagementOuterApiClient,
             ILogger<ReloadNationalAcheivementRatesService> logger,
-            INationalAchievementRates_ImportWriteRepository nationalAchievementRatesImportWriteRepository,
-            INationalAchievementRates_ImportReadRepository nationalAchievementRatesImportReadRepository,
+            INationalAchievementRatesImportWriteRepository nationalAchievementRatesImportWriteRepository,
+            INationalAchievementRatesImportReadRepository nationalAchievementRatesImportReadRepository,
             INationalAchievementRatesWriteRepository nationalAchievementRatesWriteRepository,
-            INationalAchievementRatesOverall_ImportWriteRepository nationalAchievementRatesOverallImportWriteRepository,
-            INationalAchievementRatesOverall_ImportReadRepository nationalAchievementRatesOverallImportReadRepository,
+            INationalAchievementRatesOverallImportWriteRepository nationalAchievementRatesOverallImportWriteRepository,
+            INationalAchievementRatesOverallImportReadRepository nationalAchievementRatesOverallImportReadRepository,
             INationalAchievementRatesOverallWriteRepository nationalAchievementRatesOverallWriteRepository,
             IImportAuditWriteRepository importAuditWriteRepository
             )
@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
             await _nationalAchievementRatesImportWriteRepository.DeleteAll();
 
             _logger.LogInformation("Loading to import table-NationalAchievementRatesImport");
-            await _nationalAchievementRatesImportWriteRepository.InsertMany(nationalAchievementRatesLookup.NationalAchievementRates.Select(c => (NationalAchievementRate_Import)c).ToList());
+            await _nationalAchievementRatesImportWriteRepository.InsertMany(nationalAchievementRatesLookup.NationalAchievementRates.Select(c => (NationalAchievementRateImport)c).ToList());
 
             _logger.LogInformation("Clearing main table-NationalAchievementRate");
             await _nationalAchievementRatesWriteRepository.DeleteAll();
@@ -74,7 +74,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
             await _nationalAchievementRatesOverallImportWriteRepository.DeleteAll();
 
             _logger.LogInformation("Loading to import table-NationalAchievementRatesOverallImport");
-            await _nationalAchievementRatesOverallImportWriteRepository.InsertMany(nationalAchievementRatesLookup.OverallAchievementRates.Select(c => (NationalAchievementRateOverall_Import)c).ToList());
+            await _nationalAchievementRatesOverallImportWriteRepository.InsertMany(nationalAchievementRatesLookup.OverallAchievementRates.Select(c => (NationalAchievementRateOverallImport)c).ToList());
 
             _logger.LogInformation("Clearing main table-NationalAchievementRateOverall");
             await _nationalAchievementRatesOverallWriteRepository.DeleteAll();
