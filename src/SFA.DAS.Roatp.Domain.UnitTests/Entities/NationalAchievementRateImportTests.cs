@@ -19,6 +19,7 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
 
             var destination = (NationalAchievementRateImport)source;
 
+            destination.Id.Should().Be(0);
             destination.Ukprn.Should().Be(source.Ukprn);
             destination.Age.Should().Be(source.Age.ToAge());
             destination.SectorSubjectArea.Should().Be(source.SectorSubjectArea);
