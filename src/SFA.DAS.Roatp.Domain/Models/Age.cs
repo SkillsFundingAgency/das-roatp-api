@@ -1,6 +1,6 @@
 namespace SFA.DAS.Roatp.Domain.Models
 {
-    public enum Age : short
+    public enum Age 
     {
         Unknown = 0,
         SixteenToEighteen = 1,

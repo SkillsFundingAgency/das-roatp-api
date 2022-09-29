@@ -15,9 +15,9 @@ namespace SFA.DAS.Roatp.Data.Configuration
 
             builder.Property(x => x.Id).UseIdentityColumn();
             builder.Property(x => x.Ukprn).IsRequired(); 
-            builder.Property(x => x.Age).IsRequired();
+            builder.Property(x => x.Age).IsRequired().HasConversion<int>(); ;
             builder.Property(x => x.SectorSubjectArea).HasMaxLength(1000).IsRequired();
-            builder.Property(x => x.ApprenticeshipLevel).IsRequired();
+            builder.Property(x => x.ApprenticeshipLevel).IsRequired().HasConversion<int>(); 
             builder.Property(x => x.OverallCohort).IsRequired(false);
             builder.Property(x => x.OverallAchievementRate).IsRequired(false);
         }
