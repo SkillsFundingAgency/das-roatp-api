@@ -5,7 +5,7 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup
 {
     public class NationalAchievementRatesLookup
     {
-        public List<NationalAchievementRatesApiImport> NationalAchievementRates { get; set; } = new List<NationalAchievementRatesApiImport>();
-        public List<NationalAchievementRatesOverallApiImport> OverallAchievementRates { get; set; } = new List<NationalAchievementRatesOverallApiImport>();
+        public List<NationalAchievementRatesApiModel> NationalAchievementRates { get; set; } = new List<NationalAchievementRatesApiModel>();
+        public List<NationalAchievementRatesOverallApiModel> OverallAchievementRates { get; set; } = new List<NationalAchievementRatesOverallApiModel>();
     }
 }

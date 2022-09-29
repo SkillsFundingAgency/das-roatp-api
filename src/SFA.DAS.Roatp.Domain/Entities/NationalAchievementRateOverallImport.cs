@@ -5,18 +5,18 @@ namespace SFA.DAS.Roatp.Domain.Entities
     public class NationalAchievementRateOverallImport
     {
         public long Id { get; set; }
-        public int Age { get; set; }
+        public Age Age { get; set; }
         public string SectorSubjectArea { get; set; }
-        public int ApprenticeshipLevel { get; set; }
+        public ApprenticeshipLevel ApprenticeshipLevel { get; set; }
         public int? OverallCohort { get; set; }
         public decimal? OverallAchievementRate { get; set; }
-        public static implicit operator NationalAchievementRateOverallImport(NationalAchievementRatesOverallApiImport source)
+        public static implicit operator NationalAchievementRateOverallImport(NationalAchievementRatesOverallApiModel source)
         {
             return new NationalAchievementRateOverallImport
             {
-                Age = (int)source.Age,
+                Age = source.Age,
                 SectorSubjectArea = source.SectorSubjectArea,
-                ApprenticeshipLevel = (int)source.ApprenticeshipLevel,
+                ApprenticeshipLevel = source.ApprenticeshipLevel,
                 OverallCohort = source.OverallCohort,
                 OverallAchievementRate = source.OverallAchievementRate,
             };

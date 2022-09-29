@@ -20,8 +20,6 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.Property(x => x.ApprenticeshipLevel).IsRequired();
             builder.Property(x => x.OverallCohort).IsRequired(false);
             builder.Property(x => x.OverallAchievementRate).IsRequired(false);
-
-            builder.HasIndex(x => x.Id).IsUnique();
         }
     }
 }
