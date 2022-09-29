@@ -7,9 +7,9 @@ namespace SFA.DAS.Roatp.Jobs.Functions
 {
     public class ReloadNationalAcheivementRatesFunction
     {
-        private readonly IReloadNationalAcheivementRatesService _service;
+        private readonly IReloadNationalAcheivementRatesLookupService _service;
 
-        public ReloadNationalAcheivementRatesFunction(IReloadNationalAcheivementRatesService service)
+        public ReloadNationalAcheivementRatesFunction(IReloadNationalAcheivementRatesLookupService service)
         {
             _service = service;
         }

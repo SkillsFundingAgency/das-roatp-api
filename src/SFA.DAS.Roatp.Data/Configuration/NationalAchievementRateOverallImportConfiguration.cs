@@ -6,20 +6,21 @@ using System.Diagnostics.CodeAnalysis;
 namespace SFA.DAS.Roatp.Data.Configuration
 {
     [ExcludeFromCodeCoverage]
-    public class NationalAchievementRateConfiguration : IEntityTypeConfiguration<NationalAchievementRate>
+    public class NationalAchievementRateOverallImportConfiguration : IEntityTypeConfiguration<NationalAchievementRateOverallImport>
     {
-        public void Configure(EntityTypeBuilder<NationalAchievementRate> builder)
+        public void Configure(EntityTypeBuilder<NationalAchievementRateOverallImport> builder)
         {
-            builder.ToTable(nameof(NationalAchievementRate));
+            builder.ToTable(nameof(NationalAchievementRateOverallImport));
             builder.HasKey(x => x.Id);
 
             builder.Property(x => x.Id).UseIdentityColumn();
-            builder.Property(x => x.Ukprn).IsRequired(); 
             builder.Property(x => x.Age).IsRequired();
             builder.Property(x => x.SectorSubjectArea).HasMaxLength(1000).IsRequired();
             builder.Property(x => x.ApprenticeshipLevel).IsRequired();
             builder.Property(x => x.OverallCohort).IsRequired(false);
             builder.Property(x => x.OverallAchievementRate).IsRequired(false);
+
+            builder.HasIndex(x => x.Id).IsUnique();
         }
     }
 }

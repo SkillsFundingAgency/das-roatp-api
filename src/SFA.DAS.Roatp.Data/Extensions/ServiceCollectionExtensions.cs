@@ -58,11 +58,11 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IProviderCourseLocationsWriteRepository, ProviderCourseLocationsWriteRepository>();
             services.AddTransient<IImportAuditWriteRepository, ImportAuditWriteRepository>();
             services.AddTransient<IImportAuditReadRepository, ImportAuditReadRepository>();
-            services.AddTransient<INationalAchievementRates_ImportWriteRepository, NationalAchievementRates_ImportWriteRepository>();
-            services.AddTransient<INationalAchievementRates_ImportReadRepository, NationalAchievementRates_ImportReadRepository>();
+            services.AddTransient<INationalAchievementRatesImportWriteRepository, NationalAchievementRatesImportWriteRepository>();
+            services.AddTransient<INationalAchievementRatesImportReadRepository, NationalAchievementRatesImportReadRepository>();
             services.AddTransient<INationalAchievementRatesWriteRepository, NationalAchievementRatesWriteRepository>();
-            services.AddTransient<INationalAchievementRatesOverall_ImportWriteRepository, NationalAchievementRatesOverall_ImportWriteRepository>();
-            services.AddTransient<INationalAchievementRatesOverall_ImportReadRepository, NationalAchievementRatesOverall_ImportReadRepository>();
+            services.AddTransient<INationalAchievementRatesOverallImportWriteRepository, NationalAchievementRatesOverallImportWriteRepository>();
+            services.AddTransient<INationalAchievementRatesOverallImportReadRepository, NationalAchievementRatesOverallImportReadRepository>();
             services.AddTransient<INationalAchievementRatesOverallWriteRepository, NationalAchievementRatesOverallWriteRepository>();
     }
 

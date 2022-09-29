@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions
         [Test]
         public async Task Run_InvokesService()
         {
-            var serviceMock = new Mock<IReloadNationalAcheivementRatesService>();
+            var serviceMock = new Mock<IReloadNationalAcheivementRatesLookupService>();
             var sut = new ReloadNationalAcheivementRatesFunction(serviceMock.Object);
 
             await sut.Run(default(TimerInfo), Mock.Of<ILogger>());

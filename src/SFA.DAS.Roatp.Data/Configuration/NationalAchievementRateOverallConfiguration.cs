@@ -13,12 +13,12 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.ToTable(nameof(NationalAchievementRateOverall));
             builder.HasKey(x => x.Id);
 
-            builder.Property(x => x.Id).UseIdentityColumn().IsRequired().HasColumnName("Id");
-            builder.Property(x => x.Age).HasColumnName("Age").HasColumnType("smallint").IsRequired();
-            builder.Property(x => x.SectorSubjectArea).HasColumnName("SectorSubjectArea").HasColumnType("varchar").HasMaxLength(1000).IsRequired();
-            builder.Property(x => x.ApprenticeshipLevel).HasColumnName("ApprenticeshipLevel").HasColumnType("smallint").IsRequired();
-            builder.Property(x => x.OverallCohort).HasColumnName("OverallCohort").HasColumnType("int").IsRequired(false);
-            builder.Property(x => x.OverallAchievementRate).HasColumnName("OverallAchievementRate").HasColumnType("decimal").IsRequired(false);
+            builder.Property(x => x.Id).UseIdentityColumn();
+            builder.Property(x => x.Age).IsRequired();
+            builder.Property(x => x.SectorSubjectArea).HasMaxLength(1000).IsRequired();
+            builder.Property(x => x.ApprenticeshipLevel).IsRequired();
+            builder.Property(x => x.OverallCohort).IsRequired(false);
+            builder.Property(x => x.OverallAchievementRate).IsRequired(false);
 
             builder.HasIndex(x => x.Id).IsUnique();
         }

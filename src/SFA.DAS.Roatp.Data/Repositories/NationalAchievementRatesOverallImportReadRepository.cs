@@ -9,16 +9,16 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class NationalAchievementRatesOverall_ImportReadRepository : INationalAchievementRatesOverall_ImportReadRepository
+    internal class NationalAchievementRatesOverallImportReadRepository : INationalAchievementRatesOverallImportReadRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
 
-        public NationalAchievementRatesOverall_ImportReadRepository(RoatpDataContext roatpDataContext)
+        public NationalAchievementRatesOverallImportReadRepository(RoatpDataContext roatpDataContext)
         {
             _roatpDataContext = roatpDataContext;
         }
 
-        public async Task<List<NationalAchievementRateOverall_Import>> GetAllWithAchievementData()
+        public async Task<List<NationalAchievementRateOverallImport>> GetAllWithAchievementData()
         {
             var items = await _roatpDataContext.NationalAchievementRateOverallImports
                  .Where(c => c.OverallCohort.HasValue || c.OverallAchievementRate.HasValue)

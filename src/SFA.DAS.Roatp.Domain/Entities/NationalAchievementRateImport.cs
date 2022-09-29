@@ -1,9 +1,8 @@
-using SFA.DAS.Roatp.Domain.Extensions;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Domain.Entities
 {
-    public class NationalAchievementRate_Import
+    public class NationalAchievementRateImport
     {
         public long Id { get; set; }
         public int Ukprn { get; set; }
@@ -12,13 +11,13 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public int ApprenticeshipLevel { get; set; }
         public int? OverallCohort { get; set; }
         public decimal? OverallAchievementRate { get; set; }
-        public static implicit operator NationalAchievementRate_Import(NationalAchievementRatesApiImport source)
+        public static implicit operator NationalAchievementRateImport(NationalAchievementRatesApiImport source)
         {
-            return new NationalAchievementRate_Import
+            return new NationalAchievementRateImport
             {
-                Age = source.Age.ToAge(),
+                Age = (int)source.Age,
                 Ukprn = source.Ukprn,
-                ApprenticeshipLevel = source.ApprenticeshipLevel.ToApprenticeshipLevel(),
+                ApprenticeshipLevel = (int)source.ApprenticeshipLevel,
                 OverallCohort = source.OverallCohort,
                 OverallAchievementRate = source.OverallAchievementRate,
                 SectorSubjectArea = source.SectorSubjectArea

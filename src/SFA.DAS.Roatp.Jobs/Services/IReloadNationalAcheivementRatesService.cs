@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using SFA.DAS.Roatp.Domain.Models;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Jobs.Services
 {
     public interface IReloadNationalAcheivementRatesService
     {
-        Task ReloadNationalAcheivementRates();
+        Task ReloadNationalAcheivementRates(List<NationalAchievementRatesApiImport> nationalAchievementRatesImported);
     }
 }

@@ -11,23 +11,23 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class NationalAchievementRatesWriteRepository : INationalAchievementRatesWriteRepository
+    internal class NationalAchievementRatesOverallImportWriteRepository : INationalAchievementRatesOverallImportWriteRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
-        private readonly ILogger<NationalAchievementRatesWriteRepository> _logger;
+        private readonly ILogger<NationalAchievementRatesOverallImportWriteRepository> _logger;
 
-        public NationalAchievementRatesWriteRepository(RoatpDataContext roatpDataContext, ILogger<NationalAchievementRatesWriteRepository> logger)
+        public NationalAchievementRatesOverallImportWriteRepository(RoatpDataContext roatpDataContext, ILogger<NationalAchievementRatesOverallImportWriteRepository> logger)
         {
             _roatpDataContext = roatpDataContext;
             _logger = logger;
         }
 
-        public async Task Reload(List<NationalAchievementRate> items)
+        public async Task Reload(List<NationalAchievementRateOverallImport> items)
         {
             await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
             try
             {
-                await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM NationalAchievementRate");
+                await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM NationalAchievementRateOverallImport");
                 await _roatpDataContext.BulkInsertAsync(items);
                 await _roatpDataContext.SaveChangesAsync();
                 await transaction.CommitAsync();
@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "NationalAchievementRate reload failed on database update");
+                _logger.LogError(ex, "NationalAchievementRateOverallImport reload failed on database update");
                 throw;
             }
         }
