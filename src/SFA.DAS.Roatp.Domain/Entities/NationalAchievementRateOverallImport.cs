@@ -1,4 +1,3 @@
-using SFA.DAS.Roatp.Domain.Extensions;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Domain.Entities
@@ -15,9 +14,9 @@ namespace SFA.DAS.Roatp.Domain.Entities
         {
             return new NationalAchievementRateOverallImport
             {
-                Age = source.Age.ToAge(),
+                Age = (int)source.Age,
                 SectorSubjectArea = source.SectorSubjectArea,
-                ApprenticeshipLevel = source.ApprenticeshipLevel.ToApprenticeshipLevel(),
+                ApprenticeshipLevel = (int)source.ApprenticeshipLevel,
                 OverallCohort = source.OverallCohort,
                 OverallAchievementRate = source.OverallAchievementRate,
             };

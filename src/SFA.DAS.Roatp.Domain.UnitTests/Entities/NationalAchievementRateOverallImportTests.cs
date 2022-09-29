@@ -2,7 +2,6 @@
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Extensions;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
@@ -13,15 +12,15 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
         [Test, AutoData]
         public void ImplicitOperator_ConstructsObject(NationalAchievementRatesOverallApiImport source)
         {
-            source.Age = "SixteenToEighteen";
-            source.ApprenticeshipLevel = "Two";
+            source.Age = Age.SixteenToEighteen;
+            source.ApprenticeshipLevel = ApprenticeshipLevel.Two;
 
             var destination = (NationalAchievementRateOverallImport)source;
 
             destination.Id.Should().Be(0);
-            destination.Age.Should().Be(source.Age.ToAge());
+            destination.Age.Should().Be((int)source.Age);
             destination.SectorSubjectArea.Should().Be(source.SectorSubjectArea);
-            destination.ApprenticeshipLevel.Should().Be(source.ApprenticeshipLevel.ToApprenticeshipLevel());
+            destination.ApprenticeshipLevel.Should().Be((int)source.ApprenticeshipLevel);
             destination.OverallCohort.Should().Be(source.OverallCohort);
             destination.OverallAchievementRate.Should().Be(source.OverallAchievementRate);
         }
