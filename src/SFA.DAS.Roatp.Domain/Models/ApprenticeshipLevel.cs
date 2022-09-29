@@ -1,6 +1,6 @@
 namespace SFA.DAS.Roatp.Domain.Models
 {
-    public enum ApprenticeshipLevel : short
+    public enum ApprenticeshipLevel 
     {
         Unknown = 0,
         AllLevels = 1,
