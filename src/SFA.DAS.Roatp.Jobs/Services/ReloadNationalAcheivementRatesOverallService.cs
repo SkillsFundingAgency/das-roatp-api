@@ -52,7 +52,6 @@ namespace SFA.DAS.Roatp.Jobs.Services
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while reloading the NationalAchievementRateOverall data");
-                return;
             }
         }
     }
