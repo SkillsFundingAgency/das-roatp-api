@@ -37,19 +37,13 @@ namespace SFA.DAS.Roatp.Jobs.Services
         public async Task ReloadNationalAcheivementRatesOverall(List<NationalAchievementRatesOverallApiImport> OverallAchievementRatesImported)
         {
             var timeStarted = DateTime.UtcNow;
-            _logger.LogInformation("Clearing import table-NationalAchievementRatesOverallImport");
-            await _nationalAchievementRatesOverallImportWriteRepository.DeleteAll();
+            _logger.LogInformation("Clearing and Loading import table-NationalAchievementRatesOverallImport");
+            await _nationalAchievementRatesOverallImportWriteRepository.Reload(OverallAchievementRatesImported.Select(c => (NationalAchievementRateOverallImport)c).ToList());
 
-            _logger.LogInformation("Loading to import table-NationalAchievementRatesOverallImport");
-            await _nationalAchievementRatesOverallImportWriteRepository.InsertMany(OverallAchievementRatesImported.Select(c => (NationalAchievementRateOverallImport)c).ToList());
-
-            _logger.LogInformation("Clearing main table-NationalAchievementRateOverall");
-            await _nationalAchievementRatesOverallWriteRepository.DeleteAll();
-
-            _logger.LogInformation("Loading to main table-NationalAchievementRatesOverall");
             var nationalAchievementRatesOverall = await _nationalAchievementRatesOverallImportReadRepository.GetAllWithAchievementData();
-            await _nationalAchievementRatesOverallWriteRepository.InsertMany(nationalAchievementRatesOverall.Select(c => (NationalAchievementRateOverall)c).ToList());
-            
+            _logger.LogInformation("Clearing and Loading main table-NationalAchievementRateOverall");
+            await _nationalAchievementRatesOverallWriteRepository.Reload(nationalAchievementRatesOverall.Select(c => (NationalAchievementRateOverall)c).ToList());
+
             _logger.LogInformation($"Loaded  {nationalAchievementRatesOverall.Count} National Achievement Rates Overall");
             await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, nationalAchievementRatesOverall.Count, ImportType.NationalAchievementRatesOverall));
         }

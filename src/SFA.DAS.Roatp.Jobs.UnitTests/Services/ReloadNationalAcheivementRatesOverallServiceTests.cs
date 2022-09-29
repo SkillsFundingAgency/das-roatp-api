@@ -26,11 +26,9 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
         {
             await sut.ReloadNationalAcheivementRatesOverall(OverallAchievementRatesImported);
 
-            nationalAchievementRatesOverallImportWriteRepositoryMock.Verify(r => r.DeleteAll());
-            nationalAchievementRatesOverallImportWriteRepositoryMock.Verify(r => r.InsertMany(It.IsAny<List<NationalAchievementRateOverallImport>>()));
+            nationalAchievementRatesOverallImportWriteRepositoryMock.Verify(r => r.Reload(It.IsAny<List<NationalAchievementRateOverallImport>>()));
             nationalAchievementRatesOverallImportReadRepositoryMock.Verify(r => r.GetAllWithAchievementData());
-            nationalAchievementRatesOverallWriteRepositoryMock.Verify(r => r.DeleteAll());
-            nationalAchievementRatesOverallWriteRepositoryMock.Verify(r => r.InsertMany(It.IsAny<List<NationalAchievementRateOverall>>()));
+            nationalAchievementRatesOverallWriteRepositoryMock.Verify(r => r.Reload(It.IsAny<List<NationalAchievementRateOverall>>()));
             auditRepositoryMock.Verify(x=>x.Insert(It.IsAny<ImportAudit>()));
         }
     }

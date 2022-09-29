@@ -1,5 +1,9 @@
-﻿using SFA.DAS.Roatp.Domain.Entities;
+﻿using EFCore.BulkExtensions;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
@@ -10,22 +14,30 @@ namespace SFA.DAS.Roatp.Data.Repositories
     internal class NationalAchievementRatesOverallImportWriteRepository : INationalAchievementRatesOverallImportWriteRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
+        private readonly ILogger<NationalAchievementRatesOverallImportWriteRepository> _logger;
 
-        public NationalAchievementRatesOverallImportWriteRepository(RoatpDataContext roatpDataContext)
+        public NationalAchievementRatesOverallImportWriteRepository(RoatpDataContext roatpDataContext, ILogger<NationalAchievementRatesOverallImportWriteRepository> logger)
         {
             _roatpDataContext = roatpDataContext;
+            _logger = logger;
         }
 
-        public async Task DeleteAll()
+        public async Task Reload(List<NationalAchievementRateOverallImport> items)
         {
-            _roatpDataContext.NationalAchievementRateOverallImports.RemoveRange(_roatpDataContext.NationalAchievementRateOverallImports);
-            await _roatpDataContext.SaveChangesAsync();
-        }
-
-        public async Task InsertMany(List<NationalAchievementRateOverallImport> items)
-        {
-            await _roatpDataContext.NationalAchievementRateOverallImports.AddRangeAsync(items);
-            await _roatpDataContext.SaveChangesAsync();
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
+            try
+            {
+                await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM NationalAchievementRateOverallImport");
+                await _roatpDataContext.BulkInsertAsync(items);
+                await _roatpDataContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "NationalAchievementRateOverallImport reload failed on database update");
+                throw;
+            }
         }
     }
 }

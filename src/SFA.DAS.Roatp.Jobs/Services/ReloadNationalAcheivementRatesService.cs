@@ -35,19 +35,13 @@ namespace SFA.DAS.Roatp.Jobs.Services
         public async Task ReloadNationalAcheivementRates(List<NationalAchievementRatesApiImport> nationalAchievementRatesImported)
         {
             var timeStarted = DateTime.UtcNow;
-            _logger.LogInformation("Clearing import table-NationalAchievementRatesImport");
-            await _nationalAchievementRatesImportWriteRepository.DeleteAll();
+            _logger.LogInformation("Clearing and Loading import table-NationalAchievementRatesImport");
+            await _nationalAchievementRatesImportWriteRepository.Reload(nationalAchievementRatesImported.Select(c => (NationalAchievementRateImport)c).ToList());
 
-            _logger.LogInformation("Loading to import table-NationalAchievementRatesImport");
-            await _nationalAchievementRatesImportWriteRepository.InsertMany(nationalAchievementRatesImported.Select(c => (NationalAchievementRateImport)c).ToList());
-
-            _logger.LogInformation("Clearing main table-NationalAchievementRate");
-            await _nationalAchievementRatesWriteRepository.DeleteAll();
-
-            _logger.LogInformation("Loading to main table-NationalAchievementRate");
             var nationalAchievementRates = await _nationalAchievementRatesImportReadRepository.GetAllWithAchievementData();
-            await _nationalAchievementRatesWriteRepository.InsertMany(nationalAchievementRates.Select(c => (NationalAchievementRate)c).ToList());
-            
+            _logger.LogInformation("Clearing and Loading main table-NationalAchievementRate");
+            await _nationalAchievementRatesWriteRepository.Reload(nationalAchievementRates.Select(c => (NationalAchievementRate)c).ToList());
+
             _logger.LogInformation($"Loaded  {nationalAchievementRates.Count} National Achievement Rates");
             await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, nationalAchievementRates.Count, ImportType.NationalAchievementRates));
         }

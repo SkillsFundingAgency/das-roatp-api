@@ -6,7 +6,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
 {
     public interface INationalAchievementRatesImportWriteRepository
     {
-        Task DeleteAll();
-        Task InsertMany(List<NationalAchievementRateImport> items);
+        Task Reload(List<NationalAchievementRateImport> items);
     }
 }
