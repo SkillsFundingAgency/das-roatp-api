@@ -4,7 +4,9 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Api.ApiResponses;
 using SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries;
+using GetOverallAchievementRatesResponse = SFA.DAS.Roatp.Api.ApiResponses.GetOverallAchievementRatesResponse;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
@@ -32,8 +34,8 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 
                 var response = new GetOverallAchievementRatesResponse
                 {
-                    OverallAchievementRates = queryResult.OverallAchievementRates.Select(c=>(GetOverallAchievementRateResponse)c).ToList()
-                        
+                    OverallAchievementRates = queryResult.OverallAchievementRates.Select(c => (GetOverallAchievementRateResponse)c).ToList()
+
                 };
                 return Ok(response);
             }

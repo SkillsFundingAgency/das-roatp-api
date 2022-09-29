@@ -1,21 +1,21 @@
+using MediatR;
+using SFA.DAS.Roatp.Domain.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using SFA.DAS.CourseDelivery.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries
 {
     public class GetOverallAchievementRatesHandler : IRequestHandler<GetOverallAchievementRatesQuery, GetOverallAchievementRatesResponse>
     {
-        private readonly IOverallNationalAchievementRateService _service;
+        private readonly INationalAchievementRatesOverallReadRepository _nationalAchievementRatesOverallReadRepository;
 
-        public GetOverallAchievementRatesHandler (IOverallNationalAchievementRateService service)
+        public GetOverallAchievementRatesHandler(INationalAchievementRatesOverallReadRepository nationalAchievementRatesImportReadRepository)
         {
-            _service = service;
+            _nationalAchievementRatesOverallReadRepository = nationalAchievementRatesImportReadRepository;
         }
         public async Task<GetOverallAchievementRatesResponse> Handle(GetOverallAchievementRatesQuery request, CancellationToken cancellationToken)
         {
-            var result = await _service.GetItemsBySectorSubjectArea(request.SectorSubjectArea);
+            var result = await _nationalAchievementRatesOverallReadRepository.GetBySectorSubjectArea(request.SectorSubjectArea);
             
             return new GetOverallAchievementRatesResponse
             {

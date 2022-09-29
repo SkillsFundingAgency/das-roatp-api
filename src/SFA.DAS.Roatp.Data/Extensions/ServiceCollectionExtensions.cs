@@ -64,7 +64,8 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<INationalAchievementRatesOverallImportWriteRepository, NationalAchievementRatesOverallImportWriteRepository>();
             services.AddTransient<INationalAchievementRatesOverallImportReadRepository, NationalAchievementRatesOverallImportReadRepository>();
             services.AddTransient<INationalAchievementRatesOverallWriteRepository, NationalAchievementRatesOverallWriteRepository>();
-    }
+            services.AddTransient<INationalAchievementRatesOverallReadRepository, NationalAchievementRatesOverallReadRepository>();
+        }
 
         public static async Task<string> GenerateTokenAsync()
         {

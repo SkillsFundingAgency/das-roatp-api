@@ -5,6 +5,6 @@ namespace SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries
 {
     public class GetOverallAchievementRatesResponse
     {
-        public IEnumerable<NationalAchievementRateOverall> OverallAchievementRates { get ; set ; }
+        public List<NationalAchievementRateOverall> OverallAchievementRates { get ; set ; }
     }
 }
