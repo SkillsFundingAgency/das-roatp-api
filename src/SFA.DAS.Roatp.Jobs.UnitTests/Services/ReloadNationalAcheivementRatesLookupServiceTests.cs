@@ -43,9 +43,9 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
 
             await sut.ReloadNationalAcheivementRates();
 
-            reloadNationalAcheivementRatesServiceMock.Verify(r => r.ReloadNationalAcheivementRates(It.IsAny<List<NationalAchievementRatesApiImport>>()));
+            reloadNationalAcheivementRatesServiceMock.Verify(r => r.ReloadNationalAcheivementRates(It.IsAny<List<NationalAchievementRatesApiModel>>()));
 
-            reloadNationalAcheivementRatesOverallServiceMock.Verify(r => r.ReloadNationalAcheivementRatesOverall(It.IsAny<List<NationalAchievementRatesOverallApiImport>>()));
+            reloadNationalAcheivementRatesOverallServiceMock.Verify(r => r.ReloadNationalAcheivementRatesOverall(It.IsAny<List<NationalAchievementRatesOverallApiModel>>()));
         }
     }
 }

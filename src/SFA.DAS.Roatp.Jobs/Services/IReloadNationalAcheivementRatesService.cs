@@ -6,6 +6,6 @@ namespace SFA.DAS.Roatp.Jobs.Services
 {
     public interface IReloadNationalAcheivementRatesService
     {
-        Task ReloadNationalAcheivementRates(List<NationalAchievementRatesApiImport> nationalAchievementRatesImported);
+        Task ReloadNationalAcheivementRates(List<NationalAchievementRatesApiModel> nationalAchievementRatesImported);
     }
 }

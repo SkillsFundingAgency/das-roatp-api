@@ -34,18 +34,26 @@ namespace SFA.DAS.Roatp.Jobs.Services
             _importAuditWriteRepository = importAuditWriteRepository;
         }
 
-        public async Task ReloadNationalAcheivementRatesOverall(List<NationalAchievementRatesOverallApiImport> OverallAchievementRatesImported)
+        public async Task ReloadNationalAcheivementRatesOverall(List<NationalAchievementRatesOverallApiModel> OverallAchievementRatesImported)
         {
-            var timeStarted = DateTime.UtcNow;
-            _logger.LogInformation("Clearing and Loading import table-NationalAchievementRatesOverallImport");
-            await _nationalAchievementRatesOverallImportWriteRepository.Reload(OverallAchievementRatesImported.Select(c => (NationalAchievementRateOverallImport)c).ToList());
+            try
+            {
+                var timeStarted = DateTime.UtcNow;
+                _logger.LogInformation("Clearing and Loading import table-NationalAchievementRatesOverallImport");
+                await _nationalAchievementRatesOverallImportWriteRepository.Reload(OverallAchievementRatesImported.Select(c => (NationalAchievementRateOverallImport)c).ToList());
 
-            var nationalAchievementRatesOverall = await _nationalAchievementRatesOverallImportReadRepository.GetAllWithAchievementData();
-            _logger.LogInformation("Clearing and Loading main table-NationalAchievementRateOverall");
-            await _nationalAchievementRatesOverallWriteRepository.Reload(nationalAchievementRatesOverall.Select(c => (NationalAchievementRateOverall)c).ToList());
+                var nationalAchievementRatesOverall = await _nationalAchievementRatesOverallImportReadRepository.GetAllWithAchievementData();
+                _logger.LogInformation("Clearing and Loading main table-NationalAchievementRateOverall");
+                await _nationalAchievementRatesOverallWriteRepository.Reload(nationalAchievementRatesOverall.Select(c => (NationalAchievementRateOverall)c).ToList());
 
-            _logger.LogInformation($"Loaded  {nationalAchievementRatesOverall.Count} National Achievement Rates Overall");
-            await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, nationalAchievementRatesOverall.Count, ImportType.NationalAchievementRatesOverall));
+                _logger.LogInformation($"Loaded  {nationalAchievementRatesOverall.Count} National Achievement Rates Overall");
+                await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, nationalAchievementRatesOverall.Count, ImportType.NationalAchievementRatesOverall));
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occurred while reloading the NationalAchievementRateOverall data");
+                return;
+            }
         }
     }
 }

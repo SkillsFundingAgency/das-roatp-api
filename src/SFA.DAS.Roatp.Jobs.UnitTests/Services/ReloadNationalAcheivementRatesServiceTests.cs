@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             [Frozen] Mock<INationalAchievementRatesWriteRepository> nationalAchievementRatesWriteRepositoryMock,
             [Frozen] Mock<IImportAuditWriteRepository> auditRepositoryMock,
             [Greedy] ReloadNationalAcheivementRatesService sut,
-            List<NationalAchievementRatesApiImport> nationalAchievementRatesImported)
+            List<NationalAchievementRatesApiModel> nationalAchievementRatesImported)
         {
             await sut.ReloadNationalAcheivementRates(nationalAchievementRatesImported);
 
