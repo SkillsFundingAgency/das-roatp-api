@@ -1,5 +1,4 @@
 ﻿using AutoFixture.NUnit3;
-using Microsoft.OData.Edm;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -8,6 +7,7 @@ using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Roatp.Jobs.Services;
 using SFA.DAS.Testing.AutoFixture;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             [Greedy] ReloadNationalAcheivementRatesService sut,
             List<NationalAchievementRatesApiModel> nationalAchievementRatesImported)
         {
-            providersReadRepositoryMock.Setup(c => c.GetAllProviders()).ReturnsAsync(new List<Provider>());
+            providersReadRepositoryMock.Setup(c => c.GetAllProviders()).ReturnsAsync(new List<Provider> {new Provider { Ukprn = nationalAchievementRatesImported .FirstOrDefault().Ukprn} });
 
             await sut.ReloadNationalAcheivementRates(nationalAchievementRatesImported);
 
