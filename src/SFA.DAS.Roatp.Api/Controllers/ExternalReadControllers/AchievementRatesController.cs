@@ -1,12 +1,9 @@
-using System;
-using System.Linq;
-using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Api.ApiResponses;
 using SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries;
-using GetOverallAchievementRatesResponse = SFA.DAS.Roatp.Api.ApiResponses.GetOverallAchievementRatesResponse;
+using SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries.GetOverallAchievementRates;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
@@ -28,22 +25,13 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Route("Overall")]
         public async Task<IActionResult> GetOverallAchievementRates([FromQuery] string sector)
         {
-            try
-            {
-                var queryResult = await _mediator.Send(new GetOverallAchievementRatesQuery {SectorSubjectArea = sector});
+            _logger.LogInformation("Request received to get overall achievement rates by:{sector}", sector);
 
-                var response = new GetOverallAchievementRatesResponse
-                {
-                    OverallAchievementRates = queryResult.OverallAchievementRates.Select(c => (GetOverallAchievementRateResponse)c).ToList()
+            var queryResult = await _mediator.Send(new GetOverallAchievementRatesQuery { SectorSubjectArea = sector });
+            
+            _logger.LogInformation("Found {overallAchievementRatesCount} overall achievement rates", queryResult.OverallAchievementRates.Count);
 
-                };
-                return Ok(response);
-            }
-            catch (Exception e)
-            {
-                _logger.LogError(e, $"Unable to get overall achievement rates by:{sector}");
-                return NotFound();
-            }
+            return Ok(queryResult);
         }
     }
 }
