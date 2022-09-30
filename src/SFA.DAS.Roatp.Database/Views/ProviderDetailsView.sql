@@ -18,4 +18,4 @@
     A.Latitude,
     A.Longitude
   FROM [dbo].[Provider] P
-  INNER JOIN [dbo].[ProviderAddress] A on P.Id = A.ProviderId
+  LEFT OUTER JOIN [dbo].[ProviderAddress] A on P.Id = A.ProviderId
