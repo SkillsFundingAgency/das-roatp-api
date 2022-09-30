@@ -79,7 +79,4 @@
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
   </ItemGroup>
-  <ItemGroup>
-    <RefactorLog Include="SFA.DAS.Roatp.Database.refactorlog" />
-  </ItemGroup>
 </Project>
