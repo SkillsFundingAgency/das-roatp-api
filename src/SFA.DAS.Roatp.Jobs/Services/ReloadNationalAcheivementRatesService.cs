@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
