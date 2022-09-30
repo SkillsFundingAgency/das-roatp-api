@@ -1,4 +1,5 @@
 ﻿using AutoFixture.NUnit3;
+using Microsoft.OData.Edm;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -20,10 +21,13 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             [Frozen] Mock<INationalAchievementRatesImportWriteRepository> nationalAchievementRatesImportWriteRepositoryMock,
             [Frozen] Mock<INationalAchievementRatesImportReadRepository> nationalAchievementRatesImportReadRepositoryMock,
             [Frozen] Mock<INationalAchievementRatesWriteRepository> nationalAchievementRatesWriteRepositoryMock,
+            [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
             [Frozen] Mock<IImportAuditWriteRepository> auditRepositoryMock,
             [Greedy] ReloadNationalAcheivementRatesService sut,
             List<NationalAchievementRatesApiModel> nationalAchievementRatesImported)
         {
+            providersReadRepositoryMock.Setup(c => c.GetAllProviders()).ReturnsAsync(new List<Provider>());
+
             await sut.ReloadNationalAcheivementRates(nationalAchievementRatesImported);
 
             nationalAchievementRatesImportWriteRepositoryMock.Verify(r => r.Reload(It.IsAny<List<NationalAchievementRateImport>>()));

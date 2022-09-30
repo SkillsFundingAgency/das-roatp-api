@@ -40,12 +40,12 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 _logger.LogInformation("Clearing and Loading import table-NationalAchievementRatesOverallImport");
                 await _nationalAchievementRatesOverallImportWriteRepository.Reload(OverallAchievementRatesImported.Select(c => (NationalAchievementRateOverallImport)c).ToList());
 
-                var nationalAchievementRatesOverall = await _nationalAchievementRatesOverallImportReadRepository.GetAllWithAchievementData();
+                var nationalAchievementRatesOverallImport = await _nationalAchievementRatesOverallImportReadRepository.GetAllWithAchievementData();
                 _logger.LogInformation("Clearing and Loading main table-NationalAchievementRateOverall");
-                await _nationalAchievementRatesOverallWriteRepository.Reload(nationalAchievementRatesOverall.Select(c => (NationalAchievementRateOverall)c).ToList());
+                await _nationalAchievementRatesOverallWriteRepository.Reload(nationalAchievementRatesOverallImport.Select(c => (NationalAchievementRateOverall)c).ToList());
 
-                _logger.LogInformation($"Loaded  {nationalAchievementRatesOverall.Count} National Achievement Rates Overall");
-                await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, nationalAchievementRatesOverall.Count, ImportType.NationalAchievementRatesOverall));
+                _logger.LogInformation($"Loaded  {nationalAchievementRatesOverallImport.Count} National Achievement Rates Overall");
+                await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, nationalAchievementRatesOverallImport.Count, ImportType.NationalAchievementRatesOverall));
             }
             catch (Exception ex)
             {

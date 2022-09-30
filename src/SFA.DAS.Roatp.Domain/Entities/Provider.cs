@@ -19,5 +19,8 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public virtual List<ProviderLocation> Locations { get; set; } = new List<ProviderLocation>();
 
         public virtual List<ProviderCourse> Courses { get; set; } = new List<ProviderCourse>();
+
+        public virtual List<NationalAchievementRate> NationalAchievementRates { get; set; } = new List<NationalAchievementRate>();
+
     }
 }

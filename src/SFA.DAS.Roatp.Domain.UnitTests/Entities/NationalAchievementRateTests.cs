@@ -13,8 +13,14 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
         {
             var destination = (NationalAchievementRate)source;
 
-            destination.Should().BeEquivalentTo(source, c => c.Excluding(s => s.Id));
             destination.Id.Should().Be(0);
+            destination.ProviderId.Should().Be(0);
+            destination.Age.Should().Be(source.Age);
+            destination.SectorSubjectArea.Should().Be(source.SectorSubjectArea);
+            destination.ApprenticeshipLevel.Should().Be(source.ApprenticeshipLevel);
+            destination.OverallCohort.Should().Be(source.OverallCohort);
+            destination.OverallAchievementRate.Should().Be(source.OverallAchievementRate);
+            destination.Provider.Should().BeNull();
         }
     }
 }

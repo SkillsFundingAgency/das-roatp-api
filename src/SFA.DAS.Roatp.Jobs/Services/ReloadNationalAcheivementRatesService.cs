@@ -16,20 +16,23 @@ namespace SFA.DAS.Roatp.Jobs.Services
         private readonly INationalAchievementRatesImportReadRepository _nationalAchievementRatesImportReadRepository;
         private readonly INationalAchievementRatesWriteRepository _nationalAchievementRatesWriteRepository;
         private readonly IImportAuditWriteRepository _importAuditWriteRepository;
+        private readonly IProvidersReadRepository _providersReadRepository;
+
 
         public ReloadNationalAcheivementRatesService(
             ILogger<ReloadNationalAcheivementRatesService> logger,
             INationalAchievementRatesImportWriteRepository nationalAchievementRatesImportWriteRepository,
             INationalAchievementRatesImportReadRepository nationalAchievementRatesImportReadRepository,
             INationalAchievementRatesWriteRepository nationalAchievementRatesWriteRepository,
-            IImportAuditWriteRepository importAuditWriteRepository
-            )
+            IImportAuditWriteRepository importAuditWriteRepository,
+            IProvidersReadRepository providersReadRepository)
         {
             _logger = logger;
             _nationalAchievementRatesImportWriteRepository = nationalAchievementRatesImportWriteRepository;
             _nationalAchievementRatesImportReadRepository = nationalAchievementRatesImportReadRepository;
             _nationalAchievementRatesWriteRepository = nationalAchievementRatesWriteRepository;
             _importAuditWriteRepository = importAuditWriteRepository;
+            _providersReadRepository = providersReadRepository;
         }
 
         public async Task ReloadNationalAcheivementRates(List<NationalAchievementRatesApiModel> nationalAchievementRatesImported)
@@ -40,9 +43,22 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 _logger.LogInformation("Clearing and Loading import table-NationalAchievementRatesImport");
                 await _nationalAchievementRatesImportWriteRepository.Reload(nationalAchievementRatesImported.Select(c => (NationalAchievementRateImport)c).ToList());
 
-                var nationalAchievementRates = await _nationalAchievementRatesImportReadRepository.GetAllWithAchievementData();
+                var nationalAchievementRatesImport = await _nationalAchievementRatesImportReadRepository.GetAllWithAchievementData();
+                var allproviders = await _providersReadRepository.GetAllProviders();
+                var nationalAchievementRates = new List<NationalAchievementRate>();
+                foreach (var nationalAchievementRateImport in nationalAchievementRatesImport)
+                {
+                    var provider = allproviders.FirstOrDefault(p => p.Ukprn == nationalAchievementRateImport.Ukprn);
+                    if(provider != null)
+                    {
+                        var nationalAchievementRate = (NationalAchievementRate)nationalAchievementRateImport;
+                        nationalAchievementRate.ProviderId = provider.Id;
+                        nationalAchievementRates.Add(nationalAchievementRate);
+                    }
+                }
                 _logger.LogInformation("Clearing and Loading main table-NationalAchievementRate");
-                await _nationalAchievementRatesWriteRepository.Reload(nationalAchievementRates.Select(c => (NationalAchievementRate)c).ToList());
+
+                await _nationalAchievementRatesWriteRepository.Reload(nationalAchievementRates); 
 
                 _logger.LogInformation($"Loaded  {nationalAchievementRates.Count} National Achievement Rates");
                 await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, nationalAchievementRates.Count, ImportType.NationalAchievementRates));
