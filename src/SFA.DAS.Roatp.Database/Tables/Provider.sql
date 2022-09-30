@@ -8,6 +8,8 @@
     [Phone] VARCHAR(50) NULL,
     [Website] VARCHAR(500) NULL,
     [MarketingInfo] VARCHAR(MAX) NULL,
+    [EmployerSatisfaction] DECIMAL NULL,
+    [LearnerSatisfaction] DECIMAL NULL,
     [IsImported] BIT NOT NULL DEFAULT 0,
 
     CONSTRAINT PK_Provider PRIMARY KEY (Id),
