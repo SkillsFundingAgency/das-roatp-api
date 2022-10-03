@@ -1,13 +1,11 @@
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries;
 using SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries.GetOverallAchievementRates;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
-    [ApiVersion("1.0")]
     [ApiController]
     [Route("/api/[controller]/")]
     public class AchievementRatesController : ControllerBase

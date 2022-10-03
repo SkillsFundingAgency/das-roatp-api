@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries.GetO
 
             return new GetOverallAchievementRatesQueryResult
             {
-                OverallAchievementRates = result.Select(x => (GetOverallAchievementRateResponse)x).ToList()
+                OverallAchievementRates = result
             };
         }
     }
