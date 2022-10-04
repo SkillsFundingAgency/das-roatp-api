@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         }
 
         [FunctionName(nameof(ReloadNationalAcheivementRatesFunction))]
-        public async Task Run([TimerTrigger("%ReloadNationalAcheivementRatesSchedule%", RunOnStartup =true)] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("%ReloadNationalAcheivementRatesSchedule%")] TimerInfo myTimer, ILogger log)
         {
             log.LogInformation("ReloadNationalAcheivementRatesFunction function started");
             await _service.ReloadNationalAcheivementRates();
