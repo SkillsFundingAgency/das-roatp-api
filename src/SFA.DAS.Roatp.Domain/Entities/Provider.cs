@@ -20,6 +20,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
 
         public virtual List<ProviderCourse> Courses { get; set; } = new List<ProviderCourse>();
 
-        public virtual ProviderAddress ProviderAddress { get; set; } = new ProviderAddress();
+        public virtual ProviderAddress Address { get; set; } = new ProviderAddress();
     }
 }

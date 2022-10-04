@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Roatp.Domain.Entities
+﻿using System;
+
+namespace SFA.DAS.Roatp.Domain.Entities
 {
     public class ProviderAddress
     {
@@ -12,7 +14,8 @@
         public string Postcode { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
-
+        public DateTime AddressUpdateDate { get; set; }
+        public DateTime? CoordinatesUpdateDate { get; set; }
         public virtual Provider Provider { get; set; }
     }
 }

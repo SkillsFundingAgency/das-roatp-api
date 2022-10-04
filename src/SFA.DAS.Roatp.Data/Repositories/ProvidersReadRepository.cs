@@ -23,7 +23,9 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public async Task<List<Provider>> GetAllProviders()
         {
-            return await _roatpDataContext.Providers.AsNoTracking().ToListAsync();
+            return await _roatpDataContext.Providers
+                        .Include(p => p.Address)
+                        .AsNoTracking().ToListAsync();
         }
     }
 }

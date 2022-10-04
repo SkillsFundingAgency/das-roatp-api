@@ -16,6 +16,7 @@ namespace SFA.DAS.Roatp.Data
         public DbSet<ProviderCourseVersion> ProviderCoursesVersions { get; set; }
         public DbSet<ProviderRegistrationDetail> ProviderRegistrationDetails { get; set; }
         public DbSet<Region> Regions { get; set; }
+        public DbSet<ProviderAddress> ProviderAddress { get; set; }
 
         public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) {}
 

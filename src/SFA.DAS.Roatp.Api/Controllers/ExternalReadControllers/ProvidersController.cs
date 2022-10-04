@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProvider;
+using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
