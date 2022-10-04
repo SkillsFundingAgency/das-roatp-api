@@ -94,7 +94,7 @@ namespace SFA.DAS.Roatp.Jobs
                 httpClient.BaseAddress = new Uri(apiConfig.BaseUrl);
                 httpClient.DefaultRequestHeaders.Add("Accept", "application/json");
                 httpClient.DefaultRequestHeaders.Add("X-Version", "1");
-                httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", apiConfig.SubscriptionKey);
+                //httpClient.DefaultRequestHeaders.Add("Ocp-Apim-Subscription-Key", apiConfig.SubscriptionKey);
             })
            .SetHandlerLifetime(handlerLifeTime);
         }
