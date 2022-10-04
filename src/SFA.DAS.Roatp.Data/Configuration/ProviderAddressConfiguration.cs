@@ -14,10 +14,10 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.HasKey(p => p.Id);
             builder.Property(p => p.ProviderId).IsRequired();
            
-            builder.Property(x => x.Address1).HasMaxLength(250).IsRequired(false);
-            builder.Property(x => x.Address2).HasMaxLength(250).IsRequired(false);
-            builder.Property(x => x.Address3).HasMaxLength(250).IsRequired(false);
-            builder.Property(x => x.Address4).HasMaxLength(250).IsRequired(false);
+            builder.Property(x => x.AddressLine1).HasMaxLength(250).IsRequired(false);
+            builder.Property(x => x.AddressLine2).HasMaxLength(250).IsRequired(false);
+            builder.Property(x => x.AddressLine3).HasMaxLength(250).IsRequired(false);
+            builder.Property(x => x.AddressLine4).HasMaxLength(250).IsRequired(false);
             builder.Property(x => x.Town).HasMaxLength(250).IsRequired(false);
             builder.Property(x => x.Postcode).HasMaxLength(25).IsRequired(false);
             builder.Property(x => x.Latitude).IsRequired(false);
@@ -28,8 +28,7 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.HasOne(c => c.Provider)
                        .WithOne(c => c.Address)
                        .HasPrincipalKey<Provider>(c => c.Id)
-                       .HasForeignKey<ProviderAddress>(c => c.ProviderId).IsRequired(false)
-                       .Metadata.DeleteBehavior = DeleteBehavior.Restrict;
+                       .HasForeignKey<ProviderAddress>(c => c.ProviderId);
         }
     }
 }
