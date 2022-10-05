@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
         {
             var provider = new Provider { Id = 1, Ukprn = command.Ukprn };
             var providerLocations = new List<ProviderLocation> { new ProviderLocation { Id = 1, ProviderId = 1, RegionId = command.SelectedSubregionIds.First() } };
-            var regions = new List<Domain.Entities.Region>() { new Domain.Entities.Region { RegionName = "Test", Id = command.SelectedSubregionIds.First(), SubregionName = "Test", Latitude=11, Longitude=10} };
+            var regions = new List<Region>() { new Region { RegionName = "Test", Id = command.SelectedSubregionIds.First(), SubregionName = "Test", Latitude=11, Longitude=10} };
             providersReadRepositoryMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
 
             regionsReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(regions);

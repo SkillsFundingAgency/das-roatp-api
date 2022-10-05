@@ -24,11 +24,6 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.Property(x => x.Latitude).IsRequired(false);
             builder.Property(x => x.AddressUpdateDate).IsRequired();
             builder.Property(x => x.CoordinatesUpdateDate).IsRequired(false);
-
-            builder.HasOne(c => c.Provider)
-                       .WithOne(c => c.Address)
-                       .HasPrincipalKey<Provider>(c => c.Id)
-                       .HasForeignKey<ProviderAddress>(c => c.ProviderId);
         }
     }
 }
