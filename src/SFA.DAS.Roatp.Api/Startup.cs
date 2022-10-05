@@ -12,6 +12,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json.Converters;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
@@ -89,8 +90,11 @@ namespace SFA.DAS.Roatp.Api
                 {
                     options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
                 })
-                .AddNewtonsoftJson();
-            
+                .AddNewtonsoftJson(options =>
+                {
+                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                });
+
             services.AddApplicationInsightsTelemetry();
 
             services.AddSwaggerGen(options =>

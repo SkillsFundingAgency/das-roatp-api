@@ -31,6 +31,8 @@ namespace SFA.DAS.Roatp.Domain.Entities
     {
         CourseDirectory, 
         ProviderRegistrationDetails, 
-        Standards
+        Standards,
+        NationalAchievementRates,
+        NationalAchievementRatesOverall,
     }
 }
