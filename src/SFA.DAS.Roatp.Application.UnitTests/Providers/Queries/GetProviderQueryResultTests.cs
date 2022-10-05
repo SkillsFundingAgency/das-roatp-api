@@ -21,6 +21,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries
                 .Excluding(s=>s.EmployerSatisfaction)
                 .Excluding(s=>s.LearnerSatisfaction)
                 .Excluding(s => s.NationalAchievementRates)
+                .Excluding(s => s.Address)
             );
         }
     }
