@@ -22,5 +22,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
             model.ContactUrl.Should().Be(source.Website);
             model.Address.Should().Be(source.Address);
         }
+
+        [Test, RecursiveMoqAutoData]
+        public void Operator_ReturnsNullModelFromNullEntity()
+        {
+            var model = (ProviderSummary)null;
+
+            model.Should().BeNull();
+        }
     }
 }
