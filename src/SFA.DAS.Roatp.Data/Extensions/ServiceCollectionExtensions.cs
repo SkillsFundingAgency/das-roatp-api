@@ -24,10 +24,6 @@ namespace SFA.DAS.Roatp.Data.Extensions
                     var generateTokenTask = GenerateTokenAsync();
                     connection.AccessToken = generateTokenTask.GetAwaiter().GetResult();
                 }
-                else
-                {
-                    options.EnableSensitiveDataLogging();
-                }
 
                 options.UseSqlServer(
                     connection,
