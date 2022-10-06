@@ -14,10 +14,6 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
 
         public static implicit operator ProviderSummary(Provider source)
         {
-            if (source == null)
-            {
-                return null;
-            }
             return new ProviderSummary
             {
                 Ukprn = source.Ukprn,

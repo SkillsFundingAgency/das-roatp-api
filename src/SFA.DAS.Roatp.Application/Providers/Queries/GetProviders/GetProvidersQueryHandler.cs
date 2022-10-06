@@ -23,10 +23,10 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
             _logger.LogInformation("Getting providers");
             var providers = await _providersReadRepository.GetAllProviders();
             var providersSummary = providers.Select(p => (ProviderSummary)p).ToList();
-             return new GetProvidersQueryResult
-             {
-                 RegisteredProviders = providersSummary
-             };
+            return new GetProvidersQueryResult
+            {
+                RegisteredProviders = providersSummary
+            };
         }
     }
 }
