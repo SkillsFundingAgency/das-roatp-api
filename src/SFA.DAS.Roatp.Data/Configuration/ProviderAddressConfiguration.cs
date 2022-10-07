@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.ToTable(nameof(ProviderAddress));
             builder.HasKey(p => p.Id);
             builder.Property(p => p.ProviderId).IsRequired();
-           
+
             builder.Property(x => x.AddressLine1).HasMaxLength(250).IsRequired(false);
             builder.Property(x => x.AddressLine2).HasMaxLength(250).IsRequired(false);
             builder.Property(x => x.AddressLine3).HasMaxLength(250).IsRequired(false);

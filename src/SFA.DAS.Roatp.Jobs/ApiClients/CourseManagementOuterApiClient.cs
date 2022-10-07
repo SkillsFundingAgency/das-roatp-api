@@ -1,7 +1,10 @@
 ﻿using Microsoft.Extensions.Logging;
 using System;
+using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace SFA.DAS.Roatp.Jobs.ApiClients
 {
@@ -9,6 +12,8 @@ namespace SFA.DAS.Roatp.Jobs.ApiClients
     {
         protected readonly HttpClient _httpClient;
         protected readonly ILogger<CourseManagementOuterApiClient> _logger;
+
+        protected const string _contentType = "application/json";
 
         public CourseManagementOuterApiClient(HttpClient httpClient, ILogger<CourseManagementOuterApiClient> logger)
         {
@@ -35,6 +40,33 @@ namespace SFA.DAS.Roatp.Jobs.ApiClients
             catch (HttpRequestException ex)
             {
                 _logger.LogError(ex, $"Error when processing request: {HttpMethod.Get} - {uri}");
+                throw;
+            }
+        }
+
+        public async Task<(bool,U)> Post<T, U>(string uri, T model) 
+        {
+            var serializeObject = JsonConvert.SerializeObject(model);
+        
+            try
+            {
+                using (var response = await _httpClient.PostAsync(new Uri(uri, UriKind.Relative),
+                           new StringContent(serializeObject, Encoding.UTF8,
+                               _contentType)))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return (true, await response.Content.ReadAsAsync<U>());
+                    }
+        
+                    await LogErrorIfUnsuccessfulResponse(response);
+                    return (false, default(U));
+                  
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, $"Error when processing request: {HttpMethod.Post} - {uri}");
                 throw;
             }
         }
