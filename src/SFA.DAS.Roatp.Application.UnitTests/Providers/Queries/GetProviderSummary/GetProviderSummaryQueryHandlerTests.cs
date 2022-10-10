@@ -26,6 +26,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviderSumma
             var result = await sut.Handle(query, cancellationToken);
 
             result.Should().NotBeNull();
+            result.ProviderSummary.Should().NotBeNull();
+            result.ProviderSummary.Address.Should().NotBeNull();
         }
     }
 }
