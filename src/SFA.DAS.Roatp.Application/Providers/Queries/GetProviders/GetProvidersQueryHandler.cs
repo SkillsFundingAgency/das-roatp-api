@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
         
         public async Task<GetProvidersQueryResult> Handle(GetProvidersQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Getting providers");
+            _logger.LogInformation("Getting providers summary");
             var providers = await _providersReadRepository.GetAllProviders();
             var providersSummary = providers.Select(p => (ProviderSummary)p).ToList();
             return new GetProvidersQueryResult
