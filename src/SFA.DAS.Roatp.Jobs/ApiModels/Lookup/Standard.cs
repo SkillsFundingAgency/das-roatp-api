@@ -11,6 +11,7 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup
         public string Version { get; set; }
         public string Title { get; set; }
         public string ApprovalBody { get; set; }
+        public string SectorSubjectAreaTier2Description { get; set; }
 
         public static implicit operator Domain.Entities.Standard(Standard standard) =>
             new Domain.Entities.Standard
@@ -21,7 +22,8 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup
                 Title = standard.Title,
                 Version = standard.Version,
                 Level = Convert.ToInt32(standard.Level),
-                ApprovalBody = string.IsNullOrWhiteSpace(standard.ApprovalBody) ? null : standard.ApprovalBody
+                ApprovalBody = string.IsNullOrWhiteSpace(standard.ApprovalBody) ? null : standard.ApprovalBody,
+                SectorName = standard.SectorSubjectAreaTier2Description
             };
     }
 }
