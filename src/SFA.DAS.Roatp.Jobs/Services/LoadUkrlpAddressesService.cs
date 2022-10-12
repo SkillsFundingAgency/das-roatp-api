@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Azure.Documents.SystemFunctions;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -69,7 +70,6 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
             return true;
         }
-
         private static ProviderAddress MapProviderAddress(UkrlpProviderAddress source, int providerId)
         {
         return new ProviderAddress
