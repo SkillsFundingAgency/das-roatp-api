@@ -101,7 +101,6 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.ApiClients
             public string Name { get; set; }
         }
 
-
         class TestRequest
         {
         }

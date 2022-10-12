@@ -57,7 +57,6 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             success.Should().BeFalse();
         }
 
-
         [Test]
         [MoqAutoData]
         public async Task LoadUkrlpAddressesService_OnAddressesReturned_ReturnsTrue(
