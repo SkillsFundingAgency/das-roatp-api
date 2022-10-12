@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup
                 Version = standard.Version,
                 Level = Convert.ToInt32(standard.Level),
                 ApprovalBody = string.IsNullOrWhiteSpace(standard.ApprovalBody) ? null : standard.ApprovalBody,
-                SectorName = standard.SectorSubjectAreaTier2Description
+                SectorSubjectArea = standard.SectorSubjectAreaTier2Description
             };
     }
 }
