@@ -10,6 +10,6 @@
         public string Address4 { get; set; }
         public string Town { get; set; }
         public string Postcode { get; set; }
-        public int ProviderId { get; set; }
+        public int? ProviderId { get; set; }
     }
 }

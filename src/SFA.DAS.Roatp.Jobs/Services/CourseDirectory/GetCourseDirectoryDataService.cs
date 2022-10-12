@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
             if (!success)
             {
-                const string errorMessage = "LoadUkrlpAddresses: Unexpected response when trying to get course directory details from the outer api.";
+                const string errorMessage = "GetCourseDirectoryData: Unexpected response when trying to get course directory details from the outer api.";
                 _logger.LogError(errorMessage);
                 throw new InvalidOperationException(errorMessage);
             }
@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             var sizeInMegabytes = ((sizeOfResponse / 1024F) / 1024F).ToString("0.00");
             _logger.LogInformation("Course Directory Date size: {sizeOfResponse} Mb",sizeInMegabytes);
             var cdProviders = JsonConvert.DeserializeObject<List<CdProvider>>(courseDirectoryResponse);
-            _logger.LogInformation("LoadUkrlpAddresses: {count} providers returned from Course Directory", cdProviders.Count);
+            _logger.LogInformation("GetCourseDirectoryData: {count} providers returned from Course Directory", cdProviders.Count);
 
             return cdProviders;
         }

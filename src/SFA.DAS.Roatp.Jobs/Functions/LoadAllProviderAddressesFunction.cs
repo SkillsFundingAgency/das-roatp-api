@@ -8,20 +8,18 @@ using SFA.DAS.Roatp.Jobs.Services;
 
 namespace SFA.DAS.Roatp.Jobs.Functions
 {
-    public class LoadAllProvidersAddressesFunction
+    public class LoadAllProviderAddressesFunction
     {
         private readonly ILoadUkrlpAddressesService _loadUkrlpAddressesService;
 
-        public LoadAllProvidersAddressesFunction(ILoadUkrlpAddressesService loadUkrlpAddressesService)
+        public LoadAllProviderAddressesFunction(ILoadUkrlpAddressesService loadUkrlpAddressesService)
         {
             _loadUkrlpAddressesService = loadUkrlpAddressesService;
         }
 
-
-        [FunctionName(nameof(LoadAllProvidersAddressesFunction))]
+        [FunctionName(nameof(LoadAllProviderAddressesFunction))]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "LoadAllProviderAddresses")] HttpRequest req, ILogger log)
-
         {
             var result = await _loadUkrlpAddressesService.LoadUkrlpAddresses();
             if (result)

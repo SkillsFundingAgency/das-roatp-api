@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Azure.Documents.SystemFunctions;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -48,15 +49,16 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 return false;
             }
 
-            foreach (var ukrlpProvider in ukrlpResponse)
-            {
-                ukrlpProvider.ProviderId = providers.First(x => x.Ukprn == ukrlpProvider.Ukprn).Id;
-            }
-
             var providerAddresses = new List<ProviderAddress>();
             foreach (var ukrlpProvider in ukrlpResponse)
             {
-                providerAddresses.Add(ukrlpProvider);
+                ukrlpProvider.ProviderId = providers.FirstOrDefault(x => x.Ukprn == ukrlpProvider.Ukprn)?.Id;
+                if (ukrlpProvider.ProviderId != null)
+                    providerAddresses.Add(ukrlpProvider);
+                else
+                {
+                    _logger.LogInformation($"There was no matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was not added to ProviderAddress");
+                }
             }
 
             await _providerAddressesRepository.ReloadProviderAddresses(providerAddresses);
@@ -65,7 +67,6 @@ namespace SFA.DAS.Roatp.Jobs.Services
             await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, providerAddresses.Count, ImportType.ProviderAddresses));
 
             return true;
-
         }
     }
 }

@@ -18,11 +18,10 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public DateTime? AddressUpdateDate { get; set; }
         public DateTime? CoordinatesUpdateDate { get; set; }
 
-
         public static implicit operator ProviderAddress(UkrlpProviderAddress source)
             => new ProviderAddress
             {
-                ProviderId = source.ProviderId,
+                ProviderId = source.ProviderId.GetValueOrDefault(),
                 AddressLine1 = source.Address1,
                 AddressLine2 = source.Address2,
                 AddressLine3 = source.Address3,
