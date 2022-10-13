@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.Property(x => x.SectorSubjectArea).HasMaxLength(1000).IsRequired();
             builder.Property(x => x.ApprenticeshipLevel).IsRequired().HasConversion<int>();
             builder.Property(x => x.OverallCohort).IsRequired(false);
-            builder.Property(x => x.OverallAchievementRate).IsRequired(false);
+            builder.Property(x => x.OverallAchievementRate).HasColumnType("decimal").IsRequired(false);
         }
     }
 }

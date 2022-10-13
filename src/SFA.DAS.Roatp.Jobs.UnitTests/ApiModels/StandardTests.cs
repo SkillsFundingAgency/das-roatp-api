@@ -21,6 +21,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.ApiModels
             {
                 o.Excluding(s => s.Level);
                 o.Excluding(s => s.ApprovalBody);
+                o.WithMapping<Domain.Entities.Standard>(s => s.SectorSubjectAreaTier2Description, x => x.SectorSubjectArea);
                 return o;
             });
             target.Level.Should().Be(expectedLevel);
@@ -42,6 +43,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.ApiModels
             {
                 o.Excluding(s => s.Level);
                 o.Excluding(s => s.ApprovalBody);
+                o.WithMapping<Domain.Entities.Standard>(s => s.SectorSubjectAreaTier2Description, x => x.SectorSubjectArea);
                 return o;
             });
             target.ApprovalBody.Should().BeNull();
