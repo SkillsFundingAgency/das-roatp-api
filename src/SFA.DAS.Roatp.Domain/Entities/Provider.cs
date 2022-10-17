@@ -23,6 +23,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public virtual List<NationalAchievementRate> NationalAchievementRates { get; set; } = new List<NationalAchievementRate>();
 
 
-        public virtual ProviderAddress Address { get; set; } = new ProviderAddress();
+        public virtual ProviderAddress Address { get; set; } 
     }
 }
