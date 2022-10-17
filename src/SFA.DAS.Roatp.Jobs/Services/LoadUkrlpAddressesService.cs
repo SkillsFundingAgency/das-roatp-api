@@ -34,8 +34,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
             var timeStarted = DateTime.UtcNow;
             var providers = await _providersReadRepository.GetAllProviders();
 
-        
-            var ukprnsSubset = providers.Select(provider => provider.Ukprn).Select(conv => (long)conv).ToList();
+            var ukprnsSubset = providers.Select(provider => provider.Ukprn).ToList();
 
             var request = new ProviderAddressLookupRequest
             {
