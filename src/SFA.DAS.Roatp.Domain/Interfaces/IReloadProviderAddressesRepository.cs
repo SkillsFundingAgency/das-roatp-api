@@ -7,4 +7,5 @@ namespace SFA.DAS.Roatp.Domain.Interfaces;
 public interface IReloadProviderAddressesRepository
 {
     Task<bool> ReloadProviderAddresses(List<ProviderAddress> providerAddresses);
+    Task<bool> UpdateProviderAddresses(List<ProviderAddress> providerAddresses);
 }

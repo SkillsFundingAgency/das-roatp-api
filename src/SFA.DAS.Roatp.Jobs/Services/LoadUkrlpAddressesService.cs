@@ -71,6 +71,49 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
             return true;
         }
+        public async Task<bool> LoadUkrlpAddressesSinceLastUpdated()
+        {
+            var timeStarted = DateTime.UtcNow;
+            var providers = await _providersReadRepository.GetAllProviders();
+
+            var providersUpdatedSince = DateTime.Now;
+            // get sinceLastUpdated from ImportAudit;
+
+
+            var request = new ProviderAddressLookupRequest
+            {
+                Ukprns = new List<long>(),
+                ProvidersUpdatedSince = providersUpdatedSince
+            };
+
+            var (success, ukrlpResponse) = await _courseManagementOuterApiClient.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", request);
+
+            if (!success || !ukrlpResponse.Any())
+            {
+                _logger.LogError($"LoadAllProviderAddressesFunction function failed to get ukrlp addresses");
+                return false;
+            }
+
+            var providerAddresses = new List<ProviderAddress>();
+            foreach (var ukrlpProvider in ukrlpResponse)
+            {
+                var providerId = providers.FirstOrDefault(x => x.Ukprn == ukrlpProvider.Ukprn)?.Id;
+                if (providerId != null)
+                    providerAddresses.Add(MapProviderAddress(ukrlpProvider, providerId.GetValueOrDefault()));
+                else
+                {
+                    _logger.LogInformation($"There was no matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was not added to ProviderAddress");
+                }
+            }
+
+            await _providerAddressesRepository.UpdateProviderAddresses(providerAddresses);
+
+            _logger.LogInformation("Provider addresses reload complete");
+            await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, providerAddresses.Count, ImportType.ProviderAddresses));
+
+            return true;
+        }
+
         private static ProviderAddress MapProviderAddress(UkrlpProviderAddress source, int providerId)
         {
         return new ProviderAddress
