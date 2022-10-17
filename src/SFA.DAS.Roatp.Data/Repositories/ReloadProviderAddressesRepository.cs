@@ -22,15 +22,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _logger = logger;
         }
 
-        public async Task BulkInsert<T>(IList<T> data) where T : class
-        {
-            using var tx = await _roatpDataContext.Database.BeginTransactionAsync();
-
-            await _roatpDataContext.BulkInsertAsync(data);
-
-            await tx.CommitAsync();
-        }
-
         public async Task<bool> ReloadProviderAddresses(List<ProviderAddress> providerAddresses)
         {
             await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();

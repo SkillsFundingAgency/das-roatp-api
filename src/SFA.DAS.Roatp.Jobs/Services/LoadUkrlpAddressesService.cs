@@ -33,7 +33,8 @@ namespace SFA.DAS.Roatp.Jobs.Services
         {
             var timeStarted = DateTime.UtcNow;
             var providers = await _providersReadRepository.GetAllProviders();
-      
+
+        
             var ukprnsSubset = providers.Select(provider => provider.Ukprn).Select(conv => (long)conv).ToList();
 
             var request = new ProviderAddressLookupRequest
@@ -52,9 +53,9 @@ namespace SFA.DAS.Roatp.Jobs.Services
             var providerAddresses = new List<ProviderAddress>();
             foreach (var ukrlpProvider in ukrlpResponse)
             {
-                ukrlpProvider.ProviderId = providers.FirstOrDefault(x => x.Ukprn == ukrlpProvider.Ukprn)?.Id;
-                if (ukrlpProvider.ProviderId != null)
-                    providerAddresses.Add(ukrlpProvider);
+                var providerId = providers.FirstOrDefault(x => x.Ukprn == ukrlpProvider.Ukprn)?.Id;
+                if (providerId != null)
+                    providerAddresses.Add(MapProviderAddress(ukrlpProvider, providerId.GetValueOrDefault()));
                 else
                 {
                     _logger.LogInformation($"There was no matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was not added to ProviderAddress");
@@ -68,6 +69,21 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
             return true;
         }
+
+        private static ProviderAddress MapProviderAddress(UkrlpProviderAddress source, int providerId)
+        {
+        return new ProviderAddress
+            {
+                AddressLine1 = source.Address1,
+                AddressLine2 = source.Address2,
+                AddressLine3 = source.Address3,
+                AddressLine4 = source.Address4,
+                Town = source.Town,
+                Postcode = source.Postcode,
+                AddressUpdateDate = DateTime.Now,
+                ProviderId = providerId
+            };
+    }
     }
 }
 
