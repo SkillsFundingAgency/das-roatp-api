@@ -50,5 +50,13 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
             return true;
         }
+
+        public Task<bool> UpdateProviderAddresses(List<ProviderAddress> providerAddresses)
+        {
+            // delete any matching providerAddress for ukprn
+            // but keep a note of ProviderId
+            // insert provider address
+            throw new NotImplementedException();
+        }
     }
 }
