@@ -35,6 +35,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
             var providers = await _providersReadRepository.GetAllProviders();
 
             var ukprnsSubset = providers.Select(provider => provider.Ukprn).ToList();
+        
 
             var request = new ProviderAddressLookupRequest
             {
