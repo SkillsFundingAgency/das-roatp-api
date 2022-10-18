@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Azure.Documents.SystemFunctions;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -84,7 +83,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
             var request = new ProviderAddressLookupRequest
             {
-                Ukprns = new List<long>(),
+                Ukprns = new List<int>(),
                 ProvidersUpdatedSince = providersUpdatedSince
             };
 
