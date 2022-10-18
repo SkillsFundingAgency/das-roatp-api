@@ -6,6 +6,5 @@ namespace SFA.DAS.Roatp.Jobs.Services
     { 
         Task<bool> LoadUkrlpAddresses();
         Task<bool> LoadUkrlpAddressesSinceLastUpdated();
-
     }
 }

@@ -36,8 +36,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
             var providers = await _providersReadRepository.GetAllProviders();
 
             var ukprnsSubset = providers.Select(provider => provider.Ukprn).ToList();
-        
-
+            
             var request = new ProviderAddressLookupRequest
             {
                 Ukprns = ukprnsSubset
@@ -72,6 +71,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
             return true;
         }
+
         public async Task<bool> LoadUkrlpAddressesSinceLastUpdated()
         {
             var timeStarted = DateTime.UtcNow;
@@ -126,7 +126,6 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
             _logger.LogWarning("Provider addresses update based on ProvidersUpdatedSince failed");
             return false;
-
         }
 
         private static ProviderAddress MapProviderAddress(UkrlpProviderAddress source, int providerId)
