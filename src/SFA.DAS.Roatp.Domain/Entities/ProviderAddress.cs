@@ -1,4 +1,5 @@
 ﻿using System;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Domain.Entities
 {
