@@ -14,7 +14,6 @@ namespace SFA.DAS.Roatp.Jobs.Functions
             _loadUkrlpAddressesService = loadUkrlpAddressesService;
         }
 
-
         [FunctionName(nameof(LoadProvidersUpdatedSinceLastTimeFunction))]
         public async Task Run([TimerTrigger("%UpdateUkrlpDataSchedule%", RunOnStartup = true)] TimerInfo myTimer, ILogger log)
         {
@@ -25,7 +24,6 @@ namespace SFA.DAS.Roatp.Jobs.Functions
                 log.LogInformation("Ukrlp Addresses updated from last update date");
             else
                 log.LogWarning("Ukrlp addresses not updated from last update date");
-
         }
     }
 }

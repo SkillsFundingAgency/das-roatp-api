@@ -18,7 +18,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
 {
     [TestFixture]
-    public class LoadUkrlpAddressesServiceTests
+    public class LoadUkrlpAddressesServiceGetAllProvidersTests
     {
         [Test]
         [MoqAutoData]
@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             _providersReadRepository.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
             apiClientMock.Setup(a => a.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", request)).ReturnsAsync((false,providerAddresses));
 
-            var sut = new LoadUkrlpAddressesService(_providersReadRepository.Object, apiClientMock.Object, Mock.Of<IReloadProviderAddressesRepository>(), Mock.Of<IImportAuditWriteRepository>(), Mock.Of<ILogger<LoadUkrlpAddressesService>>());
+            var sut = new LoadUkrlpAddressesService(_providersReadRepository.Object, apiClientMock.Object, Mock.Of<IReloadProviderAddressesRepository>(), Mock.Of<IImportAuditWriteRepository>(), Mock.Of<IImportAuditReadRepository>(), Mock.Of<ILogger<LoadUkrlpAddressesService>>());
             
             var success = await sut.LoadUkrlpAddresses();
 
@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             _providersReadRepository.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
             apiClientMock.Setup(a => a.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", request)).ReturnsAsync((true, providerAddresses));
 
-            var sut = new LoadUkrlpAddressesService(_providersReadRepository.Object, apiClientMock.Object, Mock.Of<IReloadProviderAddressesRepository>(), Mock.Of<IImportAuditWriteRepository>(), Mock.Of<ILogger<LoadUkrlpAddressesService>>());
+            var sut = new LoadUkrlpAddressesService(_providersReadRepository.Object, apiClientMock.Object, Mock.Of<IReloadProviderAddressesRepository>(), Mock.Of<IImportAuditWriteRepository>(),Mock.Of<IImportAuditReadRepository>(), Mock.Of<ILogger<LoadUkrlpAddressesService>>());
 
             var success = await sut.LoadUkrlpAddresses();
 
@@ -76,7 +76,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             _providersReadRepository.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
             apiClientMock.Setup(a => a.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", It.IsAny<ProviderAddressLookupRequest>())).ReturnsAsync((true, providerAddresses));
 
-            var sut = new LoadUkrlpAddressesService(_providersReadRepository.Object, apiClientMock.Object, reloadProviderAddressesRepositoryMock.Object, importAuditWriteRepositoryMock.Object, loggerMock.Object);
+            var sut = new LoadUkrlpAddressesService(_providersReadRepository.Object, apiClientMock.Object, reloadProviderAddressesRepositoryMock.Object, importAuditWriteRepositoryMock.Object, Mock.Of<IImportAuditReadRepository>(), loggerMock.Object);
 
             var success = await sut.LoadUkrlpAddresses();
 
@@ -112,7 +112,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             _providersReadRepository.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
             apiClientMock.Setup(a => a.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", It.IsAny<ProviderAddressLookupRequest>())).ReturnsAsync((true, providerAddresses));
         
-            var sut = new LoadUkrlpAddressesService(_providersReadRepository.Object, apiClientMock.Object, reloadProviderAddressesRepositoryMock.Object, importAuditWriteRepositoryMock.Object, loggerMock.Object);
+            var sut = new LoadUkrlpAddressesService(_providersReadRepository.Object, apiClientMock.Object, reloadProviderAddressesRepositoryMock.Object, importAuditWriteRepositoryMock.Object,Mock.Of<IImportAuditReadRepository>(), loggerMock.Object);
         
             var success = await sut.LoadUkrlpAddresses();
         

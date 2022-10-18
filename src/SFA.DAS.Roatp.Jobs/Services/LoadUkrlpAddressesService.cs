@@ -18,14 +18,16 @@ namespace SFA.DAS.Roatp.Jobs.Services
         private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
         private readonly IReloadProviderAddressesRepository _providerAddressesRepository;
         private readonly IImportAuditWriteRepository _importAuditWriteRepository;
+        private readonly IImportAuditReadRepository _importAuditReadRepository;
         private readonly ILogger<LoadUkrlpAddressesService> _logger;
 
-        public LoadUkrlpAddressesService(IProvidersReadRepository providersReadRepository, ICourseManagementOuterApiClient courseManagementOuterApiClient, IReloadProviderAddressesRepository providerAddressesRepository, IImportAuditWriteRepository importAuditWriteRepository, ILogger<LoadUkrlpAddressesService> logger)
+        public LoadUkrlpAddressesService(IProvidersReadRepository providersReadRepository, ICourseManagementOuterApiClient courseManagementOuterApiClient, IReloadProviderAddressesRepository providerAddressesRepository, IImportAuditWriteRepository importAuditWriteRepository, IImportAuditReadRepository importAuditReadRepository, ILogger<LoadUkrlpAddressesService> logger)
         {
             _providersReadRepository = providersReadRepository;
             _courseManagementOuterApiClient = courseManagementOuterApiClient;
             _providerAddressesRepository = providerAddressesRepository;
             _importAuditWriteRepository = importAuditWriteRepository;
+            _importAuditReadRepository = importAuditReadRepository;
             _logger = logger;
         }
 
@@ -76,8 +78,8 @@ namespace SFA.DAS.Roatp.Jobs.Services
             var timeStarted = DateTime.UtcNow;
             var providers = await _providersReadRepository.GetAllProviders();
 
-            var providersUpdatedSince = DateTime.Now;
-            // get sinceLastUpdated from ImportAudit;
+            var providersUpdatedSince =
+                await _importAuditReadRepository.GetLastImportedDateByImportType(ImportType.ProviderAddresses);
 
 
             var request = new ProviderAddressLookupRequest
@@ -106,12 +108,26 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 }
             }
 
-            await _providerAddressesRepository.UpdateProviderAddresses(providerAddresses);
+            if (!providerAddresses.Any())
+            {
+                _logger.LogInformation("No providers to update from the ProviderAddress upsert");
+                return true;
+            }
 
-            _logger.LogInformation("Provider addresses reload complete");
-            await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, providerAddresses.Count, ImportType.ProviderAddresses));
+            var successfulUpsert = await _providerAddressesRepository.UpsertProviderAddresses(providerAddresses);
 
-            return true;
+            if (successfulUpsert)
+            {
+
+                _logger.LogInformation("Provider addresses update based on ProvidersUpdatedSince complete");
+                await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, providerAddresses.Count,
+                    ImportType.ProviderAddresses));
+                return true;
+            }
+
+            _logger.LogWarning("Provider addresses update based on ProvidersUpdatedSince failed");
+            return false;
+
         }
 
         private static ProviderAddress MapProviderAddress(UkrlpProviderAddress source, int providerId)
