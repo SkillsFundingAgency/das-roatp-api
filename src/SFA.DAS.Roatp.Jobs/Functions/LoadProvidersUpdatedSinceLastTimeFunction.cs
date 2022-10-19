@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         }
 
         [FunctionName(nameof(LoadProvidersUpdatedSinceLastTimeFunction))]
-        public async Task Run([TimerTrigger("%UpdateUkrlpDataSchedule%", RunOnStartup = true)] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("%UpdateUkrlpDataSchedule%")] TimerInfo myTimer, ILogger log)
         {
             log.LogInformation("LoadProvidersUpdatedSinceLastTimeFunction function started");
             var result = await _loadUkrlpAddressesService.LoadUkrlpAddressesSinceLastUpdated();
