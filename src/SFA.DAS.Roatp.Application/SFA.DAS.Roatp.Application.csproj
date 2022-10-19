@@ -21,12 +21,15 @@
 	  <PackageReference Include="SFA.DAS.NServiceBus" Version="16.0.21" />
 	  <PackageReference Include="SFA.DAS.NServiceBus.SqlServer" Version="16.0.21" />
 	  <PackageReference Include="SFA.DAS.UnitOfWork.NServiceBus" Version="9.0.28" />
+	  <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.10.0" />
 
 
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\SFA.DAS.Roatp.Data\SFA.DAS.Roatp.Data.csproj" />
     <ProjectReference Include="..\SFA.DAS.Roatp.Domain\SFA.DAS.Roatp.Domain.csproj" />
+    <ProjectReference Include="..\SFA.DAS.Roatp.Messages\SFA.DAS.Roatp.Messages.csproj" />
   </ItemGroup>
 
 </Project>
