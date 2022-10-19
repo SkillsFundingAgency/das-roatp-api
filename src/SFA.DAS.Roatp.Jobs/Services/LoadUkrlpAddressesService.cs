@@ -80,7 +80,6 @@ namespace SFA.DAS.Roatp.Jobs.Services
             var providersUpdatedSince =
                 await _importAuditReadRepository.GetLastImportedDateByImportType(ImportType.ProviderAddresses);
 
-
             var request = new ProviderAddressLookupRequest
             {
                 Ukprns = new List<int>(),
