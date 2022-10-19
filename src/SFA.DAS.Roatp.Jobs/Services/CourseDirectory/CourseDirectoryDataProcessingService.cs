@@ -86,9 +86,9 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             var locationsToRemove = new List<CdProviderLocation>();
             foreach (var location in provider.Locations)
             {
-                if (!currentLocationNames.Contains(location.Name))
+                if (!currentLocationNames.Contains(location.Name?.Trim(), StringComparer.OrdinalIgnoreCase))
                 {
-                    currentLocationNames.Add(location.Name);
+                    currentLocationNames.Add(location.Name?.Trim());
                 }
                 else
                 {
@@ -103,7 +103,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 {
                     provider.Locations.Remove(locationToRemove);
                     metrics.ProviderLocationsRemoved++;
-                    _logger.LogWarning("Duplicate location name - provider UKPRN {ukprn}: removing location id {id} location name '{name}'",provider.Ukprn,locationToRemove.Id,locationToRemove.Name);
+                    _logger.LogWarning("Duplicate location name - provider UKPRN {ukprn}: removing location id {id} location name '{name}'",provider.Ukprn,locationToRemove.Id,locationToRemove.Name.Trim());
                 }
             }
             
