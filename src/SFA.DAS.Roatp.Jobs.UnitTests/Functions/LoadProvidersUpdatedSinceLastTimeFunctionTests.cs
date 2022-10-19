@@ -17,12 +17,12 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions
         {
             var loggerMock = new Mock<ILogger>();
             var serviceMock = new Mock<ILoadUkrlpAddressesService>();
-            serviceMock.Setup(x => x.LoadUkrlpAddressesSinceLastUpdated()).ReturnsAsync(true);
-            var sut = new LoadProvidersUpdatedSinceLastTimeFunction(serviceMock.Object);
+            serviceMock.Setup(x => x.LoadProvidersAddresses()).ReturnsAsync(true);
+            var sut = new LoadProvidersAddressFunction(serviceMock.Object);
 
             await sut.Run(default(TimerInfo), loggerMock.Object);
 
-            serviceMock.Verify(s => s.LoadUkrlpAddressesSinceLastUpdated());
+            serviceMock.Verify(s => s.LoadProvidersAddresses());
 
             loggerMock.Verify(
                 x => x.Log(
@@ -46,12 +46,12 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions
         {
             var loggerMock = new Mock<ILogger>();
             var serviceMock = new Mock<ILoadUkrlpAddressesService>();
-            serviceMock.Setup(x => x.LoadUkrlpAddressesSinceLastUpdated()).ReturnsAsync(false);
-            var sut = new LoadProvidersUpdatedSinceLastTimeFunction(serviceMock.Object);
+            serviceMock.Setup(x => x.LoadProvidersAddresses()).ReturnsAsync(false);
+            var sut = new LoadProvidersAddressFunction(serviceMock.Object);
 
             await sut.Run(default(TimerInfo), loggerMock.Object);
 
-            serviceMock.Verify(s => s.LoadUkrlpAddressesSinceLastUpdated());
+            serviceMock.Verify(s => s.LoadProvidersAddresses());
         
             loggerMock.Verify(
                 x => x.Log(

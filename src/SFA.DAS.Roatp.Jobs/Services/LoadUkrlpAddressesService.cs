@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
             _logger = logger;
         }
 
-        public async Task<bool> LoadUkrlpAddresses()
+        public async Task<bool> LoadAllProvidersAddresses()
         {
             var timeStarted = DateTime.UtcNow;
             var providers = await _providersReadRepository.GetAllProviders();
@@ -72,11 +72,10 @@ namespace SFA.DAS.Roatp.Jobs.Services
             return true;
         }
 
-        public async Task<bool> LoadUkrlpAddressesSinceLastUpdated()
+        public async Task<bool> LoadProvidersAddresses()
         {
             var timeStarted = DateTime.UtcNow;
-            var providers = await _providersReadRepository.GetAllProviders();
-
+           
             var providersUpdatedSince =
                 await _importAuditReadRepository.GetLastImportedDateByImportType(ImportType.ProviderAddresses);
 
@@ -90,19 +89,26 @@ namespace SFA.DAS.Roatp.Jobs.Services
 
             if (!success || !ukrlpResponse.Any())
             {
-                _logger.LogError($"LoadAllProviderAddressesFunction function failed to get ukrlp addresses");
+                _logger.LogError($"LoadProviderAddressesFunction function failed to get ukrlp addresses");
                 return false;
             }
 
+            _logger.LogInformation($"LoadProviderAddressesFunction function returned {ukrlpResponse.Count} ukrlp addresses");
+            var providers = await _providersReadRepository.GetAllProviders();
+
+           
             var providerAddresses = new List<ProviderAddress>();
             foreach (var ukrlpProvider in ukrlpResponse)
             {
                 var providerId = providers.FirstOrDefault(x => x.Ukprn == ukrlpProvider.Ukprn)?.Id;
                 if (providerId != null)
+                {
                     providerAddresses.Add(MapProviderAddress(ukrlpProvider, providerId.GetValueOrDefault()));
+                    _logger.LogInformation($"There is a matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was added to ProviderAddresses to process");
+                }
                 else
                 {
-                    _logger.LogInformation($"There was no matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was not added to ProviderAddress");
+                    _logger.LogInformation($"There was no matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was not added to ProviderAddresses to process");
                 }
             }
 
@@ -111,6 +117,8 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 _logger.LogInformation("No providers to update from the ProviderAddress upsert");
                 return true;
             }
+
+            _logger.LogInformation($"{providerAddresses.Count} providers found to update from the ProviderAddress upsert");
 
             var successfulUpsert = await _providerAddressesRepository.UpsertProviderAddresses(providerAddresses);
 

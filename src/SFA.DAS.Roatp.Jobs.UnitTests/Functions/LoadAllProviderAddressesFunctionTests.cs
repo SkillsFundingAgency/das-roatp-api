@@ -17,12 +17,12 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions
         {
             var loggerMock = new Mock<ILogger>();
             var serviceMock = new Mock<ILoadUkrlpAddressesService>();
-            serviceMock.Setup(x => x.LoadUkrlpAddresses()).ReturnsAsync(true);
+            serviceMock.Setup(x => x.LoadAllProvidersAddresses()).ReturnsAsync(true);
             var sut = new LoadAllProviderAddressesFunction(serviceMock.Object);
 
             await sut.Run(It.IsAny<HttpRequest>(),loggerMock.Object);
 
-            serviceMock.Verify(s => s.LoadUkrlpAddresses());
+            serviceMock.Verify(s => s.LoadAllProvidersAddresses());
 
             loggerMock.Verify(
                 x => x.Log(
@@ -47,12 +47,12 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions
         {
             var loggerMock = new Mock<ILogger>();
             var serviceMock = new Mock<ILoadUkrlpAddressesService>();
-            serviceMock.Setup(x => x.LoadUkrlpAddresses()).ReturnsAsync(false);
+            serviceMock.Setup(x => x.LoadAllProvidersAddresses()).ReturnsAsync(false);
             var sut = new LoadAllProviderAddressesFunction(serviceMock.Object);
 
             await sut.Run(It.IsAny<HttpRequest>(), loggerMock.Object);
 
-            serviceMock.Verify(s => s.LoadUkrlpAddresses());
+            serviceMock.Verify(s => s.LoadAllProvidersAddresses());
 
             loggerMock.Verify(
                 x => x.Log(

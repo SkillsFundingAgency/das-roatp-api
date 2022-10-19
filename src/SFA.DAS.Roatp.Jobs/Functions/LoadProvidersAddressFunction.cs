@@ -5,20 +5,20 @@ using Microsoft.Extensions.Logging;
 
 namespace SFA.DAS.Roatp.Jobs.Functions
 {
-    public class LoadProvidersUpdatedSinceLastTimeFunction
+    public class LoadProvidersAddressFunction
     {
         private readonly ILoadUkrlpAddressesService _loadUkrlpAddressesService;
 
-        public LoadProvidersUpdatedSinceLastTimeFunction(ILoadUkrlpAddressesService loadUkrlpAddressesService)
+        public LoadProvidersAddressFunction(ILoadUkrlpAddressesService loadUkrlpAddressesService)
         {
             _loadUkrlpAddressesService = loadUkrlpAddressesService;
         }
 
-        [FunctionName(nameof(LoadProvidersUpdatedSinceLastTimeFunction))]
-        public async Task Run([TimerTrigger("%UpdateUkrlpDataSchedule%")] TimerInfo myTimer, ILogger log)
+        [FunctionName(nameof(LoadProvidersAddressFunction))]
+        public async Task Run([TimerTrigger("%UpdateUkrlpDataSchedule%",RunOnStartup = true)] TimerInfo myTimer, ILogger log)
         {
-            log.LogInformation("LoadProvidersUpdatedSinceLastTimeFunction function started");
-            var result = await _loadUkrlpAddressesService.LoadUkrlpAddressesSinceLastUpdated();
+            log.LogInformation("LoadProvidersAddressFunction function started");
+            var result = await _loadUkrlpAddressesService.LoadProvidersAddresses();
 
             if (result)
                 log.LogInformation("Ukrlp Addresses updated from last update date");
