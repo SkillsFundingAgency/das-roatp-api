@@ -51,10 +51,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 {
                     var providerAddress = await _roatpDataContext.ProviderAddress.FirstOrDefaultAsync(x => x.ProviderId == address.ProviderId);
 
-
                     if (providerAddress != null)
                         _roatpDataContext.Remove(providerAddress);
-
 
                     _roatpDataContext.ProviderAddress.Add(address);
                 }
