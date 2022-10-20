@@ -11,7 +11,10 @@
     [EmployerSatisfaction] DECIMAL NULL,
     [LearnerSatisfaction] DECIMAL NULL,
     [IsImported] BIT NOT NULL DEFAULT 0,
+    [ProviderAddressId] INT NULL
 
     CONSTRAINT PK_Provider PRIMARY KEY (Id),
-    CONSTRAINT UK_Provider_Ukprn UNIQUE (Ukprn)
+    CONSTRAINT UK_Provider_Ukprn UNIQUE (Ukprn),
+    CONSTRAINT FK_Provider_ProviderAddress FOREIGN KEY ([ProviderAddressId]) REFERENCES ProviderAddress (Id),
+
 )

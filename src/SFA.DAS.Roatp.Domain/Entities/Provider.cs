@@ -14,7 +14,8 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string MarketingInfo { get; set; }
         public decimal? EmployerSatisfaction { get; set; }
         public decimal? LearnerSatisfaction { get; set; }
-        public bool IsImported { get; set; } = false; 
+        public bool IsImported { get; set; } = false;
+        public int? ProviderAddressId { get; set; }
 
         public virtual List<ProviderLocation> Locations { get; set; } = new List<ProviderLocation>();
 
@@ -23,6 +24,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public virtual List<NationalAchievementRate> NationalAchievementRates { get; set; } = new List<NationalAchievementRate>();
 
 
-        public virtual ProviderAddress Address { get; set; } 
+        public virtual ProviderAddress ProviderAddress { get; set; } 
     }
 }

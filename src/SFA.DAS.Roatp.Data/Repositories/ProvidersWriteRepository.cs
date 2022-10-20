@@ -1,5 +1,7 @@
-﻿using SFA.DAS.Roatp.Domain.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 
@@ -19,6 +21,13 @@ namespace SFA.DAS.Roatp.Data.Repositories
         {
             _roatpDataContext.Providers.Add(provider);
             await _roatpDataContext.SaveChangesAsync();
+        }
+
+        public async Task<List<Provider>> GetAllProviders()
+        {
+            return await _roatpDataContext.Providers
+                        .Include(p => p.ProviderAddress)
+                        .ToListAsync();
         }
     }
 }

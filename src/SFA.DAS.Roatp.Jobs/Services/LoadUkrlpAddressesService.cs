@@ -14,15 +14,15 @@ namespace SFA.DAS.Roatp.Jobs.Services
 {
     public class LoadUkrlpAddressesService: ILoadUkrlpAddressesService
     {
-        private readonly IProvidersReadRepository _providersReadRepository;
+        private readonly IProvidersWriteRepository _providersWriteRepository;
         private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
         private readonly IReloadProviderAddressesRepository _providerAddressesRepository;
         private readonly IImportAuditWriteRepository _importAuditWriteRepository;
         private readonly ILogger<LoadUkrlpAddressesService> _logger;
 
-        public LoadUkrlpAddressesService(IProvidersReadRepository providersReadRepository, ICourseManagementOuterApiClient courseManagementOuterApiClient, IReloadProviderAddressesRepository providerAddressesRepository, IImportAuditWriteRepository importAuditWriteRepository, ILogger<LoadUkrlpAddressesService> logger)
+        public LoadUkrlpAddressesService(IProvidersWriteRepository providersWriteRepository, ICourseManagementOuterApiClient courseManagementOuterApiClient, IReloadProviderAddressesRepository providerAddressesRepository, IImportAuditWriteRepository importAuditWriteRepository, ILogger<LoadUkrlpAddressesService> logger)
         {
-            _providersReadRepository = providersReadRepository;
+            _providersWriteRepository = providersWriteRepository;
             _courseManagementOuterApiClient = courseManagementOuterApiClient;
             _providerAddressesRepository = providerAddressesRepository;
             _importAuditWriteRepository = importAuditWriteRepository;
@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
         public async Task<bool> LoadUkrlpAddresses()
         {
             var timeStarted = DateTime.UtcNow;
-            var providers = await _providersReadRepository.GetAllProviders();
+            var providers = await _providersWriteRepository.GetAllProviders();
 
             var ukprnsSubset = providers.Select(provider => provider.Ukprn).ToList();
 
@@ -52,9 +52,11 @@ namespace SFA.DAS.Roatp.Jobs.Services
             var providerAddresses = new List<ProviderAddress>();
             foreach (var ukrlpProvider in ukrlpResponse)
             {
-                var providerId = providers.FirstOrDefault(x => x.Ukprn == ukrlpProvider.Ukprn)?.Id;
-                if (providerId != null)
-                    providerAddresses.Add(MapProviderAddress(ukrlpProvider, providerId.GetValueOrDefault()));
+                var provider = providers.FirstOrDefault(x => x.Ukprn == ukrlpProvider.Ukprn);
+                if (provider != null)
+                {
+                    providerAddresses.Add(MapProviderAddress(ukrlpProvider, provider));
+                }
                 else
                 {
                     _logger.LogInformation($"There was no matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was not added to ProviderAddress");
@@ -69,7 +71,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
             return true;
         }
 
-        private static ProviderAddress MapProviderAddress(UkrlpProviderAddress source, int providerId)
+        private static ProviderAddress MapProviderAddress(UkrlpProviderAddress source, Provider provider)
         {
         return new ProviderAddress
             {
@@ -80,8 +82,8 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 Town = source.Town,
                 Postcode = source.Postcode,
                 AddressUpdateDate = DateTime.Now,
-                ProviderId = providerId
-            };
+                Provider = provider
+        };
     }
     }
 }
