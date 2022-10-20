@@ -52,12 +52,12 @@ namespace SFA.DAS.Roatp.Jobs.Services
             var providerAddresses = new List<ProviderAddress>();
             foreach (var ukrlpProvider in ukrlpResponse)
             {
-                var provider = providers.FirstOrDefault(x => x.Ukprn == ukrlpProvider.Ukprn);
-                if (provider != null)
+                var providerId = providers.FirstOrDefault(x => x.Ukprn == ukrlpProvider.Ukprn)?.Id;
+                if (providerId != null)
                 {
-                    providerAddresses.Add(MapProviderAddress(ukrlpProvider, provider));
-                }
-                else
+                        providerAddresses.Add(MapProviderAddress(ukrlpProvider, providerId.GetValueOrDefault()));
+                    }
+                    else
                 {
                     _logger.LogInformation($"There was no matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was not added to ProviderAddress");
                 }
@@ -71,7 +71,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
             return true;
         }
 
-        private static ProviderAddress MapProviderAddress(UkrlpProviderAddress source, Provider provider)
+        private static ProviderAddress MapProviderAddress(UkrlpProviderAddress source, int providerId)
         {
         return new ProviderAddress
             {
@@ -82,7 +82,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 Town = source.Town,
                 Postcode = source.Postcode,
                 AddressUpdateDate = DateTime.Now,
-                ProviderId = provider.Id
+                ProviderId = providerId
         };
     }
     }

@@ -1,8 +1,10 @@
 ﻿using SFA.DAS.Roatp.Domain.Entities;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
 {
+    [ExcludeFromCodeCoverage]
     public class ProviderAddressModel
     {
         public int Id { get; set; }
