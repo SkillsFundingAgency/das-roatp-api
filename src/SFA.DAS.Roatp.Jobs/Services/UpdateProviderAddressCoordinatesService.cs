@@ -1,44 +1,78 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiClients;
+using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 
 namespace SFA.DAS.Roatp.Jobs.Services;
 
 public class UpdateProviderAddressCoordinatesService : IUpdateProviderAddressCoordinatesService
 {
+    private readonly IProviderAddressReadRepository _providerAddressReadRepository;
     private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
-    private readonly IReloadStandardsRepository _reloadStandardsRepository;
-    private readonly IImportAuditWriteRepository _importAuditWriteRepository;
-    private readonly ILogger<ReloadStandardsCacheService> _logger;
+    private readonly IProviderAddressWriteRepository _providerAddressWriteRepository;
+    private readonly ILogger<UpdateProviderAddressCoordinatesService> _logger;
 
-    public UpdateProviderAddressCoordinatesService(ILogger<ReloadStandardsCacheService> logger, ICourseManagementOuterApiClient courseManagementOuterApiClient, IReloadStandardsRepository reloadStandardsRepository, IImportAuditWriteRepository importAuditWriteRepository)
+    public UpdateProviderAddressCoordinatesService(ILogger<UpdateProviderAddressCoordinatesService> logger, ICourseManagementOuterApiClient courseManagementOuterApiClient, IProviderAddressReadRepository providerAddressReadRepository, IProviderAddressWriteRepository providerAddressWriteRepository)
     {
         _logger = logger;
         _courseManagementOuterApiClient = courseManagementOuterApiClient;
-        _reloadStandardsRepository = reloadStandardsRepository;
-        _importAuditWriteRepository = importAuditWriteRepository;
+        _providerAddressReadRepository = providerAddressReadRepository;
+        _providerAddressWriteRepository = providerAddressWriteRepository;
     }
 
     public async Task UpdateProviderAddressCoordinates()
     {
-        var timeStarted = DateTime.UtcNow;
-        var (success, standardList) = await _courseManagementOuterApiClient.Get<StandardList>("lookup/standards");
-        if (!success || !standardList.Standards.Any())
+        var noOfFailures = 0;
+        var allProviderAddresses = await _providerAddressReadRepository.GetAllProviderAddresses();
+
+        var providerAddressesToProcess = allProviderAddresses.Where(x => x.Latitude == null || x.Longitude==null);
+
+        foreach (var address in providerAddressesToProcess)
         {
-            _logger.LogError($"ReloadStandardsCacheFunction function failed to get active standards");
-            throw new InvalidOperationException("No standards were retrieved from courses api");
+            if (address.Postcode == null)
+            {
+                _logger.LogInformation($"ProviderAddress {address.Id} has no postcode");
+                continue;
+            }
+
+
+            var (success,lookupAddresses) = await _courseManagementOuterApiClient.Get<AddressList>($"lookup/addresses?postcode={address.Postcode}");
+
+            if (!success)
+            {
+                _logger.LogWarning($"Attempt to get address for  postcode {address.Postcode} failed");
+                continue;
+            }
+
+            if (!lookupAddresses.Addresses.Any())
+            {
+                _logger.LogWarning($"Attempt to get address for  postcode {address.Postcode} returned no addresses");
+                continue;
+            }
+
+            var firstAddress = lookupAddresses.Addresses[0];
+            address.Latitude = firstAddress.Latitude;
+            address.Longitude = firstAddress.Longitude;
+            address.CoordinatesUpdateDate = DateTime.Now;
+
+            var successfulUpdate = await _providerAddressWriteRepository.Update(address);
+
+            if (!successfulUpdate)
+                noOfFailures++;
         }
-
-        var standardsToReload = standardList.Standards.Select(standard => (Domain.Entities.Standard)standard).ToList();
-
-        await _reloadStandardsRepository.ReloadStandards(standardsToReload);
-
-        _logger.LogInformation("Standards reload complete");
-        await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, standardsToReload.Count, ImportType.Standards));
+        if (noOfFailures==0)
+            _logger.LogInformation($"ProviderAddress coordinates for {providerAddressesToProcess.Count()} records has completed, with no failures");
+        else
+        {
+            _logger.LogWarning($"ProviderAddress coordinates for {providerAddressesToProcess.Count()} records has completed, with {noOfFailures} failure(s)");
+        }
     }
 }

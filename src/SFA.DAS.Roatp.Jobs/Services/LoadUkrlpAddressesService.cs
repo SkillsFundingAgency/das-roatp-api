@@ -59,7 +59,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
                     }
                     else
                 {
-                    _logger.LogInformation($"There was no matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was not added to ProviderAddress");
+                    _logger.LogInformation($"There was no matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was not added to ProviderAddresses");
                 }
             }
 

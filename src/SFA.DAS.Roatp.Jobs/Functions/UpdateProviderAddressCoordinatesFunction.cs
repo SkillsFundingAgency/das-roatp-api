@@ -7,11 +7,11 @@ namespace SFA.DAS.Roatp.Jobs.Functions
 {
     public class UpdateProviderAddressCoordinatesFunction
     {
-        private readonly IReloadStandardsCacheService _reloadStandardsCacheService;
+        private readonly IUpdateProviderAddressCoordinatesService _updateProviderAddressCoordinatesService;
 
-        public UpdateProviderAddressCoordinatesFunction(IReloadStandardsCacheService reloadStandardsCacheService)
+        public UpdateProviderAddressCoordinatesFunction(IUpdateProviderAddressCoordinatesService updateProviderAddressCoordinatesService)
         {
-            _reloadStandardsCacheService = reloadStandardsCacheService;
+            _updateProviderAddressCoordinatesService = updateProviderAddressCoordinatesService;
         }
 
 
@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         {
             log.LogInformation("UpdateProviderAddressCoordinatesFunction function started");
 
-            await _reloadStandardsCacheService.ReloadStandardsCache();
+            await _updateProviderAddressCoordinatesService.UpdateProviderAddressCoordinates();
 
             log.LogInformation("UpdateProviderAddressCoordinatesFunction complete");
         }
