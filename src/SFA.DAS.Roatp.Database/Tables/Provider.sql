@@ -13,5 +13,5 @@
     [IsImported] BIT NOT NULL DEFAULT 0,
 
     CONSTRAINT PK_Provider PRIMARY KEY (Id),
-    CONSTRAINT UK_Provider_Ukprn UNIQUE (Ukprn),
+    CONSTRAINT UK_Provider_Ukprn UNIQUE (Ukprn)
 )
