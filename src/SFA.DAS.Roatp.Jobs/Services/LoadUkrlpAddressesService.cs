@@ -82,7 +82,8 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 Town = source.Town,
                 Postcode = source.Postcode,
                 AddressUpdateDate = DateTime.Now,
-                Provider = provider
+                Provider = provider,
+                ProviderId = provider.Id
         };
     }
     }
