@@ -39,6 +39,5 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
                 CoordinatesUpdateDate = source.CoordinatesUpdateDate,
             };
         }
-
     }
 }
