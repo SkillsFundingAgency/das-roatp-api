@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
            }
            catch (Exception ex)
            {
-               _logger.LogError(ex, $"ProviderAddress failed on database update for ProviderAddressId {providerAddress.Id}");
+               _logger.LogError(ex, $"ProviderAddress failed on database update");
                return false;
            }
         }
