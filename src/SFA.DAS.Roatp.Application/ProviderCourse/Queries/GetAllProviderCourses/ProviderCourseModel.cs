@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses
+﻿namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
 {
     public class ProviderCourseModel
     {
@@ -15,7 +15,7 @@
         public bool IsImported { get; set; } = false;
         public bool? HasNationalDeliveryOption { get; set; }
         public bool? HasHundredPercentEmployerDeliveryOption { get; set; }
-       public bool HasPortableFlexiJobOption { get; set; }
+        public bool HasPortableFlexiJobOption { get; set; }
         public string Version { get; set; }
         public string ApprovalBody { get; set; }
 
@@ -34,10 +34,10 @@
                 IsApprovedByRegulator = providerCourse.IsApprovedByRegulator,
                 IsImported = providerCourse.IsImported,
                 HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption
-                
+
             };
 
-           
+
             return model;
         }
         public void AttachCourseDetails(string ifateRefNum, int level, string title, string version, string approvalBody)

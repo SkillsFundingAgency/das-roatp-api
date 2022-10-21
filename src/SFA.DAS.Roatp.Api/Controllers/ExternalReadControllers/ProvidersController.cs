@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using System.Collections.Generic;
@@ -54,7 +54,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
         public async Task<ActionResult<List<ProviderCourseModel>>> GetAllProviderCourses(int ukprn)
         {
-            var allCoursesResult = await _mediator.Send(new GetProviderAllCoursesQuery(ukprn));
+            var allCoursesResult = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn));
             var result = allCoursesResult.Courses;
             _logger.LogInformation("Courses data found for {ukprn}", ukprn);
             return new OkObjectResult(result);

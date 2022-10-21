@@ -6,40 +6,40 @@ using MediatR;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
 {
-    public class GetProviderAllCoursesQueryHandler : IRequestHandler<GetProviderAllCoursesQuery, GetProviderAllCoursesQueryResult>
+    public class GetAllProviderCoursesQueryHandler : IRequestHandler<GetAllProviderCoursesQuery, GetAllProviderCoursesQueryResult>
     {
         private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
         private readonly IStandardsReadRepository _standardsReadRepository;
-        private readonly ILogger<GetProviderAllCoursesQueryHandler> _logger;
-        public GetProviderAllCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetProviderAllCoursesQueryHandler> logger)
+        private readonly ILogger<GetAllProviderCoursesQueryHandler> _logger;
+        public GetAllProviderCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetAllProviderCoursesQueryHandler> logger)
         {
             _providerCoursesReadRepository = providerCoursesReadRepository;
             _standardsReadRepository = standardsReadRepository;
             _logger = logger;
         }
 
-        public async  Task<GetProviderAllCoursesQueryResult> Handle(GetProviderAllCoursesQuery request, CancellationToken cancellationToken)
+        public async Task<GetAllProviderCoursesQueryResult> Handle(GetAllProviderCoursesQuery request, CancellationToken cancellationToken)
         {
             var providerCourses = await _providerCoursesReadRepository.GetAllProviderCourses(request.Ukprn);
 
             if (!providerCourses.Any())
             {
                 _logger.LogInformation("ProviderCourses data not found for {ukprn}", request.Ukprn);
-                return new GetProviderAllCoursesQueryResult { Courses = new List<ProviderCourseModel>() };
+                return new GetAllProviderCoursesQueryResult { Courses = new List<ProviderCourseModel>() };
             }
 
             var providerCourseModels = providerCourses.Select(p => (ProviderCourseModel)p).ToList();
             var standardsLookup = await _standardsReadRepository.GetAllStandards();
-            
+
             foreach (var p in providerCourseModels)
             {
                 var course = standardsLookup.Single(c => c.LarsCode == p.LarsCode);
                 p.AttachCourseDetails(course.IfateReferenceNumber, course.Level, course.Title, course.Version, course.ApprovalBody);
             }
 
-            return new GetProviderAllCoursesQueryResult
+            return new GetAllProviderCoursesQueryResult
             {
                 Courses = providerCourseModels
             };
