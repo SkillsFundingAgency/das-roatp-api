@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiClients;
-using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 
 namespace SFA.DAS.Roatp.Jobs.Services;
@@ -39,10 +34,9 @@ public class UpdateProviderAddressCoordinatesService : IUpdateProviderAddressCoo
         {
             if (address.Postcode == null)
             {
-                _logger.LogInformation($"ProviderAddress {address.Id} has no postcode");
+                _logger.LogInformation($"ProviderAddress Id: {address.Id} has no postcode");
                 continue;
             }
-
 
             var (success,lookupAddresses) = await _courseManagementOuterApiClient.Get<AddressList>($"lookup/addresses?postcode={address.Postcode}");
 

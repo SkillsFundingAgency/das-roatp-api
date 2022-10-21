@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
             try
             {
-                await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM ProviderAddresses");
+                await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM ProviderAddress");
                 await _roatpDataContext.BulkInsertAsync(providerAddresses);
                 await _roatpDataContext.SaveChangesAsync();
                 await transaction.CommitAsync();

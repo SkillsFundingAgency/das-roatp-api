@@ -19,9 +19,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         public async Task Run([TimerTrigger("%UpdateProviderAddressCoordinatesSchedule%",RunOnStartup = true)] TimerInfo myTimer, ILogger log)
         {
             log.LogInformation("UpdateProviderAddressCoordinatesFunction function started");
-
             await _updateProviderAddressCoordinatesService.UpdateProviderAddressCoordinates();
-
             log.LogInformation("UpdateProviderAddressCoordinatesFunction complete");
         }
     }
