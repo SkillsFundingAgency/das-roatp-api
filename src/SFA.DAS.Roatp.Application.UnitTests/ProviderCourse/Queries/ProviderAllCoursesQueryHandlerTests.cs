@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAllCourses;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
@@ -20,8 +20,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             List<Domain.Entities.ProviderCourse> courses,
             [Frozen] Mock<IProviderCoursesReadRepository> providersReadRepositoryMock,
             [Frozen] Mock<IStandardsReadRepository> standardsReadRepositoryMock,
-            GetProviderAllCoursesQuery query,
-            GetProviderAllCoursesQueryHandler sut,
+            GetAllProviderCoursesQuery query,
+            GetAllProviderCoursesQueryHandler sut,
             CancellationToken cancellationToken)
         {
             providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(courses);
@@ -36,8 +36,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
         [Test, MoqAutoData()]
         public async Task Handle_NoData_ReturnsEmptyResult(
             [Frozen] Mock<IProviderCoursesReadRepository> repoMock,
-            GetProviderAllCoursesQuery query,
-            GetProviderAllCoursesQueryHandler sut,
+            GetAllProviderCoursesQuery query,
+            GetAllProviderCoursesQueryHandler sut,
             CancellationToken cancellationToken)
         {
             repoMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(new List<Domain.Entities.ProviderCourse>());
