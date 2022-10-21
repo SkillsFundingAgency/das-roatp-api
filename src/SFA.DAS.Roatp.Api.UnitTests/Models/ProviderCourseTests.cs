@@ -41,6 +41,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
                 .Excluding(s => s.Id)
                 .Excluding(s => s.ProviderId)
                 .Excluding(s => s.Provider)
+                .Excluding(s => s.Providers)
                 .Excluding(s => s.Locations)
                 .Excluding(s => s.Versions));
         }
