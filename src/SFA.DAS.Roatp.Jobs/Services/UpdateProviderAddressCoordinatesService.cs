@@ -26,15 +26,15 @@ public class UpdateProviderAddressCoordinatesService : IUpdateProviderAddressCoo
     public async Task UpdateProviderAddressCoordinates()
     {
         var noOfFailures = 0;
-        var allProviderAddresses = await _providerAddressReadRepository.GetAllProviderAddresses();
-
-        var providerAddressesToProcess = allProviderAddresses.Where(x => x.Latitude == null || x.Longitude==null);
+       
+        var providerAddressesToProcess = await _providerAddressReadRepository.GetProviderAddressesWithMissingLatLongs();
 
         foreach (var address in providerAddressesToProcess)
         {
             if (address.Postcode == null)
             {
                 _logger.LogInformation($"ProviderAddress Id: {address.Id} has no postcode");
+                noOfFailures++;
                 continue;
             }
 
@@ -43,12 +43,14 @@ public class UpdateProviderAddressCoordinatesService : IUpdateProviderAddressCoo
             if (!success)
             {
                 _logger.LogWarning($"Attempt to get address for  postcode {address.Postcode} failed");
+                noOfFailures++;
                 continue;
             }
 
             if (!lookupAddresses.Addresses.Any())
             {
                 _logger.LogWarning($"Attempt to get address for  postcode {address.Postcode} returned no addresses");
+                noOfFailures++;
                 continue;
             }
 
@@ -63,10 +65,10 @@ public class UpdateProviderAddressCoordinatesService : IUpdateProviderAddressCoo
                 noOfFailures++;
         }
         if (noOfFailures==0)
-            _logger.LogInformation($"ProviderAddress coordinates for {providerAddressesToProcess.Count()} records has completed, with no failures");
+            _logger.LogInformation($"ProviderAddress coordinates update for {providerAddressesToProcess.Count} records has completed, with no failures");
         else
         {
-            _logger.LogWarning($"ProviderAddress coordinates for {providerAddressesToProcess.Count()} records has completed, with {noOfFailures} failure(s)");
+            _logger.LogWarning($"ProviderAddress coordinates update for {providerAddressesToProcess.Count} records has completed, with {noOfFailures} failure(s)");
         }
     }
 }

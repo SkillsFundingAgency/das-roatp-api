@@ -7,5 +7,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     public interface IProviderAddressReadRepository
     {
         Task<List<ProviderAddress>> GetAllProviderAddresses();
+        Task<List<ProviderAddress>> GetProviderAddressesWithMissingLatLongs();
     }
 }

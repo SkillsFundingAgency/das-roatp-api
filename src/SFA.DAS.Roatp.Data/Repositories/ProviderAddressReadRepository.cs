@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -20,5 +21,12 @@ internal class ProviderAddressReadRepository : IProviderAddressReadRepository
     public async Task<List<ProviderAddress>> GetAllProviderAddresses()
     {
         return await _roatpDataContext.ProviderAddresses.AsNoTracking().ToListAsync();
+    }
+
+    public async Task<List<ProviderAddress>> GetProviderAddressesWithMissingLatLongs()
+    {
+        return await _roatpDataContext.ProviderAddresses.AsNoTracking()
+            .Where(x => x.Latitude == null || x.Longitude == null)
+            .ToListAsync();
     }
 }
