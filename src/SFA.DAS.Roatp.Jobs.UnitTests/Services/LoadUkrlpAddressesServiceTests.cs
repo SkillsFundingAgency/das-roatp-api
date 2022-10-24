@@ -28,11 +28,11 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             var providers = new List<Provider>();
             var providerAddresses = new EditableList<UkrlpProviderAddress> {new() {Address1 = "1 Green Road"}};
             var request = new ProviderAddressLookupRequest();
-            var _providersWriteRepository = new Mock<IProvidersWriteRepository>();
-            _providersWriteRepository.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
+            var _providersReadRepository = new Mock<IProvidersReadRepository>();
+            _providersReadRepository.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
             apiClientMock.Setup(a => a.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", request)).ReturnsAsync((false,providerAddresses));
 
-            var sut = new LoadUkrlpAddressesService(_providersWriteRepository.Object, apiClientMock.Object, Mock.Of<IReloadProviderAddressesRepository>(), Mock.Of<IImportAuditWriteRepository>(), Mock.Of<ILogger<LoadUkrlpAddressesService>>());
+            var sut = new LoadUkrlpAddressesService(_providersReadRepository.Object, apiClientMock.Object, Mock.Of<IReloadProviderAddressesRepository>(), Mock.Of<IImportAuditWriteRepository>(), Mock.Of<ILogger<LoadUkrlpAddressesService>>());
             
             var success = await sut.LoadUkrlpAddresses();
 
@@ -47,11 +47,11 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             var providers = new List<Provider>();
             var providerAddresses = new EditableList<UkrlpProviderAddress>();
             var request = new ProviderAddressLookupRequest();
-            var _providersWriteRepository = new Mock<IProvidersWriteRepository>();
-            _providersWriteRepository.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
+            var _providersReadRepository = new Mock<IProvidersReadRepository>();
+            _providersReadRepository.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
             apiClientMock.Setup(a => a.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", request)).ReturnsAsync((true, providerAddresses));
 
-            var sut = new LoadUkrlpAddressesService(_providersWriteRepository.Object, apiClientMock.Object, Mock.Of<IReloadProviderAddressesRepository>(), Mock.Of<IImportAuditWriteRepository>(), Mock.Of<ILogger<LoadUkrlpAddressesService>>());
+            var sut = new LoadUkrlpAddressesService(_providersReadRepository.Object, apiClientMock.Object, Mock.Of<IReloadProviderAddressesRepository>(), Mock.Of<IImportAuditWriteRepository>(), Mock.Of<ILogger<LoadUkrlpAddressesService>>());
 
             var success = await sut.LoadUkrlpAddresses();
 
@@ -72,16 +72,16 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             var providers = new List<Provider> {new Provider {Ukprn = ukprn, Id=providerId}};
             var providerAddresses = new EditableList<UkrlpProviderAddress> { new() { Address1 = "1 Green Road", Ukprn = ukprn} };
  
-            var _providersWriteRepository = new Mock<IProvidersWriteRepository>();
-            _providersWriteRepository.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
+            var _providersReadRepository = new Mock<IProvidersReadRepository>();
+            _providersReadRepository.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
             apiClientMock.Setup(a => a.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", It.IsAny<ProviderAddressLookupRequest>())).ReturnsAsync((true, providerAddresses));
 
-            var sut = new LoadUkrlpAddressesService(_providersWriteRepository.Object, apiClientMock.Object, reloadProviderAddressesRepositoryMock.Object, importAuditWriteRepositoryMock.Object, loggerMock.Object);
+            var sut = new LoadUkrlpAddressesService(_providersReadRepository.Object, apiClientMock.Object, reloadProviderAddressesRepositoryMock.Object, importAuditWriteRepositoryMock.Object, loggerMock.Object);
 
             var success = await sut.LoadUkrlpAddresses();
 
             success.Should().BeTrue();
-            _providersWriteRepository.Verify(x=>x.GetAllProviders(),Times.Once);
+            _providersReadRepository.Verify(x=>x.GetAllProviders(),Times.Once);
             reloadProviderAddressesRepositoryMock.Verify(x=>x.ReloadProviderAddresses(It.IsAny<List<ProviderAddress>>()),Times.Once);
             importAuditWriteRepositoryMock.Verify(x=>x.Insert(It.IsAny<ImportAudit>()),Times.Once);
             loggerMock.Verify(
@@ -108,16 +108,16 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             var providers = new List<Provider> { new Provider { Ukprn = otherUkprn, Id = providerId } };
             var providerAddresses = new EditableList<UkrlpProviderAddress> { new() { Address1 = "1 Green Road", Ukprn = ukprn } };
         
-            var _providersWriteRepository = new Mock<IProvidersWriteRepository>();
-            _providersWriteRepository.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
+            var _providersReadRepository = new Mock<IProvidersReadRepository>();
+            _providersReadRepository.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
             apiClientMock.Setup(a => a.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", It.IsAny<ProviderAddressLookupRequest>())).ReturnsAsync((true, providerAddresses));
         
-            var sut = new LoadUkrlpAddressesService(_providersWriteRepository.Object, apiClientMock.Object, reloadProviderAddressesRepositoryMock.Object, importAuditWriteRepositoryMock.Object, loggerMock.Object);
+            var sut = new LoadUkrlpAddressesService(_providersReadRepository.Object, apiClientMock.Object, reloadProviderAddressesRepositoryMock.Object, importAuditWriteRepositoryMock.Object, loggerMock.Object);
         
             var success = await sut.LoadUkrlpAddresses();
         
             success.Should().BeTrue();
-            _providersWriteRepository.Verify(x => x.GetAllProviders(), Times.Once);
+            _providersReadRepository.Verify(x => x.GetAllProviders(), Times.Once);
             reloadProviderAddressesRepositoryMock.Verify(x => x.ReloadProviderAddresses(It.IsAny<List<ProviderAddress>>()), Times.Once);
             importAuditWriteRepositoryMock.Verify(x => x.Insert(It.IsAny<ImportAudit>()), Times.Once);
             loggerMock.Verify(

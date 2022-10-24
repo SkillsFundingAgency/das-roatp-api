@@ -14,15 +14,15 @@ namespace SFA.DAS.Roatp.Jobs.Services
 {
     public class LoadUkrlpAddressesService: ILoadUkrlpAddressesService
     {
-        private readonly IProvidersWriteRepository _providersWriteRepository;
+        private readonly IProvidersReadRepository _providersReadRepository;
         private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
         private readonly IReloadProviderAddressesRepository _providerAddressesRepository;
         private readonly IImportAuditWriteRepository _importAuditWriteRepository;
         private readonly ILogger<LoadUkrlpAddressesService> _logger;
 
-        public LoadUkrlpAddressesService(IProvidersWriteRepository providersWriteRepository, ICourseManagementOuterApiClient courseManagementOuterApiClient, IReloadProviderAddressesRepository providerAddressesRepository, IImportAuditWriteRepository importAuditWriteRepository, ILogger<LoadUkrlpAddressesService> logger)
+        public LoadUkrlpAddressesService(IProvidersReadRepository providersReadRepository, ICourseManagementOuterApiClient courseManagementOuterApiClient, IReloadProviderAddressesRepository providerAddressesRepository, IImportAuditWriteRepository importAuditWriteRepository, ILogger<LoadUkrlpAddressesService> logger)
         {
-            _providersWriteRepository = providersWriteRepository;
+            _providersReadRepository = providersReadRepository;
             _courseManagementOuterApiClient = courseManagementOuterApiClient;
             _providerAddressesRepository = providerAddressesRepository;
             _importAuditWriteRepository = importAuditWriteRepository;
@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
         public async Task<bool> LoadUkrlpAddresses()
         {
             var timeStarted = DateTime.UtcNow;
-            var providers = await _providersWriteRepository.GetAllProviders();
+            var providers = await _providersReadRepository.GetAllProviders();
 
             var ukprnsSubset = providers.Select(provider => provider.Ukprn).ToList();
 
