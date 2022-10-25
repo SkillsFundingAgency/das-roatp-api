@@ -44,5 +44,15 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .Where(c => c.Provider.Ukprn == ukprn)
                 .ToListAsync();
         }
+
+        public async Task<int> GetProvidersCount(int larscode)
+        {
+            return await _roatpDataContext
+                .ProviderCourses
+                .Include(c => c.Providers)
+                .AsNoTracking()
+                .Where(c => c.LarsCode == larscode)
+                .CountAsync();
+        }
     }
 }

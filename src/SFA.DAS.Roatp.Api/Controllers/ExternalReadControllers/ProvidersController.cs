@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
     [ApiController]
     [Route("/api/[controller]/")]
-    public class ProvidersController : Controller
+    public class ProvidersController : ControllerBase
     {
         private readonly ILogger<ProvidersController> _logger;
         private readonly IMediator _mediator;
