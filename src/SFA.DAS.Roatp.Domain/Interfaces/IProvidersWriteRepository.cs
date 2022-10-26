@@ -1,5 +1,5 @@
-﻿using System.Threading.Tasks;
-using SFA.DAS.Roatp.Domain.Entities;
+﻿using SFA.DAS.Roatp.Domain.Entities;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
@@ -8,3 +8,4 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
         Task Create(Provider provider);
     }
 }
+

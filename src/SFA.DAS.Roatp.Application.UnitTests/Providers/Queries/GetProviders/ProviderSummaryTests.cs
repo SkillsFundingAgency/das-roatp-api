@@ -20,7 +20,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
             model.Email.Should().Be(source.Email);
             model.Phone.Should().Be(source.Phone);
             model.ContactUrl.Should().Be(source.Website);
-            model.Address.Should().BeEquivalentTo(source.Address);
         }
     }
 }
