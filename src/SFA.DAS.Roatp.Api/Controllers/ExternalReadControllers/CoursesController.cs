@@ -43,5 +43,17 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
             var response = await _mediator.Send(new GetProviderDetailsForCourseQuery(larsCode, ukprn,lat,lon));
             return Ok(response);
         }
+
+
+        [HttpGet]
+        [Route("{larsCode}/providers/{ukprn}")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(GetProviderForCourseQueryResult), StatusCodes.Status200OK)]
+        public async Task<ActionResult<GetProviderForCourseQueryResult>> GetProviderForCourse(int larsCode, int ukprn)
+        {
+            _logger.LogInformation("Received request to get provider details for UKPRN: {ukprn}, LarsCode: {larscode}", ukprn, larsCode);
+            var response = await _mediator.Send(new GetProviderForCourseQuery(larsCode,  ukprn));
+            return Ok(response);
+        }
     }
 }
