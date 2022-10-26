@@ -17,7 +17,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
                 .Excluding(s => s.Id)
                 .Excluding(s=>s.ProviderId)
                 .Excluding(s=>s.Provider)
-                .Excluding(s => s.Providers)
                 .Excluding(s=>s.Locations)
                 .Excluding(s=>s.Versions)
             );

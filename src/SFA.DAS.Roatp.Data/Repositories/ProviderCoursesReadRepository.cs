@@ -49,7 +49,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
         {
             return await _roatpDataContext
                 .ProviderCourses
-                .Include(c => c.Providers)
                 .AsNoTracking()
                 .Where(c => c.LarsCode == larscode)
                 .CountAsync();
