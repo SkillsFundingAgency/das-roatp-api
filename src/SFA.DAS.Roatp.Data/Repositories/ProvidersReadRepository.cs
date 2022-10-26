@@ -19,14 +19,14 @@ namespace SFA.DAS.Roatp.Data.Repositories
         public async Task<Provider> GetByUkprn(int ukprn)
         {
             return await _roatpDataContext.Providers
-                        .Include(p => p.Address)
+                        .Include(p => p.ProviderAddress)
                         .AsNoTracking().SingleOrDefaultAsync(p => p.Ukprn == ukprn);
         }
 
         public async Task<List<Provider>> GetAllProviders()
         {
             return await _roatpDataContext.Providers
-                        .Include(p => p.Address)
+                        .Include(p => p.ProviderAddress)
                         .AsNoTracking().ToListAsync();
         }
     }

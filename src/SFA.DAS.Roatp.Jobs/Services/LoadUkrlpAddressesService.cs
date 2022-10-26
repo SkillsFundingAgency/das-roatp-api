@@ -54,8 +54,10 @@ namespace SFA.DAS.Roatp.Jobs.Services
             {
                 var providerId = providers.FirstOrDefault(x => x.Ukprn == ukrlpProvider.Ukprn)?.Id;
                 if (providerId != null)
-                    providerAddresses.Add(MapProviderAddress(ukrlpProvider, providerId.GetValueOrDefault()));
-                else
+                {
+                        providerAddresses.Add(MapProviderAddress(ukrlpProvider, providerId.GetValueOrDefault()));
+                    }
+                    else
                 {
                     _logger.LogInformation($"There was no matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was not added to ProviderAddress");
                 }
@@ -81,7 +83,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 Postcode = source.Postcode,
                 AddressUpdateDate = DateTime.Now,
                 ProviderId = providerId
-            };
+        };
     }
     }
 }
