@@ -17,18 +17,5 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public DateTime? AddressUpdateDate { get; set; }
         public DateTime? CoordinatesUpdateDate { get; set; }
         public virtual Provider Provider { get; set; }
-        //MFCMFC public static implicit operator ProviderAddress(UkrlpProviderAddress source)
-        //    => new ProviderAddress
-        //    {
-              //  ProviderId = source.ProviderId.GetValueOrDefault(),
-            //    AddressLine1 = source.Address1,
-              //  AddressLine2 = source.Address2,
-                //AddressLine3 = source.Address3,
-        //        AddressLine4 = source.Address4,
-          //      Town=source.Town,
-            //    Postcode = source.Postcode,
-              //  AddressUpdateDate = DateTime.Now,
-                //Id = source.Id
-            //};
     }
 }
