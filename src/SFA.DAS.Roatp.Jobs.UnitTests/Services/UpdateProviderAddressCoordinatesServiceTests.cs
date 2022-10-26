@@ -21,7 +21,8 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
         [MoqAutoData]
         public async Task UpdateProviderAddressCoordinatesService_OnSuccess(
             [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-            [Frozen] Mock<IProviderAddressWriteRepository> providersAddressWriteRepository
+            [Frozen] Mock<IProviderAddressWriteRepository> providersAddressWriteRepository,
+            [Frozen] Mock<IImportAuditWriteRepository> importAuditWriteRepository
             )
         {
             var postcode = "XYZ";
@@ -46,18 +47,20 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
 
             apiClientMock.Setup(a => a.Get<AddressList>($"lookup/addresses?postcode={postcode}")).ReturnsAsync((true, addressList));
 
-            var sut = new UpdateProviderAddressCoordinatesService(loggerMock.Object, apiClientMock.Object, providersAddressReadRepository.Object,providersAddressWriteRepository.Object);
+            var sut = new UpdateProviderAddressCoordinatesService(loggerMock.Object, apiClientMock.Object, providersAddressReadRepository.Object,providersAddressWriteRepository.Object, importAuditWriteRepository.Object);
 
             await sut.UpdateProviderAddressCoordinates();
             providersAddressReadRepository.Verify(x=>x.GetProviderAddressesWithMissingLatLongs(),Times.Once);
             providersAddressWriteRepository.Verify(x=>x.Update(It.IsAny<ProviderAddress>()),Times.Once);
+            importAuditWriteRepository.Verify(x=>x.Insert(It.IsAny<ImportAudit>()),Times.Once);
         }
 
         [Test]
         [MoqAutoData]
         public async Task UpdateProviderAddressCoordinatesService_WhenNoPostcodePresent_NoUpdate(
            [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-           [Frozen] Mock<IProviderAddressWriteRepository> providersAddressWriteRepository
+           [Frozen] Mock<IProviderAddressWriteRepository> providersAddressWriteRepository,
+           [Frozen] Mock<IImportAuditWriteRepository> importAuditWriteRepository
            )
         {
             var loggerMock = new Mock<ILogger<UpdateProviderAddressCoordinatesService>>();
@@ -67,18 +70,20 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             var providersAddressReadRepository = new Mock<IProviderAddressReadRepository>();
             providersAddressReadRepository.Setup(x => x.GetProviderAddressesWithMissingLatLongs()).ReturnsAsync(providerAddresses);
         
-            var sut = new UpdateProviderAddressCoordinatesService(loggerMock.Object, apiClientMock.Object, providersAddressReadRepository.Object, providersAddressWriteRepository.Object);
-        
+            var sut = new UpdateProviderAddressCoordinatesService(loggerMock.Object, apiClientMock.Object, providersAddressReadRepository.Object, providersAddressWriteRepository.Object, importAuditWriteRepository.Object);
+
             await sut.UpdateProviderAddressCoordinates();
             providersAddressReadRepository.Verify(x => x.GetProviderAddressesWithMissingLatLongs(), Times.Once);
             providersAddressWriteRepository.Verify(x => x.Update(It.IsAny<ProviderAddress>()), Times.Never);
+            importAuditWriteRepository.Verify(x => x.Insert(It.IsAny<ImportAudit>()), Times.Once);
         }
-
+        
         [Test]
         [MoqAutoData]
         public async Task UpdateProviderAddressCoordinatesService_OnApiFailure(
             [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-            [Frozen] Mock<IProviderAddressWriteRepository> providersAddressWriteRepository
+            [Frozen] Mock<IProviderAddressWriteRepository> providersAddressWriteRepository,
+            [Frozen] Mock<IImportAuditWriteRepository> importAuditWriteRepository
         )
         {
             var latitude = 1;
@@ -104,7 +109,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             apiClientMock.Setup(a => a.Get<AddressList>(It.IsAny<string>())).ReturnsAsync((false, addressList));
         
             var sut = new UpdateProviderAddressCoordinatesService(loggerMock.Object, apiClientMock.Object,
-                providersAddressReadRepository.Object, providersAddressWriteRepository.Object);
+                providersAddressReadRepository.Object, providersAddressWriteRepository.Object, importAuditWriteRepository.Object);
         
             await sut.UpdateProviderAddressCoordinates();
             providersAddressReadRepository.Verify(x => x.GetProviderAddressesWithMissingLatLongs(), Times.Once);
@@ -124,13 +129,15 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
                     It.IsAny<It.IsAnyType>(),
                     It.IsAny<Exception>(),
                     It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Exactly(2));
+            importAuditWriteRepository.Verify(x => x.Insert(It.IsAny<ImportAudit>()), Times.Once);
         }
         
         [Test]
         [MoqAutoData]
         public async Task UpdateProviderAddressCoordinatesService_OnNoMatchingAddressesForPostcode(
               [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-              [Frozen] Mock<IProviderAddressWriteRepository> providersAddressWriteRepository
+              [Frozen] Mock<IProviderAddressWriteRepository> providersAddressWriteRepository,
+              [Frozen] Mock<IImportAuditWriteRepository> importAuditWriteRepository
               )
         {
             var loggerMock = new Mock<ILogger<UpdateProviderAddressCoordinatesService>>();
@@ -145,7 +152,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
         
             apiClientMock.Setup(a => a.Get<AddressList>(It.IsAny<string>())).ReturnsAsync((true, addressList));
         
-            var sut = new UpdateProviderAddressCoordinatesService(loggerMock.Object, apiClientMock.Object, providersAddressReadRepository.Object, providersAddressWriteRepository.Object);
+            var sut = new UpdateProviderAddressCoordinatesService(loggerMock.Object, apiClientMock.Object, providersAddressReadRepository.Object, providersAddressWriteRepository.Object, importAuditWriteRepository.Object);
         
             await sut.UpdateProviderAddressCoordinates();
             providersAddressReadRepository.Verify(x => x.GetProviderAddressesWithMissingLatLongs(), Times.Once);
@@ -165,12 +172,14 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
                     It.IsAny<It.IsAnyType>(),
                     It.IsAny<Exception>(),
                     It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Exactly(2));
+            importAuditWriteRepository.Verify(x => x.Insert(It.IsAny<ImportAudit>()), Times.Once);
         }
         
         [Test]
         [MoqAutoData]
         public async Task UpdateProviderAddressCoordinatesService_OnFailureOfProviderAddressWrite(
-             [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock
+             [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
+             [Frozen] Mock<IImportAuditWriteRepository> importAuditWriteRepository
              )
         {
             var providersAddressWriteRepository = new Mock<IProviderAddressWriteRepository>();
@@ -186,7 +195,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
             providersAddressWriteRepository.Setup(x => x.Update(It.IsAny<ProviderAddress>())).ReturnsAsync(false);
             apiClientMock.Setup(a => a.Get<AddressList>(It.IsAny<string>())).ReturnsAsync((true, addressList));
         
-            var sut = new UpdateProviderAddressCoordinatesService(loggerMock.Object, apiClientMock.Object, providersAddressReadRepository.Object, providersAddressWriteRepository.Object);
+            var sut = new UpdateProviderAddressCoordinatesService(loggerMock.Object, apiClientMock.Object, providersAddressReadRepository.Object, providersAddressWriteRepository.Object, importAuditWriteRepository.Object);
         
             await sut.UpdateProviderAddressCoordinates();
             providersAddressReadRepository.Verify(x => x.GetProviderAddressesWithMissingLatLongs(), Times.Once);
@@ -206,6 +215,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services
                     It.IsAny<It.IsAnyType>(),
                     It.IsAny<Exception>(),
                     It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Exactly(2));
+            importAuditWriteRepository.Verify(x => x.Insert(It.IsAny<ImportAudit>()), Times.Once);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
@@ -13,20 +14,22 @@ public class UpdateProviderAddressCoordinatesService : IUpdateProviderAddressCoo
     private readonly IProviderAddressReadRepository _providerAddressReadRepository;
     private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
     private readonly IProviderAddressWriteRepository _providerAddressWriteRepository;
+    private readonly IImportAuditWriteRepository _importAuditWriteRepository;
     private readonly ILogger<UpdateProviderAddressCoordinatesService> _logger;
 
-    public UpdateProviderAddressCoordinatesService(ILogger<UpdateProviderAddressCoordinatesService> logger, ICourseManagementOuterApiClient courseManagementOuterApiClient, IProviderAddressReadRepository providerAddressReadRepository, IProviderAddressWriteRepository providerAddressWriteRepository)
+    public UpdateProviderAddressCoordinatesService(ILogger<UpdateProviderAddressCoordinatesService> logger, ICourseManagementOuterApiClient courseManagementOuterApiClient, IProviderAddressReadRepository providerAddressReadRepository, IProviderAddressWriteRepository providerAddressWriteRepository, IImportAuditWriteRepository importAuditWriteRepository)
     {
         _logger = logger;
         _courseManagementOuterApiClient = courseManagementOuterApiClient;
         _providerAddressReadRepository = providerAddressReadRepository;
         _providerAddressWriteRepository = providerAddressWriteRepository;
+        _importAuditWriteRepository = importAuditWriteRepository;
     }
 
     public async Task UpdateProviderAddressCoordinates()
     {
         var noOfFailures = 0;
-       
+        var timeStarted = DateTime.UtcNow;
         var providerAddressesToProcess = await _providerAddressReadRepository.GetProviderAddressesWithMissingLatLongs();
 
         foreach (var address in providerAddressesToProcess)
@@ -70,5 +73,8 @@ public class UpdateProviderAddressCoordinatesService : IUpdateProviderAddressCoo
         {
             _logger.LogWarning($"ProviderAddress coordinates update for {providerAddressesToProcess.Count} records has completed, with {noOfFailures} failure(s)");
         }
+
+        await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, providerAddressesToProcess.Count-noOfFailures,
+            ImportType.ProviderAddressesLatLong));
     }
 }
