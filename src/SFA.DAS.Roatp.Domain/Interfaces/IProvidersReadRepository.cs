@@ -9,4 +9,5 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
         Task<Provider> GetByUkprn(int ukprn);
         Task<List<Provider>> GetAllProviders();
     }
+
 }
