@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProvidersCountForCourse;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Courses.GetProviderDetailsForCourse;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
@@ -36,11 +37,11 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [HttpGet]
         [Route("{larsCode}/providers/{ukprn}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(GetProviderForCourseQueryResult), StatusCodes.Status200OK)]
-        public async Task<ActionResult<GetProviderForCourseQueryResult>> GetProviderForCourse(int larsCode, int ukprn)
+        [ProducesResponseType(typeof(GetProviderDetailsForCourseQueryResult), StatusCodes.Status200OK)]
+        public async Task<ActionResult<GetProviderDetailsForCourseQueryResult>> GetProviderForCourse(int larsCode, int ukprn, string sectorSubjectArea, double? lat = null, double? lon = null)
         {
-            _logger.LogInformation("Received request to get provider details for UKPRN: {ukprn}, LarsCode: {larscode}", ukprn, larsCode);
-            var response = await _mediator.Send(new GetProviderForCourseQuery(larsCode,  ukprn));
+            _logger.LogInformation("Received request to get provider details for UKPRN: {ukprn}, LarsCode: {larscode}, SectorSubjectArea: {sectorSubjectArea}, Lat: {lat}, Long: {lon}", ukprn, larsCode, sectorSubjectArea,lat,lon);
+            var response = await _mediator.Send(new GetProviderDetailsForCourseQuery(larsCode,  ukprn,sectorSubjectArea,lat,lon));
             return Ok(response);
         }
     }

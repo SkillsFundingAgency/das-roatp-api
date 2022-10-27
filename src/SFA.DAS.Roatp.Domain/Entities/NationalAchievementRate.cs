@@ -12,6 +12,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public int? OverallCohort { get; set; }
         public decimal? OverallAchievementRate { get; set; }
         public virtual Provider Provider { get; set; }
+
         public static implicit operator NationalAchievementRate(NationalAchievementRateImport source)
         {
             return new NationalAchievementRate
