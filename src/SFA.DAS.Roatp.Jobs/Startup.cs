@@ -82,6 +82,7 @@ namespace SFA.DAS.Roatp.Jobs
             builder.Services.AddTransient<IReloadNationalAcheivementRatesService, ReloadNationalAcheivementRatesService>();
             builder.Services.AddTransient<IReloadNationalAcheivementRatesOverallService, ReloadNationalAcheivementRatesOverallService>();
             builder.Services.AddTransient<ILoadUkrlpAddressesService, LoadUkrlpAddressesService>();
+            builder.Services.AddTransient<IUpdateProviderAddressCoordinatesService, UpdateProviderAddressCoordinatesService>();
         }
 
         private void ConfigureHttpClient(IServiceCollection services)
