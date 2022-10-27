@@ -49,12 +49,12 @@ namespace SFA.DAS.Roatp.Data.Repositories
             {
                 foreach (var address in providerAddresses)
                 {
-                    var providerAddress = await _roatpDataContext.ProviderAddress.FirstOrDefaultAsync(x => x.ProviderId == address.ProviderId);
+                    var providerAddress = await _roatpDataContext.ProviderAddresses.FirstOrDefaultAsync(x => x.ProviderId == address.ProviderId);
 
                     if (providerAddress != null)
                         _roatpDataContext.Remove(providerAddress);
 
-                    _roatpDataContext.ProviderAddress.Add(address);
+                    _roatpDataContext.ProviderAddresses.Add(address);
                 }
 
                 await _roatpDataContext.SaveChangesAsync();
