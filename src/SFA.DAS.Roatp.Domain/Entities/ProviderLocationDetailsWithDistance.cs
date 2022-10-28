@@ -9,8 +9,6 @@ public class ProviderLocationDetailsWithDistance
     public string Website { get; set; }
     public string Phone { get; set; }
     public LocationType LocationType { get; set; }
-    public int? LocationId { get; set; }
-      
     public bool? HasDayReleaseDeliveryOption { get; set; }
     public bool? HasBlockReleaseDeliveryOption { get; set; }
 
