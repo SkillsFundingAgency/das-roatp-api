@@ -24,7 +24,7 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
     public async Task<GetProviderDetailsForCourseQueryResult> Handle(GetProviderDetailsForCourseQuery request, CancellationToken cancellationToken)
     {
 
-
+        // Getting provider and course details
         var providerDetails = await _providerDetailsReadRepository.GetProviderDetailsWithDistance(request.Ukprn, request.LarsCode,request.Lat,
             request.Lon);
 
@@ -33,10 +33,12 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
 
         var result = (GetProviderDetailsForCourseQueryResult)providerDetails;
 
+        // Getting national achievement rates
         var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByUkprn(request.Ukprn);
         result.AchievementRates = nationalAchievementRates.Select(nar => (NationalAchievementRateModel)nar).ToList(); ;
         
 
+        // Getting provider location and delivery details
         var providerLocations = await _providerDetailsReadRepository.GetProviderlocationDetailsWithDistance(
             request.Ukprn, request.LarsCode, request.Lat,
             request.Lon);
