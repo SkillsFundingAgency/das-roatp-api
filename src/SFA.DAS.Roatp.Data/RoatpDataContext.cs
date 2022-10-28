@@ -22,7 +22,8 @@ namespace SFA.DAS.Roatp.Data
         public DbSet<NationalAchievementRateOverallImport> NationalAchievementRateOverallImports { get; set; }
         public DbSet<ProviderAddress> ProviderAddresses { get; set; }
 
-        public DbSet<ProviderDetailsWithDistance> ProviderDetailsWithDistance { get; set; }
+        public DbSet<ProviderAndCourseDetailsWithDistance> ProviderDetailsWithDistance { get; set; }
+        public DbSet<ProviderLocationDetailsWithDistance> ProviderLocationDetailsWithDistance { get; set; }
         public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) {}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
