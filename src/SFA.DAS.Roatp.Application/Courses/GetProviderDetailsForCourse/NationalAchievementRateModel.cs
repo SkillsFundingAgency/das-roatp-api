@@ -24,5 +24,4 @@ public class NationalAchievementRateModel
             OverallAchievementRate = source.OverallAchievementRate,
             OverallCohort = source.OverallCohort
         };
-
 }

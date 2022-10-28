@@ -8,10 +8,8 @@ namespace SFA.DAS.Roatp.Application.Courses.GetProviderDetailsForCourse;
 
 public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProviderDetailsForCourseQuery, GetProviderDetailsForCourseQueryResult>
 {
-
     private readonly IProviderDetailsReadRepository _providerDetailsReadRepository;
     private readonly INationalAchievementRatesReadRepository _nationalAchievementRatesReadRepository;
-
 
     public GetProviderDetailsForCourseQueryHandler(IProviderDetailsReadRepository providerDetailsReadRepository, INationalAchievementRatesReadRepository nationalAchievementRatesReadRepository)
     {
