@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Application.Courses.GetProviderDetailsForCourse
@@ -28,10 +29,28 @@ namespace SFA.DAS.Roatp.Application.Courses.GetProviderDetailsForCourse
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public double Distance { get; set; }
+        public string DeliveryModes
+        {
+            get
+            {
+                var deliveryModes = new List<string>();
+                if (LocationDetails.Any(x => x.BlockRelease))
+                    deliveryModes.Add("BlockRelease");
+
+                if (LocationDetails.Any(x => x.DayRelease))
+                    deliveryModes.Add("DayRelease");
+
+                if (LocationDetails.Any(x => x.LocationType == LocationType.Regional)
+                    || LocationDetails.Any(x => x.LocationType == LocationType.National))
+                    deliveryModes.Add("100PercentEmployer");
+
+                return string.Join("|", deliveryModes);
+            }
+        }
         public List<NationalAchievementRateModel> AchievementRates { get; set; } =
             new List<NationalAchievementRateModel>();
 
-        public List<LocationAndDeliveryDetail> LocationAndDeliveryDetails { get; set; } = new List<LocationAndDeliveryDetail>();
+        public List<LocationDetail> LocationDetails { get; set; } = new List<LocationDetail>();
 
         public static implicit operator GetProviderDetailsForCourseQueryResult(ProviderAndCourseDetailsWithDistance providerAndCourseDetails)
         {
