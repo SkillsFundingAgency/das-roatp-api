@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.Application.Courses.GetProviderDetailsForCourse
         public string MarketingInfo { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
-        public double DistanceInMiles { get; set; }
+        public double Distance { get; set; }
         public List<NationalAchievementRateModel> AchievementRates { get; set; } =
             new List<NationalAchievementRateModel>();
 
@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.Application.Courses.GetProviderDetailsForCourse
                 Address4 = providerAndCourseDetails.Address4,
                 Town = providerAndCourseDetails.Town,
                 Postcode = providerAndCourseDetails.Postcode,
-                DistanceInMiles = providerAndCourseDetails.Distance,
+                Distance = providerAndCourseDetails.Distance,
                 Latitude = providerAndCourseDetails.Latitude,
                 Longitude = providerAndCourseDetails.Longitude
             };
