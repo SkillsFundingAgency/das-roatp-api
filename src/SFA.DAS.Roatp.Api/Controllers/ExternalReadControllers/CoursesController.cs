@@ -1,5 +1,4 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -44,7 +43,6 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
             var response = await _mediator.Send(new GetProviderDetailsForCourseQuery(larsCode, ukprn,lat,lon));
             return Ok(response);
         }
-
 
         [HttpGet]
         [Route("{larsCode}/providers/{ukprn}")]
