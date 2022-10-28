@@ -76,7 +76,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
                     PL.Website,
                     PL.Phone,
 	                LocationType,
-	                PL.ImportedLocationId as LocationId,
 	                PCL.HasDayReleaseDeliveryOption,
 	                PCL.HasBlockReleaseDeliveryOption,
 	                AddressLine1,
