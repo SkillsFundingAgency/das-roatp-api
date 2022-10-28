@@ -1,5 +1,4 @@
-﻿using System;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -33,7 +32,6 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
             _logger.LogInformation("Found {providerCount} providers that are associated with Larscode:{larscode}", response.ProvidersCount, larsCode);
             return Ok(response);
         }
-
 
         [HttpGet]
         [Route("{larsCode}/providers/{ukprn}")]
