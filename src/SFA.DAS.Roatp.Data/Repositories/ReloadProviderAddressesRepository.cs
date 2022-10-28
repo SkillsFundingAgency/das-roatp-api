@@ -41,5 +41,33 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
             return true;
         }
+
+        public async Task<bool> UpsertProviderAddresses(List<ProviderAddress> providerAddresses)
+        {
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
+            try
+            {
+                foreach (var address in providerAddresses)
+                {
+                    var providerAddress = await _roatpDataContext.ProviderAddresses.FirstOrDefaultAsync(x => x.ProviderId == address.ProviderId);
+
+                    if (providerAddress != null)
+                        _roatpDataContext.Remove(providerAddress);
+
+                    _roatpDataContext.ProviderAddresses.Add(address);
+                }
+
+                await _roatpDataContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Provider addresses upsert failed on database update");
+                return false;
+            }
+
+            return true;
+        }
     }
 }

@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "LoadAllProviderAddresses")] HttpRequest req, ILogger log)
         {
-            var result = await _loadUkrlpAddressesService.LoadUkrlpAddresses();
+            var result = await _loadUkrlpAddressesService.LoadAllProvidersAddresses();
             if (result)
                 log.LogInformation("Ukrlp Addresses updated");
             else

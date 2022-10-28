@@ -16,7 +16,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public double? Longitude { get; set; }
         public DateTime? AddressUpdateDate { get; set; }
         public DateTime? CoordinatesUpdateDate { get; set; }
-
         public virtual Provider Provider { get; set; }
     }
 }
