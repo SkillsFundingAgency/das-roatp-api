@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using MediatR;
+using SFA.DAS.Roatp.Domain.Interfaces;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using MediatR;
-using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Courses.GetProviderDetailsForCourse;
 
 public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProviderDetailsForCourseQuery, GetProviderDetailsForCourseQueryResult>
 {
 
-    private readonly IProviderDetailsReadRepository _providerRetailsReadRepository;
+    private readonly IProviderDetailsReadRepository _providerDetailsReadRepository;
     private readonly INationalAchievementRatesReadRepository _nationalAchievementRatesReadRepository;
 
 
-    public GetProviderDetailsForCourseQueryHandler(IProviderDetailsReadRepository providerRetailsReadRepository, INationalAchievementRatesReadRepository nationalAchievementRatesReadRepository)
+    public GetProviderDetailsForCourseQueryHandler(IProviderDetailsReadRepository providerDetailsReadRepository, INationalAchievementRatesReadRepository nationalAchievementRatesReadRepository)
     {
-        _providerRetailsReadRepository = providerRetailsReadRepository;
+        _providerDetailsReadRepository = providerDetailsReadRepository;
         _nationalAchievementRatesReadRepository = nationalAchievementRatesReadRepository;
     }
     // private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
@@ -27,27 +25,22 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
     {
 
 
-        var providerDetails = await _providerRetailsReadRepository.GetProviderDetailsWithDistance(request.Ukprn, request.Lat,
+        var providerDetails = await _providerDetailsReadRepository.GetProviderDetailsWithDistance(request.Ukprn, request.LarsCode,request.Lat,
             request.Lon);
 
-        // getting providerDetails
+        if (providerDetails == null)
+            return null;
+
         var result = (GetProviderDetailsForCourseQueryResult)providerDetails;
 
-        // get NAR details
         var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByUkprn(request.Ukprn);
-        var achievementRates = nationalAchievementRates.Select(nar => (NationalAchievementRateModel)nar).ToList(); ;
-       
-        // note the original SQL filters it down to Age == 4??? and the level entered + level==1
+        result.AchievementRates = nationalAchievementRates.Select(nar => (NationalAchievementRateModel)nar).ToList(); ;
+        
 
-        if (string.IsNullOrEmpty(request.SectorSubjectArea))
-            result.AchievementRates = achievementRates;
-        else
-        {
-            result.AchievementRates = achievementRates
-                .Where(x => x.SectorSubjectArea.Equals( request.SectorSubjectArea,StringComparison.CurrentCultureIgnoreCase)).ToList();
-        }
-
-        // GET provider location details
+        var providerLocations = await _providerDetailsReadRepository.GetProviderlocationDetailsWithDistance(
+            request.Ukprn, request.LarsCode, request.Lat,
+            request.Lon);
+        result.LocationAndDeliveryDetails = providerLocations.Select(pl => (LocationAndDeliveryDetail)pl).ToList();
         return result;
     }
 }

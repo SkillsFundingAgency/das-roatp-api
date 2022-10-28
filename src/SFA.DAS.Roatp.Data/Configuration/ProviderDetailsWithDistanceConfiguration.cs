@@ -6,9 +6,9 @@ using SFA.DAS.Roatp.Domain.Entities;
 namespace SFA.DAS.Roatp.Data.Configuration
 {
     [ExcludeFromCodeCoverage]
-    public class ProviderDetailsWithDistanceConfiguration: IEntityTypeConfiguration<ProviderDetailsWithDistance>
+    public class ProviderDetailsWithDistanceConfiguration: IEntityTypeConfiguration<ProviderAndCourseDetailsWithDistance>
     {
-        public void Configure(EntityTypeBuilder<ProviderDetailsWithDistance> builder)
+        public void Configure(EntityTypeBuilder<ProviderAndCourseDetailsWithDistance> builder)
         {
             builder.HasNoKey();
         }
