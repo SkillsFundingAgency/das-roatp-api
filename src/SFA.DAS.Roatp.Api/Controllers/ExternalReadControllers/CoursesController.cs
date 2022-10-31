@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProvidersCountForCourse;
 using System.Threading.Tasks;
-using SFA.DAS.Roatp.Application.Courses.GetProviderDetailsForCourse;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {

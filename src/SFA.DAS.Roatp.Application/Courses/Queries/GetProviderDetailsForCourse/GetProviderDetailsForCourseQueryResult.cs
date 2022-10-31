@@ -2,7 +2,7 @@
 using System.Linq;
 using SFA.DAS.Roatp.Domain.Entities;
 
-namespace SFA.DAS.Roatp.Application.Courses.GetProviderDetailsForCourse
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
 {
     public class GetProviderDetailsForCourseQueryResult
     {

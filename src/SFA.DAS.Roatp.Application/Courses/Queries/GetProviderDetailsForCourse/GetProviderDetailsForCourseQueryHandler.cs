@@ -1,10 +1,10 @@
-﻿using MediatR;
-using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.Courses.GetProviderDetailsForCourse;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 
 public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProviderDetailsForCourseQuery, GetProviderDetailsForCourseQueryResult>
 {
