@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Models;
 using System;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation

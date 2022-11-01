@@ -1,8 +1,8 @@
-﻿using SFA.DAS.Roatp.Domain.Entities;
+﻿using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 
-public class LocationDetail
+public class CourseLocationModel
 {
     public LocationType LocationType { get; set; }
     public bool BlockRelease { get; set; }
@@ -14,9 +14,9 @@ public class LocationDetail
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
 
-    public static implicit operator LocationDetail(ProviderLocationDetailsWithDistance source)
+    public static implicit operator CourseLocationModel(ProviderCourseLocationDetailsModel source)
     {
-        return new LocationDetail
+        return new CourseLocationModel
         {
             LocationType = source.LocationType,
             BlockRelease = source.HasBlockReleaseDeliveryOption ?? false,

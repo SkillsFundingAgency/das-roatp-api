@@ -4,8 +4,8 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = roatpDataContext;
         }
 
-        public async Task<ProviderAndCourseDetailsWithDistance> GetProviderDetailsWithDistance(int ukprn, int larsCode, double? lat, double? lon)
+        public async Task<ProviderCourseDetailsModel> GetProviderDetailsWithDistance(int ukprn, int larsCode, double? lat, double? lon)
         {
             _logger.LogInformation("Gathering ProviderDetails with distance for ukprn {ukprn}, larscode {larscode}", ukprn,larsCode); 
             var provider = await _roatpDataContext.ProviderDetailsWithDistance
@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             return provider;
         }
 
-        public async Task<List<ProviderLocationDetailsWithDistance>> GetProviderlocationDetailsWithDistance(int ukprn, int larsCode, double? lat, double? lon)
+        public async Task<List<ProviderCourseLocationDetailsModel>> GetProviderlocationDetailsWithDistance(int ukprn, int larsCode, double? lat, double? lon)
         {
             _logger.LogInformation("Gathering ProviderLocationDetails with distance for ukprn {ukprn}, larscode {larscode}", ukprn, larsCode);
 
@@ -41,33 +41,34 @@ namespace SFA.DAS.Roatp.Data.Repositories
         private static FormattableString GetProvidersDetailsWithDistanceSql(int ukprn, int larsCode, double? lat, double? lon )
         {
             return $@"
-                    select pdv.ukprn,
+                   select p.ukprn,
                             pc.LarsCode,
-                            pdv.LegalName,
-                            pdv.TradingName,
-                            pdv.MarketingInfo,
+                            p.LegalName,
+                            p.TradingName,
+                            p.MarketingInfo,
 		                    pc.StandardInfoUrl,
 		                    pc.ContactUsEmail as Email,
                             pc.ContactUsPhoneNumber as Phone,
 		                    pc.ContactUsPageUrl as StandardContactUrl,
-                            pdv.Website as ProviderWebsite,
-                            pdv.AddressLine1 as Address1,
-                            pdv.AddressLine2 as Address2,
-                            pdv.AddressLine3 as Address3,
-                            pdv.AddressLine4 as Address4,
-                            pdv.Town as Town,
-                            Pdv.Postcode as Postcode,
-                            Pdv.Latitude,
-                            Pdv.Longitude,
+                            p.Website as ProviderWebsite,
+                            pa.AddressLine1 as Address1,
+                            pa.AddressLine2 as Address2,
+                            pa.AddressLine3 as Address3,
+                            pa.AddressLine4 as Address4,
+                            pa.Town as Town,
+                            PA.Postcode as Postcode,
+                            PA.Latitude,
+                            PA.Longitude,
                             CASE  WHEN ({lat} is null) THEN 0
                                 WHEN ({lon} is null) THEN 0
                                 ELSE
-                                    geography::Point(isnull(pdv.Latitude,0), isnull(pdv.Longitude,0), 4326)
+                                    geography::Point(isnull(pa.Latitude,0), isnull(pa.Longitude,0), 4326)
                                             .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
 			                                as Distance
-                            FROM providerDetailsView pdv
-		                    INNER JOIN ProviderCourse pc on pdv.Id = pc.ProviderId
-		                    Where ukprn={ukprn}
+                            FROM provider P
+		                    INNER JOIN ProviderCourse pc on p.Id = pc.ProviderId
+							LEFT OUTER JOIN [dbo].[ProviderAddress] PA on P.Id = PA.ProviderId
+		                    Where P.ukprn={ukprn}
 		                    AND pc.LarsCode={larsCode}";
         }
 

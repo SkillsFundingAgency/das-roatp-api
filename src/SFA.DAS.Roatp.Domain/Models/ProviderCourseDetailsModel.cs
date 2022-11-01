@@ -1,7 +1,7 @@
-﻿namespace SFA.DAS.Roatp.Domain.Entities
+﻿namespace SFA.DAS.Roatp.Domain.Models
 {
 
-    public class ProviderAndCourseDetailsWithDistance
+    public class ProviderCourseDetailsModel
     {
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }

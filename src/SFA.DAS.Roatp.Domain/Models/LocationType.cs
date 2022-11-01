@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Roatp.Domain.Entities
+﻿namespace SFA.DAS.Roatp.Domain.Models
 {
     public enum LocationType
     {

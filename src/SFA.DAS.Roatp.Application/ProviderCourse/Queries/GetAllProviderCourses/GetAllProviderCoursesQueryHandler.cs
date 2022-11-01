@@ -30,10 +30,12 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
                 return new GetAllProviderCoursesQueryResult { Courses = new List<ProviderCourseModel>() };
             }
 
-            var providerCourseModels = providerCourses.Select(p => (ProviderCourseModel)p).ToList();
             var standardsLookup = await _standardsReadRepository.GetAllStandards();
+            var providerCourseModels = providerCourses.Select(p => (ProviderCourseModel)p)
+                .Where(p => standardsLookup.Select(x=>x.LarsCode).Contains(p.LarsCode))
+                .ToList();
 
-            foreach (var p in providerCourseModels)
+           foreach (var p in providerCourseModels)
             {
                 var course = standardsLookup.Single(c => c.LarsCode == p.LarsCode);
                 p.AttachCourseDetails(course.IfateReferenceNumber, course.Level, course.Title, course.Version, course.ApprovalBody);
