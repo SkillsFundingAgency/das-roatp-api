@@ -46,6 +46,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             Assert.AreEqual(result.ContactUrl, providerCourseDetailsWithDistance.StandardContactUrl);
         }
 
+        [Test, RecursiveMoqAutoData()]
         public async Task Handle_ReturnsNoResult(
             [Frozen] Mock<IProviderDetailsReadRepository> providerDetailsReadRepositoryMock,
             GetProviderDetailsForCourseQuery query,
