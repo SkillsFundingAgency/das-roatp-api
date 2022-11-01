@@ -3,6 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCourse
@@ -12,22 +13,22 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
     {
         [Test, RecursiveMoqAutoData]
         public void Operator_PopulatesModelFromEntity(
-            ProviderAndCourseDetailsWithDistance providerAndCourseDetailsWithDistance)
+            ProviderCourseDetailsModel providerCourseDetailsModel)
         {
-            var model = (GetProviderDetailsForCourseQueryResult)providerAndCourseDetailsWithDistance;
+            var model = (GetProviderDetailsForCourseQueryResult)providerCourseDetailsModel;
 
             Assert.That(model, Is.Not.Null);
-            model.Should().BeEquivalentTo(providerAndCourseDetailsWithDistance,c => c
+            model.Should().BeEquivalentTo(providerCourseDetailsModel,c => c
                 .Excluding(s => s.LegalName)
                 .Excluding(s => s.StandardContactUrl));
-            Assert.AreEqual(providerAndCourseDetailsWithDistance.LegalName, model.Name);
-            Assert.AreEqual(providerAndCourseDetailsWithDistance.StandardContactUrl,model.ContactUrl);
+            Assert.AreEqual(providerCourseDetailsModel.LegalName, model.Name);
+            Assert.AreEqual(providerCourseDetailsModel.StandardContactUrl,model.ContactUrl);
         }
 
         [Test]
         public void Operator_ReturnsNullIfNullEntity()
         {
-            var details = (ProviderAndCourseDetailsWithDistance)null;
+            var details = (ProviderCourseDetailsModel)null;
             var model = (GetProviderDetailsForCourseQueryResult)details;
 
             Assert.IsNull(model);
@@ -49,7 +50,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
         [TestCase(true, true, true, true, "BlockRelease|DayRelease|100PercentEmployer")]
         public void DeliveryModes_Expected(bool blockRelease, bool dayRelease, bool regional, bool national, string expectedResult)
         {
-            var locationDetails = new List<LocationDetail>
+            var locationDetails = new List<CourseLocationModel>
             {
                 new() {BlockRelease = blockRelease, DayRelease = dayRelease, 
                     LocationType = regional?LocationType.Regional:national?LocationType.National: LocationType.Provider}

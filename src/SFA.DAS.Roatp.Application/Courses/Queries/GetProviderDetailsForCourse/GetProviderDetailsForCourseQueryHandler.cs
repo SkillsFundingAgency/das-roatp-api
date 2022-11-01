@@ -33,7 +33,7 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
         var providerLocations = await _providerDetailsReadRepository.GetProviderlocationDetailsWithDistance(
             request.Ukprn, request.LarsCode, request.Lat,
             request.Lon);
-        result.LocationDetails = providerLocations.Select(pl => (LocationDetail)pl).ToList();
+        result.LocationDetails = providerLocations.Select(pl => (CourseLocationModel)pl).ToList();
         return result;
     }
 }

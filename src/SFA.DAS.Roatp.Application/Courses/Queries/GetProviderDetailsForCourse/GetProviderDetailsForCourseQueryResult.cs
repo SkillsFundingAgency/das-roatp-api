@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
 {
@@ -48,33 +49,33 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
         public List<NationalAchievementRateModel> AchievementRates { get; set; } =
             new List<NationalAchievementRateModel>();
 
-        public List<LocationDetail> LocationDetails { get; set; } = new List<LocationDetail>();
+        public List<CourseLocationModel> LocationDetails { get; set; } = new List<CourseLocationModel>();
 
-        public static implicit operator GetProviderDetailsForCourseQueryResult(ProviderAndCourseDetailsWithDistance providerAndCourseDetails)
+        public static implicit operator GetProviderDetailsForCourseQueryResult(ProviderCourseDetailsModel providerCourseDetails)
         {
-            if (providerAndCourseDetails == null)
+            if (providerCourseDetails == null)
                 return null;
 
             return new GetProviderDetailsForCourseQueryResult
             {
-                Ukprn = providerAndCourseDetails.Ukprn,
-                LarsCode = providerAndCourseDetails.LarsCode,
-                ContactUrl = providerAndCourseDetails.StandardContactUrl,
-                Email = providerAndCourseDetails.Email,
-                Phone = providerAndCourseDetails.Phone,
-                Name = providerAndCourseDetails.LegalName,
-                TradingName = providerAndCourseDetails.TradingName,
-                MarketingInfo = providerAndCourseDetails.MarketingInfo,
-                StandardInfoUrl = providerAndCourseDetails.StandardInfoUrl,
-                Address1 = providerAndCourseDetails.Address1,
-                Address2 = providerAndCourseDetails.Address2,
-                Address3 = providerAndCourseDetails.Address3,
-                Address4 = providerAndCourseDetails.Address4,
-                Town = providerAndCourseDetails.Town,
-                Postcode = providerAndCourseDetails.Postcode,
-                Distance = providerAndCourseDetails.Distance,
-                Latitude = providerAndCourseDetails.Latitude,
-                Longitude = providerAndCourseDetails.Longitude
+                Ukprn = providerCourseDetails.Ukprn,
+                LarsCode = providerCourseDetails.LarsCode,
+                ContactUrl = providerCourseDetails.StandardContactUrl,
+                Email = providerCourseDetails.Email,
+                Phone = providerCourseDetails.Phone,
+                Name = providerCourseDetails.LegalName,
+                TradingName = providerCourseDetails.TradingName,
+                MarketingInfo = providerCourseDetails.MarketingInfo,
+                StandardInfoUrl = providerCourseDetails.StandardInfoUrl,
+                Address1 = providerCourseDetails.Address1,
+                Address2 = providerCourseDetails.Address2,
+                Address3 = providerCourseDetails.Address3,
+                Address4 = providerCourseDetails.Address4,
+                Town = providerCourseDetails.Town,
+                Postcode = providerCourseDetails.Postcode,
+                Distance = providerCourseDetails.Distance,
+                Latitude = providerCourseDetails.Latitude,
+                Longitude = providerCourseDetails.Longitude
             };
         }
     }
