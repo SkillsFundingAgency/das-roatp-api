@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -8,6 +9,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
+    [ExcludeFromCodeCoverage]
     public class ProviderDetailsReadRepository : IProviderDetailsReadRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
@@ -21,6 +23,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public async Task<ProviderAndCourseDetailsWithDistance> GetProviderDetailsWithDistance(int ukprn, int larsCode, double? lat, double? lon)
         {
+            _logger.LogInformation("Gathering ProviderDetails with distance for ukprn {ukprn}, larscode {larscode}", ukprn,larsCode); 
             var provider = await _roatpDataContext.ProviderDetailsWithDistance
                 .FromSqlInterpolated(GetProvidersDetailsWithDistanceSql(ukprn, larsCode, lat, lon)).FirstOrDefaultAsync();
             return provider;
@@ -28,6 +31,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public async Task<List<ProviderLocationDetailsWithDistance>> GetProviderlocationDetailsWithDistance(int ukprn, int larsCode, double? lat, double? lon)
         {
+            _logger.LogInformation("Gathering ProviderLocationDetails with distance for ukprn {ukprn}, larscode {larscode}", ukprn, larsCode);
+
             var providerLocations = await _roatpDataContext.ProviderLocationDetailsWithDistance
                 .FromSqlInterpolated(GetProviderLocationDetailsWithDistanceSql(ukprn, larsCode, lat, lon)).ToListAsync();
             return providerLocations;

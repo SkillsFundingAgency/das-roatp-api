@@ -28,7 +28,7 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
         var result = (GetProviderDetailsForCourseQueryResult)providerDetails;
 
         var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByUkprn(request.Ukprn);
-        result.AchievementRates = nationalAchievementRates.Select(nar => (NationalAchievementRateModel)nar).ToList(); ;
+        result.AchievementRates = nationalAchievementRates.Select(nar => (NationalAchievementRateModel)nar).ToList(); 
         
         var providerLocations = await _providerDetailsReadRepository.GetProviderlocationDetailsWithDistance(
             request.Ukprn, request.LarsCode, request.Lat,
