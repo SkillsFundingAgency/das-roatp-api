@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
         public string MarketingInfo { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
-        public double Distance { get; set; }
+        public decimal? ProviderHeadOfficeDistanceInMiles { get; set; }
         public string DeliveryModes
         {
             get
@@ -73,7 +73,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
                 Address4 = providerCourseDetails.Address4,
                 Town = providerCourseDetails.Town,
                 Postcode = providerCourseDetails.Postcode,
-                Distance = providerCourseDetails.Distance,
+                ProviderHeadOfficeDistanceInMiles = (decimal?)providerCourseDetails.Distance,
                 Latitude = providerCourseDetails.Latitude,
                 Longitude = providerCourseDetails.Longitude
             };
