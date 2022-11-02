@@ -41,10 +41,12 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             result.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
                 .Excluding(s => s.LegalName)
                 .Excluding(s => s.StandardContactUrl)
-            );
+                .Excluding(s=>s.Distance)
+                );
 
             Assert.AreEqual(result.Name, providerCourseDetailsModel.LegalName);
             Assert.AreEqual(result.ContactUrl, providerCourseDetailsModel.StandardContactUrl);
+           Assert.AreEqual(result.ProviderHeadOfficeDistanceInMiles,providerCourseDetailsModel.Distance);
         }
 
         [Test, RecursiveMoqAutoData()]

@@ -19,7 +19,7 @@ public class LocationDetailTests
         Assert.AreEqual(providerCourseLocationDetailsModel.HasDayReleaseDeliveryOption??false, model.DayRelease); 
         Assert.AreEqual(providerCourseLocationDetailsModel.RegionName, model.RegionName); 
         Assert.AreEqual(providerCourseLocationDetailsModel.SubregionName, model.SubRegionName); 
-        Assert.AreEqual(providerCourseLocationDetailsModel.Distance, model.Distance); 
+        Assert.AreEqual(providerCourseLocationDetailsModel.Distance, model.ProviderLocationDistanceInMiles); 
         Assert.AreEqual(providerCourseLocationDetailsModel.Latitude, model.Latitude); 
         Assert.AreEqual(providerCourseLocationDetailsModel.Longitude, model.Longitude); 
         Assert.AreEqual(providerCourseLocationDetailsModel.AddressLine1, model.Address?.Address1); 
