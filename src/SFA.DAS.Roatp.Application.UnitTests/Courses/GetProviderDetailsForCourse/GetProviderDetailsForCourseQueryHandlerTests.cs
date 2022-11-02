@@ -62,6 +62,5 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
 
             Assert.IsNull(result);
         }
-
     }
 }
