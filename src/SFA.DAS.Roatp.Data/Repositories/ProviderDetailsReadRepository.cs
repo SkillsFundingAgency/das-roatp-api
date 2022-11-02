@@ -59,8 +59,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
                             PA.Postcode as Postcode,
                             PA.Latitude,
                             PA.Longitude,
-                            CASE  WHEN ({lat} is null) THEN 0
-                                WHEN ({lon} is null) THEN 0
+                            CASE  WHEN ({lat} is null) THEN null
+                                WHEN ({lon} is null) THEN null
                                 ELSE
                                     geography::Point(isnull(pa.Latitude,0), isnull(pa.Longitude,0), 4326)
                                             .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
@@ -92,8 +92,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
 	                R.SubregionName,
 	                PL.Latitude,
 	                PL.Longitude,
-	                CASE	WHEN ({lat} is null) THEN 0
-			                WHEN ({lon} is null) THEN 0
+	                CASE	WHEN ({lat} is null) THEN null
+			                WHEN ({lon} is null) THEN null
 	                ELSE
 	                  geography::Point(isnull(PL.Latitude,0), isnull(PL.Longitude,0), 4326)
 				                .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END

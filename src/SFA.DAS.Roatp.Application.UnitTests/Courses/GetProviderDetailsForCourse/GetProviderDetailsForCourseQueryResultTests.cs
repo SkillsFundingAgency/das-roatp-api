@@ -20,9 +20,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             Assert.That(model, Is.Not.Null);
             model.Should().BeEquivalentTo(providerCourseDetailsModel,c => c
                 .Excluding(s => s.LegalName)
-                .Excluding(s => s.StandardContactUrl));
+                .Excluding(s => s.StandardContactUrl)
+                .Excluding(s=>s.Distance));
             Assert.AreEqual(providerCourseDetailsModel.LegalName, model.Name);
             Assert.AreEqual(providerCourseDetailsModel.StandardContactUrl,model.ContactUrl);
+            Assert.AreEqual(providerCourseDetailsModel.Distance,model.ProviderHeadOfficeDistanceInMiles);
         }
 
         [Test]

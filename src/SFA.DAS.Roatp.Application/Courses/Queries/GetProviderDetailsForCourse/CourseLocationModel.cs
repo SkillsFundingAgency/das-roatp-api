@@ -10,7 +10,7 @@ public class CourseLocationModel
     public string RegionName { get; set; }
     public string SubRegionName { get; set; }
     public LocationAddress Address { get; set; }
-    public double Distance { get; set; }
+    public decimal? ProviderLocationDistanceInMiles { get; set; }
     public double? Latitude { get; set; }
     public double? Longitude { get; set; }
 
@@ -23,7 +23,7 @@ public class CourseLocationModel
             DayRelease = source.HasDayReleaseDeliveryOption ?? false,
             RegionName = source.RegionName,
             SubRegionName = source.SubregionName,
-            Distance = source.Distance,
+            ProviderLocationDistanceInMiles = (decimal?)source.Distance,
             Latitude = source.Latitude,
             Longitude = source.Longitude,
             Address = new LocationAddress
