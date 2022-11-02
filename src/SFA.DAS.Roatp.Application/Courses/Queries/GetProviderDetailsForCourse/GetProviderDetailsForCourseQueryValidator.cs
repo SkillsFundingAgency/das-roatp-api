@@ -38,8 +38,6 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
             RuleFor(p => p.Lat.HasValue && !p.Lon.HasValue)
                 .Equal(false)
                 .WithMessage(LatitudeAndNotLongitude);
-
-
         }
     }
 }

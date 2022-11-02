@@ -6,7 +6,7 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCourse;
 
 [TestFixture]
-public class LocationDetailTests
+public class CourseLocationModelTests
 {
     [Test, RecursiveMoqAutoData]
     public void Operator_PopulatesModelFromEntity(ProviderCourseLocationDetailsModel providerCourseLocationDetailsModel)
