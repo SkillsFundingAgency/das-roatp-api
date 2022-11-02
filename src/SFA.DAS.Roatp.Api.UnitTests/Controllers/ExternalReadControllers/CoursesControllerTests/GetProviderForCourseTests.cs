@@ -4,21 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProvidersCountForCourse;
 using SFA.DAS.Testing.AutoFixture;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.ApplicationInsights.Common;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.SignalR.Protocol;
-using SFA.DAS.Roatp.Api.Controllers;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests
 {

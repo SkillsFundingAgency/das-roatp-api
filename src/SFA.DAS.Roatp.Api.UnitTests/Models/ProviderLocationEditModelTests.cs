@@ -3,7 +3,6 @@ using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDetails;
-using static System.Net.WebRequestMethods;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Models
 {
