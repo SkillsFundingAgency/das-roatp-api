@@ -19,21 +19,21 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
 
     public async Task<GetProviderDetailsForCourseQueryResult> Handle(GetProviderDetailsForCourseQuery request, CancellationToken cancellationToken)
     {
-        var providerDetails = await _providerDetailsReadRepository.GetProviderDetailsWithDistance(request.Ukprn, request.LarsCode,request.Lat,
-            request.Lon);
 
-        if (providerDetails == null)
-            return null;
+        var providerDetails = await _providerDetailsReadRepository.GetProviderDetailsWithDistance(request.Ukprn, request.LarsCode,request.Latitude,
+            request.Longitude);
+        var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByUkprn(request.Ukprn);
+        var providerLocations = await _providerDetailsReadRepository.GetProviderlocationDetailsWithDistance(
+            request.Ukprn, request.LarsCode, request.Latitude,
+            request.Longitude);
 
         var result = (GetProviderDetailsForCourseQueryResult)providerDetails;
 
-        var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByUkprn(request.Ukprn);
-        result.AchievementRates = nationalAchievementRates.Select(nar => (NationalAchievementRateModel)nar).ToList(); 
+        if (nationalAchievementRates!=null)
+            result.AchievementRates = nationalAchievementRates.Select(nar => (NationalAchievementRateModel)nar).ToList();
+        if(providerLocations!=null)
+            result.LocationDetails = providerLocations.Select(pl => (CourseLocationModel)pl).ToList();
         
-        var providerLocations = await _providerDetailsReadRepository.GetProviderlocationDetailsWithDistance(
-            request.Ukprn, request.LarsCode, request.Lat,
-            request.Lon);
-        result.LocationDetails = providerLocations.Select(pl => (CourseLocationModel)pl).ToList();
         return result;
     }
 }
