@@ -67,7 +67,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             var result = await sut.Handle(query, cancellationToken);
 
             Assert.That(result, Is.Not.Null);
-            Assert.AreEqual(result.AchievementRates.Count, 0);
+            Assert.AreEqual(0,result.AchievementRates.Count);
             Assert.AreEqual(result.LocationDetails.Count, providerLocationsWithDistance.Count);
 
             result.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
@@ -100,7 +100,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
 
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual(result.AchievementRates.Count, nationalAchievementRates.Count);
-            Assert.AreEqual(result.LocationDetails.Count, 0);
+            Assert.AreEqual(0,result.LocationDetails.Count);
 
             result.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
                 .Excluding(s => s.LegalName)
