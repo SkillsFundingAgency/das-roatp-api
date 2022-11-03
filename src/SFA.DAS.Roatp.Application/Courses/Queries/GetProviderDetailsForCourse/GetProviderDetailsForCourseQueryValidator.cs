@@ -16,26 +16,26 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
         {
             Include(new UkprnValidator(providersReadRepository));
             Include(new LarsCodeValidator(providersReadRepository, providerCoursesReadRepository));
-            RuleFor(p => p.Lat.HasValue)
+            RuleFor(p => p.Latitude.HasValue)
                 .Equal(false)
-                .When(p => p.Lat > (double)NationalLatLong.MaximumLatitude)
+                .When(p => p.Latitude > (double)NationalLatLong.MaximumLatitude)
                 .WithMessage(LatitudeOutsideUk);
-            RuleFor(p => p.Lat.HasValue)
+            RuleFor(p => p.Latitude.HasValue)
                 .Equal(false)
-                .When(p => p.Lat < (double)NationalLatLong.MinimumLatitude)
+                .When(p => p.Latitude < (double)NationalLatLong.MinimumLatitude)
                 .WithMessage(LatitudeOutsideUk);
-            RuleFor(p => p.Lon.HasValue)
+            RuleFor(p => p.Longitude.HasValue)
                 .Equal(false)
-                .When(p => p.Lon > (double)NationalLatLong.MaximumLongitude)
+                .When(p => p.Longitude > (double)NationalLatLong.MaximumLongitude)
                 .WithMessage(LongitudeOutsideUk);
-            RuleFor(p => p.Lon.HasValue)
+            RuleFor(p => p.Longitude.HasValue)
                 .Equal(false)
-                .When(p => p.Lon < (double)NationalLatLong.MinimumLongitude)
+                .When(p => p.Longitude < (double)NationalLatLong.MinimumLongitude)
                 .WithMessage(LongitudeOutsideUk);
-            RuleFor(p => p.Lon.HasValue && !p.Lat.HasValue)
+            RuleFor(p => p.Longitude.HasValue && !p.Latitude.HasValue)
                 .Equal(false)
                 .WithMessage(NotLatitudeAndLongitude);
-            RuleFor(p => p.Lat.HasValue && !p.Lon.HasValue)
+            RuleFor(p => p.Latitude.HasValue && !p.Longitude.HasValue)
                 .Equal(false)
                 .WithMessage(LatitudeAndNotLongitude);
         }
