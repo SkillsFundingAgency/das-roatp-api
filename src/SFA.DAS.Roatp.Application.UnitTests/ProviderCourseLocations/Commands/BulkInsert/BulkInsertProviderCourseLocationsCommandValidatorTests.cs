@@ -4,6 +4,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

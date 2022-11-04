@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
-using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 using System.Linq;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNationalLocation
