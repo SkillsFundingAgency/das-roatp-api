@@ -7,4 +7,5 @@ namespace SFA.DAS.Roatp.Domain.Interfaces;
 public interface INationalAchievementRatesReadRepository
 {
     Task<List<NationalAchievementRate>> GetByUkprn(int ukprn);
+    Task<List<NationalAchievementRate>> GetAll();
 }
