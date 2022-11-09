@@ -25,4 +25,9 @@ internal class NationalAchievementRatesReadRepository : INationalAchievementRate
 
         return results;
     }
+
+    public async Task<List<NationalAchievementRate>> GetAll()
+    {
+        return await _roatpDataContext.NationalAchievementRates.ToListAsync();
+    }
 }

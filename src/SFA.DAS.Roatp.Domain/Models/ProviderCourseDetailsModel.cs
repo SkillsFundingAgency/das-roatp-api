@@ -1,13 +1,22 @@
-﻿namespace SFA.DAS.Roatp.Domain.Models
-{
+﻿using System.Security.Cryptography.X509Certificates;
 
-    public class ProviderCourseDetailsModel
+namespace SFA.DAS.Roatp.Domain.Models
+{
+    public class ProviderCourseDetailsModel : ProviderCourseDetailsModelBase
+    {
+        public string MarketingInfo { get; set; }
+    }
+    public class ProviderCourseDetailsSummaryModel: ProviderCourseDetailsModelBase
+    {
+        public int ProviderId { get; set; }
+    }
+    public class ProviderCourseDetailsModelBase
     {
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }
         public string LegalName { get; set; }
         public string TradingName { get; set; }
-        public string MarketingInfo { get; set; }
+      
         public string StandardInfoUrl { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }

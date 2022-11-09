@@ -8,5 +8,10 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     {
         Task<ProviderCourseDetailsModel> GetProviderDetailsWithDistance(int ukprn, int larsCode, double? lat, double? lon);
         Task<List<ProviderCourseLocationDetailsModel>> GetProviderlocationDetailsWithDistance(int ukprn, int larsCode, double? lat, double? lon);
+
+        Task<List<ProviderCourseDetailsSummaryModel>> GetAllProviderDetailsWithDistance(int larsCode, double? lat, double? lon);
+        Task<List<ProviderCourseLocationDetailsModel>> GetAllProviderlocationDetailsWithDistance(int larsCode, double? lat, double? lon);
+
+
     }
 }
