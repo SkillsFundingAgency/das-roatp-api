@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -38,10 +39,31 @@ namespace SFA.DAS.Roatp.Data.Repositories
             return providerLocations;
         }
 
+        public async Task<List<ProviderCourseDetailsSummaryModel>> GetAllProviderDetailsWithDistance(int larsCode, double? lat, double? lon)
+        {
+            _logger.LogInformation("Gathering all ProviderDetails with distance for larscode {larscode}",  larsCode);
+            var providers = await _roatpDataContext.ProviderSummaryDetailsWithDistance
+                .FromSqlInterpolated(GetAllProvidersDetailsWithDistanceSql( larsCode, lat, lon)).ToListAsync();
+            return providers;
+        }
+
+        public async Task<List<ProviderCourseLocationDetailsModel>> GetAllProviderlocationDetailsWithDistance(int larsCode,
+            double? lat, double? lon)
+        {
+            _logger.LogInformation(
+                "Gathering all ProviderLocationDetails with distance for larscode {larscode}", larsCode);
+
+            var providerLocations = await _roatpDataContext.ProviderLocationDetailsWithDistance
+                .FromSqlInterpolated(GetAllProviderLocationDetailsWithDistanceSql( larsCode, lat, lon))
+                .ToListAsync();
+            return providerLocations;
+
+        }
+
         private static FormattableString GetProvidersDetailsWithDistanceSql(int ukprn, int larsCode, double? lat, double? lon )
         {
             return $@"
-                   select p.ukprn,
+                   select   p.ukprn,
                             pc.LarsCode,
                             p.LegalName,
                             p.TradingName,
@@ -72,10 +94,44 @@ namespace SFA.DAS.Roatp.Data.Repositories
 		                    AND pc.LarsCode={larsCode}";
         }
 
+        private static FormattableString GetAllProvidersDetailsWithDistanceSql(int larsCode, double? lat, double? lon)
+        {
+            return $@"
+                   select p.Id as ProviderId,
+                            p.ukprn,
+                            pc.LarsCode,
+                            p.LegalName,
+                            p.TradingName,
+		                    pc.StandardInfoUrl,
+		                    pc.ContactUsEmail as Email,
+		                    pc.ContactUsPhoneNumber as Phone,
+		                    pc.ContactUsPageUrl as StandardContactUrl,
+                            p.Website as ProviderWebsite,
+                            pa.AddressLine1 as Address1,
+                            pa.AddressLine2 as Address2,
+                            pa.AddressLine3 as Address3,
+                            pa.AddressLine4 as Address4,
+                            pa.Town as Town,
+                            PA.Postcode as Postcode,
+                            PA.Latitude,
+                            PA.Longitude,
+                            CASE  WHEN ({lat} is null) THEN null
+                                WHEN ({lon} is null) THEN null
+                                ELSE
+                                    geography::Point(isnull(pa.Latitude,0), isnull(pa.Longitude,0), 4326)
+                                            .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
+			                                as Distance
+                            FROM provider P
+		                    INNER JOIN ProviderCourse pc on p.Id = pc.ProviderId
+							LEFT OUTER JOIN [dbo].[ProviderAddress] PA on P.Id = PA.ProviderId
+		                    WHERE pc.LarsCode={larsCode}";
+        }
+
         private static FormattableString GetProviderLocationDetailsWithDistanceSql(int ukprn, int larsCode, double? lat, double? lon)
         {
             return $@"
-                    SELECT P.Ukprn,
+                    select p.Id as ProviderId, 
+                    P.Ukprn,
                     PC.LarsCode,
 	                LocationName,
 	                PL.Email,
@@ -106,6 +162,42 @@ namespace SFA.DAS.Roatp.Data.Repositories
                       LEFT OUTER JOIN Region R on R.Id =PL.RegionId
                       WHERE P.Ukprn={ukprn}
                       AND LarsCode={larsCode}";
+        }
+
+        private static FormattableString GetAllProviderLocationDetailsWithDistanceSql(int larsCode, double? lat, double? lon)
+        {
+            return $@"
+                    SELECT P.Ukprn,
+			        P.Id as providerId,
+                    PC.LarsCode,
+	                LocationName,
+	                PL.Email,
+	                PL.Website,
+	                PL.Phone,
+	                LocationType,
+	                PCL.HasDayReleaseDeliveryOption,
+	                PCL.HasBlockReleaseDeliveryOption,
+	                AddressLine1,
+	                AddressLine2,
+	                Town,
+	                Postcode,
+	                R.RegionName,
+	                R.SubregionName,
+	                PL.Latitude,
+	                PL.Longitude,
+	                CASE	WHEN ({lat} is null) THEN null
+			                WHEN ({lon} is null) THEN null
+	                ELSE
+	                    geography::Point(isnull(PL.Latitude,0), isnull(PL.Longitude,0), 4326)
+				                .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
+				                as Distance
+                        FROM Provider P
+                        INNER JOIN ProviderCourse PC
+                        ON p.Id = PC.ProviderID
+                        INNER JOIN ProviderCourseLocation PCL on PC.Id = PCL.ProviderCourseId
+                        INNER JOIN ProviderLocation PL On PCL.ProviderLocationId = PL.Id
+                        LEFT OUTER JOIN Region R on R.Id =PL.RegionId
+                        WHERE  LarsCode={larsCode}";
         }
     }
 }

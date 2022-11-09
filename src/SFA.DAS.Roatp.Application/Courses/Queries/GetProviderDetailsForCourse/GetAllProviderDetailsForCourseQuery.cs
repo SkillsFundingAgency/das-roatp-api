@@ -3,17 +3,17 @@ using SFA.DAS.Roatp.Application.Common;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 
-public class GetProviderDetailsForCourseQuery : IRequest<GetProviderDetailsForCourseQueryResult>, IUkprn, ILarsCode, ILatLon
+public class GetAllProviderDetailsForCourseQuery : IRequest<GetAllProviderDetailsForCourseQueryResult>
 {
     public int LarsCode { get; }
-    public int Ukprn { get; }
     public double? Latitude { get; }
     public double? Longitude { get; }
-    public GetProviderDetailsForCourseQuery(int larsCode, int ukprn,  double? latitude, double? longitude)
+    public short? QuerySortOrder { get; }
+    public GetAllProviderDetailsForCourseQuery(int larsCode, double? latitude, double? longitude, short querySortOrder)
     {
         LarsCode = larsCode;
-        Ukprn = ukprn;
         Latitude = latitude;
         Longitude = longitude;
+        QuerySortOrder = querySortOrder;
     }
 }
