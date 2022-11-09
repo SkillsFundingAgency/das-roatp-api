@@ -21,12 +21,13 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
         public string Address4 { get; set; }
         public string Town { get; set; }
         public string Postcode { get; set; }
-        
-        public string StandardInfoUrl { get; set; }   
+
+        public string StandardInfoUrl { get; set; }
         public string MarketingInfo { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public decimal? ProviderHeadOfficeDistanceInMiles { get; set; }
+
         public string DeliveryModes
         {
             get
@@ -45,12 +46,14 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
                 return string.Join("|", deliveryModes);
             }
         }
+
         public List<NationalAchievementRateModel> AchievementRates { get; set; } =
             new List<NationalAchievementRateModel>();
 
         public List<CourseLocationModel> LocationDetails { get; set; } = new List<CourseLocationModel>();
 
-        public static implicit operator GetProviderDetailsForCourseQueryResult(ProviderCourseDetailsModel providerCourseDetails)
+        public static implicit operator GetProviderDetailsForCourseQueryResult(
+            ProviderCourseDetailsModel providerCourseDetails)
         {
             if (providerCourseDetails == null)
                 return null;

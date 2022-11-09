@@ -53,5 +53,16 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
             var response = await _mediator.Send(new GetProviderDetailsForCourseQuery(larsCode, ukprn,lat,lon));
             return Ok(response);
         }
+
+        [HttpGet]
+        [Route("{larsCode}/providers")]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(GetAllProviderDetailsForCourseQueryResult), StatusCodes.Status200OK)]
+        public async Task<ActionResult<GetAllProviderDetailsForCourseQueryResult>> GetProviderForCourse(int larsCode, short querySortOrder, double? lat = null, double? lon = null)
+        {
+            _logger.LogInformation("Received request to get list of provider details for LarsCode: {larscode},  Latitude: {lat}, Longitude: {lon}, QuerySortOrder {querySortOrder}", larsCode, lat, lon, querySortOrder);
+            var response = await _mediator.Send(new GetAllProviderDetailsForCourseQuery(larsCode, lat, lon,querySortOrder));
+            return Ok(response);
+        }
     }
 }
