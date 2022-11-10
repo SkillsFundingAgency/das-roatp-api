@@ -191,13 +191,13 @@ namespace SFA.DAS.Roatp.Data.Repositories
 	                    geography::Point(isnull(PL.Latitude,0), isnull(PL.Longitude,0), 4326)
 				                .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
 				                as Distance
-                        FROM Provider P
-                        INNER JOIN ProviderCourse PC
-                        ON p.Id = PC.ProviderID
-                        INNER JOIN ProviderCourseLocation PCL on PC.Id = PCL.ProviderCourseId
-                        INNER JOIN ProviderLocation PL On PCL.ProviderLocationId = PL.Id
-                        LEFT OUTER JOIN Region R on R.Id =PL.RegionId
-                        WHERE  LarsCode={larsCode}";
+                FROM Provider P
+                INNER JOIN ProviderCourse PC
+                ON p.Id = PC.ProviderID
+                INNER JOIN ProviderCourseLocation PCL on PC.Id = PCL.ProviderCourseId
+                INNER JOIN ProviderLocation PL On PCL.ProviderLocationId = PL.Id
+                LEFT OUTER JOIN Region R on R.Id =PL.RegionId
+                WHERE  LarsCode={larsCode}";
         }
     }
 }
