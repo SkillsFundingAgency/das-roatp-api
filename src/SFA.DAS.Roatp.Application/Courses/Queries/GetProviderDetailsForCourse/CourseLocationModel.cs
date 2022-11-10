@@ -7,6 +7,7 @@ public class CourseLocationModel
     public LocationType LocationType { get; set; }
     public bool BlockRelease { get; set; }
     public bool DayRelease { get; set; }
+    public string LocationName { get; set; }
     public string RegionName { get; set; }
     public string SubRegionName { get; set; }
     public LocationAddress Address { get; set; }
@@ -26,6 +27,7 @@ public class CourseLocationModel
             ProviderLocationDistanceInMiles = (decimal?)source.Distance,
             Latitude = source.Latitude,
             Longitude = source.Longitude,
+            LocationName = source.LocationName,
             Address = new LocationAddress
             {
                 Address1 = source.AddressLine1,

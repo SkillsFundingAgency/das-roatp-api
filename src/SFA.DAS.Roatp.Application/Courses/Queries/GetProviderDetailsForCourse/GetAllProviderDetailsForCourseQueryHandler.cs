@@ -28,10 +28,6 @@ public class GetAllProviderDetailsForCourseQueryHandler : IRequestHandler<GetAll
 
     public async Task<GetAllProviderDetailsForCourseQueryResult> Handle(GetAllProviderDetailsForCourseQuery request, CancellationToken cancellationToken)
     {
-
-        //MFCMFC You need to rewrite this to look like the SQL queries in CourseDelivery
-        // SEE await _providerService.GetProvidersByStandardId(
-        // and await _providerService.GetProvidersByStandardAndLocation
         var providerDetails = await _providerDetailsReadRepository.GetAllProviderDetailsWithDistance( request.LarsCode, request.Latitude,
             request.Longitude);
 
@@ -70,7 +66,7 @@ public class GetAllProviderDetailsForCourseQueryHandler : IRequestHandler<GetAll
             var locations = providerLocations.Where(p => p.ProviderId == provider.ProviderId).ToList();
             _logger.LogInformation("Providers {ukprn} has {count} locations", provider.Ukprn, locations.Count);
             
-            foreach (var location in locations)
+            foreach (var location in locations.OrderBy(x=>x.Distance))
             {
                 result.LocationDetails.Add(location);
             }

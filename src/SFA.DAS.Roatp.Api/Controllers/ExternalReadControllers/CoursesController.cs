@@ -45,16 +45,6 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         }
 
         [HttpGet]
-        [Route("{larsCode}/providers/{ukprn}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(GetProviderDetailsForCourseQueryResult), StatusCodes.Status200OK)]
-        public async Task<ActionResult<GetProviderDetailsForCourseQueryResult>> GetProviderForCourse(int larsCode, int ukprn, double? lat = null, double? lon = null)
-        {
-            var response = await _mediator.Send(new GetProviderDetailsForCourseQuery(larsCode, ukprn,lat,lon));
-            return Ok(response);
-        }
-
-        [HttpGet]
         [Route("{larsCode}/providers")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(GetAllProviderDetailsForCourseQueryResult), StatusCodes.Status200OK)]
