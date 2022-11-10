@@ -47,6 +47,16 @@ public class ProviderDetails
         }
     }
 
+    public bool IsNational
+    {
+        get
+        {
+            if (LocationDetails == null || !LocationDetails.Any())
+                return false;
+
+            return LocationDetails.Any(x => x.LocationType == LocationType.National);
+        }
+    }
     public decimal? ShortestLocationDistanceInMiles {
         get
         {
