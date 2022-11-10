@@ -1,6 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -43,16 +47,47 @@ namespace SFA.DAS.Roatp.Data.Repositories
             return providerCourse;
         }
 
-        public async Task Delete(int ukprn, int larscode)
+        public async Task Delete(int ukprn, int larscode, string userId, string correlationId)
         {
-            var providerCourse = await _roatpDataContext.ProviderCourses
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
+            try
+            {
+                var providerCourse = await _roatpDataContext.ProviderCourses
                 .Where(l => l.LarsCode == larscode && l.Provider.Ukprn == ukprn)
                 .Include(l => l.Locations).Include(l => l.Versions)
                 .SingleAsync();
 
-            _roatpDataContext.Remove(providerCourse);
+                var audit = new Audit
+                {
+                    //CorrelationId = Guid.Parse(correlationId),
+                    CorrelationId = Guid.Parse(Activity.Current?.RootId),
+                    EntityType = typeof(ProviderCourse).Name,
+                    UserAction = UserActionTypes.DeleteProviderCourse.ToString(),
+                    UserId = userId,
+                    UserDisplayName = userId, //??
+                    EntityId = providerCourse.Id, 
+                    InitialState = JsonConvert.SerializeObject(providerCourse,
+                            new JsonSerializerSettings
+                            {
+                                PreserveReferencesHandling = PreserveReferencesHandling.Objects
+                            }),
+                    AuditDate = DateTime.Now
+                };
 
-            await _roatpDataContext.SaveChangesAsync();
+                _roatpDataContext.Audits.Add(audit);
+
+                _roatpDataContext.Remove(providerCourse);
+
+                await _roatpDataContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                throw;
+            }
         }
     }
 }

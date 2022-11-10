@@ -12,12 +12,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Roatp.Api.HealthCheck;
+using SFA.DAS.Roatp.Api.StartupExtensions;
 using SFA.DAS.Roatp.Application.Extensions;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
@@ -93,8 +95,8 @@ namespace SFA.DAS.Roatp.Api
                 .AddNewtonsoftJson(options =>
                 {
                     options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
-
             services.AddApplicationInsightsTelemetry();
 
             services.AddSwaggerGen(options =>
@@ -113,6 +115,8 @@ namespace SFA.DAS.Roatp.Api
             }
 
             app.UseAuthentication();
+
+            app.UseCorrelationIdInMiddleware();
 
             app.UseSwagger();
             app.UseSwaggerUI(options =>

@@ -13,6 +13,7 @@ namespace SFA.DAS.Roatp.Data
         public DbSet<ProviderLocation> ProviderLocations { get; set; }
         public DbSet<ProviderCourseLocation> ProviderCoursesLocations { get; set; }
         public DbSet<ImportAudit> ImportAudits { get; set; }
+        public DbSet<Audit> Audits { get; set; }
         public DbSet<ProviderCourseVersion> ProviderCoursesVersions { get; set; }
         public DbSet<ProviderRegistrationDetail> ProviderRegistrationDetails { get; set; }
         public DbSet<Region> Regions { get; set; }

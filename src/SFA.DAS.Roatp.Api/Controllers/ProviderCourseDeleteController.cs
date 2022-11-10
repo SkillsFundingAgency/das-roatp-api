@@ -1,8 +1,10 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Api.StartupExtensions;
 using SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse;
 
@@ -26,8 +28,10 @@ namespace SFA.DAS.Roatp.Api.Controllers
         public async Task<ActionResult> DeleteProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, [FromQuery] string userId)
         {
             _logger.LogInformation("Inner API: Request received to delete provider course ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, larsCode, userId);
-            
-            var command = new DeleteProviderCourseCommand(ukprn, larsCode,  userId);
+
+            var correlationId = HttpContext.Request.Headers[CorrelationIdInMiddleware.CorrelationIdHeaderKey].FirstOrDefault();
+
+            var command = new DeleteProviderCourseCommand(ukprn, larsCode,  userId, correlationId);
             await _mediator.Send(command);
             _logger.LogInformation("Deleted provider course for Ukprn:{ukprn} LarsCode:{larscode}", ukprn, larsCode);
 

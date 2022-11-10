@@ -54,6 +54,7 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IProviderCourseLocationsWriteRepository, ProviderCourseLocationsWriteRepository>();
             services.AddTransient<IImportAuditWriteRepository, ImportAuditWriteRepository>();
             services.AddTransient<IImportAuditReadRepository, ImportAuditReadRepository>();
+            services.AddTransient<IAuditWriteRepository, AuditWriteRepository>();
             services.AddTransient<INationalAchievementRatesImportWriteRepository, NationalAchievementRatesImportWriteRepository>();
             services.AddTransient<INationalAchievementRatesImportReadRepository, NationalAchievementRatesImportReadRepository>();
             services.AddTransient<INationalAchievementRatesWriteRepository, NationalAchievementRatesWriteRepository>();
