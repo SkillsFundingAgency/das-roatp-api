@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using SFA.DAS.Roatp.Domain.Models;
 using static SFA.DAS.Roatp.Domain.Constants;
 
 namespace SFA.DAS.Roatp.Domain.Entities

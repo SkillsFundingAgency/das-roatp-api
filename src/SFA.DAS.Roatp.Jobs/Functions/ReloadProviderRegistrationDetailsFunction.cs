@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         }
 
         [FunctionName(nameof(ReloadProviderRegistrationDetailsFunction))]
-        public async Task Run([TimerTrigger("%ReloadProviderRegistrationDetailsSchedule%", RunOnStartup =true)] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("%ReloadProviderRegistrationDetailsSchedule%")] TimerInfo myTimer, ILogger log)
         {
             log.LogInformation("ReloadProviderRegistrationDetailsFunction function started");
             await _service.ReloadProviderRegistrationDetails();

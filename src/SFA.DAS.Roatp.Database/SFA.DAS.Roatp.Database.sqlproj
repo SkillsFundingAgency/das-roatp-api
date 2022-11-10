@@ -57,7 +57,6 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="PostDeploymentScripts" />
-    <Folder Include="Views" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
@@ -74,7 +73,6 @@
     <Build Include="Tables\ProvderRegistrationDetail.sql" />
     <Build Include="Tables\ImportAudit.sql" />
     <Build Include="Tables\ProviderAddress.sql" />
-    <Build Include="Views\ProviderDetailsView.sql" />
     <Build Include="Tables\NationalAchievementRate.sql" />
     <Build Include="Tables\NationalAchievementRateImport.sql" />
     <Build Include="Tables\NationalAchievementRateOverall.sql" />

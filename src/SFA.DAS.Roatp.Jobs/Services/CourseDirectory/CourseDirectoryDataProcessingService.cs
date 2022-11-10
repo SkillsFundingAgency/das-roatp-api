@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Roatp.Jobs.ApiModels.CourseDirectory;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 using SFA.DAS.Roatp.Jobs.Services.Metrics;
@@ -152,7 +153,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 {
                     if (provider.Courses.All(x => x.LarsCode != larsCode))
                     {
-                        provider.Courses.Add(new ProviderCourse { LarsCode = larsCode, HasPortableFlexiJobOption = true });
+                        provider.Courses.Add(new Domain.Entities.ProviderCourse { LarsCode = larsCode, HasPortableFlexiJobOption = true });
                         _logger.LogInformation("Adding pilot courses for UKPRN {ukprn} LarsCode {LarsCode}", provider.Ukprn, larsCode);
                     }
                     else
@@ -199,7 +200,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 if(!CheckStandardIsSuitable(standard, cdProviderCourse.StandardCode, cdProvider.Ukprn))
                     break;
 
-                var newProviderCourse = new ProviderCourse
+                var newProviderCourse = new Domain.Entities.ProviderCourse
                 {
                     LarsCode = cdProviderCourse.StandardCode,
                     StandardInfoUrl = cdProviderCourse.StandardInfoUrl,

@@ -6,6 +6,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
