@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -64,10 +65,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
 
         [TestCase(56, 0, true, "")]
         [TestCase(null, null, true, "")]
-        [TestCase(58, 0, false, GetProviderDetailsForCourseQueryValidator.LatitudeOutsideUk)]
-        [TestCase(56, 1.75, false,GetProviderDetailsForCourseQueryValidator.LongitudeOutsideUk)]
-        [TestCase(56, null, false, GetProviderDetailsForCourseQueryValidator.LatitudeAndNotLongitude)]
-        [TestCase(null, 0, false, GetProviderDetailsForCourseQueryValidator.NotLatitudeAndLongitude)]
+        [TestCase(58, 0, false, LatLongValidator.LatitudeOutsideUk)]
+        [TestCase(56, 1.75, false, LatLongValidator.LongitudeOutsideUk)]
+        [TestCase(56, null, false, LatLongValidator.LatitudeAndNotLongitude)]
+        [TestCase(null, 0, false, LatLongValidator.NotLatitudeAndLongitude)]
         public async Task Validate_LatitudeLongitude(double? lat, double? lon, bool isValid, string ErrorMessage)
         {
             var larsCode = 1;
