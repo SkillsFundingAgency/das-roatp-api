@@ -14,7 +14,6 @@ using SFA.DAS.Roatp.Jobs.Services;
 using SFA.DAS.Roatp.Jobs.Services.CourseDirectory;
 using System;
 using System.Diagnostics.CodeAnalysis;
-using SFA.DAS.Roatp.Domain.Interfaces;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 namespace SFA.DAS.Roatp.Jobs

@@ -82,7 +82,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
 	                AddressLine2,
 	                Town,
 	                Postcode,
-					County,
+	                County,
 	                CASE	WHEN ({lat} is null) THEN null
 			                WHEN ({lon} is null) THEN null
 	                ELSE

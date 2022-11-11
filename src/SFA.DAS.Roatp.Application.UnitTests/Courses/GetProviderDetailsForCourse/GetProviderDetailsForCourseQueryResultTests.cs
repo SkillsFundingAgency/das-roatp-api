@@ -34,36 +34,52 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
         
              Assert.IsNull(model);
          }
-        
-         //MFCMFC - Not sure if we are removing DeliveryModes yes
-        // [TestCase(false, false, false, false, "")]
-        // [TestCase(true, false, false, false, "BlockRelease")]
-        // [TestCase(false, true, false, false, "DayRelease")]
-        // [TestCase(true, true, false, false, "BlockRelease|DayRelease")]
-        // [TestCase(false, false, true, false, "100PercentEmployer")]
-        // [TestCase(false, false, false, true, "100PercentEmployer")]
-        // [TestCase(false, false, true, true, "100PercentEmployer")]
-        // [TestCase(true, false, true, false, "BlockRelease|100PercentEmployer")]
-        // [TestCase(true, false, false, true, "BlockRelease|100PercentEmployer")]
-        // [TestCase(true, false, true, true, "BlockRelease|100PercentEmployer")]
-        // [TestCase(false, true, false, true, "DayRelease|100PercentEmployer")]
-        // [TestCase(false, true, true, false, "DayRelease|100PercentEmployer")]
-        // [TestCase(false, true, true, true, "DayRelease|100PercentEmployer")]
-        // [TestCase(true, true, true, true, "BlockRelease|DayRelease|100PercentEmployer")]
-        // public void DeliveryModes_Expected(bool blockRelease, bool dayRelease, bool regional, bool national, string expectedResult)
-        // {
-        //     var locationDetails = new List<CourseLocationModel>
-        //     {
-        //         new() {BlockRelease = blockRelease, DayRelease = dayRelease, 
-        //             LocationType = regional?LocationType.Regional:national?LocationType.National: LocationType.Provider}
-        //     };
-        //
-        //     var details = new GetProviderDetailsForCourseQueryResult
-        //     {
-        //         LocationDetails = locationDetails
-        //     };
-        //
-        //     Assert.AreEqual(expectedResult, details.DeliveryModes);
-        // }
+         
+         [TestCase(false, false, false, false, "")]
+         [TestCase(true, false, false, false, "BlockRelease")]
+         [TestCase(false, true, false, false, "DayRelease")]
+         [TestCase(true, true, false, false, "BlockRelease|DayRelease")]
+         [TestCase(false, false, true, false, "100PercentEmployer")]
+         [TestCase(false, false, false, true, "100PercentEmployer")]
+         [TestCase(false, false, true, true, "100PercentEmployer")]
+         [TestCase(true, false, true, false, "BlockRelease|100PercentEmployer")]
+         [TestCase(true, false, false, true, "BlockRelease|100PercentEmployer")]
+         [TestCase(true, false, true, true, "BlockRelease|100PercentEmployer")]
+         [TestCase(false, true, false, true, "DayRelease|100PercentEmployer")]
+         [TestCase(false, true, true, false, "DayRelease|100PercentEmployer")]
+         [TestCase(false, true, true, true, "DayRelease|100PercentEmployer")]
+         [TestCase(true, true, true, true, "BlockRelease|DayRelease|100PercentEmployer")]
+         public void DeliveryModes_Expected(bool blockRelease, bool dayRelease, bool regional, bool national, string expectedResult)
+         {
+             var deliveryModes = new List<DeliveryModel>();
+             if (blockRelease)
+             {
+                 deliveryModes.Add(new DeliveryModel {DeliveryModeType = DeliveryModeType.BlockRelease});
+             }
+
+             if (dayRelease)
+             {
+                 deliveryModes.Add(new DeliveryModel { DeliveryModeType = DeliveryModeType.DayRelease });
+             }
+
+             if (regional)
+             {
+                 deliveryModes.Add(new DeliveryModel { DeliveryModeType = DeliveryModeType.Workplace });
+             }
+
+             if (national)
+             {
+                 deliveryModes.Add(new DeliveryModel { DeliveryModeType = DeliveryModeType.Workplace });
+             }
+
+            var details = new GetProviderDetailsForCourseQueryResult
+            {
+                DeliveryModels = deliveryModes
+            };
+
+
+
+            Assert.AreEqual(expectedResult, details.DeliveryModes);
+         }
     }
 }

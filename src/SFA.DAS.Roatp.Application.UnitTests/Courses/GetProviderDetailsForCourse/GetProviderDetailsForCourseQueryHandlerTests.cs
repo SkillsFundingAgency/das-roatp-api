@@ -117,8 +117,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
 
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual(result.AchievementRates.Count, nationalAchievementRates.Count);
-            Assert.AreEqual(result.DeliveryModels.Count, 0);
-
+            Assert.AreEqual(0,result.DeliveryModels.Count);
 
             result.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
                 .Excluding(s => s.LegalName)
