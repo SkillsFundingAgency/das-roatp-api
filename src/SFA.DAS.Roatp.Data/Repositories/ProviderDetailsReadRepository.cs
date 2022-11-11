@@ -75,23 +75,14 @@ namespace SFA.DAS.Roatp.Data.Repositories
         private static FormattableString GetProviderLocationDetailsWithDistanceSql(int ukprn, int larsCode, double? lat, double? lon)
         {
             return $@"
-                    SELECT P.Ukprn,
-                    PC.LarsCode,
-	                LocationName,
-	                PL.Email,
-	                PL.Website,
-	                PL.Phone,
-	                LocationType,
+                    SELECT  LocationType,
 	                PCL.HasDayReleaseDeliveryOption,
 	                PCL.HasBlockReleaseDeliveryOption,
 	                AddressLine1,
 	                AddressLine2,
 	                Town,
 	                Postcode,
-	                R.RegionName,
-	                R.SubregionName,
-	                PL.Latitude,
-	                PL.Longitude,
+					County,
 	                CASE	WHEN ({lat} is null) THEN null
 			                WHEN ({lon} is null) THEN null
 	                ELSE
@@ -103,7 +94,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
                       ON p.Id = PC.ProviderID
                       INNER JOIN ProviderCourseLocation PCL on PC.Id = PCL.ProviderCourseId
                       INNER JOIN ProviderLocation PL On PCL.ProviderLocationId = PL.Id
-                      LEFT OUTER JOIN Region R on R.Id =PL.RegionId
                       WHERE P.Ukprn={ukprn}
                       AND LarsCode={larsCode}";
         }

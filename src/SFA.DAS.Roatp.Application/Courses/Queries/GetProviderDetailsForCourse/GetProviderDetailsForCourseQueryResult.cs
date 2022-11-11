@@ -27,28 +27,28 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public decimal? ProviderHeadOfficeDistanceInMiles { get; set; }
-        public string DeliveryModes
-        {
-            get
-            {
-                var deliveryModes = new List<string>();
-                if (LocationDetails.Any(x => x.BlockRelease))
-                    deliveryModes.Add("BlockRelease");
-
-                if (LocationDetails.Any(x => x.DayRelease))
-                    deliveryModes.Add("DayRelease");
-
-                if (LocationDetails.Any(x => x.LocationType == LocationType.Regional)
-                    || LocationDetails.Any(x => x.LocationType == LocationType.National))
-                    deliveryModes.Add("100PercentEmployer");
-
-                return string.Join("|", deliveryModes);
-            }
-        }
+        //MFCMFC - Not sure if we are removing this
+        // public string DeliveryModes
+        // {
+        //     get
+        //     {
+        //         var deliveryModes = new List<string>();
+        //         if (DeliveryModels.Any(x => x.DeliveryModeType==DeliveryModeType.BlockRelease))
+        //             deliveryModes.Add("BlockRelease");
+        //
+        //         if (DeliveryModels.Any(x => x.DeliveryModeType==DeliveryModeType.DayRelease))
+        //             deliveryModes.Add("DayRelease");
+        //
+        //         if (DeliveryModels.Any(x => x.DeliveryModeType == DeliveryModeType.Workplace || x.DeliveryModeType==DeliveryModeType.National))
+        //             deliveryModes.Add("100PercentEmployer");
+        //
+        //         return string.Join("|", deliveryModes);
+        //     }
+        // }
         public List<NationalAchievementRateModel> AchievementRates { get; set; } =
             new List<NationalAchievementRateModel>();
 
-        public List<CourseLocationModel> LocationDetails { get; set; } = new List<CourseLocationModel>();
+        public List<DeliveryModel> DeliveryModels { get; set; } = new List<DeliveryModel>();
 
         public static implicit operator GetProviderDetailsForCourseQueryResult(ProviderCourseDetailsModel providerCourseDetails)
         {

@@ -10,11 +10,13 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
 {
     private readonly IProviderDetailsReadRepository _providerDetailsReadRepository;
     private readonly INationalAchievementRatesReadRepository _nationalAchievementRatesReadRepository;
+    private readonly IProcessProviderCourseLocationsService _processProviderCourseLocationsService;
 
-    public GetProviderDetailsForCourseQueryHandler(IProviderDetailsReadRepository providerDetailsReadRepository, INationalAchievementRatesReadRepository nationalAchievementRatesReadRepository)
+    public GetProviderDetailsForCourseQueryHandler(IProviderDetailsReadRepository providerDetailsReadRepository, INationalAchievementRatesReadRepository nationalAchievementRatesReadRepository, IProcessProviderCourseLocationsService processProviderCourseLocationsService)
     {
         _providerDetailsReadRepository = providerDetailsReadRepository;
         _nationalAchievementRatesReadRepository = nationalAchievementRatesReadRepository;
+        _processProviderCourseLocationsService = processProviderCourseLocationsService;
     }
 
     public async Task<GetProviderDetailsForCourseQueryResult> Handle(GetProviderDetailsForCourseQuery request, CancellationToken cancellationToken)
@@ -29,11 +31,13 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
 
         var result = (GetProviderDetailsForCourseQueryResult)providerDetails;
 
+        var deliveryModels = _processProviderCourseLocationsService.ConvertProviderLocationsToDeliveryModels(providerLocations);
+
+        result.DeliveryModels = deliveryModels;
+
         if (nationalAchievementRates!=null)
             result.AchievementRates = nationalAchievementRates.Select(nar => (NationalAchievementRateModel)nar).ToList();
-        if(providerLocations!=null)
-            result.LocationDetails = providerLocations.Select(pl => (CourseLocationModel)pl).ToList();
-        
+
         return result;
     }
 }

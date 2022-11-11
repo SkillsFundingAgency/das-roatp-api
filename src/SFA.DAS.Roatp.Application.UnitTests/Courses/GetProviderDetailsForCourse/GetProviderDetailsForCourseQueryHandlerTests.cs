@@ -23,6 +23,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             List<NationalAchievementRate> nationalAchievementRates,
             [Frozen] Mock<IProviderDetailsReadRepository> providerDetailsReadRepositoryMock,
             [Frozen] Mock<INationalAchievementRatesReadRepository> nationalAchievementRatesReadRepositoryMock,
+            [Frozen] Mock<IProcessProviderCourseLocationsService> processProviderCourseLocationsService,
+            List<DeliveryModel> deliveryModels,
             GetProviderDetailsForCourseQuery query,
             GetProviderDetailsForCourseQueryHandler sut,
             CancellationToken cancellationToken)
@@ -31,12 +33,17 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             nationalAchievementRatesReadRepositoryMock.Setup(x => x.GetByUkprn(providerCourseDetailsModel.Ukprn))
                 .ReturnsAsync(nationalAchievementRates);
             providerDetailsReadRepositoryMock.Setup(r => r.GetProviderlocationDetailsWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerLocationsWithDistance);
+            processProviderCourseLocationsService
+                .Setup(x => x.ConvertProviderLocationsToDeliveryModels(providerLocationsWithDistance))
+                .Returns(deliveryModels);
 
             var result = await sut.Handle(query, cancellationToken);
 
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual(result.AchievementRates.Count,nationalAchievementRates.Count);
-            Assert.AreEqual(result.LocationDetails.Count,providerLocationsWithDistance.Count);
+
+            Assert.AreEqual(result.DeliveryModels.Count,deliveryModels.Count);
+
 
             result.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
                 .Excluding(s => s.LegalName)
@@ -55,6 +62,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             List<ProviderCourseLocationDetailsModel> providerLocationsWithDistance,
             [Frozen] Mock<IProviderDetailsReadRepository> providerDetailsReadRepositoryMock,
             [Frozen] Mock<INationalAchievementRatesReadRepository> nationalAchievementRatesReadRepositoryMock,
+            [Frozen] Mock<IProcessProviderCourseLocationsService> processProviderCourseLocationsService,
+            List<DeliveryModel> deliveryModels,
             GetProviderDetailsForCourseQuery query,
             GetProviderDetailsForCourseQueryHandler sut,
             CancellationToken cancellationToken)
@@ -63,12 +72,16 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             nationalAchievementRatesReadRepositoryMock.Setup(x => x.GetByUkprn(It.IsAny<int>()))
                 .ReturnsAsync((List<NationalAchievementRate>)null);
             providerDetailsReadRepositoryMock.Setup(r => r.GetProviderlocationDetailsWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerLocationsWithDistance);
+            processProviderCourseLocationsService
+                .Setup(x => x.ConvertProviderLocationsToDeliveryModels(providerLocationsWithDistance))
+                .Returns(deliveryModels);
 
             var result = await sut.Handle(query, cancellationToken);
 
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual(0,result.AchievementRates.Count);
-            Assert.AreEqual(result.LocationDetails.Count, providerLocationsWithDistance.Count);
+            Assert.AreEqual(result.DeliveryModels.Count, deliveryModels.Count);
+
 
             result.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
                 .Excluding(s => s.LegalName)
@@ -87,6 +100,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
           List<NationalAchievementRate> nationalAchievementRates,
           [Frozen] Mock<IProviderDetailsReadRepository> providerDetailsReadRepositoryMock,
           [Frozen] Mock<INationalAchievementRatesReadRepository> nationalAchievementRatesReadRepositoryMock,
+          [Frozen] Mock<IProcessProviderCourseLocationsService> processProviderCourseLocationsService,
           GetProviderDetailsForCourseQuery query,
           GetProviderDetailsForCourseQueryHandler sut,
           CancellationToken cancellationToken)
@@ -95,12 +109,16 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             nationalAchievementRatesReadRepositoryMock.Setup(x => x.GetByUkprn(providerCourseDetailsModel.Ukprn))
                 .ReturnsAsync(nationalAchievementRates);
             providerDetailsReadRepositoryMock.Setup(r => r.GetProviderlocationDetailsWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync((List<ProviderCourseLocationDetailsModel>)null);
+            processProviderCourseLocationsService
+                .Setup(x => x.ConvertProviderLocationsToDeliveryModels(It.IsAny<List<ProviderCourseLocationDetailsModel>>()))
+                .Returns(new List<DeliveryModel>());
 
             var result = await sut.Handle(query, cancellationToken);
 
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual(result.AchievementRates.Count, nationalAchievementRates.Count);
-            Assert.AreEqual(0,result.LocationDetails.Count);
+            Assert.AreEqual(result.DeliveryModels.Count, 0);
+
 
             result.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
                 .Excluding(s => s.LegalName)
