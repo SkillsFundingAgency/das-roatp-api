@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Domain.Entities
 {
+    [ExcludeFromCodeCoverage]
     public class Audit
     {
         public long Id { get; set; }
