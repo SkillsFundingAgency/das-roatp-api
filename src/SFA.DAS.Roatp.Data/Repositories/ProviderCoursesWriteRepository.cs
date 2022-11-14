@@ -1,10 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System;
-using System.Diagnostics;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -12,13 +11,14 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class ProviderCoursesWriteRepository : IProviderCoursesWriteRepository
+    internal class ProviderCoursesWriteRepository : AuditWriteRepository<ProviderCourse>, IProviderCoursesWriteRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
-
-        public ProviderCoursesWriteRepository(RoatpDataContext context)
+        private readonly ILogger<ProviderCoursesWriteRepository> _logger;
+        public ProviderCoursesWriteRepository(RoatpDataContext context, ILogger<ProviderCoursesWriteRepository> logger) : base(context)
         {
             _roatpDataContext = context;
+            _logger = logger;
         }
 
         public async Task<ProviderCourse> PatchProviderCourse(ProviderCourse patchedProviderCourseEntity)
@@ -47,7 +47,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             return providerCourse;
         }
 
-        public async Task Delete(int ukprn, int larscode, string userId, string correlationId)
+        public async Task Delete(int ukprn, int larscode, string userId, string userDisplayName, string userAction)
         {
             await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
             try
@@ -57,24 +57,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .Include(l => l.Locations).Include(l => l.Versions)
                 .SingleAsync();
 
-                var audit = new Audit
-                {
-                    //CorrelationId = Guid.Parse(correlationId),
-                    CorrelationId = Guid.Parse(Activity.Current?.RootId),
-                    EntityType = typeof(ProviderCourse).Name,
-                    UserAction = UserActionTypes.DeleteProviderCourse.ToString(),
-                    UserId = userId,
-                    UserDisplayName = userId, //??
-                    EntityId = providerCourse.Id, 
-                    InitialState = JsonConvert.SerializeObject(providerCourse,
-                            new JsonSerializerSettings
-                            {
-                                PreserveReferencesHandling = PreserveReferencesHandling.Objects
-                            }),
-                    AuditDate = DateTime.Now
-                };
-
-                _roatpDataContext.Audits.Add(audit);
+                AddAudit(providerCourse, null, providerCourse.Id.ToString(), userId, userDisplayName, userAction);
 
                 _roatpDataContext.Remove(providerCourse);
 
@@ -86,6 +69,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
+                _logger.LogError(ex, "ProviderCourse delete failed for ukprn {ukprn}, larscode {larscode} by userId {userId}", ukprn, larscode, userId);
                 throw;
             }
         }

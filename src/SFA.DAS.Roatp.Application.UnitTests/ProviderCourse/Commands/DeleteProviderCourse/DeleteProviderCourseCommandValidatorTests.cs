@@ -11,12 +11,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.DeleteProv
     public class DeleteProviderCourseCommandValidatorTests
     {
         private readonly string _userId = "userid";
+        private readonly string _userDisplayName = "userDisplayName";
         private readonly int _ukprn = 10012002;
         private readonly int _larsCode = 123;
         [Test]
         public async Task Validates_Ukprn_ReturnsError()
         {
-            var command = new DeleteProviderCourseCommand(10012002, _larsCode, _userId);
+            var command = new DeleteProviderCourseCommand(10012002, _larsCode, _userId, _userDisplayName);
 
             var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
 
@@ -28,7 +29,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.DeleteProv
         [Test]
         public async Task Validates_LarsCode_ReturnsError()
         {
-            var command = new DeleteProviderCourseCommand(_ukprn, _larsCode, _userId);
+            var command = new DeleteProviderCourseCommand(_ukprn, _larsCode, _userId, _userDisplayName);
             var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
@@ -41,12 +42,47 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.DeleteProv
         [TestCase(" ")]
         public async Task ValidateUserId_Empty_ReturnsError(string userId)
         {
-            var command = new DeleteProviderCourseCommand(_ukprn, _larsCode, userId);
+            var command = new DeleteProviderCourseCommand(_ukprn, _larsCode, userId, _userDisplayName);
             var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
 
             var result = await sut.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.UserId);
+        }
+
+        [TestCase("Test")]
+        public async Task ValidateUserId_NotEmpty_ReturnsNoErrors(string userId)
+        {
+            var command = new DeleteProviderCourseCommand(_ukprn, _larsCode, userId, _userDisplayName);
+            var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
+
+            var result = await sut.TestValidateAsync(command);
+
+            result.ShouldNotHaveValidationErrorFor(c => c.UserId);
+        }
+
+        [TestCase("")]
+        [TestCase(null)]
+        [TestCase(" ")]
+        public async Task ValidateUserDisplayName_Empty_ReturnsError(string userDisplayName)
+        {
+            var command = new DeleteProviderCourseCommand(_ukprn, _larsCode, _userId, userDisplayName);
+            var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
+
+            var result = await sut.TestValidateAsync(command);
+
+            result.ShouldHaveValidationErrorFor(c => c.UserDisplayName);
+        }
+
+        [TestCase("Test")]
+        public async Task ValidateUserDisplayName_NotEmpty_ReturnsNoErrors(string userDisplayName)
+        {
+            var command = new DeleteProviderCourseCommand(_ukprn, _larsCode, _userId, userDisplayName);
+            var sut = new DeleteProviderCourseCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
+
+            var result = await sut.TestValidateAsync(command);
+
+            result.ShouldNotHaveValidationErrorFor(c => c.UserDisplayName);
         }
     }
 }

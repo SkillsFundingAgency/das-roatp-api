@@ -19,7 +19,6 @@ using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Roatp.Api.HealthCheck;
-using SFA.DAS.Roatp.Api.StartupExtensions;
 using SFA.DAS.Roatp.Application.Extensions;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
@@ -115,8 +114,6 @@ namespace SFA.DAS.Roatp.Api
             }
 
             app.UseAuthentication();
-
-            app.UseCorrelationIdInMiddleware();
 
             app.UseSwagger();
             app.UseSwaggerUI(options =>

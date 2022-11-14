@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.DeleteProv
         {
             var result = await sut.Handle(command, cancellationToken);
 
-            providerCourseDeleteRepositoryyMock.Verify(d => d.Delete(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
+            providerCourseDeleteRepositoryyMock.Verify(d => d.Delete(It.IsAny<int>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
             Assert.IsTrue(result);
         }
     }

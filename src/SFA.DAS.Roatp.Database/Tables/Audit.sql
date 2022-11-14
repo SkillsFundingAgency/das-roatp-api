@@ -3,7 +3,7 @@
 	[Id] BIGINT NOT NULL IDENTITY(1,1),
 	[CorrelationId] [uniqueidentifier] NULL,
 	[EntityType] NVARCHAR(256) NOT NULL,
-	[EntityId] BIGINT NOT NULL,
+	[EntityId] NVARCHAR(256),
 	[UserId] NVARCHAR(256),
 	[UserDisplayName] NVARCHAR(256),
 	[UserAction] NVARCHAR(256),

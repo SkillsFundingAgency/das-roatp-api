@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public long Id { get; set; }
         public Guid CorrelationId { get; set; }
         public string EntityType { get; set; }
-        public long EntityId { get; set; }
+        public string EntityId { get; set; }
         public string UserId { get; set; }
         public string UserDisplayName { get; set; }
         public string UserAction { get; set; }

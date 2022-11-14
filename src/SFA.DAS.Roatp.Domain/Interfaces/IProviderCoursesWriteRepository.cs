@@ -9,6 +9,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
 
         Task<ProviderCourse> CreateProviderCourse(ProviderCourse providerCourse);
 
-        Task Delete(int ukprn, int larscode, string UserId, string CorrelationId);
+        Task Delete(int ukprn, int larscode, string userId, string userDisplayName, string userAction);
     }
 }

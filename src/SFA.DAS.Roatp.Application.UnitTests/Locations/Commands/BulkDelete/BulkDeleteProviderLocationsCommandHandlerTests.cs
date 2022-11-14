@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
 
             var result = await sut.Handle(command, cancellationToken);
 
-            providerLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.Is<IEnumerable<int>>(x=>x.Contains(regionalLocationId))), Times.Once);
+            providerLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.Is<IEnumerable<int>>(x => x.Contains(regionalLocationId)), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.EqualTo(1));
         }
@@ -67,7 +67,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
 
             var result = await sut.Handle(command, cancellationToken);
 
-            providerLocationsDeleteRepositoryMock.Verify(d => d.BulkDelete(It.IsAny<IEnumerable<int>>()), Times.Never);
+            providerLocationsDeleteRepositoryMock.Verify(d => d.BulkDelete(It.IsAny<IEnumerable<int>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()), Times.Never);
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.EqualTo(0));
         }

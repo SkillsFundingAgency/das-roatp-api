@@ -19,9 +19,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task ProviderLocationsBulkDelete_CallsHandler(
             [Frozen] Mock<IMediator> _mediatorMock,
             [Greedy] ProviderLocationsBulkDeleteController sut,
-            int ukprn,  string userId)
+            int ukprn,  string userId, string userDisplayName)
         {
-            await sut.BulkDeleteProviderLocations(ukprn, userId);
+            await sut.BulkDeleteProviderLocations(ukprn, userId, userDisplayName);
 
             _mediatorMock.Verify(m => m.Send(It.Is<BulkDeleteProviderLocationsCommand>(c => c.Ukprn == ukprn), It.IsAny<CancellationToken>()));
         }
@@ -30,11 +30,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task ProviderLocationsBulkDelete_ZeroResults_ReturnsNoContentResponse(
             [Frozen] Mock<IMediator> _mediatorMock,
             [Greedy] ProviderLocationsBulkDeleteController sut,
-            int ukprn,  string userId)
+            int ukprn,  string userId, string userDisplayName)
         {
             _mediatorMock.Setup(m => m.Send(It.Is<BulkDeleteProviderLocationsCommand>(c => c.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(0);
 
-            var result = await sut.BulkDeleteProviderLocations(ukprn,  userId);
+            var result = await sut.BulkDeleteProviderLocations(ukprn,  userId, userDisplayName);
 
             _mediatorMock.Verify(m => m.Send(It.Is<BulkDeleteProviderLocationsCommand>(c => c.Ukprn == ukprn ), It.IsAny<CancellationToken>()));
 
@@ -47,11 +47,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task ProviderLocationsBulkDelete_MoreThanZeroResults_ReturnsNoContentResponse(
             [Frozen] Mock<IMediator> _mediatorMock,
             [Greedy] ProviderLocationsBulkDeleteController sut,
-            int ukprn,  string userId)
+            int ukprn,  string userId, string userDisplayName)
         {
             _mediatorMock.Setup(m => m.Send(It.Is<BulkDeleteProviderLocationsCommand>(c => c.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(1);
 
-            var result = await sut.BulkDeleteProviderLocations(ukprn,  userId);
+            var result = await sut.BulkDeleteProviderLocations(ukprn,  userId, userDisplayName);
 
             _mediatorMock.Verify(m => m.Send(It.Is<BulkDeleteProviderLocationsCommand>(c => c.Ukprn == ukprn), It.IsAny<CancellationToken>()));
 
