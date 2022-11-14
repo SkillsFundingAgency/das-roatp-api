@@ -4,7 +4,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNationalLocation
 {
-    public class AddNationalLocationToProviderCourseLocationsCommand : IRequest<ProviderCourseLocation>, ILarsCode, IUkprn
+    public class AddNationalLocationToProviderCourseLocationsCommand : IRequest<ProviderCourseLocation>, ILarsCodeUkprn, IUkprn
     {
         public int Ukprn { get; }
         public int LarsCode { get; }

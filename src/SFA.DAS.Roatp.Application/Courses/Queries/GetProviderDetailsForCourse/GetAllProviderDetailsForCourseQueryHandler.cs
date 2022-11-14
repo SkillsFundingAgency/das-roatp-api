@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.FileSystemGlobbing.Internal.PatternContexts;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Application.Courses.Services;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
@@ -17,14 +18,17 @@ public class GetAllProviderDetailsForCourseQueryHandler : IRequestHandler<GetAll
     private readonly IProviderDetailsReadRepository _providerDetailsReadRepository;
     private readonly IStandardsReadRepository _standardsReadRepository;
     private readonly INationalAchievementRatesReadRepository _nationalAchievementRatesReadRepository;
+    private readonly IProcessProviderCourseLocationsService _processProviderCourseLocationsService;
     private readonly ILogger<GetAllProviderDetailsForCourseQueryHandler> _logger;
 
-    public GetAllProviderDetailsForCourseQueryHandler(IProviderDetailsReadRepository providerDetailsReadRepository, INationalAchievementRatesReadRepository nationalAchievementRatesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetAllProviderDetailsForCourseQueryHandler> logger)
+    public GetAllProviderDetailsForCourseQueryHandler(IProviderDetailsReadRepository providerDetailsReadRepository, INationalAchievementRatesReadRepository nationalAchievementRatesReadRepository, IStandardsReadRepository standardsReadRepository, IProcessProviderCourseLocationsService processProviderCourseLocationsService, ILogger<GetAllProviderDetailsForCourseQueryHandler> logger)
     {
         _providerDetailsReadRepository = providerDetailsReadRepository;
         _nationalAchievementRatesReadRepository = nationalAchievementRatesReadRepository;
         _standardsReadRepository = standardsReadRepository;
+        _processProviderCourseLocationsService = processProviderCourseLocationsService;
         _logger = logger;
+
     }
 
     public async Task<GetAllProviderDetailsForCourseQueryResult> Handle(GetAllProviderDetailsForCourseQuery request, CancellationToken cancellationToken)
@@ -39,7 +43,6 @@ public class GetAllProviderDetailsForCourseQueryHandler : IRequestHandler<GetAll
         var nationalAchievementRates = await _nationalAchievementRatesReadRepository
             .GetAll();
 
-        //provider not gathered.....
         var filteredNationalAchievementRates =
             nationalAchievementRates.Where(x => (x.ApprenticeshipLevel == ApprenticeshipLevel.AllLevels || x.ApprenticeshipLevel == level) 
                                                 && x.Age==Age.AllAges && x.SectorSubjectArea==standard.SectorSubjectArea 
@@ -60,22 +63,16 @@ public class GetAllProviderDetailsForCourseQueryHandler : IRequestHandler<GetAll
 
             _logger.LogInformation("Providers {ukprn} has rate {apprenticeshipLevel}",provider.Ukprn,rate?.ApprenticeshipLevel);
             
-            if (rate!=null) 
+            if (rate!=null)
                 result.AchievementRates.Add(rate);
 
-            var locations = providerLocations.Where(p => p.ProviderId == provider.ProviderId).ToList();
-            _logger.LogInformation("Providers {ukprn} has {count} locations", provider.Ukprn, locations.Count);
+            result.DeliveryModels = _processProviderCourseLocationsService.ConvertProviderLocationsToDeliveryModels(providerLocations.Where(p=>p.ProviderId==provider.ProviderId).ToList());
             
-            foreach (var location in locations.OrderBy(x=>x.Distance))
-            {
-                result.LocationDetails.Add(location);
-            }
-
             providers.Add(result);
-
         }
+
         return request.QuerySortOrder == 1 || request.Latitude==null || request.Longitude==null
-            ? new GetAllProviderDetailsForCourseQueryResult { Providers = providers.OrderBy(p => p.Name).ToList() }
+            ? new GetAllProviderDetailsForCourseQueryResult { LarsCode = standard.LarsCode, Level = standard.Level, CourseTitle = standard.Title, Providers = providers.OrderBy(p => p.Name).ToList() }
             : new GetAllProviderDetailsForCourseQueryResult { Providers = providers.OrderBy(p => p.ShortestLocationDistanceInMiles).ThenBy(p=>p.Name).ToList() };
     }
 }

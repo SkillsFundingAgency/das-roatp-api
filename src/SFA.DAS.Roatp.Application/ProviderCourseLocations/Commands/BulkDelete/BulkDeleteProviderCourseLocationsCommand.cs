@@ -3,7 +3,7 @@ using SFA.DAS.Roatp.Application.Common;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
 {
-    public class BulkDeleteProviderCourseLocationsCommand : IRequest<int>, ILarsCode, IUkprn
+    public class BulkDeleteProviderCourseLocationsCommand : IRequest<int>, ILarsCodeUkprn, IUkprn
     {
         public int Ukprn { get; }
         public int LarsCode { get; }

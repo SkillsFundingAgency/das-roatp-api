@@ -7,7 +7,7 @@ using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse
 {
-    public class PatchProviderCourseCommand : IRequest, IUkprn, ILarsCode
+    public class PatchProviderCourseCommand : IRequest, IUkprn, ILarsCodeUkprn
     {
         private const string Replace = "replace";
         public const string IsApprovedByRegulatorIdentifier = "IsApprovedByRegulator";

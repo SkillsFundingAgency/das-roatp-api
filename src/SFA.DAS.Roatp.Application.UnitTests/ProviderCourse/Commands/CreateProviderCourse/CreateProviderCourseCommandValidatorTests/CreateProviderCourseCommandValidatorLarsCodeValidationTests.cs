@@ -9,9 +9,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
     [TestFixture]
     public class CreateProviderCourseCommandValidatorLarsCodeValidationTests : CreateProviderCourseCommandValidatorTestBase
     {
-        [TestCase(0, false, LarsCodeValidatorV2.InvalidMessage)]
-        [TestCase(1, false, LarsCodeValidatorV2.NotFoundMessage)]
-        [TestCase(ValidComboLarsCode, false, LarsCodeValidatorV2.CombinationAlreadyExistsMessage)]
+        [TestCase(0, false, LarsCodeUkprnAlreadyExistsValidator.InvalidMessage)]
+        [TestCase(1, false, LarsCodeUkprnAlreadyExistsValidator.NotFoundMessage)]
+        [TestCase(ValidComboLarsCode, false, LarsCodeUkprnAlreadyExistsValidator.CombinationAlreadyExistsMessage)]
         [TestCase(RegulatedLarsCode, true, "")]
         public async Task LarsCode_Validation(int larsCode, bool isValid, string expectedErrorMessage)
         {
