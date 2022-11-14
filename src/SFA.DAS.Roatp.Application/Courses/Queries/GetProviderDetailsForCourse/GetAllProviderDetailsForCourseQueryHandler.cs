@@ -5,6 +5,7 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using Microsoft.Extensions.FileSystemGlobbing.Internal.PatternContexts;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
@@ -55,14 +56,13 @@ public class GetAllProviderDetailsForCourseQueryHandler : IRequestHandler<GetAll
             _logger.LogInformation("Provider: {ukprn}", provider.Ukprn);
 
             var result = (ProviderDetails)provider;
-            var rates= filteredNationalAchievementRates.Where(r => r.ProviderId == provider.ProviderId).ToList();
+            var rate= filteredNationalAchievementRates.Where(r => r.ProviderId == provider.ProviderId).MaxBy(a=>a.ApprenticeshipLevel);
 
-            _logger.LogInformation("Providers {ukprn} has {count} rates",provider.Ukprn,rates.Count);
-            foreach (var rate in rates)
-            {
-                result.AchievementRates.Add(rate);
-            }
+            _logger.LogInformation("Providers {ukprn} has rate {apprenticeshipLevel}",provider.Ukprn,rate?.ApprenticeshipLevel);
             
+            if (rate!=null) 
+                result.AchievementRates.Add(rate);
+
             var locations = providerLocations.Where(p => p.ProviderId == provider.ProviderId).ToList();
             _logger.LogInformation("Providers {ukprn} has {count} locations", provider.Ukprn, locations.Count);
             
