@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
 
         public Audit(string entityType, string entityId, string userId, string userDisplayName, string userAction, object initialState, object updatedState)       
         {
-            CorrelationId = Guid.Parse(Activity.Current?.RootId);
+            CorrelationId = Guid.Parse(Activity.Current.RootId);
             EntityType = entityType;
             EntityId = entityId;
             UserId = userId;

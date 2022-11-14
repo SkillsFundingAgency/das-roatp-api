@@ -48,6 +48,7 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
 
 
             audit.Should().NotBeNull();
+            audit.Id.Should().Be(0);
             audit.CorrelationId.Should().NotBeEmpty();
             audit.EntityType.Should().Be(typeof(ProviderCourse).Name);
             audit.EntityId.Should().Be(providerCourseInitialState.Id.ToString());
@@ -72,6 +73,7 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
 
 
             audit.Should().NotBeNull();
+            audit.Id.Should().Be(0);
             audit.CorrelationId.Should().NotBeEmpty();
             audit.EntityType.Should().Be(typeof(ProviderCourse).Name);
             audit.EntityId.Should().Be(providerCourseInitialState.FirstOrDefault().ProviderId.ToString());
