@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             {
                 var providerLocations = await _roatpDataContext.ProviderLocations
                 .Where(l => providerLocationIds.Contains(l.Id))
-            .ToListAsync();
+                .ToListAsync();
 
              AddAudit(providerLocations, null, ukprn.ToString(), userId, userDisplayName, userAction);
 
