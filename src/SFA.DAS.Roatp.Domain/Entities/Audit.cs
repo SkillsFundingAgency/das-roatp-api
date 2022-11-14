@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 
 namespace SFA.DAS.Roatp.Domain.Entities
 {
-    [ExcludeFromCodeCoverage]
     public class Audit
     {
         public long Id { get; set; }
@@ -16,5 +15,18 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public DateTime AuditDate { get; set; }
         public string InitialState { get; set; }
         public string UpdatedState { get; set; }
+
+        public Audit(string entityType, string entityId, string userId, string userDisplayName, string userAction, string initialState, string updatedState)       
+        {
+            CorrelationId = Guid.Parse(Activity.Current.RootId);
+            EntityType = entityType;
+            EntityId = entityId;
+            UserId = userId;
+            UserDisplayName = userDisplayName;
+            UserAction = userAction;
+            AuditDate = DateTime.Now;
+            InitialState = initialState;
+            UpdatedState = updatedState;
+        }
     }
 }

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Domain.Models;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -38,14 +37,14 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .Where(l => providerLocationIds.Contains(l.Id))
                 .ToListAsync();
 
-             AddAudit(providerLocations, null, ukprn.ToString(), userId, userDisplayName, userAction);
+                AddAudit(providerLocations, null, ukprn.ToString(), userId, userDisplayName, userAction);
 
-             _roatpDataContext.ProviderLocations.RemoveRange(providerLocations);
+                _roatpDataContext.ProviderLocations.RemoveRange(providerLocations);
 
-            await _roatpDataContext.SaveChangesAsync();
+                await _roatpDataContext.SaveChangesAsync();
+
                 await transaction.CommitAsync();
             }
-
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();

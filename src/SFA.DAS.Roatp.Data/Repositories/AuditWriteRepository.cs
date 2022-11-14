@@ -1,7 +1,5 @@
 ﻿using SFA.DAS.Roatp.Domain.Entities;
-using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json;
 
@@ -19,36 +17,19 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public void AddAudit(T entityInitialState, T entityUpdatedState, string entityId, string userId, string userDisplayName, string userAction)
         {
-            var audit = new Audit
+            var jsonSerializerOptions = new JsonSerializerOptions
             {
-                CorrelationId = Guid.Parse(Activity.Current.RootId),
-                EntityType = typeof(T).Name,
-                UserAction = userAction,
-                UserId = userId,
-                UserDisplayName = userDisplayName,
-                EntityId = entityId,
-                
-                InitialState = JsonSerializer.Serialize(entityInitialState),
-                UpdatedState = JsonSerializer.Serialize(entityUpdatedState),
-                AuditDate = DateTime.Now
+                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve
             };
+            var audit = new Audit(typeof(T).Name, entityId, userId, userDisplayName, userAction, JsonSerializer.Serialize(entityInitialState, jsonSerializerOptions), JsonSerializer.Serialize(entityUpdatedState, jsonSerializerOptions));
+            
             _roatpDataContext.Audits.Add(audit);
         }
 
         public void AddAudit(List<T> entityInitialState, List<T> entityUpdatedState, string entityId, string userId, string userDisplayName, string userAction )
         {
-            var audit = new Audit
-            {
-                CorrelationId = Guid.Parse(Activity.Current.RootId),
-                EntityType = typeof(T).Name,
-                UserAction = userAction,
-                UserId = userId,
-                UserDisplayName = userDisplayName, 
-                EntityId = entityId,
-                InitialState = JsonSerializer.Serialize(entityInitialState),
-                UpdatedState = JsonSerializer.Serialize(entityUpdatedState),
-                AuditDate = DateTime.Now
-            };
+            var audit = new Audit(typeof(T).Name, entityId, userId, userDisplayName, userAction, JsonSerializer.Serialize(entityInitialState), JsonSerializer.Serialize(entityUpdatedState));
+
             _roatpDataContext.Audits.Add(audit);
         }
     }
