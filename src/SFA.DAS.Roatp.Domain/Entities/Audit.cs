@@ -17,10 +17,10 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string InitialState { get; set; }
         public string UpdatedState { get; set; }
 
-        public Audit() { }
+        private readonly JsonSerializerOptions jsonSerializerOptions = new()
+        { ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve };
 
-        JsonSerializerOptions jsonSerializerOptions = new()
-        { ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve};
+        public Audit() { }
 
         public Audit(string entityType, string entityId, string userId, string userDisplayName, string userAction, object initialState, object updatedState)       
         {
