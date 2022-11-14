@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Text.Json;
 
 namespace SFA.DAS.Roatp.Domain.Entities
 {
@@ -16,17 +17,22 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string InitialState { get; set; }
         public string UpdatedState { get; set; }
 
-        public Audit(string entityType, string entityId, string userId, string userDisplayName, string userAction, string initialState, string updatedState)       
+        public Audit() { }
+
+        JsonSerializerOptions jsonSerializerOptions = new()
+        { ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve};
+
+        public Audit(string entityType, string entityId, string userId, string userDisplayName, string userAction, object initialState, object updatedState)       
         {
-            CorrelationId = Guid.Parse(Activity.Current.RootId);
+            CorrelationId = Guid.Parse(Activity.Current?.RootId);
             EntityType = entityType;
             EntityId = entityId;
             UserId = userId;
             UserDisplayName = userDisplayName;
             UserAction = userAction;
             AuditDate = DateTime.Now;
-            InitialState = initialState;
-            UpdatedState = updatedState;
+            InitialState = JsonSerializer.Serialize(initialState, jsonSerializerOptions);
+            UpdatedState = JsonSerializer.Serialize(updatedState, jsonSerializerOptions);
         }
     }
 }

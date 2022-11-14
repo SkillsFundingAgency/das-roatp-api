@@ -3,7 +3,6 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,11 +10,11 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class ProviderCoursesWriteRepository : AuditWriteRepository<ProviderCourse>, IProviderCoursesWriteRepository
+    internal class ProviderCoursesWriteRepository : IProviderCoursesWriteRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
         private readonly ILogger<ProviderCoursesWriteRepository> _logger;
-        public ProviderCoursesWriteRepository(RoatpDataContext context, ILogger<ProviderCoursesWriteRepository> logger) : base(context)
+        public ProviderCoursesWriteRepository(RoatpDataContext context, ILogger<ProviderCoursesWriteRepository> logger) 
         {
             _roatpDataContext = context;
             _logger = logger;
@@ -57,10 +56,12 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .Include(l => l.Locations).Include(l => l.Versions)
                 .SingleAsync();
 
-                AddAudit(providerCourse, null, providerCourse.Id.ToString(), userId, userDisplayName, userAction);
+                Audit audit = new(typeof(ProviderCourse).Name, providerCourse.Id.ToString(), userId, userDisplayName, userAction, providerCourse, null);
+               
+                _roatpDataContext.Audits.Add(audit);
 
-                _roatpDataContext.Remove(providerCourse);
-
+                _roatpDataContext.Remove(providerCourse);      
+                
                 await _roatpDataContext.SaveChangesAsync();
 
                 await transaction.CommitAsync();

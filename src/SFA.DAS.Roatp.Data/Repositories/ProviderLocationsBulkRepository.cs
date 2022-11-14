@@ -11,11 +11,11 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    internal class ProviderLocationsBulkRepository : AuditWriteRepository<ProviderLocation>, IProviderLocationsBulkRepository
+    internal class ProviderLocationsBulkRepository :  IProviderLocationsBulkRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
         private readonly ILogger<ProviderLocationsBulkRepository> _logger;
-        public ProviderLocationsBulkRepository(RoatpDataContext roatpDataContext, ILogger<ProviderLocationsBulkRepository> logger) : base(roatpDataContext)
+        public ProviderLocationsBulkRepository(RoatpDataContext roatpDataContext, ILogger<ProviderLocationsBulkRepository> logger) 
         {
             _roatpDataContext = roatpDataContext;
             _logger = logger;
@@ -37,7 +37,9 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .Where(l => providerLocationIds.Contains(l.Id))
                 .ToListAsync();
 
-                AddAudit(providerLocations, null, ukprn.ToString(), userId, userDisplayName, userAction);
+                Audit audit = new(typeof(ProviderLocation).Name, ukprn.ToString(), userId, userDisplayName, userAction, providerLocations, null);
+
+                _roatpDataContext.Audits.Add(audit);
 
                 _roatpDataContext.ProviderLocations.RemoveRange(providerLocations);
 
