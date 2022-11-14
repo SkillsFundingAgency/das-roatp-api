@@ -8,12 +8,12 @@ namespace SFA.DAS.Roatp.Domain.Models
     }
     public class ProviderCourseDetailsSummaryModel: ProviderCourseDetailsModelBase
     {
+       
         public int ProviderId { get; set; }
     }
     public class ProviderCourseDetailsModelBase
     {
         public int Ukprn { get; set; }
-        public int LarsCode { get; set; }
         public string LegalName { get; set; }
         public string TradingName { get; set; }
       
@@ -27,8 +27,6 @@ namespace SFA.DAS.Roatp.Domain.Models
         public string Address4 { get; set; }
         public string Town { get; set; }
         public string Postcode { get; set; }
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
         public double? Distance { get; set; }
     }
 }

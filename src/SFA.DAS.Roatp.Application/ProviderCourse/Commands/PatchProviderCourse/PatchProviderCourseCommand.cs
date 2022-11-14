@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.Application.Common;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
 {
-    public class PatchProviderCourseCommand : IRequest, IUkprn, ILarsCode, IUserInfo
+    public class PatchProviderCourseCommand : IRequest, IUkprn, ILarsCodeUkprn, IUserInfo
     {
         private const string Replace = "replace";
         public const string IsApprovedByRegulatorIdentifier = "IsApprovedByRegulator";

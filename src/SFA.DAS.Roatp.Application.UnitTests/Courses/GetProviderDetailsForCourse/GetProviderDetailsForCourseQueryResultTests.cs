@@ -17,13 +17,14 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             var model = (GetProviderDetailsForCourseQueryResult)providerCourseDetailsModel;
 
             Assert.That(model, Is.Not.Null);
-            model.Should().BeEquivalentTo(providerCourseDetailsModel,c => c
+            model.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
                 .Excluding(s => s.LegalName)
                 .Excluding(s => s.StandardContactUrl)
-                .Excluding(s=>s.Distance));
+                .Excluding(s => s.Distance)
+                .Excluding(s=>s.Ukprn));
             Assert.AreEqual(providerCourseDetailsModel.LegalName, model.Name);
-            Assert.AreEqual(providerCourseDetailsModel.StandardContactUrl,model.ContactUrl);
-            Assert.AreEqual(providerCourseDetailsModel.Distance,model.ProviderHeadOfficeDistanceInMiles);
+            Assert.AreEqual(providerCourseDetailsModel.StandardContactUrl, model.ContactUrl);
+            Assert.AreEqual(providerCourseDetailsModel.Distance, model.ProviderHeadOfficeDistanceInMiles);
         }
 
         [Test]
@@ -51,16 +52,33 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
         [TestCase(true, true, true, true, "BlockRelease|DayRelease|100PercentEmployer")]
         public void DeliveryModes_Expected(bool blockRelease, bool dayRelease, bool regional, bool national, string expectedResult)
         {
-            var locationDetails = new List<CourseLocationModel>
+            var deliveryModes = new List<DeliveryModel>();
+            if (blockRelease)
             {
-                new() {BlockRelease = blockRelease, DayRelease = dayRelease, 
-                    LocationType = regional?LocationType.Regional:national?LocationType.National: LocationType.Provider}
-            };
+                deliveryModes.Add(new DeliveryModel { DeliveryModeType = DeliveryModeType.BlockRelease });
+            }
+
+            if (dayRelease)
+            {
+                deliveryModes.Add(new DeliveryModel { DeliveryModeType = DeliveryModeType.DayRelease });
+            }
+
+            if (regional)
+            {
+                deliveryModes.Add(new DeliveryModel { DeliveryModeType = DeliveryModeType.Workplace });
+            }
+
+            if (national)
+            {
+                deliveryModes.Add(new DeliveryModel { DeliveryModeType = DeliveryModeType.Workplace });
+            }
 
             var details = new GetProviderDetailsForCourseQueryResult
             {
-                LocationDetails = locationDetails
+                DeliveryModels = deliveryModes
             };
+
+
 
             Assert.AreEqual(expectedResult, details.DeliveryModes);
         }

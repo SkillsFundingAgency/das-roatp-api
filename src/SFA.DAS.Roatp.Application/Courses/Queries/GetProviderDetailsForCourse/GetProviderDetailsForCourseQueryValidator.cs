@@ -10,7 +10,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
         public GetProviderDetailsForCourseQueryValidator(IProvidersReadRepository providersReadRepository, IProviderCoursesReadRepository providerCoursesReadRepository)
         {
             Include(new UkprnValidator(providersReadRepository));
-            Include(new LarsCodeValidator(providersReadRepository, providerCoursesReadRepository));
+            Include(new LarsCodeUkprnCheckerValidator(providersReadRepository, providerCoursesReadRepository));
             Include(new LatLongValidator());
         }
     }
