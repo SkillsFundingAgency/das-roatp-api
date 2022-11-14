@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using SFA.DAS.Roatp.Domain.Entities;
+﻿using SFA.DAS.Roatp.Domain.Entities;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Text.Json;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
@@ -19,10 +19,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public void AddAudit(T entityInitialState, T entityUpdatedState, string entityId, string userId, string userDisplayName, string userAction)
         {
-            var jsonSerializerSettings = new JsonSerializerSettings
-            {
-                PreserveReferencesHandling = PreserveReferencesHandling.Objects
-            };
             var audit = new Audit
             {
                 CorrelationId = Guid.Parse(Activity.Current.RootId),
@@ -31,8 +27,9 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 UserId = userId,
                 UserDisplayName = userDisplayName,
                 EntityId = entityId,
-                InitialState = JsonConvert.SerializeObject(entityInitialState, jsonSerializerSettings),
-                UpdatedState = JsonConvert.SerializeObject(entityUpdatedState, jsonSerializerSettings),
+                
+                InitialState = JsonSerializer.Serialize(entityInitialState),
+                UpdatedState = JsonSerializer.Serialize(entityUpdatedState),
                 AuditDate = DateTime.Now
             };
             _roatpDataContext.Audits.Add(audit);
@@ -40,10 +37,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public void AddAudit(List<T> entityInitialState, List<T> entityUpdatedState, string entityId, string userId, string userDisplayName, string userAction )
         {
-            var jsonSerializerSettings = new JsonSerializerSettings
-            {
-                PreserveReferencesHandling = PreserveReferencesHandling.Objects
-            };
             var audit = new Audit
             {
                 CorrelationId = Guid.Parse(Activity.Current.RootId),
@@ -52,8 +45,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 UserId = userId,
                 UserDisplayName = userDisplayName, 
                 EntityId = entityId,
-                InitialState = JsonConvert.SerializeObject(entityInitialState, jsonSerializerSettings),
-                UpdatedState = JsonConvert.SerializeObject(entityUpdatedState, jsonSerializerSettings),
+                InitialState = JsonSerializer.Serialize(entityInitialState),
+                UpdatedState = JsonSerializer.Serialize(entityUpdatedState),
                 AuditDate = DateTime.Now
             };
             _roatpDataContext.Audits.Add(audit);
