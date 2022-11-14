@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
         {
             Include(new UkprnValidator(providersReadRepository));
 
-            Include(new LarsCodeValidator(providersReadRepository, providerCoursesReadRepository));
+            Include(new LarsCodeUkprnCheckerValidator(providersReadRepository, providerCoursesReadRepository));
 
             Include(new UserInfoValidator());
 

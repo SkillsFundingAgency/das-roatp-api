@@ -4,7 +4,7 @@ using System;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProviderCourseLocation
 {
-    public class AddProviderCourseLocationCommand : IRequest<int>, IUkprn, ILarsCode, IUserInfo
+    public class AddProviderCourseLocationCommand : IRequest<int>, IUkprn, ILarsCodeUkprn, IUserInfo
     {
         
         public int Ukprn { get; set; }

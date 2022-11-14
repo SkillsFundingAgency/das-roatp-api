@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 
             Include(new UkprnValidator(providersReadRepository));
 
-            Include(new LarsCodeValidatorV2(standardsReadRepository, providerCoursesReadRepository, false));
+            Include(new LarsCodeUkprnAlreadyExistsValidator(standardsReadRepository, providerCoursesReadRepository, false));
 
             WhenAsync(
                 async (command, _) => await IsStandardRegulated(command.LarsCode, standardsReadRepository),

@@ -24,11 +24,12 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
         {
             var larsCode = 1;
             var ukprn = 11112222;
-            mediatorMock.Setup(m => m.Send(It.Is<GetProviderDetailsForCourseQuery>(q => q.LarsCode == larsCode && q.Ukprn==ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new GetProviderDetailsForCourseQueryResult {LarsCode = larsCode,Ukprn = ukprn});
+            var name = "test name";
+            mediatorMock.Setup(m => m.Send(It.Is<GetProviderDetailsForCourseQuery>(q => q.LarsCode == larsCode && q.Ukprn==ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new GetProviderDetailsForCourseQueryResult{Name=name});
 
             var result = await sut.GetProviderForCourse(larsCode, ukprn, null, null);
 
-            Assert.AreEqual(larsCode, result.Result.As<OkObjectResult>().Value.As<GetProviderDetailsForCourseQueryResult>().LarsCode);
+            Assert.AreEqual(name, result.Result.As<OkObjectResult>().Value.As<GetProviderDetailsForCourseQueryResult>().Name);
             mediatorMock.Verify(m => m.Send(It.Is<GetProviderDetailsForCourseQuery>(q => q.LarsCode == larsCode && q.Ukprn==ukprn && q.Latitude==null && q.Longitude == null), It.IsAny<CancellationToken>()));
         }
         [Test]

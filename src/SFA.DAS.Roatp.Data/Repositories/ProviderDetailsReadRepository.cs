@@ -79,8 +79,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                             pa.AddressLine4 as Address4,
                             pa.Town as Town,
                             PA.Postcode as Postcode,
-                            PA.Latitude,
-                            PA.Longitude,
+                            p.Id as ProviderId,
                             CASE  WHEN ({lat} is null) THEN null
                                 WHEN ({lon} is null) THEN null
                                 ELSE
@@ -130,24 +129,15 @@ namespace SFA.DAS.Roatp.Data.Repositories
         private static FormattableString GetProviderLocationDetailsWithDistanceSql(int ukprn, int larsCode, double? lat, double? lon)
         {
             return $@"
-                    select p.Id as ProviderId, 
-                    P.Ukprn,
-                    PC.LarsCode,
-	                LocationName,
-	                PL.Email,
-	                PL.Website,
-	                PL.Phone,
-	                LocationType,
+                    SELECT  P.Id as providerId,
+                    LocationType,
 	                PCL.HasDayReleaseDeliveryOption,
 	                PCL.HasBlockReleaseDeliveryOption,
 	                AddressLine1,
 	                AddressLine2,
 	                Town,
 	                Postcode,
-	                R.RegionName,
-	                R.SubregionName,
-	                PL.Latitude,
-	                PL.Longitude,
+	                County,
 	                CASE	WHEN ({lat} is null) THEN null
 			                WHEN ({lon} is null) THEN null
 	                ELSE
@@ -159,7 +149,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
                       ON p.Id = PC.ProviderID
                       INNER JOIN ProviderCourseLocation PCL on PC.Id = PCL.ProviderCourseId
                       INNER JOIN ProviderLocation PL On PCL.ProviderLocationId = PL.Id
-                      LEFT OUTER JOIN Region R on R.Id =PL.RegionId
                       WHERE P.Ukprn={ukprn}
                       AND LarsCode={larsCode}";
         }
@@ -170,10 +159,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
                     SELECT P.Ukprn,
 			        P.Id as providerId,
                     PC.LarsCode,
-	                LocationName,
-	                PL.Email,
-	                PL.Website,
-	                PL.Phone,
 	                LocationType,
 	                PCL.HasDayReleaseDeliveryOption,
 	                PCL.HasBlockReleaseDeliveryOption,
@@ -181,14 +166,11 @@ namespace SFA.DAS.Roatp.Data.Repositories
 	                AddressLine2,
 	                Town,
 	                Postcode,
-	                R.RegionName,
-	                R.SubregionName,
-	                PL.Latitude,
-	                PL.Longitude,
+	                County,
 	                CASE	WHEN ({lat} is null) THEN null
 			                WHEN ({lon} is null) THEN null
 	                ELSE
-	                    geography::Point(isnull(PL.Latitude,0), isnull(PL.Longitude,0), 4326)
+	                  geography::Point(isnull(PL.Latitude,0), isnull(PL.Longitude,0), 4326)
 				                .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
 				                as Distance
                 FROM Provider P
