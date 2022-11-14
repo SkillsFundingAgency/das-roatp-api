@@ -7,7 +7,6 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 public class ProviderDetails
 {
     public int Ukprn { get; set; }
-    public int LarsCode { get; set; }
 
     public string Name { get; set; }
     public string TradingName { get; set; }
@@ -33,45 +32,33 @@ public class ProviderDetails
         get
         {
             var deliveryModes = new List<string>();
-            if (LocationDetails.Any(x => x.BlockRelease))
+            if (DeliveryModels.Any(x => x.DeliveryModeType == DeliveryModeType.BlockRelease))
                 deliveryModes.Add("BlockRelease");
 
-            if (LocationDetails.Any(x => x.DayRelease))
+            if (DeliveryModels.Any(x => x.DeliveryModeType == DeliveryModeType.DayRelease))
                 deliveryModes.Add("DayRelease");
 
-            if (LocationDetails.Any(x => x.LocationType == LocationType.Regional)
-                || LocationDetails.Any(x => x.LocationType == LocationType.National))
+            if (DeliveryModels.Any(x => x.DeliveryModeType is DeliveryModeType.Workplace or DeliveryModeType.National))
                 deliveryModes.Add("100PercentEmployer");
 
             return string.Join("|", deliveryModes);
         }
     }
-
-    public bool IsNational
-    {
-        get
-        {
-            if (LocationDetails == null || !LocationDetails.Any())
-                return false;
-
-            return LocationDetails.Any(x => x.LocationType == LocationType.National);
-        }
-    }
+    
     public decimal? ShortestLocationDistanceInMiles {
         get
         {
-            if (LocationDetails is null || !LocationDetails.Any())
+            if (DeliveryModels is null || !DeliveryModels.Any())
                 return null;
-
-            return LocationDetails.Select(x => x.ProviderLocationDistanceInMiles).MinBy(x=> x);
+            
+            return DeliveryModels.Where(d=>d.DeliveryModeType is DeliveryModeType.DayRelease or DeliveryModeType.BlockRelease).Select(x => (decimal?)x.DistanceInMiles).MinBy(x=> x);
         }
     }
 
     public List<NationalAchievementRateModel> AchievementRates { get; set; } =
         new List<NationalAchievementRateModel>();
 
-    public List<CourseLocationModel> LocationDetails { get; set; } = new List<CourseLocationModel>();
-
+    public List<DeliveryModel> DeliveryModels { get; set; } = new List<DeliveryModel>();
 
     public static implicit operator ProviderDetails(ProviderCourseDetailsModel providerCourseDetails)
     {
@@ -105,7 +92,6 @@ public class ProviderDetails
         return new ProviderDetails
         {
             Ukprn = providerCourseDetails.Ukprn,
-            LarsCode = providerCourseDetails.LarsCode,
             ContactUrl = providerCourseDetails.StandardContactUrl,
             Email = providerCourseDetails.Email,
             Phone = providerCourseDetails.Phone,
@@ -119,8 +105,6 @@ public class ProviderDetails
             Town = providerCourseDetails.Town,
             Postcode = providerCourseDetails.Postcode,
             ProviderHeadOfficeDistanceInMiles = (decimal?)providerCourseDetails.Distance,
-            Latitude = providerCourseDetails.Latitude,
-            Longitude = providerCourseDetails.Longitude,
         };
     }
 }

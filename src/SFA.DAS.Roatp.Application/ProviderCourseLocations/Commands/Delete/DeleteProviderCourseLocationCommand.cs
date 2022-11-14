@@ -4,7 +4,7 @@ using System;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete
 {
-    public class DeleteProviderCourseLocationCommand : IRequest<Unit>, ILarsCode, IUkprn
+    public class DeleteProviderCourseLocationCommand : IRequest<Unit>, ILarsCodeUkprn, IUkprn
     {
         public int Ukprn { get; }
         public int LarsCode { get; }
