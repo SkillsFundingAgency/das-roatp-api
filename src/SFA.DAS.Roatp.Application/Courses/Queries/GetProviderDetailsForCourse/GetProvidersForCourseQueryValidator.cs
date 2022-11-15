@@ -4,9 +4,9 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 
-public class GetAllProviderDetailsForCourseQueryValidator : AbstractValidator<GetAllProviderDetailsForCourseQuery>
+public class GetProvidersForCourseQueryValidator : AbstractValidator<GetProvidersForCourseQuery>
 {
-    public GetAllProviderDetailsForCourseQueryValidator(IStandardsReadRepository standardsReadReadRepository)
+    public GetProvidersForCourseQueryValidator(IStandardsReadRepository standardsReadReadRepository)
     {
         Include(new LatLongValidator());
         Include(new LarsCodeValidator(standardsReadReadRepository));

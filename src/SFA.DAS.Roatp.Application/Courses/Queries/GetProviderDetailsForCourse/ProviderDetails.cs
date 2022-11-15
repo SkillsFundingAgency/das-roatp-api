@@ -27,33 +27,16 @@ public class ProviderDetails
     public double? Longitude { get; set; }
     public decimal? ProviderHeadOfficeDistanceInMiles { get; set; }
 
-    public string DeliveryModes
-    {
-        get
-        {
-            var deliveryModes = new List<string>();
-            if (DeliveryModels.Any(x => x.DeliveryModeType == DeliveryModeType.BlockRelease))
-                deliveryModes.Add("BlockRelease");
-
-            if (DeliveryModels.Any(x => x.DeliveryModeType == DeliveryModeType.DayRelease))
-                deliveryModes.Add("DayRelease");
-
-            if (DeliveryModels.Any(x => x.DeliveryModeType is DeliveryModeType.Workplace or DeliveryModeType.National))
-                deliveryModes.Add("100PercentEmployer");
-
-            return string.Join("|", deliveryModes);
-        }
-    }
-    
-    public decimal? ShortestLocationDistanceInMiles {
-        get
-        {
-            if (DeliveryModels is null || !DeliveryModels.Any())
-                return null;
-            
-            return DeliveryModels.Where(d=>d.DeliveryModeType is DeliveryModeType.DayRelease or DeliveryModeType.BlockRelease).Select(x => (decimal?)x.DistanceInMiles).MinBy(x=> x);
-        }
-    }
+    //MFCMFC
+    // public decimal? ShortestLocationDistanceInMiles {
+    //     get
+    //     {
+    //         if (DeliveryModels is null || !DeliveryModels.Any())
+    //             return null;
+    //         
+    //         return DeliveryModels.Where(d=>d.DeliveryModeType is DeliveryModeType.DayRelease or DeliveryModeType.BlockRelease).Select(x => (decimal?)x.DistanceInMiles).MinBy(x=> x);
+    //     }
+    // }
 
     public List<NationalAchievementRateModel> AchievementRates { get; set; } =
         new List<NationalAchievementRateModel>();

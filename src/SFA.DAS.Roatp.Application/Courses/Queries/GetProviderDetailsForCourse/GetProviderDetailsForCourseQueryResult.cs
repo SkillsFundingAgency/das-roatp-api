@@ -24,23 +24,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public decimal? ProviderHeadOfficeDistanceInMiles { get; set; }
-        public string DeliveryModes
-        {
-            get
-            {
-                var deliveryModes = new List<string>();
-                if (DeliveryModels.Any(x => x.DeliveryModeType == DeliveryModeType.BlockRelease))
-                    deliveryModes.Add("BlockRelease");
-
-                if (DeliveryModels.Any(x => x.DeliveryModeType == DeliveryModeType.DayRelease))
-                    deliveryModes.Add("DayRelease");
-
-                if (DeliveryModels.Any(x => x.DeliveryModeType == DeliveryModeType.Workplace || x.DeliveryModeType == DeliveryModeType.National))
-                    deliveryModes.Add("100PercentEmployer");
-
-                return string.Join("|", deliveryModes);
-            }
-        }
+        
         public List<NationalAchievementRateModel> AchievementRates { get; set; } =
             new List<NationalAchievementRateModel>();
 

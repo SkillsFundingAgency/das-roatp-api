@@ -1,27 +1,23 @@
 ﻿using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
-using Microsoft.Extensions.FileSystemGlobbing.Internal.PatternContexts;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.Courses.Services;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 
-public class GetAllProviderDetailsForCourseQueryHandler : IRequestHandler<GetAllProviderDetailsForCourseQuery, GetAllProviderDetailsForCourseQueryResult>
+public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersForCourseQuery, GetProvidersForCourseQueryResult>
 {
     private readonly IProviderDetailsReadRepository _providerDetailsReadRepository;
     private readonly IStandardsReadRepository _standardsReadRepository;
     private readonly INationalAchievementRatesReadRepository _nationalAchievementRatesReadRepository;
     private readonly IProcessProviderCourseLocationsService _processProviderCourseLocationsService;
-    private readonly ILogger<GetAllProviderDetailsForCourseQueryHandler> _logger;
+    private readonly ILogger<GetProvidersForCourseQueryHandler> _logger;
 
-    public GetAllProviderDetailsForCourseQueryHandler(IProviderDetailsReadRepository providerDetailsReadRepository, INationalAchievementRatesReadRepository nationalAchievementRatesReadRepository, IStandardsReadRepository standardsReadRepository, IProcessProviderCourseLocationsService processProviderCourseLocationsService, ILogger<GetAllProviderDetailsForCourseQueryHandler> logger)
+    public GetProvidersForCourseQueryHandler(IProviderDetailsReadRepository providerDetailsReadRepository, INationalAchievementRatesReadRepository nationalAchievementRatesReadRepository, IStandardsReadRepository standardsReadRepository, IProcessProviderCourseLocationsService processProviderCourseLocationsService, ILogger<GetProvidersForCourseQueryHandler> logger)
     {
         _providerDetailsReadRepository = providerDetailsReadRepository;
         _nationalAchievementRatesReadRepository = nationalAchievementRatesReadRepository;
@@ -31,7 +27,7 @@ public class GetAllProviderDetailsForCourseQueryHandler : IRequestHandler<GetAll
 
     }
 
-    public async Task<GetAllProviderDetailsForCourseQueryResult> Handle(GetAllProviderDetailsForCourseQuery request, CancellationToken cancellationToken)
+    public async Task<GetProvidersForCourseQueryResult> Handle(GetProvidersForCourseQuery request, CancellationToken cancellationToken)
     {
         var providerDetails = await _providerDetailsReadRepository.GetAllProviderDetailsWithDistance( request.LarsCode, request.Latitude,
             request.Longitude);
@@ -71,8 +67,10 @@ public class GetAllProviderDetailsForCourseQueryHandler : IRequestHandler<GetAll
             providers.Add(result);
         }
 
-        return request.QuerySortOrder == 1 || request.Latitude==null || request.Longitude==null
-            ? new GetAllProviderDetailsForCourseQueryResult { LarsCode = standard.LarsCode, Level = standard.Level, CourseTitle = standard.Title, Providers = providers.OrderBy(p => p.Name).ToList() }
-            : new GetAllProviderDetailsForCourseQueryResult { Providers = providers.OrderBy(p => p.ShortestLocationDistanceInMiles).ThenBy(p=>p.Name).ToList() };
+        return new GetProvidersForCourseQueryResult
+        {
+            LarsCode = standard.LarsCode, Level = standard.Level, CourseTitle = standard.Title,
+            Providers = providers.OrderBy(x=>x.Ukprn).ToList()
+        };
     }
 }
