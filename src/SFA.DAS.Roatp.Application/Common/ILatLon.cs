@@ -2,6 +2,6 @@
 
 public interface ILatLon
 {
-    public double? Latitude { get; }
-    public double? Longitude { get; }
+    public decimal? Latitude { get; }
+    public decimal? Longitude { get; }
 }
