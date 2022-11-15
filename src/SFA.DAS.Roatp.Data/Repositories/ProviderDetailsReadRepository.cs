@@ -22,11 +22,11 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = roatpDataContext;
         }
 
-        public async Task<ProviderCourseDetailsModel> GetProviderDetailsWithDistance(int ukprn, int larsCode, decimal? lat, decimal? lon)
+        public async Task<ProviderCourseDetailsModel> GetProviderForUkprnAndLarsCodeWithDistance(int ukprn, int larsCode, decimal? lat, decimal? lon)
         {
             _logger.LogInformation("Gathering ProviderDetails with distance for ukprn {ukprn}, larscode {larscode}", ukprn,larsCode); 
             var provider = await _roatpDataContext.ProviderDetailsWithDistance
-                .FromSqlInterpolated(GetProvidersDetailsWithDistanceSql(ukprn, larsCode, lat, lon)).FirstOrDefaultAsync();
+                .FromSqlInterpolated(GetProviderForUkprnAndLarsCodeWithDistanceSql(ukprn, larsCode, lat, lon)).FirstOrDefaultAsync();
             return provider;
         }
 
@@ -39,11 +39,11 @@ namespace SFA.DAS.Roatp.Data.Repositories
             return providerLocations;
         }
 
-        public async Task<List<ProviderCourseDetailsSummaryModel>> GetAllProviderDetailsWithDistance(int larsCode, decimal? lat, decimal? lon)
+        public async Task<List<ProviderCourseDetailsSummaryModel>> GetProvidersForLarsCodeWithDistance(int larsCode, decimal? lat, decimal? lon)
         {
             _logger.LogInformation("Gathering all ProviderDetails with distance for larscode {larscode}",  larsCode);
             var providers = await _roatpDataContext.ProviderSummaryDetailsWithDistance
-                .FromSqlInterpolated(GetAllProvidersDetailsWithDistanceSql( larsCode, lat, lon)).ToListAsync();
+                .FromSqlInterpolated(GetProvidersForLarsCodeWithDistanceSql( larsCode, lat, lon)).ToListAsync();
             return providers;
         }
 
@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         }
 
-        private static FormattableString GetProvidersDetailsWithDistanceSql(int ukprn, int larsCode, decimal? lat, decimal? lon )
+        private static FormattableString GetProviderForUkprnAndLarsCodeWithDistanceSql(int ukprn, int larsCode, decimal? lat, decimal? lon )
         {
             return $@"
                    select   p.ukprn,
@@ -93,7 +93,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
 		                    AND pc.LarsCode={larsCode}";
         }
 
-        private static FormattableString GetAllProvidersDetailsWithDistanceSql(int larsCode, decimal? lat, decimal? lon)
+        private static FormattableString GetProvidersForLarsCodeWithDistanceSql(int larsCode, decimal? lat, decimal? lon)
         {
             return $@"
                    select p.Id as ProviderId,

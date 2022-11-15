@@ -29,20 +29,21 @@ public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersFor
 
     public async Task<GetProvidersForCourseQueryResult> Handle(GetProvidersForCourseQuery request, CancellationToken cancellationToken)
     {
-        var providerDetails = await _providerDetailsReadRepository.GetAllProviderDetailsWithDistance( request.LarsCode, request.Latitude,
-            request.Longitude);
+        var providerDetails = 
+            await _providerDetailsReadRepository.GetProvidersForLarsCodeWithDistance( request.LarsCode, request.Latitude, request.Longitude);
 
         var standard = await _standardsReadRepository.GetStandard(request.LarsCode);
 
-        var level = (ApprenticeshipLevel)standard.Level;
+        ApprenticeshipLevel apprenticeshipLevel;
+        if (standard.Level >= 4)
+            apprenticeshipLevel = ApprenticeshipLevel.FourPlus;
+        else
+            apprenticeshipLevel = (ApprenticeshipLevel)standard.Level;
 
-        var nationalAchievementRates = await _nationalAchievementRatesReadRepository
-            .GetAll();
-
-        var filteredNationalAchievementRates =
-            nationalAchievementRates.Where(x => (x.ApprenticeshipLevel == ApprenticeshipLevel.AllLevels || x.ApprenticeshipLevel == level) 
-                                                && x.Age==Age.AllAges && x.SectorSubjectArea==standard.SectorSubjectArea 
-                                                && providerDetails.Select(p=>p.ProviderId).Contains(x.ProviderId)).ToList();
+        var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByProvidersLevelsSectorSubjectArea(
+            providerDetails.Select(p=>p.ProviderId).ToList(), 
+            new List<ApprenticeshipLevel>{ApprenticeshipLevel.AllLevels, apprenticeshipLevel},
+            standard.SectorSubjectArea);
 
         var providerLocations =
             await _providerDetailsReadRepository.GetAllProviderlocationDetailsWithDistance(request.LarsCode,
@@ -55,9 +56,9 @@ public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersFor
             _logger.LogInformation("Provider: {ukprn}", provider.Ukprn);
 
             var result = (ProviderDetails)provider;
-            var rate= filteredNationalAchievementRates.Where(r => r.ProviderId == provider.ProviderId).MaxBy(a=>a.ApprenticeshipLevel);
+            var rate= nationalAchievementRates.Where(r => r.ProviderId == provider.ProviderId).MaxBy(a=>a.ApprenticeshipLevel);
 
-            _logger.LogInformation("Providers {ukprn} has rate {apprenticeshipLevel}",provider.Ukprn,rate?.ApprenticeshipLevel);
+            _logger.LogInformation("Provider {ukprn} has apprenticeship level: {apprenticeshipLevel}",provider.Ukprn,rate?.ApprenticeshipLevel);
             
             if (rate!=null)
                 result.AchievementRates.Add(rate);
