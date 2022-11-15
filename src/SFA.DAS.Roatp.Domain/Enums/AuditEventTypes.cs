@@ -4,5 +4,6 @@
     {
         DeleteProviderCourse,
         BulkDeleteProviderLocation,
+        CreateProviderLocation,
     }
 }

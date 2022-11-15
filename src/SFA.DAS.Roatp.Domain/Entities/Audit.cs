@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
 
         public Audit() { }
 
-        public Audit(string entityType, string entityId, string userId, string userDisplayName, string userAction, object initialState, object updatedState)       
+        public Audit(string entityType, string entityId, string userId, string userDisplayName, string userAction, object initialState, object updatedState = null)       
         {
             CorrelationId = Guid.Parse(Activity.Current.RootId);
             EntityType = entityType;

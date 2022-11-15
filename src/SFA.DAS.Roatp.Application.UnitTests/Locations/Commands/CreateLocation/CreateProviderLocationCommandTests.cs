@@ -21,6 +21,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
             {
                 options.Excluding(c => c.Ukprn);
                 options.Excluding(c => c.UserId);
+                options.Excluding(c => c.UserDisplayName);
                 return options;
             });
             entity.NavigationId.Should().NotBe(Guid.Empty);

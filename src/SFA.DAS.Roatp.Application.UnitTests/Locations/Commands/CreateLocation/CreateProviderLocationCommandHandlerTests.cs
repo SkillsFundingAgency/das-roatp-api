@@ -3,6 +3,7 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
             _providersReadRepositoryMock.Setup(r => r.GetByUkprn(_command.Ukprn)).ReturnsAsync(_provider);
 
             _providerLocationsWriteRepositoryMock = new Mock<IProviderLocationsWriteRepository>();
-            _providerLocationsWriteRepositoryMock.Setup(r => r.Create(It.IsAny<ProviderLocation>())).ReturnsAsync(providerLocation);
+            _providerLocationsWriteRepositoryMock.Setup(r => r.Create(It.IsAny<ProviderLocation>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), AuditEventTypes.CreateProviderLocation.ToString())).ReturnsAsync(providerLocation);
 
             _sut = new CreateProviderLocationCommandHandler(_providersReadRepositoryMock.Object, _providerLocationsWriteRepositoryMock.Object, Mock.Of<ILogger<CreateProviderLocationCommandHandler>>());
 
@@ -51,7 +52,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
         [Test]
         public void ThenConvertsCommandToEntityAndCallsCreateRepository()
         {
-            _providerLocationsWriteRepositoryMock.Verify(r => r.Create(It.Is<ProviderLocation>(p => p.ProviderId == _provider.Id && p.LocationName == _command.LocationName)));
+            _providerLocationsWriteRepositoryMock.Verify(r => r.Create(It.Is<ProviderLocation>(p => p.ProviderId == _provider.Id && p.LocationName == _command.LocationName), _command.Ukprn, _command.UserId, _command.UserDisplayName, AuditEventTypes.CreateProviderLocation.ToString()));
         }
     }
 }
