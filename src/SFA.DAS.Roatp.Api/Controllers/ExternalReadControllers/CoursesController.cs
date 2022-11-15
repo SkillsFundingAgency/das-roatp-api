@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Route("{larsCode}/providers/{ukprn}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(GetProviderDetailsForCourseQueryResult), StatusCodes.Status200OK)]
-        public async Task<ActionResult<GetProviderDetailsForCourseQueryResult>> GetProviderForCourse(int larsCode, int ukprn, double? lat = null, double? lon = null)
+        public async Task<ActionResult<GetProviderDetailsForCourseQueryResult>> GetProviderForCourse(int larsCode, int ukprn, decimal? lat = null, decimal? lon = null)
         {
             _logger.LogInformation("Received request to get provider details for Ukprn: {ukprn}, LarsCode: {larscode},  Latitude: {lat}, Long: {lon}", ukprn, larsCode,lat,lon);
             var response = await _mediator.Send(new GetProviderDetailsForCourseQuery(larsCode, ukprn,lat,lon));
@@ -48,7 +48,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Route("{larsCode}/providers")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(GetProvidersForCourseQueryResult), StatusCodes.Status200OK)]
-        public async Task<ActionResult<GetProvidersForCourseQueryResult>> GetProviderForCourse(int larsCode,  double? lat = null, double? lon = null)
+        public async Task<ActionResult<GetProvidersForCourseQueryResult>> GetProviderForCourse(int larsCode,  decimal? lat = null, decimal? lon = null)
         {
             _logger.LogInformation("Received request to get list of provider details for LarsCode: {larscode},  Latitude: {lat}, Longitude: {lon}", larsCode, lat, lon);
             var response = await _mediator.Send(new GetProvidersForCourseQuery(larsCode, lat, lon));

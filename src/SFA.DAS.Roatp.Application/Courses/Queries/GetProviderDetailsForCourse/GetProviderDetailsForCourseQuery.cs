@@ -7,9 +7,9 @@ public class GetProviderDetailsForCourseQuery : IRequest<GetProviderDetailsForCo
 {
     public int LarsCode { get; }
     public int Ukprn { get; }
-    public double? Latitude { get; }
-    public double? Longitude { get; }
-    public GetProviderDetailsForCourseQuery(int larsCode, int ukprn,  double? latitude, double? longitude)
+    public decimal? Latitude { get; }
+    public decimal? Longitude { get; }
+    public GetProviderDetailsForCourseQuery(int larsCode, int ukprn,  decimal? latitude, decimal? longitude)
     {
         LarsCode = larsCode;
         Ukprn = ukprn;
