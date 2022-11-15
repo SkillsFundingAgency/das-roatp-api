@@ -23,20 +23,7 @@ public class ProviderDetails
 
     public string StandardInfoUrl { get; set; }
     public string MarketingInfo { get; set; }
-    public double? Latitude { get; set; }
-    public double? Longitude { get; set; }
     public decimal? ProviderHeadOfficeDistanceInMiles { get; set; }
-
-    //MFCMFC
-    // public decimal? ShortestLocationDistanceInMiles {
-    //     get
-    //     {
-    //         if (DeliveryModels is null || !DeliveryModels.Any())
-    //             return null;
-    //         
-    //         return DeliveryModels.Where(d=>d.DeliveryModeType is DeliveryModeType.DayRelease or DeliveryModeType.BlockRelease).Select(x => (decimal?)x.DistanceInMiles).MinBy(x=> x);
-    //     }
-    // }
 
     public List<NationalAchievementRateModel> AchievementRates { get; set; } =
         new List<NationalAchievementRateModel>();
