@@ -28,8 +28,13 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
     public async Task<GetProviderDetailsForCourseQueryResult> Handle(GetProviderDetailsForCourseQuery request, CancellationToken cancellationToken)
     {
         var standard = await _standardsReadRepository.GetStandard(request.LarsCode);
-        var level = (ApprenticeshipLevel)standard.Level;
-        var providerDetails = await _providerDetailsReadRepository.GetProviderDetailsWithDistance(request.Ukprn, request.LarsCode, request.Latitude,
+        ApprenticeshipLevel level;
+        if (standard.Level >= 4)
+            level = ApprenticeshipLevel.FourPlus;
+        else
+            level = (ApprenticeshipLevel)standard.Level;
+
+        var providerDetails = await _providerDetailsReadRepository.GetProviderForUkprnAndLarsCodeWithDistance(request.Ukprn, request.LarsCode, request.Latitude,
             request.Longitude);
         var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByUkprn(request.Ukprn);
 
@@ -37,6 +42,8 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
             nationalAchievementRates?.Where(x => (x.ApprenticeshipLevel == ApprenticeshipLevel.AllLevels || x.ApprenticeshipLevel == level)
                                                 && x.Age == Age.AllAges && x.SectorSubjectArea == standard.SectorSubjectArea).ToList();
         var rate = filteredNationalAchievementRates?.MaxBy(a => a.ApprenticeshipLevel);
+
+        _logger.LogInformation("Provider {ukprn} has apprenticeship level {apprenticeshipLevel}", request.Ukprn, rate?.ApprenticeshipLevel);
 
         var providerLocations = await _providerDetailsReadRepository.GetProviderlocationDetailsWithDistance(
             request.Ukprn, request.LarsCode, request.Latitude,
@@ -48,9 +55,7 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
 
         result.DeliveryModels = deliveryModels;
 
-        _logger.LogInformation("Provider {ukprn} has rate {apprenticeshipLevel}", request.Ukprn, rate?.ApprenticeshipLevel);
-
-        if (rate != null)
+            if (rate != null)
             result.AchievementRates.Add(rate);
 
         return result;
