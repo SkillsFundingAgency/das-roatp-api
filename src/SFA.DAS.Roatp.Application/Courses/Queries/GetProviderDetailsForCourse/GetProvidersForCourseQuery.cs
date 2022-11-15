@@ -6,10 +6,10 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 public class GetProvidersForCourseQuery : IRequest<GetProvidersForCourseQueryResult>, ILatLon, ILarsCode
 {
     public int LarsCode { get; }
-    public double? Latitude { get; }
-    public double? Longitude { get; }
+    public decimal? Latitude { get; }
+    public decimal? Longitude { get; }
 
-    public GetProvidersForCourseQuery(int larsCode, double? latitude, double? longitude)
+    public GetProvidersForCourseQuery(int larsCode, decimal? latitude, decimal? longitude)
     {
         LarsCode = larsCode;
         Latitude = latitude;

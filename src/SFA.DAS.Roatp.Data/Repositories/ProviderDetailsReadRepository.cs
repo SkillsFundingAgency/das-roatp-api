@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = roatpDataContext;
         }
 
-        public async Task<ProviderCourseDetailsModel> GetProviderDetailsWithDistance(int ukprn, int larsCode, double? lat, double? lon)
+        public async Task<ProviderCourseDetailsModel> GetProviderDetailsWithDistance(int ukprn, int larsCode, decimal? lat, decimal? lon)
         {
             _logger.LogInformation("Gathering ProviderDetails with distance for ukprn {ukprn}, larscode {larscode}", ukprn,larsCode); 
             var provider = await _roatpDataContext.ProviderDetailsWithDistance
@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             return provider;
         }
 
-        public async Task<List<ProviderCourseLocationDetailsModel>> GetProviderlocationDetailsWithDistance(int ukprn, int larsCode, double? lat, double? lon)
+        public async Task<List<ProviderCourseLocationDetailsModel>> GetProviderlocationDetailsWithDistance(int ukprn, int larsCode, decimal? lat, decimal? lon)
         {
             _logger.LogInformation("Gathering ProviderLocationDetails with distance for ukprn {ukprn}, larscode {larscode}", ukprn, larsCode);
 
@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             return providerLocations;
         }
 
-        public async Task<List<ProviderCourseDetailsSummaryModel>> GetAllProviderDetailsWithDistance(int larsCode, double? lat, double? lon)
+        public async Task<List<ProviderCourseDetailsSummaryModel>> GetAllProviderDetailsWithDistance(int larsCode, decimal? lat, decimal? lon)
         {
             _logger.LogInformation("Gathering all ProviderDetails with distance for larscode {larscode}",  larsCode);
             var providers = await _roatpDataContext.ProviderSummaryDetailsWithDistance
@@ -48,7 +48,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
         }
 
         public async Task<List<ProviderCourseLocationDetailsModel>> GetAllProviderlocationDetailsWithDistance(int larsCode,
-            double? lat, double? lon)
+            decimal? lat, decimal? lon)
         {
             _logger.LogInformation(
                 "Gathering all ProviderLocationDetails with distance for larscode {larscode}", larsCode);
@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         }
 
-        private static FormattableString GetProvidersDetailsWithDistanceSql(int ukprn, int larsCode, double? lat, double? lon )
+        private static FormattableString GetProvidersDetailsWithDistanceSql(int ukprn, int larsCode, decimal? lat, decimal? lon )
         {
             return $@"
                    select   p.ukprn,
@@ -93,7 +93,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
 		                    AND pc.LarsCode={larsCode}";
         }
 
-        private static FormattableString GetAllProvidersDetailsWithDistanceSql(int larsCode, double? lat, double? lon)
+        private static FormattableString GetAllProvidersDetailsWithDistanceSql(int larsCode, decimal? lat, decimal? lon)
         {
             return $@"
                    select p.Id as ProviderId,
@@ -126,7 +126,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
 		                    WHERE pc.LarsCode={larsCode}";
         }
 
-        private static FormattableString GetProviderLocationDetailsWithDistanceSql(int ukprn, int larsCode, double? lat, double? lon)
+        private static FormattableString GetProviderLocationDetailsWithDistanceSql(int ukprn, int larsCode, decimal? lat, decimal? lon)
         {
             return $@"
                     SELECT  P.Id as providerId,
@@ -153,7 +153,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                       AND LarsCode={larsCode}";
         }
 
-        private static FormattableString GetAllProviderLocationDetailsWithDistanceSql(int larsCode, double? lat, double? lon)
+        private static FormattableString GetAllProviderLocationDetailsWithDistanceSql(int larsCode, decimal? lat, decimal? lon)
         {
             return $@"
                     SELECT P.Ukprn,
