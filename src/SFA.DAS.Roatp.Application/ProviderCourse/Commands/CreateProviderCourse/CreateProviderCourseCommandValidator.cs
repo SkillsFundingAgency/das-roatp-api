@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         public const string AtleastOneLocationIsRequiredMessage = "National delivery option is not set and there are no regions or provider locations either. Any one of these is required.";
         public const string LocationIdNotFoundMessage = "At least one of the location ids was not found";
         public const string RegionIdNotFoundMessage = "At least one of the region id was not found";
-
+        
         public CreateProviderCourseCommandValidator(
             IProvidersReadRepository providersReadRepository,
             IStandardsReadRepository standardsReadRepository,
@@ -25,8 +25,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
             Include(new UserInfoValidator());
 
             Include(new UkprnValidator(providersReadRepository));
-
-            Include(new LarsCodeUkprnAlreadyExistsValidator(standardsReadRepository, providerCoursesReadRepository, false));
+            Include(new LarsCodeValidator(standardsReadRepository));
+            Include(new LarsCodeUkprnCombinationValidator(providerCoursesReadRepository));
 
             WhenAsync(
                 async (command, _) => await IsStandardRegulated(command.LarsCode, standardsReadRepository),
