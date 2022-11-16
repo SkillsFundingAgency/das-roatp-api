@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
         {
             Include(new UkprnValidator(providersReadRepository));
 
-            Include(new LarsCodeUkprnCheckerValidator(providersReadRepository, providerCoursesReadRepository));
+            Include(new LarsCodeUkprnCombinationValidator(providersReadRepository, providerCoursesReadRepository));
 
             RuleFor(c => c.UserId).NotEmpty();
 

@@ -35,13 +35,13 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
             {
                 var nearestRegionalLocation = providerCourseLocations
                     .Where(l => l.LocationType == LocationType.Regional).OrderBy(x => x.Distance).First();
+                
                 deliveryModels.Add(
                     new DeliveryModel
                     {
                         DeliveryModeType = DeliveryModeType.Workplace,
                         DistanceInMiles = nearestRegionalLocation.Distance
                     });
-
             }
 
             if (providerCourseLocations.Any(l => l.LocationType == LocationType.Provider))
@@ -62,7 +62,6 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
                         Postcode = nearestLocationDayRelease.Postcode
                     });
 
-
                 var nearestLocationBlockRelease = providerCourseLocations
                     .Where(l => l.LocationType == LocationType.Provider && l.HasBlockReleaseDeliveryOption == true).MinBy(l => l.Distance);
 
@@ -78,7 +77,6 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
                             County = nearestLocationBlockRelease.County,
                             Postcode = nearestLocationBlockRelease.Postcode
                         });
-
             }
 
             return deliveryModels;

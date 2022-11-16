@@ -41,9 +41,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
 
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual(0,result.AchievementRates.Count);
-
             Assert.AreEqual(result.DeliveryModels.Count, deliveryModels.Count);
-
 
             result.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
                 .Excluding(s => s.LegalName)
@@ -117,7 +115,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             var result = await sut.Handle(query, cancellationToken);
 
             Assert.That(result, Is.Not.Null);
-            Assert.AreEqual(0,result.AchievementRates.Count);
+            Assert.AreEqual(0, result.AchievementRates.Count);
             Assert.AreEqual(0, result.DeliveryModels.Count);
 
             result.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
