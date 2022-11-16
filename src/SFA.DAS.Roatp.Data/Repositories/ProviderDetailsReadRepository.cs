@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Data.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
@@ -88,9 +89,11 @@ namespace SFA.DAS.Roatp.Data.Repositories
 			                                as Distance
                             FROM provider P
 		                    INNER JOIN ProviderCourse pc on p.Id = pc.ProviderId
-							LEFT OUTER JOIN [dbo].[ProviderAddress] PA on P.Id = PA.ProviderId
+							LEFT OUTER JOIN [ProviderAddress] PA on P.Id = PA.ProviderId
+                            LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
 		                    Where P.ukprn={ukprn}
-		                    AND pc.LarsCode={larsCode}";
+		                    AND pc.LarsCode={larsCode}
+                            AND ISNULL(PRD.StatusId, {OrganisationStatus.Active}) !={OrganisationStatus.Removed}";
         }
 
         private static FormattableString GetProvidersForLarsCodeWithDistanceSql(int larsCode, decimal? lat, decimal? lon)
@@ -122,8 +125,10 @@ namespace SFA.DAS.Roatp.Data.Repositories
 			                                as Distance
                             FROM provider P
 		                    INNER JOIN ProviderCourse pc on p.Id = pc.ProviderId
-							LEFT OUTER JOIN [dbo].[ProviderAddress] PA on P.Id = PA.ProviderId
-		                    WHERE pc.LarsCode={larsCode}";
+							LEFT OUTER JOIN [ProviderAddress] PA on P.Id = PA.ProviderId
+                            LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
+		                    WHERE pc.LarsCode={larsCode}
+                            AND ISNULL(PRD.StatusId, {OrganisationStatus.Active}) !={OrganisationStatus.Removed}";
         }
 
         private static FormattableString GetProviderLocationDetailsWithDistanceSql(int ukprn, int larsCode, decimal? lat, decimal? lon)
@@ -149,8 +154,10 @@ namespace SFA.DAS.Roatp.Data.Repositories
                       ON p.Id = PC.ProviderID
                       INNER JOIN ProviderCourseLocation PCL on PC.Id = PCL.ProviderCourseId
                       INNER JOIN ProviderLocation PL On PCL.ProviderLocationId = PL.Id
+                      LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
                       WHERE P.Ukprn={ukprn}
-                      AND LarsCode={larsCode}";
+                      AND LarsCode={larsCode}
+                      AND ISNULL(PRD.StatusId, {OrganisationStatus.Active}) !={OrganisationStatus.Removed}";
         }
 
         private static FormattableString GetAllProviderLocationDetailsWithDistanceSql(int larsCode, decimal? lat, decimal? lon)
@@ -179,7 +186,9 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 INNER JOIN ProviderCourseLocation PCL on PC.Id = PCL.ProviderCourseId
                 INNER JOIN ProviderLocation PL On PCL.ProviderLocationId = PL.Id
                 LEFT OUTER JOIN Region R on R.Id =PL.RegionId
-                WHERE  LarsCode={larsCode}";
+                LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
+                WHERE  LarsCode={larsCode}
+                AND ISNULL(PRD.StatusId, {OrganisationStatus.Active}) !={OrganisationStatus.Removed}";
         }
     }
 }

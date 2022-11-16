@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -31,7 +32,7 @@ public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersFor
     {
         var providerDetails = 
             await _providerDetailsReadRepository.GetProvidersForLarsCodeWithDistance( request.LarsCode, request.Latitude, request.Longitude);
-
+        
         var standard = await _standardsReadRepository.GetStandard(request.LarsCode);
 
         ApprenticeshipLevel apprenticeshipLevel;
