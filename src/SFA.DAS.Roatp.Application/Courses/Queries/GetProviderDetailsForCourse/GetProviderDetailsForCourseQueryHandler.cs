@@ -3,7 +3,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
@@ -55,8 +54,10 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
 
         result.DeliveryModels = deliveryModels;
 
-            if (rate != null)
+        if (rate != null)
+        {
             result.AchievementRates.Add(rate);
+        }
 
         return result;
     }

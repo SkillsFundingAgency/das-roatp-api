@@ -1,6 +1,4 @@
-﻿using System.Security.Cryptography.X509Certificates;
-
-namespace SFA.DAS.Roatp.Domain.Models
+﻿namespace SFA.DAS.Roatp.Domain.Models
 {
     public class ProviderCourseDetailsModel : ProviderCourseDetailsModelBase
     {
