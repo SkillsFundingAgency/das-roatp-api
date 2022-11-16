@@ -13,7 +13,6 @@ public class LarsCodeValidatorTests
 {
     Mock<IStandardsReadRepository> _standardsReadRepositoryMock;
     LarsCodeValidator _sut;
-    //const int ValidComboLarsCode = 123;
     const int ValidLarsCode = 321;
 
     [SetUp]

@@ -4,10 +4,6 @@ using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using FluentAssertions;
 using FluentValidation.TestHelper;
@@ -18,7 +14,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
     public class GetProvidersForCourseQueryValidatorTests
     {
         private Mock<IStandardsReadRepository> _standardsReadRepo;
-
 
         [SetUp]
         public void Before_each_test()
