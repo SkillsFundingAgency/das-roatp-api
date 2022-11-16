@@ -35,7 +35,7 @@ public class LarsCodeUkprnAlreadyExistsValidatorTests
     public async Task LarsCode_ProviderCourseComboToExist_Validation(int larsCode, string expectedErrorMessage, bool isValid)
     {
         _sut = new LarsCodeUkprnAlreadyExistsValidator(_standardsReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, true);
-        var testObj = new larsCodeUkprnValidatorTestObject(ValidUkprn, larsCode);
+        var testObj = new LarsCodeUkprnValidatorTestObject(ValidUkprn, larsCode);
 
         var result = await _sut.TestValidateAsync(testObj);
 
@@ -52,7 +52,7 @@ public class LarsCodeUkprnAlreadyExistsValidatorTests
     public async Task LarsCode_ProviderCourseComboToNotExist_PassesValidation(int larsCode, string expectedErrorMessage, bool isValid)
     {
         _sut = new LarsCodeUkprnAlreadyExistsValidator(_standardsReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, false);
-        var testObj = new larsCodeUkprnValidatorTestObject(ValidUkprn, larsCode);
+        var testObj = new LarsCodeUkprnValidatorTestObject(ValidUkprn, larsCode);
 
         var result = await _sut.TestValidateAsync(testObj);
 
@@ -66,7 +66,7 @@ public class LarsCodeUkprnAlreadyExistsValidatorTests
     public async Task LarsCode_ProviderCourseComboToNotExist_FailsValidation()
     {
         _sut = new LarsCodeUkprnAlreadyExistsValidator(_standardsReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, false);
-        var testObj = new larsCodeUkprnValidatorTestObject(ValidUkprn, ValidComboLarsCode);
+        var testObj = new LarsCodeUkprnValidatorTestObject(ValidUkprn, ValidComboLarsCode);
 
         var result = await _sut.TestValidateAsync(testObj);
 
@@ -74,12 +74,12 @@ public class LarsCodeUkprnAlreadyExistsValidatorTests
     }
 
 
-    public class larsCodeUkprnValidatorTestObject : ILarsCodeUkprn
+    public class LarsCodeUkprnValidatorTestObject : ILarsCodeUkprn
     {
         public int Ukprn { get; }
 
         public int LarsCode { get; }
-        public larsCodeUkprnValidatorTestObject(int ukprn, int larsCode)
+        public LarsCodeUkprnValidatorTestObject(int ukprn, int larsCode)
         {
             Ukprn = ukprn;
             LarsCode = larsCode;
