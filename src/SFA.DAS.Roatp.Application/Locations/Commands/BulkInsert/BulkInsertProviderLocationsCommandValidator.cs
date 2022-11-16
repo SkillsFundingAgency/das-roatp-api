@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
         {
             Include(new UkprnValidator(providersReadRepository));
 
-            Include(new LarsCodeUkprnCheckerValidator(providersReadRepository, providerCoursesReadRepository));
+            Include(new LarsCodeUkprnCombinationValidator(providersReadRepository, providerCoursesReadRepository));
 
             Include(new UserInfoValidator());
 

@@ -6,7 +6,6 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 public class ProviderDetails
 {
     public int Ukprn { get; set; }
-
     public string Name { get; set; }
     public string TradingName { get; set; }
     public string ContactUrl { get; set; }
@@ -40,7 +39,6 @@ public class ProviderDetails
         result.MarketingInfo = providerCourseDetails.MarketingInfo;
 
         return result;
-
     }
 
     public static implicit operator ProviderDetails(
