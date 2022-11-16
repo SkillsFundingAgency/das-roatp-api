@@ -1,7 +1,10 @@
-﻿namespace SFA.DAS.Roatp.Domain.Constants
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace SFA.DAS.Roatp.Domain.Constants
 {
     public static class Constants
     {
+        [ExcludeFromCodeCoverage]
         public static class NationalLatLong
         {
             public const decimal NationalLatitude = 52.564269m;
