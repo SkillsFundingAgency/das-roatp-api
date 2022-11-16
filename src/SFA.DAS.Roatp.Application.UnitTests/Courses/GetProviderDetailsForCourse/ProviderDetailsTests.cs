@@ -50,6 +50,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             Assert.AreEqual(summaryModel.Distance, model.ProviderHeadOfficeDistanceInMiles);
         }
 
+        [Test]
+        public void Operator_PopulatesModelFromSummaryModelNull()
+        { 
+            var model = (ProviderDetails)(ProviderCourseDetailsSummaryModel)null;
+            Assert.That(model, Is.Null);
+        }
+
         [Test, RecursiveMoqAutoData]
         public void Operator_PopulatesModelFromProviderCourseDetailsModel(ProviderCourseDetailsModel providerCourseDetailsModel)
         {
@@ -66,6 +73,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             Assert.AreEqual(providerCourseDetailsModel.StandardContactUrl, model.ContactUrl);
             Assert.AreEqual(providerCourseDetailsModel.Distance, model.ProviderHeadOfficeDistanceInMiles);
             Assert.AreEqual(providerCourseDetailsModel.MarketingInfo,model.MarketingInfo);
+        }
+
+        [Test]
+        public void Operator_PopulatesModelFromProviderCourseDetailsModelNull()
+        {
+            var model = (ProviderDetails)(ProviderCourseDetailsModel)null;
+            Assert.That(model, Is.Null);
         }
     }
 }
