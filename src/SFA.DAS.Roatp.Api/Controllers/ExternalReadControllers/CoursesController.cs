@@ -48,7 +48,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Route("{larsCode}/providers")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(GetProvidersForCourseQueryResult), StatusCodes.Status200OK)]
-        public async Task<ActionResult<GetProvidersForCourseQueryResult>> GetProviderForCourse(int larsCode,  decimal? lat = null, decimal? lon = null)
+        public async Task<ActionResult<GetProvidersForCourseQueryResult>> GetProvidersForCourse(int larsCode,  decimal? lat = null, decimal? lon = null)
         {
             _logger.LogInformation("Received request to get list of provider details for LarsCode: {larscode},  Latitude: {lat}, Longitude: {lon}", larsCode, lat, lon);
             var response = await _mediator.Send(new GetProvidersForCourseQuery(larsCode, lat, lon));
