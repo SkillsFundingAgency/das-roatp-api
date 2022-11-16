@@ -36,13 +36,7 @@ internal class NationalAchievementRatesReadRepository : INationalAchievementRate
 
     public async Task<List<NationalAchievementRate>> GetByProvidersLevelsSectorSubjectArea(List<int> providerIds, List<ApprenticeshipLevel> levels, string sectorSubjectArea)
     {
-
-
-        // var filteredNationalAchievementRates =
-        //     nationalAchievementRates.Where(x => (x.ApprenticeshipLevel == ApprenticeshipLevel.AllLevels || x.ApprenticeshipLevel == level)
-        //                                         && x.Age == Age.AllAges && x.SectorSubjectArea == standard.SectorSubjectArea
-        //                                         && providerDetails.Select(p => p.ProviderId).Contains(x.ProviderId)).ToList();
-      return await _roatpDataContext.NationalAchievementRates
+        return await _roatpDataContext.NationalAchievementRates
           .Where(x=>(levels.Contains(x.ApprenticeshipLevel)) 
                                             && x.Age==Age.AllAges 
                                             && x.SectorSubjectArea==sectorSubjectArea 
