@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Net.WebSockets;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -36,7 +35,7 @@ public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersFor
         var standard = await _standardsReadRepository.GetStandard(request.LarsCode);
 
         ApprenticeshipLevel apprenticeshipLevel;
-        if (standard.Level >= 4)
+        if (standard.Level >= (int)ApprenticeshipLevel.FourPlus)
             apprenticeshipLevel = ApprenticeshipLevel.FourPlus;
         else
             apprenticeshipLevel = (ApprenticeshipLevel)standard.Level;
