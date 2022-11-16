@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System.Threading;
@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
             _logger.LogInformation("Creating provider location by name {locationName} for ProviderId: {providerId} and Ukprn {ukprn}", request.LocationName, provider.Id, request.Ukprn);
             var providerLocation = (ProviderLocation)request;
             providerLocation.ProviderId = provider.Id;
-            var updatedProviderLocation = await _providerLocationsWriteRepository.Create(providerLocation, request.Ukprn, request.UserId, request.UserDisplayName, AuditEventTypes.CreateProviderLocation.ToString());
+            var updatedProviderLocation = await _providerLocationsWriteRepository.Create(providerLocation, request.Ukprn, request.UserId, request.UserDisplayName, AuditEventTypes.CreateProviderLocation);
             return updatedProviderLocation.Id;
         }
     }

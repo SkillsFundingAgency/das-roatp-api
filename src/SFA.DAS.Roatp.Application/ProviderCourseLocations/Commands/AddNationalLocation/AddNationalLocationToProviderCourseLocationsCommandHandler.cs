@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
             {
                 _logger.LogInformation("Creating national location for Ukprn: {ukprn} ", request.Ukprn);
                 nationalLocation = ProviderLocation.CreateNationalLocation(provider.Id);
-                await _providerLocationsWriteRepository.Create(nationalLocation, request.Ukprn, request.UserId, request.UserDisplayName, AuditEventTypes.CreateProviderLocation.ToString());
+                await _providerLocationsWriteRepository.Create(nationalLocation, request.Ukprn, request.UserId, request.UserDisplayName, AuditEventTypes.CreateProviderLocation);
             }
 
             var providerCourse = await _providerCoursesReadRepository.GetProviderCourse(provider.Id, request.LarsCode);

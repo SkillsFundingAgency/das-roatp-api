@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Roatp.Domain
+﻿namespace SFA.DAS.Roatp.Domain.Constants
 {
     public static class Constants
     {
@@ -10,7 +10,6 @@
             public const decimal MinimumLatitude = 49.9146m;
             public const decimal MaximumLongitude = 1.74365m;
             public const decimal MinimumLongitude = -6.31574m;
-
         }
     }
 }

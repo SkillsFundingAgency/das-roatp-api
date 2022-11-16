@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using static SFA.DAS.Roatp.Domain.Constants;
+using static SFA.DAS.Roatp.Domain.Constants.Constants;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
 {
