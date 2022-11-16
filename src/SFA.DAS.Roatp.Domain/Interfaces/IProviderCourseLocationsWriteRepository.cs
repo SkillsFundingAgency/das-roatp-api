@@ -7,6 +7,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     public interface IProviderCourseLocationsWriteRepository
     {
         Task<ProviderCourseLocation> Create(ProviderCourseLocation providerCourseLocation);
-        Task Delete(Guid navigationId);
+        Task Delete(Guid navigationId, int ukprn, string userId, string userDisplayName, string userAction);
     }
 }

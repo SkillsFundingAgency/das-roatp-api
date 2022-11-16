@@ -12,10 +12,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
     public class DeleteProviderCourseLocationCommandValidatorTests
     {
         private readonly string _userId = "userid";
+        private readonly string _userDisplayName = "userDisplayName";
         [Test]
         public async Task ValidateId_LessThanZero_ReturnsError()
         {
-            var command = new DeleteProviderCourseLocationCommand(10012002, 123, Guid.Empty, _userId);
+            var command = new DeleteProviderCourseLocationCommand(10012002, 123, Guid.Empty, _userId, _userDisplayName);
 
             var sut = new DeleteProviderCourseLocationCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>(), Mock.Of<IProviderCourseLocationsReadRepository>());
 
@@ -29,7 +30,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
         public async Task ValidateUkprn_InValid_ReturnsError()
         {
             var id = Guid.NewGuid();
-            var command = new DeleteProviderCourseLocationCommand(10012002, 123, id, _userId);
+            var command = new DeleteProviderCourseLocationCommand(10012002, 123, id, _userId, _userDisplayName);
 
             var _providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationsReadRepository>();
             _providerCourseLocationReadRepositoryMock
@@ -47,7 +48,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
         public async Task ValidateLarsCode_InValid_ReturnsError()
         {
             var id = Guid.NewGuid();
-            var command = new DeleteProviderCourseLocationCommand(10012002, 123, id, _userId);
+            var command = new DeleteProviderCourseLocationCommand(10012002, 123, id, _userId, _userDisplayName);
 
             var _providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationsReadRepository>();
             _providerCourseLocationReadRepositoryMock
@@ -67,7 +68,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
         public async Task ValidateUserId_Empty_ReturnsError(string userId)
         {
             var id = Guid.NewGuid();
-            var command = new DeleteProviderCourseLocationCommand(10012002, 123, id, userId);
+            var command = new DeleteProviderCourseLocationCommand(10012002, 123, id, userId, _userDisplayName);
 
             var _providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationsReadRepository>();
             _providerCourseLocationReadRepositoryMock
@@ -79,6 +80,26 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
             var result = await sut.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.UserId);
+        }
+
+        [TestCase("")]
+        [TestCase(null)]
+        [TestCase(" ")]
+        public async Task ValidateUserDisplayName_Empty_ReturnsError(string userDisplayName)
+        {
+            var id = Guid.NewGuid();
+            var command = new DeleteProviderCourseLocationCommand(10012002, 123, id, _userId, userDisplayName);
+
+            var _providerCourseLocationReadRepositoryMock = new Mock<IProviderCourseLocationsReadRepository>();
+            _providerCourseLocationReadRepositoryMock
+                .Setup(x => x.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()))
+                .ReturnsAsync(new System.Collections.Generic.List<Domain.Entities.ProviderCourseLocation> { new Domain.Entities.ProviderCourseLocation { NavigationId = id } });
+
+            var sut = new DeleteProviderCourseLocationCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>(), _providerCourseLocationReadRepositoryMock.Object);
+
+            var result = await sut.TestValidateAsync(command);
+
+            result.ShouldHaveValidationErrorFor(c => c.UserDisplayName);
         }
     }
 }

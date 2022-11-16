@@ -39,11 +39,11 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpDelete]
         [Route("/providers/{ukprn}/courses/{larsCode}/location/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> DeleteProviderCourseLocation([FromRoute] int ukprn, [FromRoute] int larsCode, [FromRoute] Guid id, [FromQuery] string userId)
+        public async Task<ActionResult> DeleteProviderCourseLocation([FromRoute] int ukprn, [FromRoute] int larsCode, [FromRoute] Guid id, [FromQuery] string userId, [FromQuery] string userDisplayName)
         {
             _logger.LogInformation("Inner API: Request received for delete provider course location for Ukprn:{ukprn} LarsCode:{larscode} ProviderCourseLocationId:{id}", ukprn, larsCode, id);
 
-            var command = new DeleteProviderCourseLocationCommand(ukprn, larsCode, id, userId);
+            var command = new DeleteProviderCourseLocationCommand(ukprn, larsCode, id, userId, userDisplayName);
             await _mediator.Send(command);
 
             _logger.LogInformation("Deleted provider course locations for Ukprn:{ukprn} LarsCode:{larscode} ProviderCourseLocationId:{id}", ukprn, larsCode, id);
