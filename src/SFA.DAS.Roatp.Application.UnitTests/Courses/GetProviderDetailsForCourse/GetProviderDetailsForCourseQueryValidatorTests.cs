@@ -80,6 +80,5 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
            if (!result.IsValid)
                 Assert.AreEqual(result.Errors[0].ErrorMessage,ErrorMessage);
         }
-
     }
 }
