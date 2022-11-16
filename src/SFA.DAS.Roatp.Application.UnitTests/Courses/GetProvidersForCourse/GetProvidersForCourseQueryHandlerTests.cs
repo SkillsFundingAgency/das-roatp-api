@@ -77,7 +77,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
             Assert.AreEqual(firstProviderResult.ContactUrl, firstProviderModel.StandardContactUrl);
             Assert.AreEqual(firstProviderResult.ProviderHeadOfficeDistanceInMiles, firstProviderModel.Distance);
 
-            var otherProviderResult = result.Providers.First(x => x.Ukprn == firstProviderModel.Ukprn);
+            var otherProviderResult = result.Providers.First(x => x.Ukprn != firstProviderModel.Ukprn);
             Assert.AreEqual(0,otherProviderResult.AchievementRates.Count);
         }
 
