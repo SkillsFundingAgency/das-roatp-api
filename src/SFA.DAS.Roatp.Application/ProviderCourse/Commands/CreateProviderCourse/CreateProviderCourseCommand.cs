@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 {
-    public class CreateProviderCourseCommand : IRequest<int>, IUkprn, ILarsCodeUkprn
+    public class CreateProviderCourseCommand : IRequest<int>, IUkprn, ILarsCodeUkprn, ILarsCode
     {
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }
