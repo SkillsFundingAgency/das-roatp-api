@@ -24,7 +24,6 @@ public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersFor
         _standardsReadRepository = standardsReadRepository;
         _processProviderCourseLocationsService = processProviderCourseLocationsService;
         _logger = logger;
-
     }
 
     public async Task<GetProvidersForCourseQueryResult> Handle(GetProvidersForCourseQuery request, CancellationToken cancellationToken)
