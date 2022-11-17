@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             return provider;
         }
 
-        public async Task<List<ProviderCourseLocationDetailsModel>> GetProviderlocationDetailsWithDistance(int ukprn, int larsCode, decimal? lat, decimal? lon)
+        public async Task<List<ProviderCourseLocationDetailsModel>> GetProviderLocationDetailsWithDistance(int ukprn, int larsCode, decimal? lat, decimal? lon)
         {
             _logger.LogInformation("Gathering ProviderLocationDetails with distance for ukprn {ukprn}, larscode {larscode}", ukprn, larsCode);
 
@@ -124,11 +124,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
                     LocationType,
 	                PCL.HasDayReleaseDeliveryOption,
 	                PCL.HasBlockReleaseDeliveryOption,
-	                AddressLine1,
-	                AddressLine2,
-	                Town,
-	                Postcode,
-	                County,
 	                CASE	WHEN ({lat} is null) THEN null
 			                WHEN ({lon} is null) THEN null
 	                ELSE
@@ -155,11 +150,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
 	                LocationType,
 	                PCL.HasDayReleaseDeliveryOption,
 	                PCL.HasBlockReleaseDeliveryOption,
-	                AddressLine1,
-	                AddressLine2,
-	                Town,
-	                Postcode,
-	                County,
 	                CASE	WHEN ({lat} is null) THEN null
 			                WHEN ({lon} is null) THEN null
 	                ELSE

@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
             var service = new ProcessProviderCourseLocationsService();
             var expectedResult = service.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
-            var actualResult = new List<DeliveryModel> { new() { DeliveryModeType = DeliveryModeType.NotFound } };
+            var actualResult = new List<DeliveryModel>();
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
 
@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
             var service = new ProcessProviderCourseLocationsService();
             var expectedResult = service.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
-            var actualResult = new List<DeliveryModel> { new() { DeliveryModeType = DeliveryModeType.NotFound } };
+            var actualResult = new List<DeliveryModel>();
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
 
@@ -44,7 +44,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
             var service = new ProcessProviderCourseLocationsService();
             var expectedResult = service.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
-            var actualResult = new List<DeliveryModel> { new() { DeliveryModeType = DeliveryModeType.National } };
+            var actualResult = new List<DeliveryModel> { new() { LocationType = LocationType.National } };
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
 
@@ -70,7 +70,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
             var service = new ProcessProviderCourseLocationsService();
             var expectedResult = service.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
-            var actualResult = new List<DeliveryModel> { new() { DeliveryModeType = DeliveryModeType.Workplace, DistanceInMiles = shortestDistance } };
+            var actualResult = new List<DeliveryModel> { new() { LocationType = LocationType.Regional, DistanceInMiles = shortestDistance } };
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
 
@@ -97,12 +97,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
                 {
                     LocationType = LocationType.Provider,
                     Distance = shortestDistance,
-                    HasDayReleaseDeliveryOption = true,
-                    AddressLine1 = address1,
-                    Addressline2 = address2,
-                    Town = town,
-                    County = county,
-                    Postcode = postcode
+                    HasDayReleaseDeliveryOption = true
                 },
                 new()
                 {
@@ -117,8 +112,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
 
             var actualResult = new List<DeliveryModel>
             {
-                new() {DeliveryModeType = DeliveryModeType.DayRelease, DistanceInMiles = shortestDistance, Address1 = address1,Address2 = address2, Town = town, County = county, Postcode = postcode},
-                new() {DeliveryModeType = DeliveryModeType.BlockRelease, DistanceInMiles = oneMile}
+                new() {LocationType = LocationType.Provider, DayRelease = true, DistanceInMiles = shortestDistance},
+                new() {LocationType = LocationType.Provider,BlockRelease = true, DistanceInMiles = oneMile}
             };
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
@@ -130,11 +125,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
             const int oneMile = 1;
             const int shortestDistance = 100;
             const int longestDistance = 150;
-            const string address1 = "address 1";
-            const string address2 = "address 2";
-            const string town = "Town a";
-            const string county = "County A";
-            const string postcode = "xxx";
+           
             var providerLocations = new List<ProviderCourseLocationDetailsModel>
             {
                 new()
@@ -147,12 +138,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
                 {
                     LocationType = LocationType.Provider,
                     Distance = shortestDistance,
-                    HasBlockReleaseDeliveryOption = true,
-                    AddressLine1 = address1,
-                    Addressline2 = address2,
-                    Town = town,
-                    County = county,
-                    Postcode = postcode
+                    HasBlockReleaseDeliveryOption = true
                 },
                 new()
                 {
@@ -167,8 +153,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
 
             var actualResult = new List<DeliveryModel>
             {
-                new() {DeliveryModeType = DeliveryModeType.BlockRelease, DistanceInMiles = shortestDistance, Address1 = address1,Address2 = address2, Town = town, County = county, Postcode = postcode},
-                new() {DeliveryModeType = DeliveryModeType.DayRelease, DistanceInMiles = oneMile}
+                new() {LocationType = LocationType.Provider, BlockRelease = true, DistanceInMiles = shortestDistance},
+                new() {LocationType = LocationType.Provider,DayRelease = true, DistanceInMiles = oneMile}
             };
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
