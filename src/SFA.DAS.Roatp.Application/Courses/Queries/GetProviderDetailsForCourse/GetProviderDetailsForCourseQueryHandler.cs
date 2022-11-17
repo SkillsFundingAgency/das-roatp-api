@@ -28,7 +28,7 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
     {
         var standard = await _standardsReadRepository.GetStandard(request.LarsCode);
         ApprenticeshipLevel level;
-        if (standard.Level >= 4)
+        if (standard.Level >= (int)ApprenticeshipLevel.FourPlus)
             level = ApprenticeshipLevel.FourPlus;
         else
             level = (ApprenticeshipLevel)standard.Level;

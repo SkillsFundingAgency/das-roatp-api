@@ -17,7 +17,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
     [TestFixture]
     public class GetProvidersForCourseQueryHandlerTests
     {
-
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_ReturnsResult(
             List<ProviderCourseDetailsSummaryModel> providerCourseDetailsSummaryModels,
@@ -61,9 +60,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
             var firstProviderResult = result.Providers.First(x => x.Ukprn == firstProviderModel.Ukprn);
 
             Assert.GreaterOrEqual(1,firstProviderResult.AchievementRates.Count);
-
             Assert.AreEqual(firstProviderResult.DeliveryModels.Count, deliveryModels.Count);
-
 
             firstProviderResult.Should().BeEquivalentTo(firstProviderModel, c => c
              .Excluding(s => s.LegalName)
@@ -139,7 +136,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
             Assert.AreEqual(firstProviderResult.ContactUrl, firstProviderModel.StandardContactUrl);
             Assert.AreEqual(firstProviderResult.ProviderHeadOfficeDistanceInMiles, firstProviderModel.Distance);
         }
-
 
         [Test, RecursiveMoqAutoData()]
         public async Task HanHandle_NoNationalAchievementRates_ReturnsResultWithEmptyList(

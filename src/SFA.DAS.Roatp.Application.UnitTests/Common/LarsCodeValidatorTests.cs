@@ -22,7 +22,6 @@ public class LarsCodeValidatorTests
         _standardsReadRepositoryMock.Setup(r => r.GetStandard(It.Is<int>( i=> i == ValidLarsCode))).ReturnsAsync(new Standard());
     }
 
-    
     [TestCase(0, LarsCodeValidator.InvalidMessage, false)]
     [TestCase(99999, LarsCodeValidator.NotFoundMessage, false)]
     [TestCase(ValidLarsCode, "", true)]
@@ -41,7 +40,6 @@ public class LarsCodeValidatorTests
     
     public class LarsCodeValidatorTestObject : ILarsCode
     {
-
         public int LarsCode { get; }
         public LarsCodeValidatorTestObject( int larsCode)
         {

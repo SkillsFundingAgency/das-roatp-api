@@ -8,7 +8,6 @@ using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
-using Microsoft.AspNetCore.Http;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests
