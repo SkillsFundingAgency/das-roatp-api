@@ -80,11 +80,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
             const int oneMile = 1;
             const int shortestDistance = 100;
             const int longestDistance = 150;
-            const string address1 = "address 1";
-            const string address2 = "address 2";
-            const string town = "Town a";
-            const string county = "County A";
-            const string postcode = "xxx";
             var providerLocations = new List<ProviderCourseLocationDetailsModel>
             {
                 new()
