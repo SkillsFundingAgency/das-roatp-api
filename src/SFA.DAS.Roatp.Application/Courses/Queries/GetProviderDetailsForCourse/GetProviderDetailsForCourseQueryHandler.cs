@@ -44,7 +44,7 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
 
         _logger.LogInformation("Provider {ukprn} has apprenticeship level {apprenticeshipLevel}", request.Ukprn, rate?.ApprenticeshipLevel);
 
-        var providerLocations = await _providerDetailsReadRepository.GetProviderlocationDetailsWithDistance(
+        var providerLocations = await _providerDetailsReadRepository.GetProviderLocationDetailsWithDistance(
             request.Ukprn, request.LarsCode, request.Latitude,
             request.Longitude);
 

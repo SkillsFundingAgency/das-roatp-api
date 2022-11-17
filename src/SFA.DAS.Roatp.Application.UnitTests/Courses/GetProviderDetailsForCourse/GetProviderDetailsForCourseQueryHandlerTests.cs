@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             providerDetailsReadRepositoryMock.Setup(r => r.GetProviderForUkprnAndLarsCodeWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerCourseDetailsModel);
             nationalAchievementRatesReadRepositoryMock.Setup(x => x.GetByUkprn(providerCourseDetailsModel.Ukprn))
                 .ReturnsAsync(nationalAchievementRates);
-            providerDetailsReadRepositoryMock.Setup(r => r.GetProviderlocationDetailsWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerLocationsWithDistance);
+            providerDetailsReadRepositoryMock.Setup(r => r.GetProviderLocationDetailsWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerLocationsWithDistance);
             processProviderCourseLocationsService
                 .Setup(x => x.ConvertProviderLocationsToDeliveryModels(providerLocationsWithDistance))
                 .Returns(deliveryModels);
@@ -70,7 +70,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             providerDetailsReadRepositoryMock.Setup(r => r.GetProviderForUkprnAndLarsCodeWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerCourseDetailsModel);
             nationalAchievementRatesReadRepositoryMock.Setup(x => x.GetByUkprn(It.IsAny<int>()))
                 .ReturnsAsync((List<NationalAchievementRate>)null);
-            providerDetailsReadRepositoryMock.Setup(r => r.GetProviderlocationDetailsWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerLocationsWithDistance);
+            providerDetailsReadRepositoryMock.Setup(r => r.GetProviderLocationDetailsWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerLocationsWithDistance);
             processProviderCourseLocationsService
                 .Setup(x => x.ConvertProviderLocationsToDeliveryModels(providerLocationsWithDistance))
                 .Returns(deliveryModels);
@@ -107,7 +107,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             providerDetailsReadRepositoryMock.Setup(r => r.GetProviderForUkprnAndLarsCodeWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerCourseDetailsModel);
             nationalAchievementRatesReadRepositoryMock.Setup(x => x.GetByUkprn(providerCourseDetailsModel.Ukprn))
                 .ReturnsAsync(nationalAchievementRates);
-            providerDetailsReadRepositoryMock.Setup(r => r.GetProviderlocationDetailsWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync((List<ProviderCourseLocationDetailsModel>)null);
+            providerDetailsReadRepositoryMock.Setup(r => r.GetProviderLocationDetailsWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync((List<ProviderCourseLocationDetailsModel>)null);
             processProviderCourseLocationsService
                 .Setup(x => x.ConvertProviderLocationsToDeliveryModels(It.IsAny<List<ProviderCourseLocationDetailsModel>>()))
                 .Returns(new List<DeliveryModel>());
