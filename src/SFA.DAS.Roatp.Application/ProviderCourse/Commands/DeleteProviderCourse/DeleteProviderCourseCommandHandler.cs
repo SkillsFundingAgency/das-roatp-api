@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse
         public async Task<bool> Handle(DeleteProviderCourseCommand command, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Provider course will be deleted for Ukprn:{ukprn} Larscode:{larsCode} by User {userId}", command.Ukprn, command.LarsCode, command.UserId);
-            await _providerCoursesWriteRepository.Delete(command.Ukprn, command.LarsCode);
+            await _providerCoursesWriteRepository.Delete(command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.DeleteProviderCourse.ToString());
             return true;
         }
     }

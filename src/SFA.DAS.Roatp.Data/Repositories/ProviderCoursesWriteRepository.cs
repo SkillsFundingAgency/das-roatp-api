@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,10 +13,11 @@ namespace SFA.DAS.Roatp.Data.Repositories
     internal class ProviderCoursesWriteRepository : IProviderCoursesWriteRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
-
-        public ProviderCoursesWriteRepository(RoatpDataContext context)
+        private readonly ILogger<ProviderCoursesWriteRepository> _logger;
+        public ProviderCoursesWriteRepository(RoatpDataContext context, ILogger<ProviderCoursesWriteRepository> logger) 
         {
             _roatpDataContext = context;
+            _logger = logger;
         }
 
         public async Task<ProviderCourse> PatchProviderCourse(ProviderCourse patchedProviderCourseEntity)
@@ -43,16 +46,33 @@ namespace SFA.DAS.Roatp.Data.Repositories
             return providerCourse;
         }
 
-        public async Task Delete(int ukprn, int larscode)
+        public async Task Delete(int ukprn, int larscode, string userId, string userDisplayName, string userAction)
         {
-            var providerCourse = await _roatpDataContext.ProviderCourses
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
+            try
+            {
+                var providerCourse = await _roatpDataContext.ProviderCourses
                 .Where(l => l.LarsCode == larscode && l.Provider.Ukprn == ukprn)
                 .Include(l => l.Locations).Include(l => l.Versions)
                 .SingleAsync();
 
-            _roatpDataContext.Remove(providerCourse);
+                Audit audit = new(typeof(ProviderCourse).Name, providerCourse.Id.ToString(), userId, userDisplayName, userAction, providerCourse, null);
+               
+                _roatpDataContext.Audits.Add(audit);
 
-            await _roatpDataContext.SaveChangesAsync();
+                _roatpDataContext.Remove(providerCourse);      
+                
+                await _roatpDataContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "ProviderCourse delete failed for ukprn {ukprn}, larscode {larscode} by userId {userId}", ukprn, larscode, userId);
+                throw;
+            }
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -23,15 +24,15 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpDelete]
         [Route("/providers/{ukprn}/courses/{larsCode}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> DeleteProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, [FromQuery] string userId)
+        public async Task<ActionResult> DeleteProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, [FromQuery] string userId, [FromQuery] string UserDisplayName)
         {
             _logger.LogInformation("Inner API: Request received to delete provider course ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, larsCode, userId);
-            
-            var command = new DeleteProviderCourseCommand(ukprn, larsCode,  userId);
+
+            var command = new DeleteProviderCourseCommand(ukprn, larsCode,  userId, UserDisplayName);
             await _mediator.Send(command);
             _logger.LogInformation("Deleted provider course for Ukprn:{ukprn} LarsCode:{larscode}", ukprn, larsCode);
 
-            var bulkDeleteProviderLocationsCommand = new BulkDeleteProviderLocationsCommand(ukprn, userId);
+            var bulkDeleteProviderLocationsCommand = new BulkDeleteProviderLocationsCommand(ukprn, userId, UserDisplayName);
             var result = await _mediator.Send(bulkDeleteProviderLocationsCommand);
 
             _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn}", result, ukprn);

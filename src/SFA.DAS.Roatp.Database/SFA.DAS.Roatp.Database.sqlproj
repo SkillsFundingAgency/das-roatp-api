@@ -77,6 +77,7 @@
     <Build Include="Tables\NationalAchievementRateImport.sql" />
     <Build Include="Tables\NationalAchievementRateOverall.sql" />
     <Build Include="Tables\NationalAchievementRateOverallImport.sql" />
+    <Build Include="Tables\Audit.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
