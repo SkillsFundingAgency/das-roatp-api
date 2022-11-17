@@ -33,8 +33,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
 
             await sut.Handle(command, new CancellationToken());
 
-            providerCourseLocationsWriteRepositoryMock.Verify(p => p.Create(It.IsAny<ProviderCourseLocation>()), Times.Once);
-            providerCourseLocationsWriteRepositoryMock.Verify(m => m.Create(It.Is<ProviderCourseLocation>(l => l.ProviderLocationId == providerLocation.Id && l.ProviderCourseId == providerCourse.Id && l.HasDayReleaseDeliveryOption == command.HasDayReleaseDeliveryOption && l.HasBlockReleaseDeliveryOption == command.HasBlockReleaseDeliveryOption)));
+            providerCourseLocationsWriteRepositoryMock.Verify(p => p.Create(It.IsAny<ProviderCourseLocation>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
+            providerCourseLocationsWriteRepositoryMock.Verify(m => m.Create(It.Is<ProviderCourseLocation>(l => l.ProviderLocationId == providerLocation.Id && l.ProviderCourseId == providerCourse.Id && l.HasDayReleaseDeliveryOption == command.HasDayReleaseDeliveryOption && l.HasBlockReleaseDeliveryOption == command.HasBlockReleaseDeliveryOption), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
     }
 }

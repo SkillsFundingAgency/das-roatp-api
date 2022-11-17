@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System.Threading;
@@ -39,7 +40,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
                 HasBlockReleaseDeliveryOption = command.HasBlockReleaseDeliveryOption
             };
             _logger.LogInformation("Creating provider course location for Ukprn: {ukprn} LarsCode: {larsCode}, ProviderLocationId: {Id}", command.Ukprn, command.LarsCode, providerLocation.Id);
-            var createdProviderCourseLocation = await _providerCourseLocationsWriteRepository.Create(providerCourseLocation);
+            var createdProviderCourseLocation = await _providerCourseLocationsWriteRepository.Create(providerCourseLocation, command.Ukprn, command.UserId, command.UserDisplayName, AuditEventTypes.CreateProviderCourseLocation);
             return createdProviderCourseLocation.Id;
         }
     }

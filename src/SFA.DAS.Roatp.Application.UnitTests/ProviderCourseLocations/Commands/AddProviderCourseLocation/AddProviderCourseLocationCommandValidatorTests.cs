@@ -21,6 +21,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         private int ukprn = 10012002;
         private int larsCode = 123;
         private string userId = "user";
+        private string userDisplayName = "userDisplayName";
 
         private AddProviderCourseLocationCommand _command;
 
@@ -47,13 +48,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
                 .Setup(x => x.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(new List<ProviderCourseLocation>());
 
-            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, Guid.NewGuid(), true, true);
+            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, userDisplayName, Guid.NewGuid(), true, true);
         }
 
         [Test, RecursiveMoqAutoData]
         public async Task ValidateUkprn_InValid_ReturnsError()
         {
-            _command = new AddProviderCourseLocationCommand(100, larsCode, userId, Guid.NewGuid(), true, true);
+            _command = new AddProviderCourseLocationCommand(100, larsCode, userId, userDisplayName, Guid.NewGuid(), true, true);
             var sut = new AddProviderCourseLocationCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, _providerLocationsReadRepositoryMock.Object, _providerCourseLocationsReadRepositoryMock.Object);
 
             var result = await sut.TestValidateAsync(_command);
@@ -65,7 +66,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         public async Task ValidateLarsCode_InValid_ReturnsError()
         {
             var locationNavigationId = Guid.NewGuid();
-            _command = new AddProviderCourseLocationCommand(ukprn, 0, userId, locationNavigationId, true, true);
+            _command = new AddProviderCourseLocationCommand(ukprn, 0, userId, userDisplayName, locationNavigationId, true, true);
 
             var provider = new Provider();
             _providersReadRepositoryMock
@@ -101,7 +102,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         [TestCase(" ")]
         public async Task ValidateUserId_Empty_ReturnsError(string userId)
         {
-            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, Guid.NewGuid(), true, true);
+            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, userDisplayName, Guid.NewGuid(), true, true);
 
 
             var sut = new AddProviderCourseLocationCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, _providerLocationsReadRepositoryMock.Object, _providerCourseLocationsReadRepositoryMock.Object);
@@ -114,7 +115,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         [Test]
         public async Task ValidateLocationNavigationId_InValid_ReturnsError()
         {
-            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, Guid.Empty, true, true);
+            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, userDisplayName, Guid.Empty, true, true);
 
             var sut = new AddProviderCourseLocationCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, _providerLocationsReadRepositoryMock.Object, _providerCourseLocationsReadRepositoryMock.Object);
 
@@ -128,7 +129,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         [Test]
         public async Task ValidateLocationNavigationId_Valid_ReturnsNoError()
         {
-            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, Guid.NewGuid(), true, true);
+            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, userDisplayName, Guid.NewGuid(), true, true);
 
             var sut = new AddProviderCourseLocationCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, _providerLocationsReadRepositoryMock.Object, _providerCourseLocationsReadRepositoryMock.Object);
 
@@ -142,7 +143,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         [TestCase(false, true)]
         public async Task ValidateHasDayReleaseDeliveryOption_SelectedDeliveryOption_ReturnsNoError(bool? hasDayReleaseDeliveryOption, bool? hasBlockReleaseDeliveryOption)
         {
-            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, Guid.NewGuid(), hasDayReleaseDeliveryOption, hasBlockReleaseDeliveryOption);
+            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, userDisplayName, Guid.NewGuid(), hasDayReleaseDeliveryOption, hasBlockReleaseDeliveryOption);
 
             var sut = new AddProviderCourseLocationCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, _providerLocationsReadRepositoryMock.Object, _providerCourseLocationsReadRepositoryMock.Object);
 
@@ -157,7 +158,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         [TestCase(null, false)]
         public async Task ValidateHasDayReleaseDeliveryOption_NotSelected_ReturnsError(bool hasDayReleaseDeliveryOption, bool hasBlockReleaseDeliveryOption)
         {
-            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, Guid.NewGuid(), hasDayReleaseDeliveryOption, hasBlockReleaseDeliveryOption);
+            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, userDisplayName, Guid.NewGuid(), hasDayReleaseDeliveryOption, hasBlockReleaseDeliveryOption);
 
             var sut = new AddProviderCourseLocationCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, _providerLocationsReadRepositoryMock.Object, _providerCourseLocationsReadRepositoryMock.Object);
 

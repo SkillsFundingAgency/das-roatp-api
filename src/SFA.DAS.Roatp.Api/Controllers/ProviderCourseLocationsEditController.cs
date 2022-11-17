@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         public async Task<IActionResult> CreateProviderCourseLocation([FromRoute] int ukprn, [FromRoute] int larsCode, AddProviderCourseLocationModel model)
         {
             _logger.LogInformation("Inner API: Request to create provider course location received for ukprn: {ukprn} larsCode: {larscode} locationNavigationId : {locationNavigationId}", ukprn, larsCode, model.LocationNavigationId);
-            var command = new AddProviderCourseLocationCommand(ukprn, larsCode, model.UserId, model.LocationNavigationId, model.HasDayReleaseDeliveryOption, model.HasBlockReleaseDeliveryOption);
+            var command = new AddProviderCourseLocationCommand(ukprn, larsCode, model.UserId, model.UserDisplayName, model.LocationNavigationId, model.HasDayReleaseDeliveryOption, model.HasBlockReleaseDeliveryOption);
             var providerCourseLocationId = await _mediator.Send(command);
             return CreatedAtRoute(RouteNames.GetProviderCourseLocations, new { ukprn, larsCode }, providerCourseLocationId);
         }

@@ -21,11 +21,29 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _logger = logger;
         }
 
-        public async Task<ProviderCourseLocation> Create(ProviderCourseLocation providerCourseLocation)
+        public async Task<ProviderCourseLocation> Create(ProviderCourseLocation providerCourseLocation, int ukprn, string userId, string userDisplayName, string userAction)
         {
-            _roatpDataContext.ProviderCoursesLocations.Add(providerCourseLocation);
-            await _roatpDataContext.SaveChangesAsync();
-            return providerCourseLocation;
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
+            try
+            {
+                _roatpDataContext.ProviderCoursesLocations.Add(providerCourseLocation);
+
+                Audit audit = new(typeof(ProviderCourseLocation).Name, providerCourseLocation.ProviderCourseId.ToString(), userId, userDisplayName, userAction, providerCourseLocation, null);
+
+                _roatpDataContext.Audits.Add(audit);
+
+                await _roatpDataContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+
+                return providerCourseLocation;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+
+                _logger.LogError(ex, "ProviderCourseLocation create is failed for ukprn {ukprn} providerCourseId {providerCourseId} by userId {userId}", ukprn, providerCourseLocation.ProviderCourseId, userId);
+                throw;
+            }
         }
 
         public async Task Delete(Guid navigationId, int ukprn, string userId, string userDisplayName, string userAction)
