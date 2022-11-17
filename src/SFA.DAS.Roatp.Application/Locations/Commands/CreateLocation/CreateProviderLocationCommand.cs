@@ -8,8 +8,9 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
 {
     public class CreateProviderLocationCommand : IRequest<int>, IUkprn
     {
-        public string UserId { get; set; }
         public int Ukprn { get; set; }
+        public string UserId { get; set; }
+        public string UserDisplayName { get; set; }
         public string LocationName { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }

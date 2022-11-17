@@ -33,7 +33,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
                 .Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>()))
                 .ReturnsAsync(new Domain.Entities.ProviderCourse());
 
-            _command = new AddNationalLocationToProviderCourseLocationsCommand(10012002, 123, "user");
+            _command = new AddNationalLocationToProviderCourseLocationsCommand(10012002, 123, "user", "userDisplayName");
         }
 
         [Test, RecursiveMoqAutoData]

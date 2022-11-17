@@ -66,7 +66,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
                 await transaction.CommitAsync();
             }
-
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();

@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.CourseManagement.Domain.ApiModels;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using System.Linq;
@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
             if (providerLocationIdsToDelete.Any())
             {
                 _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn}", providerLocationIdsToDelete.Count, LocationType.Regional, command.Ukprn);
-                await _providerLocationsBulkRepository.BulkDelete(providerLocationIdsToDelete, command.UserId,  command.UserDisplayName, command.Ukprn, AuditEventTypes.BulkDeleteProviderLocation.ToString());
+                await _providerLocationsBulkRepository.BulkDelete(providerLocationIdsToDelete, command.UserId,  command.UserDisplayName, command.Ukprn, AuditEventTypes.BulkDeleteProviderLocation);
             }
             return providerLocationIdsToDelete.Count;
         }

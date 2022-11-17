@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         public async Task<IActionResult> AddNationalLocationToProviderCourseLocations([FromRoute] int ukprn, [FromRoute] int larsCode, AddNationalLocationToProviderCourseLocationsModel model)
         {
             _logger.LogInformation("Inner API: Request to create national location received for ukprn: {ukprn} larsCode: {larscode}", ukprn, larsCode);
-            var command = new AddNationalLocationToProviderCourseLocationsCommand(ukprn, larsCode, model.UserId);
+            var command = new AddNationalLocationToProviderCourseLocationsCommand(ukprn, larsCode, model.UserId, model.UserDisplayName);
             var providerCourseLocation = await _mediator.Send(command);
             return CreatedAtRoute(RouteNames.GetProviderCourseLocations, new { ukprn, larsCode }, providerCourseLocation.Id);
         }
