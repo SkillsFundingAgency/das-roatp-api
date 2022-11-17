@@ -2,8 +2,6 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries.GetOverallAchievementRates;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
-using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Domain.Entities;
 using System.Collections.Generic;
 using System.Threading.Tasks;
