@@ -13,12 +13,6 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
 
             if (providerCourseLocations == null || !providerCourseLocations.Any())
             {
-                deliveryModels.Add(
-                    new DeliveryModel
-                    {
-                        DeliveryModeType = DeliveryModeType.NotFound
-                    });
-
                 return deliveryModels;
             }
 
@@ -27,7 +21,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
                 deliveryModels.Add(
                     new DeliveryModel
                     {
-                        DeliveryModeType = DeliveryModeType.National
+                        LocationType = LocationType.National
                     });
             }
 
@@ -39,7 +33,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
                 deliveryModels.Add(
                     new DeliveryModel
                     {
-                        DeliveryModeType = DeliveryModeType.Workplace,
+                        LocationType = LocationType.Regional,
                         DistanceInMiles = nearestRegionalLocation.Distance
                     });
             }
@@ -53,13 +47,9 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
                     deliveryModels.Add(
                     new DeliveryModel
                     {
-                        DeliveryModeType = DeliveryModeType.DayRelease,
+                        LocationType = LocationType.Provider,
+                        DayRelease = true,
                         DistanceInMiles = nearestLocationDayRelease.Distance,
-                        Address1 = nearestLocationDayRelease.AddressLine1,
-                        Address2 = nearestLocationDayRelease.Addressline2,
-                        Town = nearestLocationDayRelease.Town,
-                        County = nearestLocationDayRelease.County,
-                        Postcode = nearestLocationDayRelease.Postcode
                     });
 
                 var nearestLocationBlockRelease = providerCourseLocations
@@ -69,13 +59,9 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
                     deliveryModels.Add(
                         new DeliveryModel
                         {
-                            DeliveryModeType = DeliveryModeType.BlockRelease,
+                            LocationType = LocationType.Provider,
+                            BlockRelease = true,
                             DistanceInMiles = nearestLocationBlockRelease.Distance,
-                            Address1 = nearestLocationBlockRelease.AddressLine1,
-                            Address2 = nearestLocationBlockRelease.Addressline2,
-                            Town = nearestLocationBlockRelease.Town,
-                            County = nearestLocationBlockRelease.County,
-                            Postcode = nearestLocationBlockRelease.Postcode
                         });
             }
 
