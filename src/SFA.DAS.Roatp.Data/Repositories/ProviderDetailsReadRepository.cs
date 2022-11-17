@@ -103,19 +103,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
                             pc.LarsCode,
                             p.LegalName,
                             p.TradingName,
-                            pc.StandardInfoUrl,
-                            pc.ContactUsEmail as Email,
-                            pc.ContactUsPhoneNumber as Phone,
-                            pc.ContactUsPageUrl as StandardContactUrl,
-                            p.Website as ProviderWebsite,
-                            pa.AddressLine1 as Address1,
-                            pa.AddressLine2 as Address2,
-                            pa.AddressLine3 as Address3,
-                            pa.AddressLine4 as Address4,
-                            pa.Town as Town,
-                            PA.Postcode as Postcode,
-                            PA.Latitude,
-                            PA.Longitude,
                             CASE  WHEN ({lat} is null) THEN null
                                 WHEN ({lon} is null) THEN null
                                 ELSE
