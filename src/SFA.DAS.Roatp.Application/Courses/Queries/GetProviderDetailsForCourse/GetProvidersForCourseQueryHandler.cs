@@ -48,13 +48,13 @@ public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersFor
             await _providerDetailsReadRepository.GetAllProviderlocationDetailsWithDistance(request.LarsCode,
                 request.Latitude, request.Longitude);
 
-        var providers = new List<ProviderDetails>();
+        var providers = new List<ProviderSummation>();
         _logger.LogInformation("Providers to process: {count}", providers.Count);
         foreach (var provider in providerDetails)
         {
             _logger.LogInformation("Provider: {ukprn}", provider.Ukprn);
 
-            var result = (ProviderDetails)provider;
+            var result = (ProviderSummation)provider;
             var rate= nationalAchievementRates.Where(r => r.ProviderId == provider.ProviderId).MaxBy(a=>a.ApprenticeshipLevel);
 
             _logger.LogInformation("Provider {ukprn} has apprenticeship level: {apprenticeshipLevel}",provider.Ukprn,rate?.ApprenticeshipLevel);

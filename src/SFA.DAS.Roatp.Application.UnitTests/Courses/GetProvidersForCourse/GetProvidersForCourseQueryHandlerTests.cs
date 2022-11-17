@@ -64,14 +64,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
 
             firstProviderResult.Should().BeEquivalentTo(firstProviderModel, c => c
              .Excluding(s => s.LegalName)
-             .Excluding(s => s.StandardContactUrl)
              .Excluding(s => s.Distance)
              .Excluding(s => s.Ukprn)
              .Excluding(s => s.ProviderId)
              );
 
             Assert.AreEqual(firstProviderResult.Name, firstProviderModel.LegalName);
-            Assert.AreEqual(firstProviderResult.ContactUrl, firstProviderModel.StandardContactUrl);
+
             Assert.AreEqual(firstProviderResult.ProviderHeadOfficeDistanceInMiles, firstProviderModel.Distance);
 
             var otherProviderResult = result.Providers.First(x => x.Ukprn != firstProviderModel.Ukprn);
@@ -126,14 +125,12 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
 
             firstProviderResult.Should().BeEquivalentTo(firstProviderModel, c => c
              .Excluding(s => s.LegalName)
-             .Excluding(s => s.StandardContactUrl)
              .Excluding(s => s.Distance)
              .Excluding(s => s.Ukprn)
              .Excluding(s => s.ProviderId)
              );
 
             Assert.AreEqual(firstProviderResult.Name, firstProviderModel.LegalName);
-            Assert.AreEqual(firstProviderResult.ContactUrl, firstProviderModel.StandardContactUrl);
             Assert.AreEqual(firstProviderResult.ProviderHeadOfficeDistanceInMiles, firstProviderModel.Distance);
         }
 
@@ -181,14 +178,12 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
 
             firstProviderResult.Should().BeEquivalentTo(firstProviderModel, c => c
              .Excluding(s => s.LegalName)
-             .Excluding(s => s.StandardContactUrl)
              .Excluding(s => s.Distance)
              .Excluding(s => s.Ukprn)
              .Excluding(s => s.ProviderId)
              );
 
             Assert.AreEqual(firstProviderResult.Name, firstProviderModel.LegalName);
-            Assert.AreEqual(firstProviderResult.ContactUrl, firstProviderModel.StandardContactUrl);
             Assert.AreEqual(firstProviderResult.ProviderHeadOfficeDistanceInMiles, firstProviderModel.Distance);
 
             var otherProviderResult = result.Providers.First(x => x.Ukprn != firstProviderModel.Ukprn);

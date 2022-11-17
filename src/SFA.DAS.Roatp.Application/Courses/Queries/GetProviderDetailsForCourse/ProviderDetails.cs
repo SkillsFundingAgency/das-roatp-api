@@ -37,19 +37,18 @@ public class ProviderDetails
         
         var result = (ProviderDetails) baseResult;
         result.MarketingInfo = providerCourseDetails.MarketingInfo;
-
+        result.ContactUrl = providerCourseDetails.StandardContactUrl;
+        result.Email = providerCourseDetails.Email;
+        result.Phone = providerCourseDetails.Phone;
+        result.StandardInfoUrl = providerCourseDetails.StandardInfoUrl;
+        result.Address1 = providerCourseDetails.Address1;
+        result.Address2 = providerCourseDetails.Address2;
+        result.Address3 = providerCourseDetails.Address3;
+        result.Address4 = providerCourseDetails.Address4;
+        result.Town = providerCourseDetails.Town;
+        result.Postcode = providerCourseDetails.Postcode;
         return result;
     }
-
-    public static implicit operator ProviderDetails(
-        ProviderCourseDetailsSummaryModel providerCourseDetails)
-    {
-        if (providerCourseDetails == null)
-            return null;
-
-        return (ProviderCourseDetailsModelBase)providerCourseDetails;
-    }
-
 
     public static implicit operator ProviderDetails(
         ProviderCourseDetailsModelBase providerCourseDetails)
@@ -58,18 +57,9 @@ public class ProviderDetails
         return new ProviderDetails
         {
             Ukprn = providerCourseDetails.Ukprn,
-            ContactUrl = providerCourseDetails.StandardContactUrl,
-            Email = providerCourseDetails.Email,
-            Phone = providerCourseDetails.Phone,
+            
             Name = providerCourseDetails.LegalName,
             TradingName = providerCourseDetails.TradingName,
-            StandardInfoUrl = providerCourseDetails.StandardInfoUrl,
-            Address1 = providerCourseDetails.Address1,
-            Address2 = providerCourseDetails.Address2,
-            Address3 = providerCourseDetails.Address3,
-            Address4 = providerCourseDetails.Address4,
-            Town = providerCourseDetails.Town,
-            Postcode = providerCourseDetails.Postcode,
             ProviderHeadOfficeDistanceInMiles = (decimal?)providerCourseDetails.Distance,
         };
     }
