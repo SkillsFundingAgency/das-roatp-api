@@ -47,7 +47,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<int> GetProvidersCount(int larsCode)
+        public Task<int> GetProvidersCount(int larsCode)
         {
             FormattableString sql = $@"SELECT DISTINCT PC.*
                     FROM providerCourse PC
@@ -56,7 +56,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                     where PC.larsCode ={larsCode}
                     AND ISNULL(PRD.StatusId,{OrganisationStatus.Active}) IN ({OrganisationStatus.Active},{OrganisationStatus.ActiveNotTakingOnApprentices})";
 
-            return _roatpDataContext.ProviderCourses.FromSqlInterpolated(sql).Count();
+            return Task.FromResult(_roatpDataContext.ProviderCourses.FromSqlInterpolated(sql).Count());
         }
     }
 }
