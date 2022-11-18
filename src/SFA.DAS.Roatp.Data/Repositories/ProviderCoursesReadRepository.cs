@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Data.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using static System.Int32;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
@@ -47,16 +48,24 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .ToListAsync();
         }
 
-        public Task<int> GetProvidersCount(int larsCode)
+        public async Task<int> GetProvidersCount(int larsCode)
         {
-            FormattableString sql = $@"SELECT DISTINCT PC.*
+            var sql = $@"SELECT count(0)
                     FROM providerCourse PC
                     INNER JOIN Provider P on P.ID = PC.ProviderID
                     LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.ukprn = PRD.ukprn
                     where PC.larsCode ={larsCode}
-                    AND ISNULL(PRD.StatusId,{OrganisationStatus.Active}) IN ({OrganisationStatus.Active},{OrganisationStatus.ActiveNotTakingOnApprentices})";
+                    AND PRD.StatusId IN ({OrganisationStatus.Active},{OrganisationStatus.ActiveNotTakingOnApprentices})";
 
-            return Task.FromResult(_roatpDataContext.ProviderCourses.FromSqlInterpolated(sql).Count());
+
+            await using var connection = _roatpDataContext.Database.GetDbConnection();
+            await connection.OpenAsync();
+
+            await using var command = connection.CreateCommand();
+            command.CommandText = sql;
+            var result = await command.ExecuteScalarAsync();
+            TryParse(result?.ToString(), out var count);
+            return count;
         }
     }
 }
