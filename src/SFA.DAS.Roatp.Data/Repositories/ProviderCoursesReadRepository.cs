@@ -50,22 +50,22 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public async Task<int> GetProvidersCount(int larsCode)
         {
-            var sql = $@"SELECT count(0)
-                    FROM providerCourse PC
-                    INNER JOIN Provider P on P.ID = PC.ProviderID
-                    LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.ukprn = PRD.ukprn
-                    where PC.larsCode ={larsCode}
-                    AND PRD.StatusId IN ({OrganisationStatus.Active},{OrganisationStatus.ActiveNotTakingOnApprentices})";
-
-
             await using var connection = _roatpDataContext.Database.GetDbConnection();
             await connection.OpenAsync();
 
             await using var command = connection.CreateCommand();
-            command.CommandText = sql;
+            command.CommandText = $@"SELECT count(0)
+                    FROM providerCourse PC
+                    INNER JOIN Provider P on P.ID = PC.ProviderID
+                    LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.ukprn = PRD.ukprn
+                    where PC.larsCode ={larsCode}
+                    AND PRD.StatusId IN ({OrganisationStatus.Active},{OrganisationStatus.ActiveNotTakingOnApprentices})"; ;
             var result = await command.ExecuteScalarAsync();
-            TryParse(result?.ToString(), out var count);
-            return count;
+            var success = TryParse(result?.ToString(), out var count);
+            if (success)
+                return count;
+
+            return 0;
         }
     }
 }
