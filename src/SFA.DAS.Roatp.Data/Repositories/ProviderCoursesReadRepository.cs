@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Data.Constants;
@@ -47,26 +47,16 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .ToListAsync();
         }
 
-        public async Task<int> GetProvidersCount(int larscode)
+        public async Task<int> GetProvidersCount(int larsCode)
         {
-            var activeProviderRegistrationDetails = await _roatpDataContext
-                .ProviderRegistrationDetails
-                .AsNoTracking()
-                .Where(p=>
-                            p.StatusId == OrganisationStatus.Active 
-                            || p.StatusId==OrganisationStatus.ActiveNotTakingOnApprentices)
-                .ToListAsync();
+            FormattableString sql = $@"SELECT DISTINCT PC.*
+                    FROM providerCourse PC
+                    INNER JOIN Provider P on P.ID = PC.ProviderID
+                    LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.ukprn = PRD.ukprn
+                    where PC.larsCode ={larsCode}
+                    AND ISNULL(PRD.StatusId,{OrganisationStatus.Active}) IN ({OrganisationStatus.Active},{OrganisationStatus.ActiveNotTakingOnApprentices})";
 
-            var activeProviders = await _roatpDataContext
-                .Providers.Where(p=> activeProviderRegistrationDetails
-                    .Select(prd => prd.Ukprn).Contains(p.Ukprn))
-                    .ToListAsync();
-
-            return await _roatpDataContext
-                .ProviderCourses
-                .AsNoTracking()
-                .Where(c => c.LarsCode == larscode && activeProviders.Select(x=>x.Id).Contains(c.ProviderId))
-                .CountAsync();
+            return _roatpDataContext.ProviderCourses.FromSqlInterpolated(sql).Count();
         }
     }
 }
