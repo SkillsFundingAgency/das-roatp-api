@@ -38,8 +38,8 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
         var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByUkprn(request.Ukprn);
 
         var filteredNationalAchievementRates =
-            nationalAchievementRates?.Where(x => (x.ApprenticeshipLevel == ApprenticeshipLevel.AllLevels || x.ApprenticeshipLevel == level)
-                                                && x.Age == Age.AllAges && x.SectorSubjectArea == standard.SectorSubjectArea).ToList();
+            nationalAchievementRates.Where(x => (x.ApprenticeshipLevel == ApprenticeshipLevel.AllLevels || x.ApprenticeshipLevel == level)
+                                                && x.Age == Age.AllAges && x.SectorSubjectArea == standard.SectorSubjectArea);
         var rate = filteredNationalAchievementRates?.MaxBy(a => a.ApprenticeshipLevel);
 
         _logger.LogInformation("Provider {ukprn} has apprenticeship level {apprenticeshipLevel}", request.Ukprn, rate?.ApprenticeshipLevel);

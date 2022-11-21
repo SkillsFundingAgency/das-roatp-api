@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
         {
             Include(new UkprnValidator(providersReadRepository));
             Include(new LarsCodeUkprnCombinationValidator(providersReadRepository, providerCoursesReadRepository));
-            Include(new LatLongValidator());
+            Include(new CoordinatesValidator());
         }
     }
 }
