@@ -57,12 +57,17 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
             result.Errors[0].ErrorMessage.Should().Be(LarsCodeValidator.NotFoundMessage);
         }
 
-        [TestCase(56, 0, true, "")]
+        [TestCase(90, 0, true, "")]
+        [TestCase(-90, 0, true, "")]
+        [TestCase(0, 180, true, "")]
+        [TestCase(0, -180, true, "")]
         [TestCase(null, null, true, "")]
-        [TestCase(58, 0, false, LatLongValidator.LatitudeOutsideUk)]
-        [TestCase(56, 1.75, false, LatLongValidator.LongitudeOutsideUk)]
-        [TestCase(56, null, false, LatLongValidator.LatitudeAndNotLongitude)]
-        [TestCase(null, 0, false, LatLongValidator.NotLatitudeAndLongitude)]
+        [TestCase(90.0001, 0, false, CoordinatesValidator.LatitudeOutsideAcceptableRange)]
+        [TestCase(-90.0001, 0, false, CoordinatesValidator.LatitudeOutsideAcceptableRange)]
+        [TestCase(0, 180.0001, false, CoordinatesValidator.LongitudeOutsideAcceptableRange)]
+        [TestCase(0, -180.0001, false, CoordinatesValidator.LongitudeOutsideAcceptableRange)]
+        [TestCase(56, null, false, CoordinatesValidator.LatitudeAndNotLongitude)]
+        [TestCase(null, 0, false, CoordinatesValidator.NotLatitudeAndLongitude)]
         public async Task Validate_LatitudeLongitude(decimal? lat, decimal? lon, bool isValid, string errorMessage)
         {
             var larsCode = 1;
