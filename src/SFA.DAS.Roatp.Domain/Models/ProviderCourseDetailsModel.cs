@@ -14,7 +14,7 @@
         public string Town { get; set; }
         public string Postcode { get; set; }
     }
-    public class ProviderCourseDetailsSummaryModel: ProviderCourseDetailsModelBase
+    public class ProviderCourseSummaryModel: ProviderCourseDetailsModelBase
     {
        
         public int ProviderId { get; set; }

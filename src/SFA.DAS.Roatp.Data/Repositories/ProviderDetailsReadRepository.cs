@@ -22,39 +22,39 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = roatpDataContext;
         }
 
-        public async Task<ProviderCourseDetailsModel> GetProviderForUkprnAndLarsCodeWithDistance(int ukprn, int larsCode, decimal? lat, decimal? lon)
+        public async Task<ProviderCourseDetailsModel> GetProviderForUkprnAndLarsCodeWithDistance(int ukprn, int larsCode, decimal? latitude, decimal? longitude)
         {
             _logger.LogInformation("Gathering ProviderDetails with distance for ukprn {ukprn}, larscode {larscode}", ukprn,larsCode); 
             var provider = await _roatpDataContext.ProviderDetailsWithDistance
-                .FromSqlInterpolated(GetProviderForUkprnAndLarsCodeWithDistanceSql(ukprn, larsCode, lat, lon)).FirstOrDefaultAsync();
+                .FromSqlInterpolated(GetProviderForUkprnAndLarsCodeWithDistanceSql(ukprn, larsCode, latitude, longitude)).FirstOrDefaultAsync();
             return provider;
         }
 
-        public async Task<List<ProviderCourseLocationDetailsModel>> GetProviderLocationDetailsWithDistance(int ukprn, int larsCode, decimal? lat, decimal? lon)
+        public async Task<List<ProviderCourseLocationDetailsModel>> GetProviderLocationDetailsWithDistance(int ukprn, int larsCode, decimal? latitude, decimal? longitude)
         {
             _logger.LogInformation("Gathering ProviderLocationDetails with distance for ukprn {ukprn}, larscode {larscode}", ukprn, larsCode);
 
             var providerLocations = await _roatpDataContext.ProviderLocationDetailsWithDistance
-                .FromSqlInterpolated(GetProviderLocationDetailsWithDistanceSql(ukprn, larsCode, lat, lon)).ToListAsync();
+                .FromSqlInterpolated(GetProviderLocationDetailsWithDistanceSql(ukprn, larsCode, latitude, longitude)).ToListAsync();
             return providerLocations;
         }
 
-        public async Task<List<ProviderCourseDetailsSummaryModel>> GetProvidersForLarsCodeWithDistance(int larsCode, decimal? lat, decimal? lon)
+        public async Task<List<ProviderCourseSummaryModel>> GetProvidersForLarsCodeWithDistance(int larsCode, decimal? latitude, decimal? longitude)
         {
             _logger.LogInformation("Gathering all ProviderDetails with distance for larscode {larscode}",  larsCode);
             var providers = await _roatpDataContext.ProviderSummaryDetailsWithDistance
-                .FromSqlInterpolated(GetProvidersForLarsCodeWithDistanceSql( larsCode, lat, lon)).ToListAsync();
+                .FromSqlInterpolated(GetProvidersForLarsCodeWithDistanceSql( larsCode, latitude, longitude)).ToListAsync();
             return providers;
         }
 
         public async Task<List<ProviderCourseLocationDetailsModel>> GetAllProviderlocationDetailsWithDistance(int larsCode,
-            decimal? lat, decimal? lon)
+            decimal? latitude, decimal? longitude)
         {
             _logger.LogInformation(
                 "Gathering all ProviderLocationDetails with distance for larscode {larscode}", larsCode);
 
             var providerLocations = await _roatpDataContext.ProviderLocationDetailsWithDistance
-                .FromSqlInterpolated(GetAllProviderLocationDetailsWithDistanceSql( larsCode, lat, lon))
+                .FromSqlInterpolated(GetAllProviderLocationDetailsWithDistanceSql( larsCode, latitude, longitude))
                 .ToListAsync();
             return providerLocations;
 

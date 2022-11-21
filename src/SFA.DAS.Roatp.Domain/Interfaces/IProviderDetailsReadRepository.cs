@@ -6,11 +6,11 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
 {
     public interface IProviderDetailsReadRepository
     {
-        Task<ProviderCourseDetailsModel> GetProviderForUkprnAndLarsCodeWithDistance(int ukprn, int larsCode, decimal? lat, decimal? lon);
-        Task<List<ProviderCourseLocationDetailsModel>> GetProviderLocationDetailsWithDistance(int ukprn, int larsCode, decimal? lat, decimal? lon);
+        Task<ProviderCourseDetailsModel> GetProviderForUkprnAndLarsCodeWithDistance(int ukprn, int larsCode, decimal? latitude, decimal? longitude);
+        Task<List<ProviderCourseLocationDetailsModel>> GetProviderLocationDetailsWithDistance(int ukprn, int larsCode, decimal? latitude, decimal? longitude);
 
-        Task<List<ProviderCourseDetailsSummaryModel>> GetProvidersForLarsCodeWithDistance(int larsCode, decimal? lat, decimal? lon);
-        Task<List<ProviderCourseLocationDetailsModel>> GetAllProviderlocationDetailsWithDistance(int larsCode, decimal? lat, decimal? lon);
+        Task<List<ProviderCourseSummaryModel>> GetProvidersForLarsCodeWithDistance(int larsCode, decimal? latitude, decimal? longitude);
+        Task<List<ProviderCourseLocationDetailsModel>> GetAllProviderlocationDetailsWithDistance(int larsCode, decimal? latitude, decimal? longitude);
 
 
     }

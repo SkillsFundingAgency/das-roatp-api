@@ -12,12 +12,12 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
         [Test]
         public void Operator_PopulatesModelFromSummaryModelNull()
         {
-            var model = (ProviderSummation)(ProviderCourseDetailsSummaryModel)null;
+            var model = (ProviderSummation)(ProviderCourseSummaryModel)null;
             Assert.That(model, Is.Null);
         }
 
         [Test, RecursiveMoqAutoData]
-        public void Operator_PopulatesModelFromSummaryModel(ProviderCourseDetailsSummaryModel summaryModel)
+        public void Operator_PopulatesModelFromSummaryModel(ProviderCourseSummaryModel summaryModel)
         {
             var model = (ProviderSummation)summaryModel;
 
