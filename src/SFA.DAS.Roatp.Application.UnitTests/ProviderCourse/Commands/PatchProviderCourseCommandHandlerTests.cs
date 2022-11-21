@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Models;
+using SFA.DAS.Roatp.Domain.Constants;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
 {
@@ -43,7 +44,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             PatchProviderCourseCommandHandler sut,
             PatchProviderCourse patch,
             CancellationToken cancellationToken,
-            Domain.Entities.ProviderCourse providerCourse)
+            Domain.Entities.ProviderCourse providerCourse, string userId, string userDisplayName)
         {
             var ukprn = 10000001;
             var larsCode = 1;
@@ -60,6 +61,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
            {
                Ukprn = ukprn,
                LarsCode = larsCode,
+               UserId = userId,
+               UserDisplayName = userDisplayName,
                Patch = patchCommand
            };
 
@@ -70,7 +73,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
                       c.ContactUsPageUrl == patch.ContactUsPageUrl && 
                       c.ContactUsPhoneNumber == patch.ContactUsPhoneNumber && 
                       c.StandardInfoUrl == patch.StandardInfoUrl &&
-                      c.IsApprovedByRegulator == patch.IsApprovedByRegulator)));
+                      c.IsApprovedByRegulator == patch.IsApprovedByRegulator),command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseContactDeatilsOrConfirmingRegulator));
         }
     }
 }

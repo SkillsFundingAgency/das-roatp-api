@@ -26,11 +26,14 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             var ukprn = 10000001;
             var  larsCode = 1;
             var request = new JsonPatchDocument<PatchProviderCourse>();
+            var userId = "userId";
+            var userDisplayName = "userDisplayName";
+
 
             var mediatorMock = new Mock<IMediator>();
             var sut = new ProviderCourseEditController(mediatorMock.Object, Mock.Of<ILogger<ProviderCourseEditController>>());
 
-            var result = await sut.PatchProviderCourse(ukprn, larsCode, request);
+            var result = await sut.PatchProviderCourse(ukprn, larsCode, request, userId, userDisplayName);
 
             (result as NoContentResult).Should().NotBeNull();
 

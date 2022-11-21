@@ -20,21 +20,35 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _logger = logger;
         }
 
-        public async Task<ProviderCourse> PatchProviderCourse(ProviderCourse patchedProviderCourseEntity)
+        public async Task<ProviderCourse> PatchProviderCourse(ProviderCourse patchedProviderCourseEntity, int ukprn, int larscode, string userId, string userDisplayName, string userAction)
         {
-            var providerCourse = await _roatpDataContext
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
+            try
+            {
+                var providerCourse = await _roatpDataContext
                 .ProviderCourses
                 .FindAsync(patchedProviderCourseEntity.Id);
 
-            providerCourse.ContactUsEmail = patchedProviderCourseEntity.ContactUsEmail;
-            providerCourse.ContactUsPageUrl = patchedProviderCourseEntity.ContactUsPageUrl;
-            providerCourse.ContactUsPhoneNumber = patchedProviderCourseEntity.ContactUsPhoneNumber;
-            providerCourse.StandardInfoUrl = patchedProviderCourseEntity.StandardInfoUrl;
-            providerCourse.IsApprovedByRegulator = patchedProviderCourseEntity.IsApprovedByRegulator;
+                Audit audit = new(typeof(ProviderCourse).Name, providerCourse.Id.ToString(), userId, userDisplayName, userAction, providerCourse, patchedProviderCourseEntity);
 
-            await _roatpDataContext.SaveChangesAsync();
+                _roatpDataContext.Audits.Add(audit);
 
-            return providerCourse;
+                providerCourse.ContactUsEmail = patchedProviderCourseEntity.ContactUsEmail;
+                providerCourse.ContactUsPageUrl = patchedProviderCourseEntity.ContactUsPageUrl;
+                providerCourse.ContactUsPhoneNumber = patchedProviderCourseEntity.ContactUsPhoneNumber;
+                providerCourse.StandardInfoUrl = patchedProviderCourseEntity.StandardInfoUrl;
+                providerCourse.IsApprovedByRegulator = patchedProviderCourseEntity.IsApprovedByRegulator;
+
+                await _roatpDataContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+                return providerCourse;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "ProviderCourse update failed for ukprn {ukprn}, larscode {larscode} providerCourseId {providerCourseId} by userId {userId}", ukprn, larscode, patchedProviderCourseEntity.Id, userId);
+                throw;
+            }
         }
 
         public async Task<ProviderCourse> CreateProviderCourse(ProviderCourse providerCourse)

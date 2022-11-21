@@ -7,7 +7,7 @@ using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse
 {
-    public class PatchProviderCourseCommand : IRequest, IUkprn, ILarsCode
+    public class PatchProviderCourseCommand : IRequest, IUkprn, ILarsCode, IUserInfo
     {
         private const string Replace = "replace";
         public const string IsApprovedByRegulatorIdentifier = "IsApprovedByRegulator";
@@ -18,6 +18,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
 
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }
+        public string UserId { get; set; }
+        public string UserDisplayName { get; set; }
         public JsonPatchDocument<PatchProviderCourse> Patch { get; set; }
 
         public string StandardInfoUrl =>
