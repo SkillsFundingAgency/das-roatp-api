@@ -21,11 +21,27 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _logger = logger;
         }
 
-        public async Task BulkInsert(IEnumerable<ProviderLocation> providerLocations)
+        public async Task BulkInsert(IEnumerable<ProviderLocation> providerLocations, string userId, string userDisplayName, int ukprn, string userAction)
         {
-            await _roatpDataContext.ProviderLocations.AddRangeAsync(providerLocations);
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
+            try
+            {
+                await _roatpDataContext.ProviderLocations.AddRangeAsync(providerLocations);
 
-            await _roatpDataContext.SaveChangesAsync();
+                Audit audit = new(typeof(ProviderLocation).Name, ukprn.ToString(), userId, userDisplayName, userAction, providerLocations, null);
+
+                _roatpDataContext.Audits.Add(audit);
+
+                await _roatpDataContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "ProviderLocation bulk insert failed for ukprn {ukprn} by userId {userId}", ukprn, userId);
+                throw;
+            }
         }
 
         public async Task BulkDelete(IEnumerable<int> providerLocationIds, string userId, string userDisplayName, int ukprn, string userAction)

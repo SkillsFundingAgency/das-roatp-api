@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
 
             Include(new LarsCodeValidator(providersReadRepository, providerCoursesReadRepository));
 
-            RuleFor(c => c.UserId).NotEmpty();
+            Include(new UserInfoValidator());
 
             RuleFor(c => c.DeleteProviderCourseLocationOptions)
                 .NotEqual(DeleteProviderCourseLocationOption.None)
