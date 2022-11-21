@@ -14,17 +14,17 @@ public class ProviderSummation
 
     public List<DeliveryModel> DeliveryModels { get; set; } = new List<DeliveryModel>();
 
-    public static implicit operator ProviderSummation(ProviderCourseDetailsSummaryModel providerDetails)
+    public static implicit operator ProviderSummation(ProviderCourseSummaryModel provider)
     {
-        if (providerDetails == null)
+        if (provider == null)
             return null;
 
         return new ProviderSummation
         {
-            Ukprn = providerDetails.Ukprn,
-            Name = providerDetails.LegalName,
-            TradingName = providerDetails.TradingName,
-            ProviderHeadOfficeDistanceInMiles = (decimal?)providerDetails.Distance,
+            Ukprn = provider.Ukprn,
+            Name = provider.LegalName,
+            TradingName = provider.TradingName,
+            ProviderHeadOfficeDistanceInMiles = (decimal?)provider.Distance,
         };
     }
 }
