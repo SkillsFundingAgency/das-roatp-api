@@ -3,9 +3,8 @@ using System.Linq;
 using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using SFA.DAS.Roatp.Application.Common;
-using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.ProviderCourse
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
 {
     public class PatchProviderCourseCommand : IRequest, IUkprn, ILarsCode, IUserInfo
     {
@@ -20,11 +19,11 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
         public int LarsCode { get; set; }
         public string UserId { get; set; }
         public string UserDisplayName { get; set; }
-        public JsonPatchDocument<PatchProviderCourse> Patch { get; set; }
+        public JsonPatchDocument<Domain.Models.PatchProviderCourse> Patch { get; set; }
 
         public string StandardInfoUrl =>
             Patch.Operations.FirstOrDefault(operation =>
-                operation.path == StandardInfoUrlIdentifier && operation.op.Equals(Replace,StringComparison.CurrentCultureIgnoreCase))?.value.ToString();
+                operation.path == StandardInfoUrlIdentifier && operation.op.Equals(Replace, StringComparison.CurrentCultureIgnoreCase))?.value.ToString();
 
         public string ContactUsPhoneNumber =>
             Patch.Operations.FirstOrDefault(operation =>
@@ -44,7 +43,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse
             {
                 var isApprovedByRegulator = Patch.Operations.FirstOrDefault(operation =>
                     operation.path == IsApprovedByRegulatorIdentifier && operation.op.Equals(Replace, StringComparison.CurrentCultureIgnoreCase))?.value;
-                
+
                 if (bool.TryParse(isApprovedByRegulator?.ToString(), out var result))
                     return result;
 

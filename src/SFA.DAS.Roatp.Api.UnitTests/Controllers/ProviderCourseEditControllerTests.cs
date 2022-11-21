@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
-using SFA.DAS.Roatp.Application.ProviderCourse;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
@@ -14,6 +13,7 @@ using AutoFixture.NUnit3;
 using SFA.DAS.Testing.AutoFixture;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Api.Models;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {
