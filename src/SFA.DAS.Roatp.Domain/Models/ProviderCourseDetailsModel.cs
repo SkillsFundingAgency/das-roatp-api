@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Roatp.Domain.Models
 {
-    public class ProviderCourseDetailsModel : ProviderCourseDetailsModelBase
+    public class ProviderCourseDetailsModel
     {
         public string MarketingInfo { get; set; }
         public string StandardInfoUrl { get; set; }
@@ -13,19 +13,9 @@
         public string Address4 { get; set; }
         public string Town { get; set; }
         public string Postcode { get; set; }
-    }
-    public class ProviderCourseSummaryModel: ProviderCourseDetailsModelBase
-    {
-       
-        public int ProviderId { get; set; }
-    }
-    public class ProviderCourseDetailsModelBase
-    {
         public int Ukprn { get; set; }
         public string LegalName { get; set; }
         public string TradingName { get; set; }
-      
-        
         public double? Distance { get; set; }
     }
 }
