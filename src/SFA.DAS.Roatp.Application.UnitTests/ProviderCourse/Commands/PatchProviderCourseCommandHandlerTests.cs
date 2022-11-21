@@ -73,7 +73,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
                       c.ContactUsPageUrl == patch.ContactUsPageUrl && 
                       c.ContactUsPhoneNumber == patch.ContactUsPhoneNumber && 
                       c.StandardInfoUrl == patch.StandardInfoUrl &&
-                      c.IsApprovedByRegulator == patch.IsApprovedByRegulator),command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseContactDeatilsOrConfirmingRegulator));
+                      c.IsApprovedByRegulator == patch.IsApprovedByRegulator),command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseContactDetailsOrConfirmingRegulator));
         }
     }
 }
