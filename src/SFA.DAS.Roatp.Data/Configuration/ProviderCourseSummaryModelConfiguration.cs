@@ -6,9 +6,9 @@ using SFA.DAS.Roatp.Domain.Models;
 namespace SFA.DAS.Roatp.Data.Configuration;
 
 [ExcludeFromCodeCoverage]
-public class ProviderCourseDetailsSummaryModelConfiguration : IEntityTypeConfiguration<ProviderCourseDetailsSummaryModel>
+public class ProviderCourseSummaryModelConfiguration : IEntityTypeConfiguration<ProviderCourseSummaryModel>
 {
-    public void Configure(EntityTypeBuilder<ProviderCourseDetailsSummaryModel> builder)
+    public void Configure(EntityTypeBuilder<ProviderCourseSummaryModel> builder)
     {
         builder.HasNoKey();
     }

@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
         }
 
         [Test, RecursiveMoqAutoData]
-        public void Operator_PopulatesModelFromSummaryModel(ProviderCourseDetailsSummaryModel summaryModel)
+        public void Operator_PopulatesModelFromSummaryModel(ProviderCourseSummaryModel summaryModel)
         {
             var model = (ProviderDetails)summaryModel;
 

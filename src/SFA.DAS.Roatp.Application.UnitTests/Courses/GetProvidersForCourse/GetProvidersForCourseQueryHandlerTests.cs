@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
     {
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_ReturnsResult(
-            List<ProviderCourseDetailsSummaryModel> providerCourseDetailsSummaryModels,
+            List<ProviderCourseSummaryModel> providerCourseDetailsSummaryModels,
             List<ProviderCourseLocationDetailsModel> providerLocationsWithDistance,
             List<NationalAchievementRate> nationalAchievementRates,
             [Frozen] Mock<IProviderDetailsReadRepository> providerDetailsReadRepositoryMock,
@@ -79,7 +79,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
 
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_Level6_ReturnsResult(
-            List<ProviderCourseDetailsSummaryModel> providerCourseDetailsSummaryModels,
+            List<ProviderCourseSummaryModel> providerCourseDetailsSummaryModels,
             List<ProviderCourseLocationDetailsModel> providerLocationsWithDistance,
             List<NationalAchievementRate> nationalAchievementRates,
             [Frozen] Mock<IProviderDetailsReadRepository> providerDetailsReadRepositoryMock,
@@ -136,7 +136,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
 
         [Test, RecursiveMoqAutoData()]
         public async Task HanHandle_NoNationalAchievementRates_ReturnsResultWithEmptyList(
-            List<ProviderCourseDetailsSummaryModel> providerCourseDetailsSummaryModels,
+            List<ProviderCourseSummaryModel> providerCourseDetailsSummaryModels,
             List<ProviderCourseLocationDetailsModel> providerLocationsWithDistance,
             [Frozen] Mock<IProviderDetailsReadRepository> providerDetailsReadRepositoryMock,
             [Frozen] Mock<IStandardsReadRepository> standardsReadMock,
