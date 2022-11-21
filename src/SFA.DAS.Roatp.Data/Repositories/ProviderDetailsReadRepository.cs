@@ -92,7 +92,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                             LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
 		                    Where P.ukprn={ukprn}
 		                    AND pc.LarsCode={larsCode}
-                            AND ISNULL(PRD.StatusId, {OrganisationStatus.Active}) in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
+                            AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
         }
 
         private static FormattableString GetProvidersForLarsCodeWithDistanceSql(int larsCode, decimal? lat, decimal? lon)
@@ -114,7 +114,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
 							LEFT OUTER JOIN [ProviderAddress] PA on P.Id = PA.ProviderId
                             LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
 		                    WHERE pc.LarsCode={larsCode}
-                            AND ISNULL(PRD.StatusId, {OrganisationStatus.Active}) in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
+                            AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
         }
 
         private static FormattableString GetProviderLocationDetailsWithDistanceSql(int ukprn, int larsCode, decimal? lat, decimal? lon)
@@ -138,7 +138,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                       LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
                       WHERE P.Ukprn={ukprn}
                       AND LarsCode={larsCode}
-                      AND ISNULL(PRD.StatusId, {OrganisationStatus.Active}) in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
+                      AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
 
         }
 
@@ -165,7 +165,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 LEFT OUTER JOIN Region R on R.Id =PL.RegionId
                 LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
                 WHERE  LarsCode={larsCode}
-                AND ISNULL(PRD.StatusId, {OrganisationStatus.Active}) in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
+                AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
         }
     }
 }

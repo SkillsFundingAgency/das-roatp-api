@@ -7,9 +7,9 @@ namespace SFA.DAS.Roatp.Domain.Constants
     {
         public const decimal NationalLatitude = 52.564269m;
         public const decimal NationalLongitude = -1.466056m;
-        public const decimal MaximumLatitude = 57.584276m;
-        public const decimal MinimumLatitude = 49.9146m;
-        public const decimal MaximumLongitude = 1.74365m;
-        public const decimal MinimumLongitude = -6.31574m;
+        public const decimal MaximumLatitude = 90m;
+        public const decimal MinimumLatitude = -90m;
+        public const decimal MaximumLongitude = 180m;
+        public const decimal MinimumLongitude = -180m;
     }
 }

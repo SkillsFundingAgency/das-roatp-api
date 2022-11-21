@@ -2,31 +2,31 @@
 
 namespace SFA.DAS.Roatp.Application.Common;
 
-public class LatLongValidator : AbstractValidator<ILatLon>
+public class CoordinatesValidator : AbstractValidator<ICoordinates>
 {
-    public const string LatitudeOutsideUk = "The latitude entered is outside the area of the UK";
-    public const string LongitudeOutsideUk = "The longitude entered is outside the area of the UK";
+    public const string LatitudeOutsideAcceptableRange = "The latitude entered is outside acceptable range (-90 to 90)";
+    public const string LongitudeOutsideAcceptableRange = "The longitude entered is outside acceptable rangen (-180 to 180)";
     public const string LatitudeAndNotLongitude = "Latitude without longitude is not valid";
     public const string NotLatitudeAndLongitude = "Longitude without latitude is not valid";
 
-    public LatLongValidator()
+    public CoordinatesValidator()
     {
         RuleFor(p => p.Latitude.HasValue)
             .Equal(false)
             .When(p => p.Latitude > Domain.Constants.NationalLatLong.MaximumLatitude)
-            .WithMessage(LatitudeOutsideUk);
+            .WithMessage(LatitudeOutsideAcceptableRange);
         RuleFor(p => p.Latitude.HasValue)
             .Equal(false)
             .When(p => p.Latitude < Domain.Constants.NationalLatLong.MinimumLatitude)
-            .WithMessage(LatitudeOutsideUk);
+            .WithMessage(LatitudeOutsideAcceptableRange);
         RuleFor(p => p.Longitude.HasValue)
             .Equal(false)
             .When(p => p.Longitude > Domain.Constants.NationalLatLong.MaximumLongitude)
-            .WithMessage(LongitudeOutsideUk);
+            .WithMessage(LongitudeOutsideAcceptableRange);
         RuleFor(p => p.Longitude.HasValue)
             .Equal(false)
             .When(p => p.Longitude < Domain.Constants.NationalLatLong.MinimumLongitude)
-            .WithMessage(LongitudeOutsideUk);
+            .WithMessage(LongitudeOutsideAcceptableRange);
         RuleFor(p => p.Longitude.HasValue && !p.Latitude.HasValue)
             .Equal(false)
             .WithMessage(NotLatitudeAndLongitude);

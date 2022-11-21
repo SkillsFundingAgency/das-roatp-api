@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             var name = "test name";
             mediatorMock.Setup(m => m.Send(It.Is<GetProviderDetailsForCourseQuery>(q => q.LarsCode == larsCode && q.Ukprn==ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new GetProviderDetailsForCourseQueryResult{Name=name});
 
-            var result = await sut.GetProviderForCourse(larsCode, ukprn, null, null);
+            var result = await sut.GetProviderDetailsForCourse(larsCode, ukprn, null, null);
 
             Assert.AreEqual(name, result.Result.As<OkObjectResult>().Value.As<GetProviderDetailsForCourseQueryResult>().Name);
             mediatorMock.Verify(m => m.Send(It.Is<GetProviderDetailsForCourseQuery>(q => q.LarsCode == larsCode && q.Ukprn==ukprn && q.Latitude==null && q.Longitude == null), It.IsAny<CancellationToken>()));

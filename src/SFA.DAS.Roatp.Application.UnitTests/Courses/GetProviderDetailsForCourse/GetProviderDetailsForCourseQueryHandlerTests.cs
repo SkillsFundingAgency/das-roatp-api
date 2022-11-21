@@ -69,7 +69,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
         {
             providerDetailsReadRepositoryMock.Setup(r => r.GetProviderForUkprnAndLarsCodeWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerCourseDetailsModel);
             nationalAchievementRatesReadRepositoryMock.Setup(x => x.GetByUkprn(It.IsAny<int>()))
-                .ReturnsAsync((List<NationalAchievementRate>)null);
+                .ReturnsAsync(new List<NationalAchievementRate>());
             providerDetailsReadRepositoryMock.Setup(r => r.GetProviderLocationDetailsWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerLocationsWithDistance);
             processProviderCourseLocationsService
                 .Setup(x => x.ConvertProviderLocationsToDeliveryModels(providerLocationsWithDistance))
