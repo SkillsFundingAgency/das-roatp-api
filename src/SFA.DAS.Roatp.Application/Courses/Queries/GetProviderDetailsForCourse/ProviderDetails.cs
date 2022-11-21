@@ -33,31 +33,33 @@ public class ProviderDetails
         if (providerCourseDetails == null)
             return null;
 
-        var baseResult = (ProviderCourseDetailsModelBase)providerCourseDetails;
-        
-        var result = (ProviderDetails) baseResult;
-        result.MarketingInfo = providerCourseDetails.MarketingInfo;
-        result.ContactUrl = providerCourseDetails.StandardContactUrl;
-        result.Email = providerCourseDetails.Email;
-        result.Phone = providerCourseDetails.Phone;
-        result.StandardInfoUrl = providerCourseDetails.StandardInfoUrl;
-        result.Address1 = providerCourseDetails.Address1;
-        result.Address2 = providerCourseDetails.Address2;
-        result.Address3 = providerCourseDetails.Address3;
-        result.Address4 = providerCourseDetails.Address4;
-        result.Town = providerCourseDetails.Town;
-        result.Postcode = providerCourseDetails.Postcode;
-        return result;
+        return new ProviderDetails
+        {
+            MarketingInfo = providerCourseDetails.MarketingInfo,
+            ContactUrl = providerCourseDetails.StandardContactUrl,
+            Email = providerCourseDetails.Email,
+            Phone = providerCourseDetails.Phone,
+            StandardInfoUrl = providerCourseDetails.StandardInfoUrl,
+            Address1 = providerCourseDetails.Address1,
+            Address2 = providerCourseDetails.Address2,
+            Address3 = providerCourseDetails.Address3,
+            Address4 = providerCourseDetails.Address4,
+            Town = providerCourseDetails.Town,
+            Postcode = providerCourseDetails.Postcode,
+            Ukprn = providerCourseDetails.Ukprn,
+            Name = providerCourseDetails.LegalName,
+            TradingName = providerCourseDetails.TradingName,
+            ProviderHeadOfficeDistanceInMiles = (decimal?)providerCourseDetails.Distance
+        };
     }
 
     public static implicit operator ProviderDetails(
-        ProviderCourseDetailsModelBase providerCourseDetails)
+        ProviderCourseSummaryModel providerCourseDetails)
     {
 
         return new ProviderDetails
         {
             Ukprn = providerCourseDetails.Ukprn,
-            
             Name = providerCourseDetails.LegalName,
             TradingName = providerCourseDetails.TradingName,
             ProviderHeadOfficeDistanceInMiles = (decimal?)providerCourseDetails.Distance,
