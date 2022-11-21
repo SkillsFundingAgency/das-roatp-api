@@ -8,7 +8,7 @@ public class GetProvidersForCourseQueryValidator : AbstractValidator<GetProvider
 {
     public GetProvidersForCourseQueryValidator(IStandardsReadRepository standardsReadReadRepository)
     {
-        Include(new LatLongValidator());
+        Include(new CoordinatesValidator());
         Include(new LarsCodeValidator(standardsReadReadRepository));
     }
 }

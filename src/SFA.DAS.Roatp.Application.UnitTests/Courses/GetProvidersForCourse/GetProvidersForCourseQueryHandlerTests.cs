@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
             var firstProviderModel = providerCourseDetailsSummaryModels.First();
             foreach (var rate in nationalAchievementRates)
             {
-             rate.ProviderId=firstProviderModel.ProviderId;
+                rate.ProviderId=firstProviderModel.ProviderId;
             }
             nationalAchievementRatesReadRepositoryMock.Setup(x => x.GetByProvidersLevelsSectorSubjectArea(It.IsAny<List<int>>(),It.IsAny<List<ApprenticeshipLevel>>(),It.IsAny<string>()))
              .ReturnsAsync(nationalAchievementRates);
