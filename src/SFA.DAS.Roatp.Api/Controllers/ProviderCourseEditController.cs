@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.Domain.Models;
 using System;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Api.Models;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {

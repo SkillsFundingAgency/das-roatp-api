@@ -6,7 +6,7 @@ using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.ProviderCourse
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
 {
     public class PatchProviderCourseCommandValidator : AbstractValidator<PatchProviderCourseCommand>
     {
