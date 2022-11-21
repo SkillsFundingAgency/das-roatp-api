@@ -10,21 +10,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
     public class ProviderDetailsTests
     {
         [Test, RecursiveMoqAutoData]
-        public void Operator_PopulatesModelFromModelBase(ProviderCourseDetailsModelBase modelBase)
-        {
-            var model = (ProviderDetails)modelBase;
-
-            Assert.That(model, Is.Not.Null);
-            
-            model.Should().BeEquivalentTo(modelBase, c => c
-                .Excluding(s => s.LegalName)
-                .Excluding(s => s.Distance)
-            );
-            Assert.AreEqual(modelBase.LegalName, model.Name);
-            Assert.AreEqual(modelBase.Distance, model.ProviderHeadOfficeDistanceInMiles);
-        }
-
-        [Test, RecursiveMoqAutoData]
         public void Operator_PopulatesModelFromSummaryModel(ProviderCourseSummaryModel summaryModel)
         {
             var model = (ProviderDetails)summaryModel;
