@@ -7,6 +7,7 @@ using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
@@ -57,6 +58,20 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
             var allCoursesResult = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn));
             var result = allCoursesResult.Courses;
             _logger.LogInformation("Courses data found for {ukprn}", ukprn);
+            return new OkObjectResult(result);
+        }
+
+        [HttpGet]
+        [Route("/providers/{ukprn}/courses/{larsCode}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProviderCourseModel), 200)]
+        public async Task<ActionResult<ProviderCourseModel>> GetCourse(int ukprn, int larsCode)
+        {
+            var courseResult = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
+            var result = courseResult.Course;
+            _logger.LogInformation("Course data found for {ukprn} and {larsCode}", ukprn, larsCode);
             return new OkObjectResult(result);
         }
     }
