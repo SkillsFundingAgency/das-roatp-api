@@ -62,7 +62,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         }
 
         [HttpGet]
-        [Route("/providers/{ukprn}/courses/{larsCode}")]
+        [Route("{ukprn}/courses/{larsCode}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
