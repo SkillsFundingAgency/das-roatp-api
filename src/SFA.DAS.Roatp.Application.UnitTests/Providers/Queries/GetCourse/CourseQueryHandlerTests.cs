@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
+namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetCourse
 {
     [TestFixture]
     public class CourseQueryHandlerTests
@@ -18,8 +18,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             Domain.Entities.ProviderCourse course,
             [Frozen] Mock<IProviderCoursesReadRepository> providerCoursesReadRepositoryMock,
             [Frozen] Mock<IStandardsReadRepository> standardsReadRepositoryMock,
-            GetProviderCourseQuery query,
-            GetProviderCourseQueryHandler sut,
+            GetCourseQuery query,
+            GetCourseQueryHandler sut,
             CancellationToken cancellationToken)
         {
             providerCoursesReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(query.Ukprn, query.LarsCode)).ReturnsAsync(course);

@@ -67,12 +67,11 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProviderCourseModel), 200)]
-        public async Task<ActionResult<ProviderCourseModel>> GetCourse(int ukprn, int larsCode)
+        public async Task<ActionResult<ProviderCourseModel>> GetProviderCourse(int ukprn, int larsCode)
         {
-            var courseResult = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
-            var result = courseResult.Course;
+            var courseResult = await _mediator.Send(new GetCourseQuery(ukprn, larsCode));
             _logger.LogInformation("Course data found for {ukprn} and {larsCode}", ukprn, larsCode);
-            return new OkObjectResult(result);
+            return new OkObjectResult(courseResult.Course);
         }
     }
 }
