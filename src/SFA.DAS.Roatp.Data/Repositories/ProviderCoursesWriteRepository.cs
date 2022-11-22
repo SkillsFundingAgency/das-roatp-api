@@ -51,13 +51,29 @@ namespace SFA.DAS.Roatp.Data.Repositories
             }
         }
 
-        public async Task<ProviderCourse> CreateProviderCourse(ProviderCourse providerCourse)
+        public async Task<ProviderCourse> CreateProviderCourse(ProviderCourse providerCourse, int ukprn, string userId, string userDisplayName, string userAction)
         {
-            await _roatpDataContext.ProviderCourses.AddAsync(providerCourse);
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
+            try
+            {
+                await _roatpDataContext.ProviderCourses.AddAsync(providerCourse);
 
-            await _roatpDataContext.SaveChangesAsync();
+                Audit audit = new(typeof(ProviderCourse).Name, ukprn.ToString(), userId, userDisplayName, userAction, providerCourse, null);
 
-            return providerCourse;
+                _roatpDataContext.Audits.Add(audit);
+
+                await _roatpDataContext.SaveChangesAsync();
+
+                await transaction.CommitAsync();
+
+                return providerCourse;
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "ProviderCourse Create failed for ukprn {ukprn}, larscode {larscode} by userId {userId}", ukprn, providerCourse.LarsCode, userId);
+                throw;
+            }
         }
 
         public async Task Delete(int ukprn, int larscode, string userId, string userDisplayName, string userAction)

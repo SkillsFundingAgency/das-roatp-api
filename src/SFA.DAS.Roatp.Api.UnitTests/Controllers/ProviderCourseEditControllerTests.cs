@@ -44,11 +44,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task CreateProviderCourse_InvokesRequest(
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProviderCourseEditController sut,
-            int ukprn, int larsCode, ProviderCourseAddModel model, int providerCourseId)
+            int ukprn, int larsCode, ProviderCourseAddModel model, int providerCourseId, string userId, string userDisplayName)
         {
             mediatorMock.Setup(m => m.Send(It.Is<CreateProviderCourseCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseId);
 
-            var result = await sut.CreateProviderCourse(ukprn, larsCode, model);
+            var result = await sut.CreateProviderCourse(ukprn, larsCode, model, userId, userDisplayName);
 
             result.As<CreatedResult>().Location.Should().Be($"/providers/{ukprn}/courses");
         }

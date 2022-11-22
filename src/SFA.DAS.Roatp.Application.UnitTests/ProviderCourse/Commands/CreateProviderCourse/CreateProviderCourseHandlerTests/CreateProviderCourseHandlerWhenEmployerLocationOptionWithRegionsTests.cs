@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
             await sut.Handle(command, new CancellationToken());
 
-            providerCoursesWriteRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == 1 && c.Locations.First().ProviderLocationId == providerLocation.Id && c.Locations.First().Location == null)));
+            providerCoursesWriteRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == 1 && c.Locations.First().ProviderLocationId == providerLocation.Id && c.Locations.First().Location == null), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -59,7 +59,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
             await sut.Handle(command, new CancellationToken());
 
-            providerCoursesWriteRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == 1 && c.Locations.First().Location != null)));
+            providerCoursesWriteRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == 1 && c.Locations.First().Location != null), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
     }
 }

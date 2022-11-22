@@ -33,7 +33,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
             await sut.Handle(command, new CancellationToken());
 
-            providerCoursesWriteRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == 1 && c.Locations.First().Location.LocationType == LocationType.National && c.Locations.First().ProviderLocationId == 0)));
+            providerCoursesWriteRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == 1 && c.Locations.First().Location.LocationType == LocationType.National && c.Locations.First().ProviderLocationId == 0), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
             await sut.Handle(command, new CancellationToken());
 
-            providerCoursesWriteRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == 1 && c.Locations.First().ProviderLocationId == providerLocation.Id)));
+            providerCoursesWriteRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == 1 && c.Locations.First().ProviderLocationId == providerLocation.Id), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
 
         [Test, RecursiveMoqAutoData]
@@ -82,7 +82,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
             await sut.Handle(command, new CancellationToken());
 
-            providerCourseEditRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == numberOfLocations && c.Locations.First().ProviderLocationId == provider.Locations.First().Id)));
+            providerCourseEditRepositoryMock.Verify(p => p.CreateProviderCourse(It.Is<Domain.Entities.ProviderCourse>(c => c.ProviderId == provider.Id && c.Locations.Count == numberOfLocations && c.Locations.First().ProviderLocationId == provider.Locations.First().Id), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
     }
 }

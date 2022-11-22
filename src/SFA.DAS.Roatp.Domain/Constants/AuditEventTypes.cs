@@ -2,6 +2,7 @@
 {
     public static class AuditEventTypes
     {
+        public const string CreateProviderCourse = "CreateProviderCourse";
         public const string DeleteProviderCourse = "DeleteProviderCourse";
         public const string UpdateProviderCourseContactDetailsOrConfirmingRegulator = "UpdateProviderCourseContactDetailsOrConfirmingRegulator";
         public const string BulkInsertProviderLocation = "BulkInsertProviderLocation";
