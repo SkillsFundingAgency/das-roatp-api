@@ -59,7 +59,7 @@ public class Startup
 
             var policies = new Dictionary<string, string>
             {
-                {Constants.EndpointGroups.Operation, Constants.EndpointGroups.Integration},
+                {Constants.EndpointGroups.Management, Constants.EndpointGroups.Management},
                 {Constants.EndpointGroups.Integration, Constants.EndpointGroups.Integration }
             };
 
@@ -103,7 +103,7 @@ public class Startup
 
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc(Constants.EndpointGroups.Operation, new OpenApiInfo { Title = "Course Management Operations"});
+            options.SwaggerDoc(Constants.EndpointGroups.Management, new OpenApiInfo { Title = "Course Management"});
             options.SwaggerDoc(Constants.EndpointGroups.Integration, new OpenApiInfo { Title = "Roatp Integration"});
             options.OperationFilter<SwaggerHeaderFilter>();
         });
@@ -121,7 +121,7 @@ public class Startup
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Operation}/swagger.json", Constants.EndpointGroups.Operation);
+            options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Management}/swagger.json", Constants.EndpointGroups.Management);
             options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Integration}/swagger.json", Constants.EndpointGroups.Integration);
             options.RoutePrefix = string.Empty;
         });

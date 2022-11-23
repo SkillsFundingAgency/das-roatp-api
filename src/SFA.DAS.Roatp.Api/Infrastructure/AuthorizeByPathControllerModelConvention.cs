@@ -11,6 +11,6 @@ public class AuthorizeByPathControllerModelConvention : IControllerModelConventi
     public void Apply(ControllerModel controller)
     {
         var controllerPath = controller.ControllerType.Namespace.Split('.').Last();
-        controller.Filters.Add(controllerPath.Equals("ExternalReadControllers") ? new AuthorizeFilter(Constants.EndpointGroups.Integration) : new AuthorizeFilter(Constants.EndpointGroups.Operation));
+        controller.Filters.Add(controllerPath.Equals("ExternalReadControllers") ? new AuthorizeFilter(Constants.EndpointGroups.Integration) : new AuthorizeFilter(Constants.EndpointGroups.Management));
     }
 }

@@ -10,6 +10,6 @@ public class ApiExplorerGroupingConvention : IControllerModelConvention
     public void Apply(ControllerModel controller)
     {
         var controllerPath = controller.ControllerType.Namespace.Split('.').Last();
-        controller.ApiExplorer.GroupName = controllerPath.Equals("ExternalReadControllers") ? Constants.EndpointGroups.Integration : Constants.EndpointGroups.Operation;
+        controller.ApiExplorer.GroupName = controllerPath.Equals("ExternalReadControllers") ? Constants.EndpointGroups.Integration : Constants.EndpointGroups.Management;
     }
 }
