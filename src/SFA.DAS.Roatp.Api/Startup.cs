@@ -104,7 +104,7 @@ namespace SFA.DAS.Roatp.Api
             {
                 options.SwaggerDoc(Constants.EndpointGroups.Operation, new OpenApiInfo { Title = "Course Management Operations"});
                 options.SwaggerDoc(Constants.EndpointGroups.Integration, new OpenApiInfo { Title = "Roatp Integration"});
-                options.OperationFilter<SwaggerVersionHeaderFilter>();
+                options.OperationFilter<SwaggerHeaderFilter>();
             });
         }
 
