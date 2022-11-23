@@ -6,6 +6,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     public interface IProviderLocationsWriteRepository
     {
         Task<ProviderLocation> Create(ProviderLocation location, int ukprn, string userId, string userDisplayName, string userAction);
-        Task UpdateProviderlocation(ProviderLocation updatedProviderLocationEntity);
+        Task UpdateProviderlocation(ProviderLocation updatedProviderLocationEntity, int ukprn, string userId, string userDisplayName, string userAction);
     }
 }

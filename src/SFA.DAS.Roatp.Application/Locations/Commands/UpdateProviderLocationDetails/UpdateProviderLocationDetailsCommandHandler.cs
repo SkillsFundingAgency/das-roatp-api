@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System;
 using System.Threading;
@@ -35,7 +36,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
             providerLocation.Email = request.Email;
             providerLocation.Phone = request.Phone;
 
-            await _providerLocationsWriteRepository.UpdateProviderlocation(providerLocation);
+            await _providerLocationsWriteRepository.UpdateProviderlocation(providerLocation, request.Ukprn, request.UserId, request.UserDisplayName, AuditEventTypes.UpdateProviderLocation);
 
             return Unit.Value;
         }

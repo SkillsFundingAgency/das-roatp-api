@@ -3,6 +3,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDetails;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 using System;
@@ -41,7 +42,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.UpdateProviderL
 
             await sut.Handle(command, cancellationToken);
 
-            editRepoMock.Verify(e => e.UpdateProviderlocation(It.Is<Domain.Entities.ProviderLocation>(c => c.LocationName == command.LocationName && c.Email == command.Email && c.Website == command.Website && c.Phone == command.Phone)));
+            editRepoMock.Verify(e => e.UpdateProviderlocation(It.Is<Domain.Entities.ProviderLocation>(c => c.LocationName == command.LocationName && c.Email == command.Email && c.Website == command.Website && c.Phone == command.Phone), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), AuditEventTypes.UpdateProviderLocation));
         }
     }
 }

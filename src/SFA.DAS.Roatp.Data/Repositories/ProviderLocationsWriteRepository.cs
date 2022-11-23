@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Logging;
+using NetTopologySuite.Geometries;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System;
@@ -42,18 +43,35 @@ namespace SFA.DAS.Roatp.Data.Repositories
             }
         }
 
-        public async Task UpdateProviderlocation(ProviderLocation updatedProviderLocationEntity)
+        public async Task UpdateProviderlocation(ProviderLocation updatedProviderLocationEntity, int ukprn, string userId, string userDisplayName, string userAction)
         {
-            var providerLocation = await _roatpDataContext
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
+            try
+            {
+                var providerLocation = await _roatpDataContext
                 .ProviderLocations
                 .FindAsync(updatedProviderLocationEntity.Id);
 
-            providerLocation.LocationName = updatedProviderLocationEntity.LocationName;
-            providerLocation.Website = updatedProviderLocationEntity.Website;
-            providerLocation.Email = updatedProviderLocationEntity.Email;
-            providerLocation.Phone = updatedProviderLocationEntity.Phone;
+                Audit audit = new(typeof(ProviderLocation).Name, ukprn.ToString(), userId, userDisplayName, userAction, providerLocation, updatedProviderLocationEntity);
 
-            await _roatpDataContext.SaveChangesAsync();
+                _roatpDataContext.Audits.Add(audit);
+
+
+                providerLocation.LocationName = updatedProviderLocationEntity.LocationName;
+                providerLocation.Website = updatedProviderLocationEntity.Website;
+                providerLocation.Email = updatedProviderLocationEntity.Email;
+                providerLocation.Phone = updatedProviderLocationEntity.Phone;
+
+
+                await _roatpDataContext.SaveChangesAsync();
+                await transaction.CommitAsync();
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "ProviderLocation Update is failed for ukprn {ukprn} by userId {userId}", ukprn, userId);
+                throw;
+            }
         }
     }
 }
