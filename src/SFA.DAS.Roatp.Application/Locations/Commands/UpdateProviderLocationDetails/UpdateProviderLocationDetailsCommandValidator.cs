@@ -27,8 +27,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
                })
                .WithMessage(ProviderLocationNotFoundErrorMessage);
 
-            RuleFor(p => p.UserId)
-                .NotEmpty();
+            Include(new UserInfoValidator());
 
             RuleFor(p => p.LocationName)
                 .Cascade(CascadeMode.Stop)
