@@ -11,7 +11,7 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
 {
     [TestFixture]
-    public class ProviderCourseCourseQueryHandlerTests
+    public class ProviderCourseQueryHandlerTests
     {
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_ReturnsResult(
