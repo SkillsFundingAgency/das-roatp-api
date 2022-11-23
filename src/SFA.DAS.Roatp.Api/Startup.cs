@@ -24,140 +24,140 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 
-namespace SFA.DAS.Roatp.Api
+namespace SFA.DAS.Roatp.Api;
+
+[ExcludeFromCodeCoverage]
+public class Startup
 {
-    [ExcludeFromCodeCoverage]
-    public class Startup
+    private readonly string _initialEnvironment;
+    public IConfiguration Configuration { get; }
+    public Startup(IConfiguration configuration)
     {
-        private readonly string _initialEnvironment;
-        public IConfiguration Configuration { get; }
-        public Startup(IConfiguration configuration)
+        var config = new ConfigurationBuilder()
+            .AddConfiguration(configuration);
+
+        _initialEnvironment = configuration["Environment"];
+
+        config.AddAzureTableStorage(options =>
         {
-            var config = new ConfigurationBuilder()
-                .AddConfiguration(configuration);
+            options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
+            options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
+            options.EnvironmentName = configuration["Environment"];
+            options.PreFixConfigurationKeys = false;
+        });
 
-            _initialEnvironment = configuration["Environment"];
-
-            config.AddAzureTableStorage(options =>
-            {
-                options.ConfigurationKeys = configuration["ConfigNames"].Split(",");
-                options.StorageConnectionString = configuration["ConfigurationStorageConnectionString"];
-                options.EnvironmentName = configuration["Environment"];
-                options.PreFixConfigurationKeys = false;
-            });
-
-            Configuration = config.Build();
-        }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            if (!IsEnvironmentLocalOrDev)
-            {
-                var azureAdConfiguration = Configuration
-                    .GetSection("AzureAd")
-                    .Get<AzureActiveDirectoryConfiguration>();
-
-                var policies = new Dictionary<string, string>
-                {
-                    {PolicyNames.Default, "Default"}
-                };
-
-                services.AddAuthentication(azureAdConfiguration, policies);
-            }
-
-            services
-                .AddHealthChecks()
-                .AddDbContextCheck<RoatpDataContext>()
-                .AddCheck<StandardsHealthCheck>(StandardsHealthCheck.HealthCheckResultDescription,
-                    failureStatus: HealthStatus.Unhealthy,
-                    tags: new[] { "ready" });
-
-            services.AddRoatpDataContext(Configuration["SqlDatabaseConnectionString"], _initialEnvironment);
-
-            services.AddApiVersioning(opt =>
-            {
-                opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
-                opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
-            });
-
-            services.AddApplicationRegistrations();
-
-            services
-                .AddControllers(o =>
-                {
-                    if (!IsEnvironmentLocalOrDev)
-                        o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
-                    o.Conventions.Add(new ApiExplorerGroupingConvention());
-                })
-                .AddJsonOptions(options =>
-                {
-                    options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
-                })
-                .AddNewtonsoftJson(options =>
-                {
-                    options.SerializerSettings.Converters.Add(new StringEnumConverter());
-                    options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-                });
-            services.AddApplicationInsightsTelemetry();
-
-            services.AddSwaggerGen(options =>
-            {
-                options.SwaggerDoc(Constants.EndpointGroups.Operation, new OpenApiInfo { Title = "Course Management Operations"});
-                options.SwaggerDoc(Constants.EndpointGroups.Integration, new OpenApiInfo { Title = "Roatp Integration"});
-                options.OperationFilter<SwaggerHeaderFilter>();
-            });
-        }
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseAuthentication();
-
-            app.UseSwagger();
-            app.UseSwaggerUI(options =>
-            {
-                options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Operation}/swagger.json", Constants.EndpointGroups.Operation);
-                options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Integration}/swagger.json", Constants.EndpointGroups.Integration);
-                options.RoutePrefix = string.Empty;
-            });
-
-            app.UseHttpsRedirection();
-
-            app.UseRouting();
-
-            app.UseHealthChecks("/health", new HealthCheckOptions
-            {
-                ResponseWriter = HealthCheckResponseWriter.WriteJsonResponse
-            });
-
-            if (!IsEnvironmentLocalOrDev)
-            {
-
-                app.UseHealthChecks("/ping", new HealthCheckOptions
-                {
-                    Predicate = (_) => false,
-                    ResponseWriter = (context, report) =>
-                    {
-                        context.Response.ContentType = "application/json";
-                        return context.Response.WriteAsync("");
-                    }
-                });
-            }
-
-            app.UseFluentValidationExceptionHandler();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
-
-        private bool IsEnvironmentLocalOrDev
-            => Configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase)
-            || Configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase);
+        Configuration = config.Build();
     }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+        if (!IsEnvironmentLocalOrDev)
+        {
+            var azureAdConfiguration = Configuration
+                .GetSection("AzureAd")
+                .Get<AzureActiveDirectoryConfiguration>();
+
+            var policies = new Dictionary<string, string>
+            {
+                {Constants.EndpointGroups.Operation, Constants.EndpointGroups.Integration},
+                {Constants.EndpointGroups.Integration, Constants.EndpointGroups.Integration }
+            };
+
+            services.AddAuthentication(azureAdConfiguration, policies);
+        }
+
+        services
+            .AddHealthChecks()
+            .AddDbContextCheck<RoatpDataContext>()
+            .AddCheck<StandardsHealthCheck>(StandardsHealthCheck.HealthCheckResultDescription,
+                failureStatus: HealthStatus.Unhealthy,
+                tags: new[] { "ready" });
+
+        services.AddRoatpDataContext(Configuration["SqlDatabaseConnectionString"], _initialEnvironment);
+
+        services.AddApiVersioning(opt =>
+        {
+            opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
+            opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+        });
+
+        services.AddApplicationRegistrations();
+
+        services
+            .AddControllers(o =>
+            {
+                if (!IsEnvironmentLocalOrDev)
+                    o.Conventions.Add(new AuthorizeByPathControllerModelConvention());
+                o.Conventions.Add(new ApiExplorerGroupingConvention());
+            })
+            .AddJsonOptions(options =>
+            {
+                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+            })
+            .AddNewtonsoftJson(options =>
+            {
+                options.SerializerSettings.Converters.Add(new StringEnumConverter());
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            });
+        services.AddApplicationInsightsTelemetry();
+
+        services.AddSwaggerGen(options =>
+        {
+            options.SwaggerDoc(Constants.EndpointGroups.Operation, new OpenApiInfo { Title = "Course Management Operations"});
+            options.SwaggerDoc(Constants.EndpointGroups.Integration, new OpenApiInfo { Title = "Roatp Integration"});
+            options.OperationFilter<SwaggerHeaderFilter>();
+        });
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+        if (env.IsDevelopment())
+        {
+            app.UseDeveloperExceptionPage();
+        }
+
+        app.UseAuthentication();
+
+        app.UseSwagger();
+        app.UseSwaggerUI(options =>
+        {
+            options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Operation}/swagger.json", Constants.EndpointGroups.Operation);
+            options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Integration}/swagger.json", Constants.EndpointGroups.Integration);
+            options.RoutePrefix = string.Empty;
+        });
+
+        app.UseHttpsRedirection();
+
+        app.UseRouting();
+
+        app.UseHealthChecks("/health", new HealthCheckOptions
+        {
+            ResponseWriter = HealthCheckResponseWriter.WriteJsonResponse
+        });
+
+        if (!IsEnvironmentLocalOrDev)
+        {
+
+            app.UseHealthChecks("/ping", new HealthCheckOptions
+            {
+                Predicate = (_) => false,
+                ResponseWriter = (context, report) =>
+                {
+                    context.Response.ContentType = "application/json";
+                    return context.Response.WriteAsync("");
+                }
+            });
+        }
+
+        app.UseFluentValidationExceptionHandler();
+
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+        });
+    }
+
+    private bool IsEnvironmentLocalOrDev
+        => Configuration["Environment"].Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase)
+        || Configuration["Environment"].Equals("DEV", StringComparison.CurrentCultureIgnoreCase);
 }

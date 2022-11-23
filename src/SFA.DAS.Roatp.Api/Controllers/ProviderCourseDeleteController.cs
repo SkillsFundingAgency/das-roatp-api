@@ -1,11 +1,10 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
