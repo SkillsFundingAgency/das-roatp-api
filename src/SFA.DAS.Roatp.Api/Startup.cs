@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
@@ -19,9 +15,14 @@ using SFA.DAS.Api.Common.Configuration;
 using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Roatp.Api.HealthCheck;
+using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Extensions;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace SFA.DAS.Roatp.Api
 {
@@ -86,6 +87,7 @@ namespace SFA.DAS.Roatp.Api
                 {
                     if (!IsEnvironmentLocalOrDev)
                         o.Conventions.Add(new AuthorizeControllerModelConvention(new List<string>()));
+                    o.Conventions.Add(new ApiExplorerGroupingConvention());
                 })
                 .AddJsonOptions(options =>
                 {
@@ -100,10 +102,10 @@ namespace SFA.DAS.Roatp.Api
 
             services.AddSwaggerGen(options =>
             {
-                options.SwaggerDoc("v1", new OpenApiInfo { Title = "RoatpAPI", Version = "v1" });
+                options.SwaggerDoc(Constants.EndpointGroups.Operation, new OpenApiInfo { Title = "Course Management Operations"});
+                options.SwaggerDoc(Constants.EndpointGroups.Integration, new OpenApiInfo { Title = "Roatp Integration"});
                 options.OperationFilter<SwaggerVersionHeaderFilter>();
             });
-
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -118,7 +120,8 @@ namespace SFA.DAS.Roatp.Api
             app.UseSwagger();
             app.UseSwaggerUI(options =>
             {
-                options.SwaggerEndpoint("/swagger/v1/swagger.json", "v1");
+                options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Operation}/swagger.json", Constants.EndpointGroups.Operation);
+                options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Integration}/swagger.json", Constants.EndpointGroups.Integration);
                 options.RoutePrefix = string.Empty;
             });
 
