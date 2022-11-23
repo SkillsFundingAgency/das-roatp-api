@@ -69,7 +69,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [ProducesResponseType(typeof(ProviderCourseModel), 200)]
         public async Task<ActionResult<ProviderCourseModel>> GetProviderCourse(int ukprn, int larsCode)
         {
-            var courseResult = await _mediator.Send(new GetCourseQuery(ukprn, larsCode));
+            var courseResult = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
             _logger.LogInformation("Course data found for {ukprn} and {larsCode}", ukprn, larsCode);
             return new OkObjectResult(courseResult.Course);
         }

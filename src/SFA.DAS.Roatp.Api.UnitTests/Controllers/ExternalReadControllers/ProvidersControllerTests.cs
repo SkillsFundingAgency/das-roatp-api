@@ -74,9 +74,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             [Greedy] ProvidersController sut,
             int ukprn,
             int larsCode,
-            GetCourseQueryResult handlerResult)
+            GetProviderCourseQueryResult handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
             var result = await sut.GetProviderCourse(ukprn, larsCode);
             (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.Course);
         }
