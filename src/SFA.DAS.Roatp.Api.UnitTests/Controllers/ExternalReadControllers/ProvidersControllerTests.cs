@@ -10,6 +10,7 @@ using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Testing.AutoFixture;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -57,6 +58,13 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             var result = await sut.GetAllProviderCourses(ukprn);
 
             result.Result.As<OkObjectResult>().Value.Should().BeEquivalentTo(handlerResult.Courses);
+        }
+
+        [Test]
+        public void ControllerConvention_HasRequiredNamespace()
+        {
+            var controllerPath = typeof(ProvidersController).Namespace.Split('.').Last();
+            Assert.That(controllerPath == "ExternalReadControllers");
         }
     }
 }

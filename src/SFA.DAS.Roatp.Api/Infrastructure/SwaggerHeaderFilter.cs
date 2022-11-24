@@ -21,14 +21,5 @@ public class SwaggerHeaderFilter : IOperationFilter
             Example = new OpenApiString("1.0"),
             Required = true
         });
-
-        operation.Parameters.Add(new OpenApiParameter
-        {
-            Name = "Authorization",
-            In = ParameterLocation.Header,
-            AllowEmptyValue = false,
-            Example = new OpenApiString("Bearer <token>"),
-            Required = true
-        });
     }
 }
