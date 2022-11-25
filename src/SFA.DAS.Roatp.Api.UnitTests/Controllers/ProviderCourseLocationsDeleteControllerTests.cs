@@ -66,9 +66,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task DeleteProviderCourseLocation_CallsHandler(
            [Frozen] Mock<IMediator> _mediatorMock,
            [Greedy] ProviderCourseLocationsDeleteController sut,
-           int ukprn, int larsCode, Guid id, string userId)
+           int ukprn, int larsCode, Guid id, string userId, string userDisplayName)
         {
-            await sut.DeleteProviderCourseLocation(ukprn, larsCode, id, userId);
+            await sut.DeleteProviderCourseLocation(ukprn, larsCode, id, userId, userDisplayName);
 
             _mediatorMock.Verify(m => m.Send(It.Is<DeleteProviderCourseLocationCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.LocationId == id), It.IsAny<CancellationToken>()));
         }
@@ -77,11 +77,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task DeleteProviderCourseLocation_ZeroResults_ReturnsNoContentResponse(
             [Frozen] Mock<IMediator> _mediatorMock,
             [Greedy] ProviderCourseLocationsDeleteController sut,
-            int ukprn, int larsCode, Guid id, string userId)
+            int ukprn, int larsCode, Guid id, string userId, string userDisplayName)
         {
             _mediatorMock.Setup(m => m.Send(It.Is<DeleteProviderCourseLocationCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.LocationId == id), It.IsAny<CancellationToken>())).ReturnsAsync(Unit.Value);
 
-            var result = await sut.DeleteProviderCourseLocation(ukprn, larsCode, id, userId);
+            var result = await sut.DeleteProviderCourseLocation(ukprn, larsCode, id, userId, userDisplayName);
 
             _mediatorMock.Verify(m => m.Send(It.Is<DeleteProviderCourseLocationCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode && c.LocationId == id), It.IsAny<CancellationToken>()));
 

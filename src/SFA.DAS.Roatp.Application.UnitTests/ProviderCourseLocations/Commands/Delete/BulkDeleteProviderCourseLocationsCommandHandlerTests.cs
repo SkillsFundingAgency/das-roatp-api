@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
             var result = await _sut.Handle(request, new CancellationToken());
 
             result.Should().Be(Unit.Value);
-            _providerCourseLocationsWriteRepositoryMock.Verify(d => d.Delete(It.IsAny<Guid>()), Times.Once);
+            _providerCourseLocationsWriteRepositoryMock.Verify(d => d.Delete(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
     }
 }

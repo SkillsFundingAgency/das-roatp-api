@@ -10,7 +10,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
         {
             Include(new UkprnValidator(providersReadRepository));
 
-            RuleFor(c => c.UserId).NotEmpty();
+            Include(new UserInfoValidator());
         }
     }
 }

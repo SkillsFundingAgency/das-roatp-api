@@ -36,5 +36,18 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
 
             result.ShouldHaveValidationErrorFor(c => c.UserId);
         }
+
+        [TestCase("")]
+        [TestCase(null)]
+        [TestCase(" ")]
+        public async Task ValidateUserDisplayName_Empty_ReturnsError(string userDisplayName)
+        {
+            var command = new BulkDeleteProviderLocationsCommand(10012002, _userId, userDisplayName);
+            var sut = new BulkDeleteProviderLocationsCommandValidator(Mock.Of<IProvidersReadRepository>());
+
+            var result = await sut.TestValidateAsync(command);
+
+            result.ShouldHaveValidationErrorFor(c => c.UserDisplayName);
+        }
     }
 }
