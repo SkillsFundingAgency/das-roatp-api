@@ -10,15 +10,17 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }
         public string UserId { get; set; }
+        public string UserDisplayName { get; set; }
         public Guid LocationNavigationId { get; set; }
         public bool? HasDayReleaseDeliveryOption { get; set; }
         public bool? HasBlockReleaseDeliveryOption { get; set; }
 
-        public AddProviderCourseLocationCommand(int ukprn, int larsCode, string userId, Guid locationNavigationId, bool? hasDayReleaseDeliveryOption, bool? hasBlockReleaseDeliveryOption)
+        public AddProviderCourseLocationCommand(int ukprn, int larsCode, string userId, string userDisplayName, Guid locationNavigationId, bool? hasDayReleaseDeliveryOption, bool? hasBlockReleaseDeliveryOption)
         {
             Ukprn = ukprn;
             LarsCode = larsCode;
             UserId = userId;
+            UserDisplayName = userDisplayName;
             LocationNavigationId = locationNavigationId;
             HasDayReleaseDeliveryOption = hasDayReleaseDeliveryOption;
             HasBlockReleaseDeliveryOption = hasBlockReleaseDeliveryOption;
