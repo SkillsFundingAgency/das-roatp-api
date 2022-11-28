@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.Domain.Models;
 using System;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Api.Models;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -25,7 +26,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
 
         [Route("/providers/{ukprn}/courses/{larsCode}")]
         [HttpPatch] 
-        public async Task<IActionResult> PatchProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, [FromBody] JsonPatchDocument<PatchProviderCourse> request)
+        public async Task<IActionResult> PatchProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, [FromBody] JsonPatchDocument<PatchProviderCourse> request, [FromQuery] string userId, [FromQuery] string userDisplayName)
         {
             _logger.LogInformation("Inner API: Request to patch course contact details for ukprn: {ukprn} larscode: {larscode}", ukprn, larsCode);
 
@@ -33,6 +34,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
+                UserId = userId,
+                UserDisplayName = userDisplayName,
                 Patch = request
             });
             

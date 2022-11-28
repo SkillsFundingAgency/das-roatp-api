@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands

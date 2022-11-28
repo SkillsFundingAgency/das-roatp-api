@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.ProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
