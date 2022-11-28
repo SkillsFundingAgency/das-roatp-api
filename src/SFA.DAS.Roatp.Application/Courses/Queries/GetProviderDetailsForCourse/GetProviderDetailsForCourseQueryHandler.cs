@@ -35,6 +35,8 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
 
         var providerDetails = await _providerDetailsReadRepository.GetProviderForUkprnAndLarsCodeWithDistance(request.Ukprn, request.LarsCode, request.Latitude,
             request.Longitude);
+        if (providerDetails == null)
+            return null;
         var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByUkprn(request.Ukprn);
 
         var filteredNationalAchievementRates =
@@ -49,6 +51,7 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
             request.Longitude);
 
         var result = (GetProviderDetailsForCourseQueryResult)providerDetails;
+       
 
         var deliveryModels = _processProviderCourseLocationsService.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
