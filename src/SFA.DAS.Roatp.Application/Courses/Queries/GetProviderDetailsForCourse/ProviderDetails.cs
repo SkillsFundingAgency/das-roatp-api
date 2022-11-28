@@ -6,6 +6,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 public class ProviderDetails
 {
     public int Ukprn { get; set; }
+    public int LarsCode { get; set; }
     public string Name { get; set; }
     public string TradingName { get; set; }
     public string ContactUrl { get; set; }
@@ -47,6 +48,7 @@ public class ProviderDetails
             Town = providerCourseDetails.Town,
             Postcode = providerCourseDetails.Postcode,
             Ukprn = providerCourseDetails.Ukprn,
+            LarsCode = providerCourseDetails.LarsCode,
             Name = providerCourseDetails.LegalName,
             TradingName = providerCourseDetails.TradingName,
             ProviderHeadOfficeDistanceInMiles = (decimal?)providerCourseDetails.Distance
