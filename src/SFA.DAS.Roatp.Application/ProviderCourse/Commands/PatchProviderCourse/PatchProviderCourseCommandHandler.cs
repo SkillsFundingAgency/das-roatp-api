@@ -42,7 +42,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
             providerCourse.ContactUsPhoneNumber = patchedProviderCourse.ContactUsPhoneNumber;
             providerCourse.StandardInfoUrl = patchedProviderCourse.StandardInfoUrl;
 
-            await _providerCoursesWriteRepository.PatchProviderCourse(providerCourse, command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseContactDetailsOrConfirmingRegulator);
+            await _providerCoursesWriteRepository.PatchProviderCourse(providerCourse, command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseDetails);
 
             return Unit.Value;
         }
