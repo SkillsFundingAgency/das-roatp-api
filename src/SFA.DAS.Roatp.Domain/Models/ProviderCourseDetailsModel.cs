@@ -14,6 +14,7 @@
         public string Town { get; set; }
         public string Postcode { get; set; }
         public int Ukprn { get; set; }
+        public int LarsCode { get; set; }
         public string LegalName { get; set; }
         public string TradingName { get; set; }
         public double? Distance { get; set; }
