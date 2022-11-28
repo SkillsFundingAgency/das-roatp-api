@@ -44,13 +44,15 @@ namespace SFA.DAS.Roatp.Api.Controllers
 
         [Route("/providers/{ukprn}/courses/{larsCode}")]
         [HttpPost]
-        public async Task<IActionResult> CreateProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, ProviderCourseAddModel providerCourseAddModel)
+        public async Task<IActionResult> CreateProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, ProviderCourseAddModel providerCourseAddModel, [FromQuery] string userId, [FromQuery] string userDisplayName)
         {
             _logger.LogInformation("Inner API: Received command to add course: {larscode} to provider: {ukprn}", larsCode, ukprn);
 
             CreateProviderCourseCommand command = providerCourseAddModel;
             command.Ukprn = ukprn;
             command.LarsCode = larsCode;
+            command.UserId = userId;
+            command.UserDisplayName = userDisplayName;
 
             var result = await _mediator.Send(command);
 

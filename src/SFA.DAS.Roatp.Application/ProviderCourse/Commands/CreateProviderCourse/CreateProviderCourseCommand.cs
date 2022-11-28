@@ -4,8 +4,10 @@ using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 {
-    public class CreateProviderCourseCommand : IRequest<int>, IUkprn, ILarsCode
+    public class CreateProviderCourseCommand : IRequest<int>, IUkprn, ILarsCode, IUserInfo
     {
+        public string UserId { get; set; }
+        public string UserDisplayName { get; set; }
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }
         public bool? IsApprovedByRegulator { get; set; }
