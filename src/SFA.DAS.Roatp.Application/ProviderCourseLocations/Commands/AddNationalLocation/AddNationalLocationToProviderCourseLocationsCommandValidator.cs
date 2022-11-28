@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNational
 
             Include(new LarsCodeValidator(providersReadRepository, providerCoursesReadRepository));
 
-            RuleFor(c => c.UserId).NotEmpty();
+            Include(new UserInfoValidator());
 
             RuleFor(c => c).MustAsync(async (command, cancellationToken) => 
             {
