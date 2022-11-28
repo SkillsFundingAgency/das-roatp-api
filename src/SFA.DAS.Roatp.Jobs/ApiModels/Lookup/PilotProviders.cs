@@ -20,6 +20,8 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup
                 10007424,
                 10000948,
                 10000560,
+                10001378,
+                10031526
             };
     }
 }

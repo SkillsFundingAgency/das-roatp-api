@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -52,6 +53,9 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             var regions =  await GetRegions();
 
             var cdProviders = await _getCourseDirectoryDataService.GetCourseDirectoryData();
+
+            var x = cdProviders.FirstOrDefault(x => x.Website!=null&& x.Name.Contains("L and F"));
+
             loadMetrics.TotalProvidersFromCourseDirectory = cdProviders.Count;
 
             if (betaAndPilotProvidersOnly)
