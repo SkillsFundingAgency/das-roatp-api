@@ -44,13 +44,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var result = await _sut.Handle(request, new CancellationToken());
 
             result.Should().Be(0);
-            _providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.IsAny<IEnumerable<int>>()), Times.Never);
+            _providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.IsAny<IEnumerable<int>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()), Times.Never);
         }
 
         [Test, AutoData]
-        public async Task Handler_NoProviderLocations_ReturnsZero(int ukprn, int larsCode, string userId)
+        public async Task Handler_NoProviderLocations_ReturnsZero(int ukprn, int larsCode, string userId, string userDisplayName)
         {
-            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteProviderLocations, userId);
+            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteProviderLocations, userId, userDisplayName);
             var locations = new List<ProviderCourseLocation>() 
             {
                 _nationalLocation,
@@ -61,13 +61,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var result = await _sut.Handle(request, new CancellationToken());
 
             result.Should().Be(0);
-            _providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.IsAny<IEnumerable<int>>()), Times.Never);
+            _providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.IsAny<IEnumerable<int>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()), Times.Never);
         }
 
         [Test, AutoData]
-        public async Task Handler_NoEmployerLocations_ReturnsZero(int ukprn, int larsCode, string userId)
+        public async Task Handler_NoEmployerLocations_ReturnsZero(int ukprn, int larsCode, string userId, string userDisplayName)
         {
-            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteEmployerLocations, userId);
+            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteEmployerLocations, userId, userDisplayName);
             var locations = new List<ProviderCourseLocation>()
             {
                 _providerLocation
@@ -77,13 +77,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var result = await _sut.Handle(request, new CancellationToken());
 
             result.Should().Be(0);
-            _providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.IsAny<IEnumerable<int>>()), Times.Never);
+            _providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.IsAny<IEnumerable<int>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()), Times.Never);
         }
 
         [Test, AutoData]
-        public async Task Handler_DeleteEmployerLocations_CallsRepositoryWithEmployerLocationIds(int ukprn, int larsCode, string userId)
+        public async Task Handler_DeleteEmployerLocations_CallsRepositoryWithEmployerLocationIds(int ukprn, int larsCode, string userId, string userDisplayName)
         {
-            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteEmployerLocations, userId);
+            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteEmployerLocations, userId, userDisplayName);
             var locations = new List<ProviderCourseLocation>()
             {
                 _nationalLocation,
@@ -96,13 +96,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
 
             result.Should().Be(2);
             var expectedList = new [] { _nationalLocation.Id, _regionalLocation.Id };
-            _providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.Is<IEnumerable<int>>(l => !l.Except(expectedList).Any())));
+            _providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.Is<IEnumerable<int>>(l => !l.Except(expectedList).Any()), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()));
         }
 
         [Test, AutoData]
-        public async Task Handler_DeleteEmployerLocations_CallsRepositoryWithProviderLocationIds(int ukprn, int larsCode,string userId)
+        public async Task Handler_DeleteEmployerLocations_CallsRepositoryWithProviderLocationIds(int ukprn, int larsCode,string userId, string userDisplayName)
         {
-            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteProviderLocations, userId);
+            var request = new BulkDeleteProviderCourseLocationsCommand(ukprn, larsCode, DeleteProviderCourseLocationOption.DeleteProviderLocations, userId, userDisplayName);
             var locations = new List<ProviderCourseLocation>()
             {
                 _nationalLocation,
@@ -115,7 +115,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
 
             result.Should().Be(1);
             var expectedList = new[] { _providerLocation.Id };
-            _providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.Is<IEnumerable<int>>(l => !l.Except(expectedList).Any())));
+            _providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.Is<IEnumerable<int>>(l => !l.Except(expectedList).Any()), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()));
         }
     }
 }
