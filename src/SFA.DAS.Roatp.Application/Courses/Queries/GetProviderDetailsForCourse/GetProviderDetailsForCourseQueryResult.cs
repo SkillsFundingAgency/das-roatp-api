@@ -6,6 +6,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
     public class GetProviderDetailsForCourseQueryResult
     {
         public string Name { get; set; }
+        public int Ukprn { get; set; }
         public string TradingName { get; set; }
         public string ContactUrl { get; set; }
         public string Email { get; set; }
@@ -36,6 +37,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
 
             return new GetProviderDetailsForCourseQueryResult
             {
+                Ukprn = providerCourseDetails.Ukprn,
                 ContactUrl = providerCourseDetails.StandardContactUrl,
                 Email = providerCourseDetails.Email,
                 Phone = providerCourseDetails.Phone,
