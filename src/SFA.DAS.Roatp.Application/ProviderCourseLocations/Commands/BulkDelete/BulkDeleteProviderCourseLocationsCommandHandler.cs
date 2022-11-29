@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
@@ -23,34 +24,34 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
             _logger = logger;
         }
 
-        public async Task<int> Handle(BulkDeleteProviderCourseLocationsCommand request, CancellationToken cancellationToken)
+        public async Task<int> Handle(BulkDeleteProviderCourseLocationsCommand command, CancellationToken cancellationToken)
         {
-            var courseLocations = await _providerCourseLocationsReadRepository.GetAllProviderCourseLocations(request.Ukprn, request.LarsCode);
+            var courseLocations = await _providerCourseLocationsReadRepository.GetAllProviderCourseLocations(command.Ukprn, command.LarsCode);
 
             if (!courseLocations.Any())
             {
-                _logger.LogInformation("No locations are associated with Ukprn:{ukprn} and LarsCode:{larscode}", request.Ukprn, request.LarsCode);
+                _logger.LogInformation("No locations are associated with Ukprn:{ukprn} and LarsCode:{larscode}", command.Ukprn, command.LarsCode);
                 return 0;
             }
 
             IEnumerable<ProviderCourseLocation> locationsToDelete;
 
-            if (request.DeleteProviderCourseLocationOptions == DeleteProviderCourseLocationOption.DeleteProviderLocations)
+            if (command.DeleteProviderCourseLocationOptions == DeleteProviderCourseLocationOption.DeleteProviderLocations)
                 locationsToDelete = courseLocations.Where(l => l.Location.LocationType == LocationType.Provider);
             else
                 locationsToDelete = courseLocations.Where(l => l.Location.LocationType != LocationType.Provider);
 
             var count = locationsToDelete.Count();
 
-            var locationType = request.DeleteProviderCourseLocationOptions == DeleteProviderCourseLocationOption.DeleteProviderLocations ? "Provider" : "Employer";
+            var locationType = command.DeleteProviderCourseLocationOptions == DeleteProviderCourseLocationOption.DeleteProviderLocations ? "Provider" : "Employer";
             if (count == 0)
             {
-                _logger.LogInformation("No {locationType} locations found for Ukprn:{ukprn} and LarsCode:{larscode}", locationType, request.Ukprn, request.LarsCode);
+                _logger.LogInformation("No {locationType} locations found for Ukprn:{ukprn} and LarsCode:{larscode}", locationType, command.Ukprn, command.LarsCode);
                 return 0;
             }
 
-            _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn} and LarsCode:{larscode}", count, locationType, request.Ukprn, request.LarsCode);
-            await _providerCourseLocationsBulkRepository.BulkDelete(locationsToDelete.Select(l => l.Id));
+            _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn} and LarsCode:{larscode}", count, locationType, command.Ukprn, command.LarsCode);
+            await _providerCourseLocationsBulkRepository.BulkDelete(locationsToDelete.Select(l => l.Id), command.UserId, command.UserDisplayName, command.Ukprn, AuditEventTypes.BulkDeleteProviderCourseLocation);
 
             return count;
         }

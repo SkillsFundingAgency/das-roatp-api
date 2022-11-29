@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Roatp.Application.ProviderCourse
+﻿namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
 {
     public class PatchProviderCourseCommandResponse
     {

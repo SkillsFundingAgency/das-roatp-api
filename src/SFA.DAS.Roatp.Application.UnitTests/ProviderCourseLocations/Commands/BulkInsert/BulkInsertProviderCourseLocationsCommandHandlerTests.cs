@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
 
             var result = await sut.Handle(command, cancellationToken);
 
-            providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkInsert(It.IsAny<IEnumerable<ProviderCourseLocation>>()), Times.Once);
+            providerCourseLocationsBulkRepositoryMock.Verify(d => d.BulkInsert(It.IsAny<IEnumerable<ProviderCourseLocation>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
 
             Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.EqualTo(1));

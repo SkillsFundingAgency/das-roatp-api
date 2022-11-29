@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
@@ -45,7 +46,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
                 providerCourseLocationsToInsert.Add(providerCourseLocation);
             }
             _logger.LogInformation("{count} {locationType} locations will be inserted for Ukprn:{ukprn}", providerCourseLocationsToInsert.Count, LocationType.Regional, command.Ukprn);
-            await _providerCourseLocationsBulkRepository.BulkInsert(providerCourseLocationsToInsert);
+            await _providerCourseLocationsBulkRepository.BulkInsert(providerCourseLocationsToInsert, command.UserId, command.UserDisplayName, command.Ukprn, AuditEventTypes.BulkInsertProviderCourseLocation);
             return providerCourseLocationsToInsert.Count;
         }
     }

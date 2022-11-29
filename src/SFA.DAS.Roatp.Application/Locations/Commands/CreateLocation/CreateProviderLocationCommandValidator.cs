@@ -15,7 +15,8 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
         {
             Include(new UkprnValidator(providersReadRepository));
 
-            RuleFor(c => c.UserId).NotEmpty();
+            Include(new UserInfoValidator());
+
             RuleFor(c => c.LocationName)
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()

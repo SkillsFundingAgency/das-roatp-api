@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
@@ -56,7 +57,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 
             await ProcessProviderLocations(request, providerCourse);
 
-            await _providerCoursesWriteRepository.CreateProviderCourse(providerCourse);
+            await _providerCoursesWriteRepository.CreateProviderCourse(providerCourse, request.Ukprn, request.UserId, request.UserDisplayName, AuditEventTypes.CreateProviderCourse);
 
             _logger.LogInformation("Added course:{larscode} with id:{providercourseid} for provider: {ukprn}", request.LarsCode, providerCourse.Id, request.Ukprn);
             return providerCourse.Id;

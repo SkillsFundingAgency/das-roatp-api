@@ -5,6 +5,7 @@ namespace SFA.DAS.Roatp.Api.Models
     public class ProviderLocationEditModel
     {
         public string UserId { get; set; }
+        public string UserDisplayName { get; set; }
         public string LocationName { get; set; }
         public string Website { get; set; }
         public string Email { get; set; }
@@ -13,6 +14,7 @@ namespace SFA.DAS.Roatp.Api.Models
             new UpdateProviderLocationDetailsCommand
             {
                 UserId = model.UserId,
+                UserDisplayName = model.UserDisplayName,
                 LocationName = model.LocationName,
                 Website = model.Website,
                 Email = model.Email,

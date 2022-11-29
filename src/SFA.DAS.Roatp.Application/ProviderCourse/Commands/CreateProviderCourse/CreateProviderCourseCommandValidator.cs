@@ -22,6 +22,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
             IProviderLocationsReadRepository providerLocationsReadRepository,
             IRegionsReadRepository regionsReadRepository)
         {
+            Include(new UserInfoValidator());
+
             Include(new UkprnValidator(providersReadRepository));
 
             Include(new LarsCodeValidatorV2(standardsReadRepository, providerCoursesReadRepository, false));

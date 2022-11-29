@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 
             Include(new LarsCodeValidator(providersReadRepository, providerCoursesReadRepository));
 
-            RuleFor(c => c.UserId).NotEmpty();
+            Include(new UserInfoValidator());
 
             RuleFor(x => x.SelectedSubregionIds)
               .Cascade(CascadeMode.Stop)
