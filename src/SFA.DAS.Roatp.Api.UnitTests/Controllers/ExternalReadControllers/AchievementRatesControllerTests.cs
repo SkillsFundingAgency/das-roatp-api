@@ -7,6 +7,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 using SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries.GetOverallAchievementRates;
 using SFA.DAS.Testing.AutoFixture;
+using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
@@ -32,6 +33,13 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             var queryResult = result.Value as GetOverallAchievementRatesQueryResult;
             queryResult.OverallAchievementRates.Should().BeEquivalentTo(handlerResult.OverallAchievementRates);
             mediatorMock.Verify(m => m.Send(It.IsAny<GetOverallAchievementRatesQuery>(), It.IsAny<CancellationToken>()));
+        }
+
+        [Test]
+        public void ControllerConvention_HasRequiredNamespace()
+        {
+            var controllerPath = typeof(AchievementRatesController).Namespace.Split('.').Last();
+            Assert.That(controllerPath == "ExternalReadControllers");
         }
     }
 }

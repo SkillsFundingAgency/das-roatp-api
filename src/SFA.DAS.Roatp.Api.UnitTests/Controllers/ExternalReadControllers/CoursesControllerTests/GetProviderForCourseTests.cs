@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
+using System.Linq;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests
 {
@@ -30,6 +31,13 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
 
             Assert.AreEqual(larsCode, result.Result.As<OkObjectResult>().Value.As<GetProviderDetailsForCourseQueryResult>().LarsCode);
             mediatorMock.Verify(m => m.Send(It.Is<GetProviderDetailsForCourseQuery>(q => q.LarsCode == larsCode && q.Ukprn==ukprn && q.Latitude==null && q.Longitude == null), It.IsAny<CancellationToken>()));
+        }
+
+        [Test]
+        public void ControllerConvention_HasRequiredNamespace()
+        {
+            var controllerPath = typeof(CoursesController).Namespace.Split('.').Last();
+            Assert.That(controllerPath == "ExternalReadControllers");
         }
     }
 }
