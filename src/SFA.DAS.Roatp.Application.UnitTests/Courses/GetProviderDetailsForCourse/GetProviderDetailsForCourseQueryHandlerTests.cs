@@ -129,5 +129,17 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             Assert.AreEqual(result.ContactUrl, providerCourseDetailsModel.StandardContactUrl);
             Assert.AreEqual(result.ProviderHeadOfficeDistanceInMiles, providerCourseDetailsModel.Distance);
         }
+
+        [Test, RecursiveMoqAutoData()]
+        public async Task Handle_NoProviderDetails_ReturnsNull(
+            [Frozen] Mock<IProviderDetailsReadRepository> providerDetailsReadRepositoryMock,
+           GetProviderDetailsForCourseQuery query,
+           GetProviderDetailsForCourseQueryHandler sut,
+           CancellationToken cancellationToken)
+        {
+            providerDetailsReadRepositoryMock.Setup(r => r.GetProviderForUkprnAndLarsCodeWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync((ProviderCourseDetailsModel)null);
+            var result = await sut.Handle(query, cancellationToken);
+            Assert.IsNull(result);
+        }
     }
 }
