@@ -13,16 +13,15 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
     public class GetProviderDetailsForCourseQueryValidatorTests
     {
         private Mock<IProvidersReadRepository> _providersReadRepo;
-        private Mock<IProviderCoursesReadRepository> _providerCoursesReadRepo;
+        private Mock<IStandardsReadRepository> _standardsReadRepo;
 
         [SetUp]
         public void Before_each_test()
         {
             _providersReadRepo = new Mock<IProvidersReadRepository>();
-            _providerCoursesReadRepo = new Mock<IProviderCoursesReadRepository>();
             _providersReadRepo.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
-            _providerCoursesReadRepo.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>()))
-                .ReturnsAsync(new Domain.Entities.ProviderCourse());
+            _standardsReadRepo = new Mock<IStandardsReadRepository>();
+            _standardsReadRepo.Setup(x => x.GetStandard(It.IsAny<int>())).ReturnsAsync(new Standard());
         }
 
         [TestCase(1, 10000001, null, null, true)]
@@ -32,8 +31,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             bool isValid)
         {
             var validator =
-                new GetProviderDetailsForCourseQueryValidator(_providersReadRepo.Object,
-                    _providerCoursesReadRepo.Object);
+                new GetProviderDetailsForCourseQueryValidator(_providersReadRepo.Object, _standardsReadRepo.Object);
 
             var result =
                 await validator.TestValidateAsync(new GetProviderDetailsForCourseQuery(larsCode, ukprn, lat, lon));
@@ -50,12 +48,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
         public async Task Validate_LarsCode(int larsCode, bool isValid)
         {
             var ukprn = 10000001;
-            decimal? lat = null;
-            decimal? lon = null;
-            var validator = new GetProviderDetailsForCourseQueryValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
 
-            var result = await validator.TestValidateAsync(new GetProviderDetailsForCourseQuery(larsCode, ukprn, lat, lon));
+            var validator = new GetProviderDetailsForCourseQueryValidator(_providersReadRepo.Object, _standardsReadRepo.Object);
 
+            var result = await validator.TestValidateAsync(new GetProviderDetailsForCourseQuery(larsCode, ukprn, null, null));
+     
             if (isValid)
                 result.ShouldNotHaveValidationErrorFor(c => c.LarsCode);
             else
@@ -77,8 +74,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
         {
             var larsCode = 1;
             var ukprn = 10000001;
-            var validator = new GetProviderDetailsForCourseQueryValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
-
+            var validator = new GetProviderDetailsForCourseQueryValidator(_providersReadRepo.Object, _standardsReadRepo.Object);
             var result = await validator.TestValidateAsync(new GetProviderDetailsForCourseQuery(larsCode, ukprn, lat, lon));
 
            Assert.AreEqual(isValid, result.IsValid);
