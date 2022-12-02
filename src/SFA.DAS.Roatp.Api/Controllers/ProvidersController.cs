@@ -23,6 +23,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [Route("/providers/{ukprn}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(GetProviderQueryResult), StatusCodes.Status200OK)]
         public async Task<ActionResult<GetProviderQueryResult>> GetProvider(int ukprn)
         {
             var providerResult = await _mediator.Send(new GetProviderQuery(ukprn));

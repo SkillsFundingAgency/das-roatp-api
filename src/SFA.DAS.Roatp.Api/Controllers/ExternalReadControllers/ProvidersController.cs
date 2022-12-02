@@ -25,6 +25,8 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 
         [HttpGet]
         [Route("")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(List<ProviderSummary>), 200)]
         public async Task<IActionResult> GetProviders()
         {
             var providerResult = await _mediator.Send(new GetProvidersQuery());
@@ -34,6 +36,8 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 
         [HttpGet]
         [Route("{ukprn}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(ProviderSummary), 200)]
         public async Task<IActionResult> GetProvider(int ukprn)
         {
             var providerResult = await _mediator.Send(new GetProviderSummaryQuery(ukprn));

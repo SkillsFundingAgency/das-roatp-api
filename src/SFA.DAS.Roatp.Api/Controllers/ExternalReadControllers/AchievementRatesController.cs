@@ -2,6 +2,8 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries.GetOverallAchievementRates;
+using SFA.DAS.Roatp.Domain.Entities;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
@@ -21,6 +23,8 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 
         [HttpGet]
         [Route("Overall")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(List<NationalAchievementRateOverall>), 200)]
         public async Task<IActionResult> GetOverallAchievementRates([FromQuery] string sector)
         {
             _logger.LogInformation("Request received to get overall achievement rates by:{sector}", sector);

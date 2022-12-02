@@ -1,6 +1,5 @@
 ﻿using FluentValidation.TestHelper;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using System.Threading.Tasks;
 
@@ -9,9 +8,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
     [TestFixture]
     public class CreateProviderCourseCommandValidatorLarsCodeValidationTests : CreateProviderCourseCommandValidatorTestBase
     {
-        [TestCase(0, false, LarsCodeValidatorV2.InvalidMessage)]
-        [TestCase(1, false, LarsCodeValidatorV2.NotFoundMessage)]
-        [TestCase(ValidComboLarsCode, false, LarsCodeValidatorV2.CombinationAlreadyExistsMessage)]
+        [TestCase(ValidComboLarsCode, false, CreateProviderCourseCommandValidator.LarsCodeUkprnCombinationAlreadyExistsMessage)]
         [TestCase(RegulatedLarsCode, true, "")]
         public async Task LarsCode_Validation(int larsCode, bool isValid, string expectedErrorMessage)
         {

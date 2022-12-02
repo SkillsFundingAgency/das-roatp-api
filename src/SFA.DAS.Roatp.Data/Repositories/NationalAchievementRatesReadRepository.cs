@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Data.Repositories;
 
@@ -24,5 +25,20 @@ internal class NationalAchievementRatesReadRepository : INationalAchievementRate
             c.Provider.Ukprn == ukprn).ToListAsync();
 
         return results;
+    }
+
+    public async Task<List<NationalAchievementRate>> GetAll()
+    {
+        return await _roatpDataContext.NationalAchievementRates.ToListAsync();
+    }
+
+    public async Task<List<NationalAchievementRate>> GetByProvidersLevelsSectorSubjectArea(List<int> providerIds, List<ApprenticeshipLevel> levels, string sectorSubjectArea)
+    {
+        return await _roatpDataContext.NationalAchievementRates
+          .Where(x=>(levels.Contains(x.ApprenticeshipLevel)) 
+                                            && x.Age==Age.AllAges 
+                                            && x.SectorSubjectArea==sectorSubjectArea 
+                                            && providerIds.Contains(x.ProviderId))  
+          .ToListAsync();
     }
 }

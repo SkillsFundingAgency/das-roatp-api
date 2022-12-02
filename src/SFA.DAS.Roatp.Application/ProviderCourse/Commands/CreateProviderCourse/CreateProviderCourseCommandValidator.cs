@@ -14,7 +14,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         public const string AtleastOneLocationIsRequiredMessage = "National delivery option is not set and there are no regions or provider locations either. Any one of these is required.";
         public const string LocationIdNotFoundMessage = "At least one of the location ids was not found";
         public const string RegionIdNotFoundMessage = "At least one of the region id was not found";
-
+        public const string LarsCodeUkprnCombinationAlreadyExistsMessage = "Ukprn and LarsCode combination already exists";
+        public const string LarsCodeInvalidMessage = "Larscode must be greater than zero";
         public CreateProviderCourseCommandValidator(
             IProvidersReadRepository providersReadRepository,
             IStandardsReadRepository standardsReadRepository,
@@ -24,9 +25,18 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         {
             Include(new UserInfoValidator());
 
-            Include(new UkprnValidator(providersReadRepository));
-
-            Include(new LarsCodeValidatorV2(standardsReadRepository, providerCoursesReadRepository, false));
+            Include(new UkprnValidator(providersReadRepository)); 
+            RuleFor(x => x.LarsCode)
+                .Cascade(CascadeMode.Stop)
+                .GreaterThan(0)
+                .WithMessage(LarsCodeInvalidMessage)
+                .MustAsync(async (model, larsCode, cancellation) =>
+                {
+                    var providerCourse = await providerCoursesReadRepository.GetProviderCourseByUkprn(model.Ukprn, larsCode);
+                    return providerCourse == null;
+                })
+                .WithMessage(LarsCodeUkprnCombinationAlreadyExistsMessage)
+                .When(_ => true, ApplyConditionTo.CurrentValidator);
 
             WhenAsync(
                 async (command, _) => await IsStandardRegulated(command.LarsCode, standardsReadRepository),

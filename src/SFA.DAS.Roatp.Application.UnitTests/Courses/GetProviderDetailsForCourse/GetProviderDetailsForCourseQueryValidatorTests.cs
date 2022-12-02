@@ -1,8 +1,8 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
+using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
         [TestCase(1, 10000001, null, null, true)]
         [TestCase(1, 10000000, null, null, false)]
         [TestCase(1, 100000000, null, null, false)]
-        public async Task Validate_Ukprn(int larsCode, int ukprn, double? lat, double? lon,
+        public async Task Validate_Ukprn(int larsCode, int ukprn, decimal? lat, decimal? lon,
             bool isValid)
         {
             var validator =
@@ -50,8 +50,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
         public async Task Validate_LarsCode(int larsCode, bool isValid)
         {
             var ukprn = 10000001;
-            Double? lat = null;
-            Double? lon = null;
+            decimal? lat = null;
+            decimal? lon = null;
             var validator = new GetProviderDetailsForCourseQueryValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
 
             var result = await validator.TestValidateAsync(new GetProviderDetailsForCourseQuery(larsCode, ukprn, lat, lon));
@@ -62,13 +62,18 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
                 result.ShouldHaveValidationErrorFor(c => c.LarsCode);
         }
 
-        [TestCase(56, 0, true, "")]
+        [TestCase(90, 0, true, "")]
+        [TestCase(-90, 0, true, "")]
+        [TestCase(0, 180, true, "")]
+        [TestCase(0, -180, true, "")]
         [TestCase(null, null, true, "")]
-        [TestCase(58, 0, false, GetProviderDetailsForCourseQueryValidator.LatitudeOutsideUk)]
-        [TestCase(56, 1.75, false,GetProviderDetailsForCourseQueryValidator.LongitudeOutsideUk)]
-        [TestCase(56, null, false, GetProviderDetailsForCourseQueryValidator.LatitudeAndNotLongitude)]
-        [TestCase(null, 0, false, GetProviderDetailsForCourseQueryValidator.NotLatitudeAndLongitude)]
-        public async Task Validate_LatitudeLongitude(double? lat, double? lon, bool isValid, string ErrorMessage)
+        [TestCase(90.0001, 0, false, CoordinatesValidator.LatitudeOutsideAcceptableRange)]
+        [TestCase(-90.0001, 0, false, CoordinatesValidator.LatitudeOutsideAcceptableRange)]
+        [TestCase(0, 180.0001, false, CoordinatesValidator.LongitudeOutsideAcceptableRange)]
+        [TestCase(0, -180.0001, false, CoordinatesValidator.LongitudeOutsideAcceptableRange)]
+        [TestCase(56, null, false, CoordinatesValidator.LatitudeAndNotLongitude)]
+        [TestCase(null, 0, false, CoordinatesValidator.NotLatitudeAndLongitude)]
+        public async Task Validate_LatitudeLongitude(decimal? lat, decimal? lon, bool isValid, string errorMessage)
         {
             var larsCode = 1;
             var ukprn = 10000001;
@@ -78,8 +83,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
 
            Assert.AreEqual(isValid, result.IsValid);
            if (!result.IsValid)
-                Assert.AreEqual(result.Errors[0].ErrorMessage,ErrorMessage);
+                Assert.AreEqual(result.Errors[0].ErrorMessage,errorMessage);
         }
-
     }
 }

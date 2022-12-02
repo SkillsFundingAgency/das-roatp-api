@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 {
-    public class BulkInsertProviderLocationsCommand : IRequest<int>, ILarsCode, IUkprn, IUserInfo
+    public class BulkInsertProviderLocationsCommand : IRequest<int>, ILarsCodeUkprn, IUkprn, IUserInfo
     {
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }
