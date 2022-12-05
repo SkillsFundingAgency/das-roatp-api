@@ -7,7 +7,7 @@ using SFA.DAS.Roatp.Domain.Models;
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
 {
     [TestFixture]
-    public class ProcessProviderCourseLocationsServiceTests
+    public class ProcessProviderCourseLocationsServiceDeliveryModelsTests
     {
         [Test]
         public void Service_NoProviderCourseLocations_ReturnsNotFoundRecord()
