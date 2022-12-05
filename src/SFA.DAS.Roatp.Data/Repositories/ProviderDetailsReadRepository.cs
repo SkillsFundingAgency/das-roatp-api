@@ -122,6 +122,11 @@ namespace SFA.DAS.Roatp.Data.Repositories
             return $@"
                     SELECT  P.Id as providerId,
                     LocationType,
+                    PL.AddressLine1,
+                    PL.AddressLine2,
+                    PL.Town,
+                    PL.County,
+                    PL.Postcode,
 	                PCL.HasDayReleaseDeliveryOption,
 	                PCL.HasBlockReleaseDeliveryOption,
 	                CASE	WHEN ({lat} is null) THEN null
@@ -149,6 +154,11 @@ namespace SFA.DAS.Roatp.Data.Repositories
 	                P.Id as providerId,
 	                PC.LarsCode,
 	                LocationType,
+                    PL.AddressLine1,
+                    PL.AddressLine2,
+                    PL.Town,
+                    PL.County,
+                    PL.Postcode,
 	                PCL.HasDayReleaseDeliveryOption,
 	                PCL.HasBlockReleaseDeliveryOption,
 	                CASE	WHEN ({lat} is null) THEN null
