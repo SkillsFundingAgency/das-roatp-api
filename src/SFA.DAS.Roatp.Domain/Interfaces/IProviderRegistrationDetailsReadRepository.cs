@@ -7,5 +7,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     public interface IProviderRegistrationDetailsReadRepository
     {
         Task<List<ProviderRegistrationDetail>> GetActiveProviderRegistrations();
+        Task<ProviderRegistrationDetail> GetProviderRegistrationDetail(int ukprn);
     }
 }

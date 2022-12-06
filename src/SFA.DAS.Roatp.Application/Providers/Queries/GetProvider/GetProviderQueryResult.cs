@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProvider
+﻿using SFA.DAS.Roatp.Domain.Models;
+
+namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProvider
 {
     public class GetProviderQueryResult
     {
@@ -10,6 +12,7 @@
         public string Website { get; set; }
         public string MarketingInfo { get; set; }
         public bool IsImported { get; set; } = false;
+        public ProviderType ProviderType { get; set; }
 
         public static implicit operator GetProviderQueryResult(Domain.Entities.Provider source) =>
             new GetProviderQueryResult
@@ -21,7 +24,7 @@
                 Phone = source.Phone,
                 Website = source.Website,
                 MarketingInfo = source.MarketingInfo,
-                IsImported = source.IsImported
+                IsImported = source.IsImported,
             };
     }
 }
