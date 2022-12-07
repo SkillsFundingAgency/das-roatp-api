@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
             if (providerCourseLocations.Any(l => l.LocationType == LocationType.Regional))
             {
                 var nearestRegionalLocation = providerCourseLocations
-                    .Where(l => l.LocationType == LocationType.Regional).OrderBy(x => x.Distance).First();
+                    .Where(l => l.LocationType == LocationType.Regional).MinBy(x => x.Distance);
 
                 deliveryModels.Add(
                     new DeliveryModel
@@ -93,7 +93,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
                 if (providerCourseLocations.Any(l => l.LocationType == LocationType.Regional))
                 {
                     var nearestRegionalLocation = providerCourseLocations
-                        .Where(l => l.LocationType == LocationType.Regional).OrderBy(x => x.Distance).First();
+                        .Where(l => l.LocationType == LocationType.Regional).MinBy(x => x.Distance);
 
                     deliveryModels.Add(
                         new DeliveryModelWithAddress
