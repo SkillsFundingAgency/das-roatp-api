@@ -29,6 +29,8 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProvider
             if(providerRegistrationDetail != null)
             {
                 getProviderQueryResult.ProviderType = (ProviderType)providerRegistrationDetail.ProviderTypeId;
+                getProviderQueryResult.ProviderStatusType = (ProviderStatusType)providerRegistrationDetail.StatusId;
+                getProviderQueryResult.ProviderStatusUpdatedDate = providerRegistrationDetail.StatusDate;
             }
             return getProviderQueryResult;
         }
