@@ -42,7 +42,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
             _logger.LogInformation("Received request to get provider details for Ukprn: {ukprn}, LarsCode: {larscode},  Latitude: {latitude}, Long: {longitude}", ukprn, larsCode, lat, lon);
             var response = await _mediator.Send(new GetProviderDetailsForCourseQuery(larsCode, ukprn, lat, lon));
             if (response == null)
-                return BadRequest();
+                return NotFound();
             return Ok(response);
         }
 

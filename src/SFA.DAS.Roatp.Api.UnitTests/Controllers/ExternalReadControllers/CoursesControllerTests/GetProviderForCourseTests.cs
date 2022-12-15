@@ -53,8 +53,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             var response = await sut.GetProviderDetailsForCourse(larsCode, ukprn, null, null);
 
             mediatorMock.Verify(m => m.Send(It.Is<GetProviderDetailsForCourseQuery>(q => q.LarsCode == larsCode && q.Ukprn == ukprn && q.Latitude == null && q.Longitude == null), It.IsAny<CancellationToken>()));
-           
-            Assert.AreEqual(StatusCodes.Status400BadRequest,(((BadRequestResult)response.Result)!).StatusCode);
+
+            Assert.AreEqual(StatusCodes.Status404NotFound, (((NotFoundResult)response.Result)!).StatusCode);
         }
     }
 }
