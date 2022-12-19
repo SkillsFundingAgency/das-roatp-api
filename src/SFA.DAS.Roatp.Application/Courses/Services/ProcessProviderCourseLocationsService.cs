@@ -7,74 +7,74 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
 {
     public class ProcessProviderCourseLocationsService : IProcessProviderCourseLocationsService
     {
+        // public List<DeliveryModel> ConvertProviderLocationsToDeliveryModels(
+        //     List<ProviderCourseLocationDetailsModel> providerCourseLocations)
+        // {
+        //     var deliveryModels = new List<DeliveryModel>();
+        //
+        //     if (providerCourseLocations == null || !providerCourseLocations.Any())
+        //     {
+        //         return deliveryModels;
+        //     }
+        //
+        //     if (providerCourseLocations.Any(l => l.LocationType == LocationType.National))
+        //     {
+        //         deliveryModels.Add(
+        //             new DeliveryModel
+        //             {
+        //                 LocationType = LocationType.National
+        //             });
+        //     }
+        //
+        //     if (providerCourseLocations.Any(l => l.LocationType == LocationType.Regional))
+        //     {
+        //         var nearestRegionalLocation = providerCourseLocations
+        //             .Where(l => l.LocationType == LocationType.Regional).MinBy(x => x.Distance);
+        //
+        //         deliveryModels.Add(
+        //             new DeliveryModel
+        //             {
+        //                 LocationType = LocationType.Regional,
+        //                 DistanceInMiles = nearestRegionalLocation.Distance
+        //             });
+        //     }
+        //
+        //     if (providerCourseLocations.Any(l => l.LocationType == LocationType.Provider))
+        //     {
+        //         var nearestLocationDayRelease = providerCourseLocations
+        //             .Where(l => l.LocationType == LocationType.Provider && l.HasDayReleaseDeliveryOption == true)
+        //             .MinBy(l => l.Distance);
+        //
+        //         if (nearestLocationDayRelease != null)
+        //             deliveryModels.Add(
+        //                 new DeliveryModel
+        //                 {
+        //                     LocationType = LocationType.Provider,
+        //                     DayRelease = true,
+        //                     DistanceInMiles = nearestLocationDayRelease.Distance,
+        //                 });
+        //
+        //         var nearestLocationBlockRelease = providerCourseLocations
+        //             .Where(l => l.LocationType == LocationType.Provider && l.HasBlockReleaseDeliveryOption == true)
+        //             .MinBy(l => l.Distance);
+        //
+        //         if (nearestLocationBlockRelease != null)
+        //             deliveryModels.Add(
+        //                 new DeliveryModel
+        //                 {
+        //                     LocationType = LocationType.Provider,
+        //                     BlockRelease = true,
+        //                     DistanceInMiles = nearestLocationBlockRelease.Distance,
+        //                 });
+        //     }
+        //
+        //     return deliveryModels;
+        // }
+
         public List<DeliveryModel> ConvertProviderLocationsToDeliveryModels(
             List<ProviderCourseLocationDetailsModel> providerCourseLocations)
-        {
-            var deliveryModels = new List<DeliveryModel>();
-
-            if (providerCourseLocations == null || !providerCourseLocations.Any())
             {
-                return deliveryModels;
-            }
-
-            if (providerCourseLocations.Any(l => l.LocationType == LocationType.National))
-            {
-                deliveryModels.Add(
-                    new DeliveryModel
-                    {
-                        LocationType = LocationType.National
-                    });
-            }
-
-            if (providerCourseLocations.Any(l => l.LocationType == LocationType.Regional))
-            {
-                var nearestRegionalLocation = providerCourseLocations
-                    .Where(l => l.LocationType == LocationType.Regional).MinBy(x => x.Distance);
-
-                deliveryModels.Add(
-                    new DeliveryModel
-                    {
-                        LocationType = LocationType.Regional,
-                        DistanceInMiles = nearestRegionalLocation.Distance
-                    });
-            }
-
-            if (providerCourseLocations.Any(l => l.LocationType == LocationType.Provider))
-            {
-                var nearestLocationDayRelease = providerCourseLocations
-                    .Where(l => l.LocationType == LocationType.Provider && l.HasDayReleaseDeliveryOption == true)
-                    .MinBy(l => l.Distance);
-
-                if (nearestLocationDayRelease != null)
-                    deliveryModels.Add(
-                        new DeliveryModel
-                        {
-                            LocationType = LocationType.Provider,
-                            DayRelease = true,
-                            DistanceInMiles = nearestLocationDayRelease.Distance,
-                        });
-
-                var nearestLocationBlockRelease = providerCourseLocations
-                    .Where(l => l.LocationType == LocationType.Provider && l.HasBlockReleaseDeliveryOption == true)
-                    .MinBy(l => l.Distance);
-
-                if (nearestLocationBlockRelease != null)
-                    deliveryModels.Add(
-                        new DeliveryModel
-                        {
-                            LocationType = LocationType.Provider,
-                            BlockRelease = true,
-                            DistanceInMiles = nearestLocationBlockRelease.Distance,
-                        });
-            }
-
-            return deliveryModels;
-        }
-
-        public List<DeliveryModelWithAddress> ConvertProviderLocationsToDeliveryModelWithAddress(
-            List<ProviderCourseLocationDetailsModel> providerCourseLocations)
-            {
-                var deliveryModels = new List<DeliveryModelWithAddress>();
+                var deliveryModels = new List<DeliveryModel>();
 
                 if (providerCourseLocations == null || !providerCourseLocations.Any())
                 {
@@ -84,7 +84,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
                 if (providerCourseLocations.Any(l => l.LocationType == LocationType.National))
                 {
                     deliveryModels.Add(
-                        new DeliveryModelWithAddress
+                        new DeliveryModel
                         {
                             LocationType = LocationType.National
                         });
@@ -96,7 +96,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
                         .Where(l => l.LocationType == LocationType.Regional).MinBy(x => x.Distance);
 
                     deliveryModels.Add(
-                        new DeliveryModelWithAddress
+                        new DeliveryModel
                         {
                             LocationType = LocationType.Regional,
                             DistanceInMiles = nearestRegionalLocation.Distance
@@ -111,7 +111,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
 
                     if (nearestLocationDayRelease != null)
                         deliveryModels.Add(
-                            new DeliveryModelWithAddress
+                            new DeliveryModel
                             {
                                 LocationType = LocationType.Provider,
                                 DayRelease = true,
@@ -129,7 +129,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Services
 
                     if (nearestLocationBlockRelease != null)
                         deliveryModels.Add(
-                            new DeliveryModelWithAddress
+                            new DeliveryModel
                             {
                                 LocationType = LocationType.Provider,
                                 BlockRelease = true,
