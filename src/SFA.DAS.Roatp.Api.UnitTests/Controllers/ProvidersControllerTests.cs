@@ -1,6 +1,4 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +7,8 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProvider;
 using SFA.DAS.Testing.AutoFixture;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {

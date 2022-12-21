@@ -19,5 +19,10 @@
             public static string UrlTooLong (string fieldName) => $"{fieldName} address is too long, must be 500 characters or fewer";
             public static string UrlWrongFormat(string fieldName) => $"{fieldName} address must be in the correct format, like www.example.com";
         }
+
+        public static class MarketingInfoValidationMessages
+        {
+            public const string MarketingInfoTooLong = "The length of 'Marketing Info' must be 750 characters or fewer.";
+        }
     }
 }

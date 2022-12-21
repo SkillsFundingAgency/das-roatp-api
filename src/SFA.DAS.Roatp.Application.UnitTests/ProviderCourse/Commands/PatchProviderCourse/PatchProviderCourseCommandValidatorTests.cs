@@ -8,10 +8,9 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Domain.Models;
 using static SFA.DAS.Roatp.Application.Common.ValidationMessages;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProviderCourse
 {
     [TestFixture]
     public class PatchProviderCourseCommandValidatorTests
@@ -44,8 +43,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
 
-             var result =  await validator.TestValidateAsync(new PatchProviderCourseCommand { Ukprn = ukprn, Patch = new JsonPatchDocument<PatchProviderCourse>()});
-            
+            var result = await validator.TestValidateAsync(new PatchProviderCourseCommand { Ukprn = ukprn, Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>() });
+
             if (isValid)
                 result.ShouldNotHaveValidationErrorFor(c => c.Ukprn);
             else
@@ -59,8 +58,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
 
-            var result = await validator.TestValidateAsync(new PatchProviderCourseCommand { LarsCode = larsCode, Patch = new JsonPatchDocument<PatchProviderCourse>()});
-        
+            var result = await validator.TestValidateAsync(new PatchProviderCourseCommand { LarsCode = larsCode, Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>() });
+
             if (isValid)
                 result.ShouldNotHaveValidationErrorFor(c => c.LarsCode);
             else
@@ -78,14 +77,14 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
             };
 
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
             {
                 Operations =
                 {
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = IsApprovedByRegulator, value = "True" }
                 }
             };
@@ -96,7 +95,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             Assert.IsTrue(result.IsValid);
         }
 
-        [TestCase("True",true)]
+        [TestCase("True", true)]
         [TestCase("False", true)]
         [TestCase("true", true)]
         [TestCase("false", true)]
@@ -112,14 +111,14 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
             };
 
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
             {
                 Operations =
                 {
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = IsApprovedByRegulator, value = isApprovedByRegulatorValue }
                 }
             };
@@ -149,22 +148,22 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
             };
 
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
             {
                 Operations =
                 {
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = StandardInfoUrl, value = "http://www.test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = "test@test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = IsApprovedByRegulator, value = "True" }
                 }
             };
@@ -186,28 +185,28 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
             };
 
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
             {
                 Operations =
                 {
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = StandardInfoUrl, value = "http://www.test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = "test@test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = IsApprovedByRegulator, value = "True" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = "unexpectedField", value = "field" }
                 }
             };
-            
+
             var result = await validator.TestValidateAsync(command);
 
             Assert.IsFalse(result.IsValid);
@@ -226,22 +225,22 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
             };
 
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
             {
                 Operations =
                 {
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = "Add", path = StandardInfoUrl, value = "http://www.test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = "test@test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = IsApprovedByRegulator, value = "True" }
                 }
             };
@@ -252,7 +251,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             Assert.IsTrue(result.Errors.Count == 1);
             Assert.AreEqual(PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableOperationErrorMessage, result.Errors[0].ErrorMessage);
         }
-        
+
 
         [Test]
         public async Task Validate_Patch_NoOperations_ErrorMessage()
@@ -265,7 +264,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
             };
 
             var result = await validator.TestValidateAsync(command);
@@ -287,20 +286,20 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
             };
 
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
             {
                 Operations =
                 {
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = StandardInfoUrl, value = "http://www.test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = "invalidEmail" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" }
                 }
             };
@@ -323,20 +322,20 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
             };
 
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
             {
                 Operations =
                 {
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = StandardInfoUrl, value = "http://www.test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = new string('x',255) + "@test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" }
                 }
             };
@@ -359,20 +358,20 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
             };
 
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
             {
                 Operations =
                 {
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = StandardInfoUrl, value = "http://www.test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = new string('x',260)},
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" }
                 }
             };
@@ -381,11 +380,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
 
             Assert.IsFalse(result.IsValid);
             Assert.IsTrue(result.Errors.Count == 2);
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage== EmailValidationMessages.EmailAddressTooLong));
+            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == EmailValidationMessages.EmailAddressTooLong));
             Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == EmailValidationMessages.EmailAddressWrongFormat));
         }
 
-        [TestCase(1,true)]
+        [TestCase(1, true)]
         [TestCase(2, true)]
         [TestCase(3, true)]
         [TestCase(4, true)]
@@ -411,20 +410,20 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
             };
 
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
             {
                 Operations =
                 {
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = StandardInfoUrl, value = "http://www.test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = new string('1',phoneNumberLength) },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = "test@test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" }
                 }
             };
@@ -455,20 +454,20 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
             };
 
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
             {
                 Operations =
                 {
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = StandardInfoUrl, value = "wrongformat" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = "test@test.com" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPageUrl, value = "wrongformat" }
                 }
             };
@@ -493,20 +492,20 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
-                Patch = new JsonPatchDocument<PatchProviderCourse>()
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
             };
 
-            command.Patch = new JsonPatchDocument<PatchProviderCourse>
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
             {
                 Operations =
                 {
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = StandardInfoUrl, value = longUrl },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value="test@test.com"},
-                    new Operation<PatchProviderCourse>
+                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPageUrl,  value =  longUrl}
                 }
             };

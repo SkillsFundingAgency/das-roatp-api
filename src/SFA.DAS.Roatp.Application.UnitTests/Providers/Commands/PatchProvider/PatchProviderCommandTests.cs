@@ -5,10 +5,10 @@ using SFA.DAS.Roatp.Application.ProviderCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
+namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
 {
     [TestFixture]
-    public class PatchProviderCourseCommandTests
+    public class PatchProviderCommandTests
     {
         private const string Replace = "replace";
         private const string ContactUsEmail = "ContactUsEmail";
@@ -24,8 +24,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             var larsCode = 1;
             var testValue = "value";
             var patchCommand = new JsonPatchDocument<PatchProviderCourse>();
-            patchCommand.Operations.Add(new Operation<PatchProviderCourse> {op=Replace,path=StandardInfoUrl,value=testValue});
-           
+            patchCommand.Operations.Add(new Operation<PatchProviderCourse> { op = Replace, path = StandardInfoUrl, value = testValue });
+
             var command = new PatchProviderCourseCommand
             {
                 Ukprn = ukprn,
@@ -33,7 +33,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
                 Patch = patchCommand
             };
 
-            Assert.AreEqual(testValue,command.StandardInfoUrl);
+            Assert.AreEqual(testValue, command.StandardInfoUrl);
             Assert.IsTrue(command.IsPresentStandardInfoUrl);
         }
 
@@ -123,7 +123,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
             var ukprn = 10000001;
             var larsCode = 1;
             var patchCommand = new JsonPatchDocument<PatchProviderCourse>();
-           
+
             var command = new PatchProviderCourseCommand
             {
                 Ukprn = ukprn,
@@ -131,7 +131,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands
                 Patch = patchCommand
             };
 
-            Assert.AreEqual(null,command.IsApprovedByRegulator);
+            Assert.AreEqual(null, command.IsApprovedByRegulator);
             Assert.IsFalse(command.IsPresentIsApprovedByRegulator);
             Assert.AreEqual(null, command.ContactUsEmail);
             Assert.IsFalse(command.IsPresentContactUsEmail);

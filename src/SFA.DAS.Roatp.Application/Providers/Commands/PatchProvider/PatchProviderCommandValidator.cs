@@ -15,8 +15,6 @@ namespace SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider
         public const string PatchOperationContainsUnavailableFieldErrorMessage = "This patch operation contains an unexpected field and will not continue";
         public const string PatchOperationContainsUnavailableOperationErrorMessage = "This patch operation contains an unexpected operation and will not continue";
 
-        public const string IsApprovedByRegulatorIsNotABooleanErrorMessage = "The patch contains an update for IsApprovedByRegulator that is not a boolean value";
-
         public static readonly IList<string> PatchFields = new ReadOnlyCollection<string>(
                 new List<string>
                 {
