@@ -13,6 +13,6 @@
         public const string UpdateProviderLocation = "UpdateProviderLocation";
         public const string DeleteProviderCourseLocation = "DeleteProviderCourseLocation";
         public const string CreateProviderCourseLocation = "CreateProviderCourseLocation";
-
+        public const string UpdateProviderDescription = "UpdateProviderDescription";
     }
 }
