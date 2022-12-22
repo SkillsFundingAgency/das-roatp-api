@@ -37,10 +37,10 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Route("{larsCode}/providers/{ukprn}")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(GetProviderDetailsForCourseQueryResult), StatusCodes.Status200OK)]
-        public async Task<ActionResult<GetProviderDetailsForCourseQueryResult>> GetProviderDetailsForCourse(int larsCode, int ukprn, decimal? latitude = null, decimal? longitude = null)
+        public async Task<ActionResult<GetProviderDetailsForCourseQueryResult>> GetProviderDetailsForCourse(int larsCode, int ukprn, decimal? lat = null, decimal? lon = null)
         {
-            _logger.LogInformation("Received request to get provider details for Ukprn: {ukprn}, LarsCode: {larscode},  Latitude: {latitude}, Long: {longitude}", ukprn, larsCode,latitude,longitude);
-            var response = await _mediator.Send(new GetProviderDetailsForCourseQuery(larsCode, ukprn,latitude,longitude));
+            _logger.LogInformation("Received request to get provider details for Ukprn: {ukprn}, LarsCode: {larscode},  Latitude: {latitude}, Long: {longitude}", ukprn, larsCode, lat, lon);
+            var response = await _mediator.Send(new GetProviderDetailsForCourseQuery(larsCode, ukprn, lat, lon));
             if (response == null)
                 return BadRequest();
             return Ok(response);
@@ -50,10 +50,10 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Route("{larsCode}/providers")]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(GetProvidersForCourseQueryResult), StatusCodes.Status200OK)]
-        public async Task<ActionResult<GetProvidersForCourseQueryResult>> GetProvidersForCourse(int larsCode,  decimal? latitude = null, decimal? longitude = null)
+        public async Task<ActionResult<GetProvidersForCourseQueryResult>> GetProvidersForCourse(int larsCode, decimal? lat = null, decimal? lon = null)
         {
-            _logger.LogInformation("Received request to get list of provider details for LarsCode: {larscode},  Latitude: {latitude}, Longitude: {longitude}", larsCode, latitude, longitude);
-            var response = await _mediator.Send(new GetProvidersForCourseQuery(larsCode, latitude, longitude));
+            _logger.LogInformation("Received request to get list of provider details for LarsCode: {larscode},  Latitude: {latitude}, Longitude: {longitude}", larsCode, lat, lon);
+            var response = await _mediator.Send(new GetProvidersForCourseQuery(larsCode, lat, lon));
             return Ok(response);
         }
     }

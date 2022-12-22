@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
         public List<NationalAchievementRateModel> AchievementRates { get; set; } =
             new List<NationalAchievementRateModel>();
 
-        public List<DeliveryModel> DeliveryModels { get; set; } = new List<DeliveryModel>();
+        public List<DeliveryModelWithAddress> DeliveryModels { get; set; } = new List<DeliveryModelWithAddress>();
 
         public static implicit operator GetProviderDetailsForCourseQueryResult(ProviderCourseDetailsModel providerCourseDetails)
         {
