@@ -37,8 +37,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
             [Frozen] Mock<IProviderCoursesWriteRepository> editRepoMock,
             PatchProviderCourseCommandHandler sut,
             Domain.Models.PatchProviderCourse patch,
-            CancellationToken cancellationToken,
-            Domain.Entities.ProviderCourse providerCourse, string userId, string userDisplayName)
+            Domain.Entities.ProviderCourse providerCourse, 
+            string userId, 
+            string userDisplayName, 
+            CancellationToken cancellationToken )
         {
             var ukprn = 10000001;
             var larsCode = 1;

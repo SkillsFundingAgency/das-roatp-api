@@ -36,8 +36,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
             [Frozen] Mock<IProvidersWriteRepository> editRepoMock,
             PatchProviderCommandHandler sut,
             Domain.Models.PatchProvider patch,
-            CancellationToken cancellationToken,
-            Domain.Entities.Provider provider, string userId, string userDisplayName)
+            Domain.Entities.Provider provider, 
+            string userId, 
+            string userDisplayName,
+            CancellationToken cancellationToken)
         {
             var ukprn = 10000001;
             readRepoMock.Setup(r => r.GetByUkprn(It.Is<int>(i => i == ukprn))).ReturnsAsync(provider);
