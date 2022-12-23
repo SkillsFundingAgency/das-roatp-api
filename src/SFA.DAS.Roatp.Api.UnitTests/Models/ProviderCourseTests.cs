@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
                 IsApprovedByRegulator = isApprovedByRegulator
             };
 
-            var patchProviderCourse = new Domain.Entities.ProviderCourse
+            var patchProviderCourse = new ProviderCourse
             {
                 ContactUsEmail = contactUsEmail,
                 ContactUsPageUrl = contactUsPageUrl,
