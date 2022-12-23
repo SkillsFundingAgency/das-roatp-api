@@ -20,6 +20,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
         {
             return await _roatpDataContext.Providers
                         .Include(p => p.ProviderAddress)
+                        .Include(p => p.Courses)
                         .AsNoTracking().SingleOrDefaultAsync(p => p.Ukprn == ukprn);
         }
 
