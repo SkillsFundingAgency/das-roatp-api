@@ -28,8 +28,8 @@ namespace SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider
 
             if (provider == null)
             {
-                _logger.LogError("Provider not found for ukprn: {ukprn}", command.Ukprn);
-                throw new InvalidOperationException($"Provider not found for ukprn: {command.Ukprn}");
+                _logger.LogError("PatchProvider: Provider not found for ukprn: {ukprn}", command.Ukprn);
+                throw new InvalidOperationException($"PatchProvider: Provider not found for ukprn: {command.Ukprn}");
             }
 
             var patchedProvider = (Domain.Models.PatchProvider)provider;
