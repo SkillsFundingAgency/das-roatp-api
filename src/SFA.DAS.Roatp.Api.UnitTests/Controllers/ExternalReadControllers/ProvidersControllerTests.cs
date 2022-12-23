@@ -6,6 +6,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Testing.AutoFixture;
@@ -65,6 +66,19 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         {
             var controllerPath = typeof(ProvidersController).Namespace.Split('.').Last();
             Assert.That(controllerPath == "ExternalReadControllers");
+        }
+            
+        [Test, MoqAutoData]
+        public async Task GetCourse_CallsMediator(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Greedy] ProvidersController sut,
+            int ukprn,
+            int larsCode,
+            GetProviderCourseQueryResult handlerResult)
+        {
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
+            var result = await sut.GetProviderCourse(ukprn, larsCode);
+            (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.Course);
         }
     }
 }

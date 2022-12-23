@@ -6,4 +6,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces;
 public interface IProcessProviderCourseLocationsService
 {
     List<DeliveryModel> ConvertProviderLocationsToDeliveryModels(List<ProviderCourseLocationDetailsModel> providerCourseLocations);
+    List<DeliveryModelWithAddress> ConvertProviderLocationsToDeliveryModelWithAddress(List<ProviderCourseLocationDetailsModel> providerCourseLocations);
+
 }
