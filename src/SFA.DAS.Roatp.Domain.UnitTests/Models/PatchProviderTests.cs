@@ -9,9 +9,11 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Models
     [TestFixture]
     public class PatchProviderTests
     {
-        [Test, AutoData]
-        public void ImplicitOperator_ConstructsObject(Provider source)
+        [Test]
+        public void ImplicitOperator_ConstructsObject()
         {
+            var source = new Provider { MarketingInfo = "Test" };
+
             var destination = (PatchProvider)source;
 
             destination.MarketingInfo.Should().Be(source.MarketingInfo);
