@@ -50,9 +50,7 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
 
         var result = (GetProviderDetailsForCourseQueryResult)providerDetails;
 
-        var deliveryModelsWithAddress = _processProviderCourseLocationsService.ConvertProviderLocationsToDeliveryModels(providerLocations);
-
-        result.DeliveryModels = deliveryModelsWithAddress;
+        result.DeliveryModels = _processProviderCourseLocationsService.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
         if (rate != null)
         {
