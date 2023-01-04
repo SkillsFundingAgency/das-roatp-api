@@ -103,8 +103,8 @@ public class Startup
 
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc(Constants.EndpointGroups.Management, new OpenApiInfo { Title = "Course Management"});
-            options.SwaggerDoc(Constants.EndpointGroups.Integration, new OpenApiInfo { Title = "Roatp Integration"});
+            options.SwaggerDoc(Constants.EndpointGroups.Management, new OpenApiInfo { Title = "Course Management", Version = "v1" });
+            options.SwaggerDoc(Constants.EndpointGroups.Integration, new OpenApiInfo { Title = "Roatp Integration", Version = "v1" });
             options.OperationFilter<SwaggerHeaderFilter>();
         });
     }
