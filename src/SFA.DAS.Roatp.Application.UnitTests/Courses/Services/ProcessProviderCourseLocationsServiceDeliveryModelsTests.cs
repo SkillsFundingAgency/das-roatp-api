@@ -14,9 +14,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
         {
             var providerLocations = new List<ProviderCourseLocationDetailsModel>();
             var service = new ProcessProviderCourseLocationsService();
-            var expectedResult = service.ConvertProviderLocationsToDeliveryModelWithAddress(providerLocations);
+            var expectedResult = service.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
-            var actualResult = new List<DeliveryModelWithAddress>();
+            var actualResult = new List<DeliveryModel>();
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
 
@@ -25,9 +25,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
         {
             List<ProviderCourseLocationDetailsModel> providerLocations = null;
             var service = new ProcessProviderCourseLocationsService();
-            var expectedResult = service.ConvertProviderLocationsToDeliveryModelWithAddress(providerLocations);
+            var expectedResult = service.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
-            var actualResult = new List<DeliveryModelWithAddress>();
+            var actualResult = new List<DeliveryModel>();
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
 
@@ -42,9 +42,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
                 }
             };
             var service = new ProcessProviderCourseLocationsService();
-            var expectedResult = service.ConvertProviderLocationsToDeliveryModelWithAddress(providerLocations);
+            var expectedResult = service.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
-            var actualResult = new List<DeliveryModelWithAddress> { new() { LocationType = LocationType.National } };
+            var actualResult = new List<DeliveryModel> { new() { LocationType = LocationType.National } };
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
 
@@ -68,9 +68,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
 
             };
             var service = new ProcessProviderCourseLocationsService();
-            var expectedResult = service.ConvertProviderLocationsToDeliveryModelWithAddress(providerLocations);
+            var expectedResult = service.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
-            var actualResult = new List<DeliveryModelWithAddress> { new() { LocationType = LocationType.Regional, DistanceInMiles = shortestDistance } };
+            var actualResult = new List<DeliveryModel> { new() { LocationType = LocationType.Regional, DistanceInMiles = shortestDistance } };
             actualResult.Should().BeEquivalentTo(expectedResult);
         }
 
@@ -114,9 +114,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
                 }
             };
             var service = new ProcessProviderCourseLocationsService();
-            var expectedResult = service.ConvertProviderLocationsToDeliveryModelWithAddress(providerLocations);
+            var expectedResult = service.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
-            var actualResult = new List<DeliveryModelWithAddress>
+            var actualResult = new List<DeliveryModel>
             {
                 new() {LocationType = LocationType.Provider, DayRelease = true, 
                     DistanceInMiles = shortestDistance, 
@@ -170,9 +170,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.Services
                 }
             };
             var service = new ProcessProviderCourseLocationsService();
-            var expectedResult = service.ConvertProviderLocationsToDeliveryModelWithAddress(providerLocations);
+            var expectedResult = service.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
-            var actualResult = new List<DeliveryModelWithAddress>
+            var actualResult = new List<DeliveryModel>
             {
                 new() {LocationType = LocationType.Provider, BlockRelease = true, DistanceInMiles = shortestDistance,
                     Address1 = shortestDistanceAddress1,
