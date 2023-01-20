@@ -20,7 +20,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
                 .Excluding(s => s.LegalName)
                 .Excluding(s => s.Distance)
                 .Excluding(s=>s.ProviderId)
+                .Excluding(s=>s.IsApprovedByRegulator)
             );
+
             Assert.AreEqual(summaryModel.LegalName, model.Name);
             Assert.AreEqual(summaryModel.Distance, model.ProviderHeadOfficeDistanceInMiles);
         }
