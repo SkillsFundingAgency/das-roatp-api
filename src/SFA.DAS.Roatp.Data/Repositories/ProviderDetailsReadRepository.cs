@@ -114,7 +114,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
 							LEFT OUTER JOIN [ProviderAddress] PA on P.Id = PA.ProviderId
                             LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
 		                    WHERE pc.LarsCode={larsCode}
-                            AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
+                            AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})
+                            AND PRD.ProviderTypeId={ProviderType.Main}";
         }
 
         private static FormattableString GetProviderLocationDetailsWithDistanceSql(int ukprn, int larsCode, decimal? lat, decimal? lon)
@@ -175,7 +176,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 LEFT OUTER JOIN Region R on R.Id =PL.RegionId
                 LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
                 WHERE  LarsCode={larsCode}
-                AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
+                AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})
+                AND PRD.ProviderTypeId={ProviderType.Main}";
         }
     }
 }
