@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 
         [HttpGet]
         [Route("{larsCode}/providers/{ukprn}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(GetProviderDetailsForCourseQueryResult), StatusCodes.Status200OK)]
         public async Task<ActionResult<GetProviderDetailsForCourseQueryResult>> GetProviderDetailsForCourse(int larsCode, int ukprn, decimal? lat = null, decimal? lon = null)
         {
