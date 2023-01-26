@@ -35,14 +35,14 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 
         [HttpGet]
         [Route("{larsCode}/providers/{ukprn}")]
-        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(GetProviderDetailsForCourseQueryResult), StatusCodes.Status200OK)]
         public async Task<ActionResult<GetProviderDetailsForCourseQueryResult>> GetProviderDetailsForCourse(int larsCode, int ukprn, decimal? lat = null, decimal? lon = null)
         {
             _logger.LogInformation("Received request to get provider details for Ukprn: {ukprn}, LarsCode: {larscode},  Latitude: {latitude}, Long: {longitude}", ukprn, larsCode, lat, lon);
             var response = await _mediator.Send(new GetProviderDetailsForCourseQuery(larsCode, ukprn, lat, lon));
             if (response == null)
-                return BadRequest();
+                return NotFound();
             return Ok(response);
         }
 
