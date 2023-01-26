@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 
-public class GetProviderDetailsForCourseQuery : IRequest<GetProviderDetailsForCourseQueryResult>, IUkprn, ILarsCode, ICoordinates
+public class GetProviderDetailsForCourseQuery : IRequest<ValidatedResponse<GetProviderDetailsForCourseQueryResult>>, IUkprn, ILarsCode, ICoordinates
 
 {
     public int LarsCode { get; }

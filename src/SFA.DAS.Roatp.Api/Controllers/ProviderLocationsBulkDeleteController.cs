@@ -3,12 +3,13 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    public class ProviderLocationsBulkDeleteController : Controller
+    public class ProviderLocationsBulkDeleteController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderLocationsBulkDeleteController> _logger;
         private readonly IMediator _mediator;
@@ -22,16 +23,17 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpDelete]
         [Route("/providers/{ukprn}/locations/cleanup")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> BulkDeleteProviderLocations([FromRoute] int ukprn, [FromQuery] string userId, [FromQuery] string userDisplayName)
+        public async Task<IActionResult> BulkDeleteProviderLocations([FromRoute] int ukprn, [FromQuery] string userId, [FromQuery] string userDisplayName)
         {
             _logger.LogInformation("Inner API: Request received to bulk delete provider locations ukprn: {ukprn}  userid:{userid}", ukprn, userId);
             
             var command = new BulkDeleteProviderLocationsCommand(ukprn, userId, userDisplayName);
-            var result = await _mediator.Send(command);
+            var response = await _mediator.Send(command);
 
-            _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn}", result, ukprn);
+            if (response.IsValidResponse)
+                _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn}", response.Result, ukprn);
 
-            return NoContent();
+            return GetNoContentResponse(response);
         }
     }
 }

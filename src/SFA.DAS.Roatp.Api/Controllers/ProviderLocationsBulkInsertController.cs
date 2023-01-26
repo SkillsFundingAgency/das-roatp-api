@@ -3,13 +3,14 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    public class ProviderLocationsBulkInsertController : Controller
+    public class ProviderLocationsBulkInsertController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderLocationsBulkInsertController> _logger;
         private readonly IMediator _mediator;
@@ -24,15 +25,16 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [Route("/providers/{ukprn}/locations/bulk-insert-regions")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> BulkInsertProviderLocations([FromRoute] int ukprn,  ProviderLocationsInsertModel providerLocationsInsertModel)
+        public async Task<IActionResult> BulkInsertProviderLocations([FromRoute] int ukprn,  ProviderLocationsInsertModel providerLocationsInsertModel)
         {
             _logger.LogInformation("Inner API: Request received to bulk insert locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, providerLocationsInsertModel.LarsCode, providerLocationsInsertModel.UserId);
             var command = (BulkInsertProviderLocationsCommand)providerLocationsInsertModel;
             command.Ukprn = ukprn;
-            var result =  await _mediator.Send(command);
-            _logger.LogInformation("Inserted {numberOfRecordsInserted} provider locations for Ukprn:{ukprn} LarsCode:{larscode}", result, ukprn, providerLocationsInsertModel.LarsCode);
+            var response =  await _mediator.Send(command);
+            if (response.IsValidResponse)
+                _logger.LogInformation("Inserted {numberOfRecordsInserted} provider locations for Ukprn:{ukprn} LarsCode:{larscode}", response.Result, ukprn, providerLocationsInsertModel.LarsCode);
 
-            return NoContent();
+            return GetNoContentResponse(response);
         }
     }
 }

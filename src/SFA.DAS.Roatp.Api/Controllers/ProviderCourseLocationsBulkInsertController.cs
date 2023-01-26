@@ -3,12 +3,13 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    public class ProviderCourseLocationsBulkInsertController : Controller
+    public class ProviderCourseLocationsBulkInsertController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderCourseLocationsBulkInsertController> _logger;
         private readonly IMediator _mediator;
@@ -27,10 +28,11 @@ namespace SFA.DAS.Roatp.Api.Controllers
         {
             _logger.LogInformation("Inner API: Request received to bulk insert provider course locations ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, command.LarsCode, command.UserId);
             command.Ukprn = ukprn;
-            var result = await _mediator.Send(command);
-            _logger.LogInformation("Inserted {numberOfRecordsInserted} provider course locations for Ukprn:{ukprn} LarsCode:{larscode}", result, ukprn, command.LarsCode);
+            var response = await _mediator.Send(command);
+            if (response.IsValidResponse)
+                _logger.LogInformation("Inserted {numberOfRecordsInserted} provider course locations for Ukprn:{ukprn} LarsCode:{larscode}", response.Result, ukprn, command.LarsCode);
 
-            return NoContent();
+            return GetNoContentResponse(response);
         }
     }
 }

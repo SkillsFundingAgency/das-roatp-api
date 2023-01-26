@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
 {
-    public class BulkDeleteProviderCourseLocationsCommandHandler : IRequestHandler<BulkDeleteProviderCourseLocationsCommand, int>
+    public class BulkDeleteProviderCourseLocationsCommandHandler : IRequestHandler<BulkDeleteProviderCourseLocationsCommand, ValidatedResponse<int>>
     {
         private readonly IProviderCourseLocationsBulkRepository _providerCourseLocationsBulkRepository;
         private readonly IProviderCourseLocationsReadRepository _providerCourseLocationsReadRepository;
@@ -24,14 +25,14 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
             _logger = logger;
         }
 
-        public async Task<int> Handle(BulkDeleteProviderCourseLocationsCommand command, CancellationToken cancellationToken)
+        public async Task<ValidatedResponse<int>> Handle(BulkDeleteProviderCourseLocationsCommand command, CancellationToken cancellationToken)
         {
             var courseLocations = await _providerCourseLocationsReadRepository.GetAllProviderCourseLocations(command.Ukprn, command.LarsCode);
 
             if (!courseLocations.Any())
             {
                 _logger.LogInformation("No locations are associated with Ukprn:{ukprn} and LarsCode:{larscode}", command.Ukprn, command.LarsCode);
-                return 0;
+                return new ValidatedResponse<int>(0);
             }
 
             IEnumerable<ProviderCourseLocation> locationsToDelete;
@@ -47,13 +48,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
             if (count == 0)
             {
                 _logger.LogInformation("No {locationType} locations found for Ukprn:{ukprn} and LarsCode:{larscode}", locationType, command.Ukprn, command.LarsCode);
-                return 0;
+                return new ValidatedResponse<int>(0);
             }
 
             _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn} and LarsCode:{larscode}", count, locationType, command.Ukprn, command.LarsCode);
             await _providerCourseLocationsBulkRepository.BulkDelete(locationsToDelete.Select(l => l.Id), command.UserId, command.UserDisplayName, command.Ukprn, AuditEventTypes.BulkDeleteProviderCourseLocation);
 
-            return count;
+            return new ValidatedResponse<int>(count);
         }
     }
 }

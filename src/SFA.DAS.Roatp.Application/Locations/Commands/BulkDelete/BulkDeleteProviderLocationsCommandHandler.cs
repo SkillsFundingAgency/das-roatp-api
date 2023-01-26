@@ -6,10 +6,11 @@ using SFA.DAS.Roatp.Domain.Models;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
 {
-    public class BulkDeleteProviderLocationsCommandHandler : IRequestHandler<BulkDeleteProviderLocationsCommand, int>
+    public class BulkDeleteProviderLocationsCommandHandler : IRequestHandler<BulkDeleteProviderLocationsCommand, ValidatedResponse<int>>
     {
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
         private readonly IProviderCourseLocationsReadRepository _providerCourseLocationsReadRepository;
@@ -27,7 +28,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
             _logger = logger;
         }
 
-        public async Task<int> Handle(BulkDeleteProviderLocationsCommand command, CancellationToken cancellationToken)
+        public async Task<ValidatedResponse<int>> Handle(BulkDeleteProviderLocationsCommand command, CancellationToken cancellationToken)
         {
             var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
             var providerCourseLocations = await _providerCourseLocationsReadRepository.GetProviderCourseLocationsByUkprn(command.Ukprn);
@@ -42,7 +43,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
                 _logger.LogInformation("{count} {locationType} locations will be deleted for Ukprn:{ukprn}", providerLocationIdsToDelete.Count, LocationType.Regional, command.Ukprn);
                 await _providerLocationsBulkRepository.BulkDelete(providerLocationIdsToDelete, command.UserId,  command.UserDisplayName, command.Ukprn, AuditEventTypes.BulkDeleteProviderLocation);
             }
-            return providerLocationIdsToDelete.Count;
+            return new ValidatedResponse<int>(providerLocationIdsToDelete.Count);
         }
     }
 }

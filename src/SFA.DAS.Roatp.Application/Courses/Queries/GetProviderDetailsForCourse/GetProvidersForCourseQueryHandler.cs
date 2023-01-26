@@ -4,12 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 
-public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersForCourseQuery, GetProvidersForCourseQueryResult>
+public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersForCourseQuery, ValidatedResponse<GetProvidersForCourseQueryResult>>
 {
     private readonly IProviderDetailsReadRepository _providerDetailsReadRepository;
     private readonly IStandardsReadRepository _standardsReadRepository;
@@ -26,7 +27,7 @@ public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersFor
         _logger = logger;
     }
 
-    public async Task<GetProvidersForCourseQueryResult> Handle(GetProvidersForCourseQuery request, CancellationToken cancellationToken)
+    public async Task<ValidatedResponse<GetProvidersForCourseQueryResult>> Handle(GetProvidersForCourseQuery request, CancellationToken cancellationToken)
     {
         var providerDetails = 
             await _providerDetailsReadRepository.GetProvidersForLarsCodeWithDistance( request.LarsCode, request.Latitude, request.Longitude);
@@ -67,10 +68,11 @@ public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersFor
             providers.Add(result);
         }
 
-        return new GetProvidersForCourseQueryResult
+        return new ValidatedResponse<GetProvidersForCourseQueryResult>(
+            new GetProvidersForCourseQueryResult
         {
             LarsCode = standard.LarsCode, Level = standard.Level, CourseTitle = standard.Title,
             Providers = providers.OrderBy(x=>x.Ukprn).ToList()
-        };
+        });
     }
 }

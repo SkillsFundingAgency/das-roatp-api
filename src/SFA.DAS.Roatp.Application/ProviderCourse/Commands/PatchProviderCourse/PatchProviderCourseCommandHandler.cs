@@ -3,12 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
 {
-    public class PatchProviderCourseCommandHandler : IRequestHandler<PatchProviderCourseCommand, Unit>
+    public class PatchProviderCourseCommandHandler : IRequestHandler<PatchProviderCourseCommand, ValidatedResponse<bool>>
     {
         private readonly IProviderCoursesWriteRepository _providerCoursesWriteRepository;
         private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
@@ -21,7 +22,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
             _logger = logger;
         }
 
-        public async Task<Unit> Handle(PatchProviderCourseCommand command, CancellationToken cancellationToken)
+        public async Task<ValidatedResponse<bool>> Handle(PatchProviderCourseCommand command, CancellationToken cancellationToken)
         {
             var providerCourse = await
                 _providerCoursesReadRepository.GetProviderCourseByUkprn(command.Ukprn, command.LarsCode);
@@ -42,9 +43,9 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
             providerCourse.ContactUsPhoneNumber = patchedProviderCourse.ContactUsPhoneNumber;
             providerCourse.StandardInfoUrl = patchedProviderCourse.StandardInfoUrl;
 
-            await _providerCoursesWriteRepository.PatchProviderCourse(providerCourse, command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseDetails);
+            var response= await _providerCoursesWriteRepository.PatchProviderCourse(providerCourse, command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseDetails);
 
-            return Unit.Value;
+            return new ValidatedResponse<bool>(response != null);
         }
     }
 }

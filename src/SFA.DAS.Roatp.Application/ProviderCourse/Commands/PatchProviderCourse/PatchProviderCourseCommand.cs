@@ -3,10 +3,11 @@ using System.Linq;
 using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
 {
-    public class PatchProviderCourseCommand : IRequest, IUkprn, ILarsCodeUkprn, IUserInfo
+    public class PatchProviderCourseCommand : IRequest<ValidatedResponse<bool>>, IUkprn, ILarsCodeUkprn, IUserInfo
     {
         private const string Replace = "replace";
         public const string IsApprovedByRegulatorIdentifier = "IsApprovedByRegulator";

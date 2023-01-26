@@ -4,11 +4,13 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Application.Common;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    public class ProviderLocationCreateController : ControllerBase
+    public class ProviderLocationCreateController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderLocationCreateController> _logger;
         private readonly IMediator _mediator;
@@ -34,7 +36,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
 
             var response = await _mediator.Send(command);
 
-            return Created($"/providers/{ukprn}/locations", response);
+            return GetPostResponse(response, $"/providers/{ukprn}/locations");
         }
     }
 }

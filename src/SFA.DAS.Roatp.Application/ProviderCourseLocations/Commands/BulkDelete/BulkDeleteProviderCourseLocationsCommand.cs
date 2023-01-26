@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
 {
-    public class BulkDeleteProviderCourseLocationsCommand : IRequest<int>, ILarsCodeUkprn, IUkprn, IUserInfo
+    public class BulkDeleteProviderCourseLocationsCommand : IRequest<ValidatedResponse<int>>, ILarsCodeUkprn, IUkprn, IUserInfo
     {
         public int Ukprn { get; }
         public int LarsCode { get; }

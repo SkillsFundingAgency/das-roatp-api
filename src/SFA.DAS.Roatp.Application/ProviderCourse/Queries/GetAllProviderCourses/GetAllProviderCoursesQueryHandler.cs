@@ -4,11 +4,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
 {
-    public class GetAllProviderCoursesQueryHandler : IRequestHandler<GetAllProviderCoursesQuery, GetAllProviderCoursesQueryResult>
+    public class GetAllProviderCoursesQueryHandler : IRequestHandler<GetAllProviderCoursesQuery, ValidatedResponse<GetAllProviderCoursesQueryResult>>
     {
         private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
         private readonly IStandardsReadRepository _standardsReadRepository;
@@ -20,14 +21,14 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
             _logger = logger;
         }
 
-        public async Task<GetAllProviderCoursesQueryResult> Handle(GetAllProviderCoursesQuery request, CancellationToken cancellationToken)
+        public async Task<ValidatedResponse<GetAllProviderCoursesQueryResult>> Handle(GetAllProviderCoursesQuery request, CancellationToken cancellationToken)
         {
             var providerCourses = await _providerCoursesReadRepository.GetAllProviderCourses(request.Ukprn);
 
             if (!providerCourses.Any())
             {
                 _logger.LogInformation("ProviderCourses data not found for {ukprn}", request.Ukprn);
-                return new GetAllProviderCoursesQueryResult { Courses = new List<ProviderCourseModel>() };
+                return new ValidatedResponse<GetAllProviderCoursesQueryResult>(new GetAllProviderCoursesQueryResult { Courses = new List<ProviderCourseModel>() });
             }
 
             var standardsLookup = await _standardsReadRepository.GetAllStandards();
@@ -41,10 +42,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
                 p.AttachCourseDetails(course.IfateReferenceNumber, course.Level, course.Title, course.Version, course.ApprovalBody);
             }
 
-            return new GetAllProviderCoursesQueryResult
-            {
-                Courses = providerCourseModels
-            };
+           return new ValidatedResponse<GetAllProviderCoursesQueryResult>(new GetAllProviderCoursesQueryResult { Courses = providerCourseModels });
         }
     }
 }

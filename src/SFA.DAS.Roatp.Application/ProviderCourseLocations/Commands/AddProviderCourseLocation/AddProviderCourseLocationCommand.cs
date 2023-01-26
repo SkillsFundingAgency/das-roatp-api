@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 using System;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProviderCourseLocation
 {
-    public class AddProviderCourseLocationCommand : IRequest<int>, IUkprn, ILarsCodeUkprn, IUserInfo
+    public class AddProviderCourseLocationCommand : IRequest<ValidatedResponse<int>>, IUkprn, ILarsCodeUkprn, IUserInfo
     {
         
         public int Ukprn { get; set; }
