@@ -103,6 +103,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
                             pc.LarsCode,
                             p.LegalName,
                             p.TradingName,
+                            CASE WHEN s.ApprovalBody IS null THEN null 
+                                ELSE pc.IsApprovedByRegulator End IsApprovedByRegulator,
                             CASE  WHEN ({lat} is null) THEN null
                                 WHEN ({lon} is null) THEN null
                                 ELSE
@@ -113,6 +115,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
 		                    INNER JOIN ProviderCourse pc on p.Id = pc.ProviderId
 							LEFT OUTER JOIN [ProviderAddress] PA on P.Id = PA.ProviderId
                             LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
+                            LEFT OUTER JOIN Standard S on PC.LarsCode = S.LarsCode
 		                    WHERE pc.LarsCode={larsCode}
                             AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})
                             AND PRD.ProviderTypeId={ProviderType.Main}";
