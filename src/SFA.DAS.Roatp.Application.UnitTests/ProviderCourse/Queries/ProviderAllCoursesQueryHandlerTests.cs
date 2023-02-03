@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             var response = await sut.Handle(query, cancellationToken);
 
             Assert.That(response, Is.Not.Null);
-            Assert.That(response.Result.Courses.Count, Is.EqualTo(courses.Count));
+            Assert.AreEqual( courses.Count, response.Result.Courses.Count);
         }
 
         [Test, MoqAutoData()]
@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             var response = await sut.Handle(query, cancellationToken);
         
             Assert.That(response, Is.Not.Null);
-            Assert.AreEqual(response.Result.Courses.Count, 0);
+            Assert.AreEqual(0,response.Result.Courses.Count);
         }
     }
 }

@@ -36,18 +36,8 @@ namespace SFA.DAS.Roatp.Application.Mediatr.Behaviors
                 if (responseType.IsGenericType)
                 {
                     var resultType = responseType.GetGenericArguments()[0];
-                    Type invalidResponseType;
-
-                    if (responseType.Name.Contains("ValidatedResponse"))
-                    {
-                        invalidResponseType = typeof(ValidatedResponse<>).MakeGenericType(resultType);
-                    }
-                    else
-                    {
-                        invalidResponseType = typeof(ValidatedResponse<>).MakeGenericType(resultType);
-
-                    }
-
+                    var invalidResponseType = typeof(ValidatedResponse<>).MakeGenericType(resultType);
+                    
                     if (Activator.CreateInstance(invalidResponseType,
                             result.Errors) as TResponse is { } invalidResponse)
                     {
