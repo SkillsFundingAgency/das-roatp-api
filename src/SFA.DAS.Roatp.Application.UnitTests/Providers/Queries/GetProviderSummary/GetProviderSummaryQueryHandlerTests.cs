@@ -23,11 +23,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviderSumma
         {
             repoMock.Setup(r => r.GetByUkprn(query.Ukprn)).ReturnsAsync(provider);
 
-            var result = await sut.Handle(query, cancellationToken);
+            var response = await sut.Handle(query, cancellationToken);
 
-            result.Should().NotBeNull();
-            result.ProviderSummary.Should().NotBeNull();
-            result.ProviderSummary.Address.Should().NotBeNull();
+            response.Should().NotBeNull();
+            response.Result.ProviderSummary.Should().NotBeNull();
+            response.Result.ProviderSummary.Address.Should().NotBeNull();
         }
     }
 }

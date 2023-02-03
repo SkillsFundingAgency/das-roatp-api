@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.Application.Mediatr.Behaviors
 {
     [ExcludeFromCodeCoverage]
     public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-        where TResponse : ValidatedResponseBase
+        where TResponse : ValidatedResponse
         where TRequest : IRequest<TResponse>
     {
         private readonly IValidator<TRequest> _compositeValidator;

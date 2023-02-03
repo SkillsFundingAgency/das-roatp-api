@@ -5,9 +5,9 @@ using System.Linq;
 
 namespace SFA.DAS.Roatp.Application.Mediatr.Responses
 {
-    public class ValidatedResponseBase { }
+    public class ValidatedResponse { }
     
-    public class ValidatedResponse<T> : ValidatedResponseBase
+    public class ValidatedResponse<T> : ValidatedResponse
     {
          public T Result { get; }
         private readonly IList<ValidationFailure> _errorMessages = new List<ValidationFailure>();

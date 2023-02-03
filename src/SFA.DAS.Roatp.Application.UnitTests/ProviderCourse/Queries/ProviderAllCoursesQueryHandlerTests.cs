@@ -27,10 +27,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(courses);
             var standards = courses.Select(course => new Standard { LarsCode = course.LarsCode }).ToList();
             standardsReadRepositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
-            var result = await sut.Handle(query, cancellationToken);
+            var response = await sut.Handle(query, cancellationToken);
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Courses.Count, Is.EqualTo(courses.Count));
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response.Result.Courses.Count, Is.EqualTo(courses.Count));
         }
 
         [Test, MoqAutoData()]
@@ -42,10 +42,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
         {
             repoMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(new List<Domain.Entities.ProviderCourse>());
         
-            var result = await sut.Handle(query, cancellationToken);
+            var response = await sut.Handle(query, cancellationToken);
         
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Courses, Is.Empty);
+            Assert.That(response, Is.Not.Null);
+            Assert.AreEqual(response.Result.Courses.Count, 0);
         }
     }
 }

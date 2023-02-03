@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
             if (response.IsValidResponse)
                 _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider course locations for Ukprn:{ukprn} LarsCode:{larscode}", response.Result, ukprn, larsCode);
 
-            return GetDeleteResponse(response);
+            return GetNoContentResponse(response);
         }
 
         [HttpDelete]
@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
             if (response.IsValidResponse)
                 _logger.LogInformation("Deleted provider course locations for Ukprn:{ukprn} LarsCode:{larscode} ProviderCourseLocationId:{id}", ukprn, larsCode, id);
 
-            return GetDeleteResponse(response);
+            return GetNoContentResponse(response);
         }
     }
 }

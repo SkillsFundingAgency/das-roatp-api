@@ -10,6 +10,7 @@ using SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert;
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {
@@ -22,8 +23,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Greedy] ProviderLocationsBulkInsertController sut,
             int ukprn, ProviderLocationsInsertModel providerLocationsInsertModel)
         {
+            _mediatorMock.Setup(m => m.Send(It.Is<BulkInsertProviderLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == providerLocationsInsertModel.LarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<int>(0));
             await sut.BulkInsertProviderLocations(ukprn, providerLocationsInsertModel);
-
             _mediatorMock.Verify(m => m.Send(It.Is<BulkInsertProviderLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == providerLocationsInsertModel.LarsCode), It.IsAny<CancellationToken>()));
         }
 
@@ -33,14 +34,10 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Greedy] ProviderLocationsBulkInsertController sut,
             int ukprn, ProviderLocationsInsertModel providerLocationsInsertModel)
         {
-            _mediatorMock.Setup(m => m.Send(It.Is<BulkInsertProviderLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == providerLocationsInsertModel.LarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(1);
-
+            _mediatorMock.Setup(m => m.Send(It.Is<BulkInsertProviderLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == providerLocationsInsertModel.LarsCode), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<int>(1));
             var result = await sut.BulkInsertProviderLocations(ukprn, providerLocationsInsertModel);
-
             _mediatorMock.Verify(m => m.Send(It.Is<BulkInsertProviderLocationsCommand>(c => c.Ukprn == ukprn && c.LarsCode == providerLocationsInsertModel.LarsCode), It.IsAny<CancellationToken>()));
-
             var statusCodeResult = (NoContentResult)result;
-
             statusCodeResult.Should().NotBeNull();
         }
     }

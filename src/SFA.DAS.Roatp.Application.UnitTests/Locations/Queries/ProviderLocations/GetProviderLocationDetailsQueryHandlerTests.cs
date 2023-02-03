@@ -25,10 +25,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         {
             repoMock.Setup(r => r.GetProviderLocation(query.Ukprn, query.Id)).ReturnsAsync(location);
 
-            var result = await sut.Handle(query, cancellationToken);
+            var response = await sut.Handle(query, cancellationToken);
 
-            result.Should().NotBeNull();
-            result.Location.Should().NotBeNull();
+            response.Should().NotBeNull();
+            response.Result.Should().NotBeNull();
         }
     }
 }

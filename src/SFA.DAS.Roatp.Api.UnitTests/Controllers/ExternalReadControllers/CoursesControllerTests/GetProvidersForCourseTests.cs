@@ -9,6 +9,7 @@ using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests
 {
@@ -23,11 +24,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
         {
             var larsCode = 1;
             var courseTitle = "test name";
-            mediatorMock.Setup(m => m.Send(It.Is<GetProvidersForCourseQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(new GetProvidersForCourseQueryResult { CourseTitle = courseTitle});
-
+            mediatorMock.Setup(m => m.Send(It.Is<GetProvidersForCourseQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProvidersForCourseQueryResult>(new GetProvidersForCourseQueryResult { CourseTitle = courseTitle}));
+    
             var result = await sut.GetProvidersForCourse(larsCode, null, null);
-
-            Assert.AreEqual(courseTitle, result.Result.As<OkObjectResult>().Value.As<GetProvidersForCourseQueryResult>().CourseTitle);
+    
+            Assert.AreEqual(courseTitle, result.As<OkObjectResult>().Value.As<GetProvidersForCourseQueryResult>().CourseTitle);
             mediatorMock.Verify(m => m.Send(It.Is<GetProvidersForCourseQuery>(q => q.LarsCode == larsCode && q.Latitude == null && q.Longitude == null), It.IsAny<CancellationToken>()));
         }
     }

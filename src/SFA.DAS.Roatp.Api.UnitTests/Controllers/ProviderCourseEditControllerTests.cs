@@ -13,7 +13,9 @@ using AutoFixture.NUnit3;
 using SFA.DAS.Testing.AutoFixture;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Api.Models;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
+using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {
@@ -28,15 +30,17 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             var request = new JsonPatchDocument<PatchProviderCourse>();
             var userId = "userId";
             var userDisplayName = "userDisplayName";
-
-
+        
+        
             var mediatorMock = new Mock<IMediator>();
+            mediatorMock.Setup(m => m.Send(It.Is<PatchProviderCourseCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<bool>(true));
+
             var sut = new ProviderCourseEditController(mediatorMock.Object, Mock.Of<ILogger<ProviderCourseEditController>>());
-
+        
             var result = await sut.PatchProviderCourse(ukprn, larsCode, request, userId, userDisplayName);
-
+        
             (result as NoContentResult).Should().NotBeNull();
-
+        
             mediatorMock.Verify(m => m.Send(It.Is<PatchProviderCourseCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode), It.IsAny<CancellationToken>()));
         }
 
@@ -46,10 +50,10 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Greedy] ProviderCourseEditController sut,
             int ukprn, int larsCode, ProviderCourseAddModel model, int providerCourseId, string userId, string userDisplayName)
         {
-            mediatorMock.Setup(m => m.Send(It.Is<CreateProviderCourseCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseId);
-
+            mediatorMock.Setup(m => m.Send(It.Is<CreateProviderCourseCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<int>(providerCourseId));
+        
             var result = await sut.CreateProviderCourse(ukprn, larsCode, model, userId, userDisplayName);
-
+        
             result.As<CreatedResult>().Location.Should().Be($"/providers/{ukprn}/courses");
         }
     }

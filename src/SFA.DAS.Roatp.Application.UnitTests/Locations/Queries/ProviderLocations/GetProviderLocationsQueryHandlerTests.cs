@@ -24,10 +24,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         {
             repoMock.Setup(r => r.GetAllProviderLocations(query.Ukprn)).ReturnsAsync(locations);
 
-            var result = await sut.Handle(query, cancellationToken);
+            var response = await sut.Handle(query, cancellationToken);
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Locations.Count, Is.EqualTo(locations.Count));
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response.Result.Count, Is.EqualTo(locations.Count));
         }
 
         [Test, MoqAutoData()]
@@ -39,10 +39,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         {
             repoMock.Setup(r => r.GetAllProviderLocations(query.Ukprn)).ReturnsAsync(new List<ProviderLocation>());
 
-            var result = await sut.Handle(query, cancellationToken);
+            var response = await sut.Handle(query, cancellationToken);
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Locations, Is.Empty);
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response.Result, Is.Empty);
         }
     }
 }

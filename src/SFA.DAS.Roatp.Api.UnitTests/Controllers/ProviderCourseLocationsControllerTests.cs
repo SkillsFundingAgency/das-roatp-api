@@ -9,6 +9,7 @@ using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderCours
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {
@@ -23,11 +24,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             int larsCode,
             GetProviderCourseLocationsQueryResult handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
-
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderCourseLocationsQueryResult>(handlerResult));
             var result = await sut.GetProviderCourseLocations(ukprn, larsCode);
-
-            (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.ProviderCourseLocations);
+            ((OkObjectResult)result).Value.Should().BeEquivalentTo(handlerResult);
         }
     }
 }

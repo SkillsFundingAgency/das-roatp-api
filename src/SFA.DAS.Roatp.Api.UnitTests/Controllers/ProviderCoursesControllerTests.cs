@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Testing.AutoFixture;
@@ -23,9 +24,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             int ukprn,
             GetAllProviderCoursesQueryResult handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderCoursesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderCoursesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetAllProviderCoursesQueryResult>(handlerResult));
             var result = await sut.GetAllCourses(ukprn);
-            (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.Courses);
+            ((OkObjectResult)result).Value.Should().BeEquivalentTo(handlerResult);
         }
 
         [Test, MoqAutoData]
@@ -36,9 +37,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             int larsCode,
             GetProviderCourseQueryResult handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderCourseQueryResult>(handlerResult));
             var result = await sut.GetCourse(ukprn, larsCode);
-            (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.Course);
+            ((OkObjectResult)result).Value.Should().BeEquivalentTo(handlerResult);
         }
     }
 }

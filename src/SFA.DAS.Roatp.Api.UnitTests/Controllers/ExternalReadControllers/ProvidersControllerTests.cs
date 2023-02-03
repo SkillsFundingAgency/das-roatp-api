@@ -10,10 +10,10 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
 {
@@ -27,9 +27,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         {
             GetProvidersQueryResult handlerResult = new GetProvidersQueryResult();
             mediatorMock.Setup(m => m.Send(It.IsAny<GetProvidersQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
-
             var result = await sut.GetProviders();
-
             (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
         }
 
@@ -40,13 +38,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
            int ukprn,
            GetProviderSummaryQueryResult handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderSummaryQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
-
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderSummaryQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderSummaryQueryResult>( handlerResult));
             var result = await sut.GetProvider(ukprn);
-
             (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
         }
-
+        
         [Test, MoqAutoData]
         public async Task GetAllProviderCourses_InvokesMediator_ReturnsCoursesDetails(
            [Frozen] Mock<IMediator> mediatorMock,
@@ -54,13 +50,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
            int ukprn,
            GetAllProviderCoursesQueryResult handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
-
+            mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync( new ValidatedResponse<GetAllProviderCoursesQueryResult>( handlerResult));
             var result = await sut.GetAllProviderCourses(ukprn);
-
-            result.Result.As<OkObjectResult>().Value.Should().BeEquivalentTo(handlerResult.Courses);
+            result.As<OkObjectResult>().Value.Should().BeEquivalentTo(handlerResult);
         }
-
+        
         [Test]
         public void ControllerConvention_HasRequiredNamespace()
         {
@@ -76,9 +70,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             int larsCode,
             GetProviderCourseQueryResult handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderCourseQueryResult>(handlerResult));
             var result = await sut.GetProviderCourse(ukprn, larsCode);
-            (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.Course);
+            (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
         }
     }
 }

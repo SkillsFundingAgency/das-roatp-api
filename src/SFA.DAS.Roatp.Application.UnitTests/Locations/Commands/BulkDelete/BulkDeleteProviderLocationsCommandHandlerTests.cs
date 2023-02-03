@@ -38,13 +38,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(command.Ukprn)).ReturnsAsync(providerLocations);
             providerCourseLocationsReadRepositoryMock.Setup(r => r.GetProviderCourseLocationsByUkprn(command.Ukprn)).ReturnsAsync(providerCourseLocations);
 
-            var result = await sut.Handle(command, cancellationToken);
+            var response = await sut.Handle(command, cancellationToken);
 
             providerLocationsBulkRepositoryMock.Verify(d => d.BulkDelete(It.Is<IEnumerable<int>>(x => x.Contains(regionalLocationId)), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.EqualTo(1));
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response.Result, Is.EqualTo(1));
         }
-
+        
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_Deletes_NoRecords(
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
@@ -61,15 +61,15 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkDelete
                 new ProviderLocation { Id = 3, ProviderId = providerId, LocationType = LocationType.National}
             };
             var providerCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation { Id = 1, ProviderCourseId = 1, ProviderLocationId = 1 } };
-
+        
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
             providerCourseLocationsReadRepositoryMock.Setup(r => r.GetProviderCourseLocationsByUkprn(It.IsAny<int>())).ReturnsAsync(providerCourseLocations);
-
-            var result = await sut.Handle(command, cancellationToken);
-
+        
+            var response = await sut.Handle(command, cancellationToken);
+        
             providerLocationsDeleteRepositoryMock.Verify(d => d.BulkDelete(It.IsAny<IEnumerable<int>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()), Times.Never);
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.EqualTo(0));
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response.Result, Is.EqualTo(0));
         }
     }
 
