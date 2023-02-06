@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore.Query.Internal;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -258,6 +259,14 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
         private static void AddProviderLocation(Provider provider, CdProviderLocation cdProviderLocation, int? regionId)
         {
+            var latitude = cdProviderLocation.Latitude;
+            var longitude = cdProviderLocation.Longitude;
+            if (latitude == 0 && longitude == 0)
+            {
+                latitude = null;
+                longitude = null;
+            }
+
             provider.Locations.Add(new ProviderLocation
             {
                 ImportedLocationId = cdProviderLocation.Id,
@@ -270,8 +279,8 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 Town = cdProviderLocation.Town,
                 Postcode = cdProviderLocation.Postcode,
                 County = cdProviderLocation.County,
-                Latitude = cdProviderLocation.Latitude,
-                Longitude = cdProviderLocation.Longitude,
+                Latitude = latitude,
+                Longitude = longitude,
                 Email = cdProviderLocation.Email,
                 Website = cdProviderLocation.Website,
                 Phone = cdProviderLocation.Phone,
