@@ -42,7 +42,8 @@ namespace SFA.DAS.Roatp.Jobs.Configuration
             };
             config.AddTarget(fileTarget);
 
-            config.AddRule(GetMinLogLevel(), LogLevel.Fatal, "Disk");
+            //config.AddRule(GetMinLogLevel(), LogLevel.Fatal, "Disk");
+            config.AddRule(LogLevel.FromString("Warning"), LogLevel.Fatal, "Disk");
         }
 
         private static void AddRedisTarget(LoggingConfiguration config, string appName)
