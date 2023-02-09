@@ -9,6 +9,7 @@ public class ProviderSummation
     public string Name { get; set; }
     public string TradingName { get; set; }
     public decimal? ProviderHeadOfficeDistanceInMiles { get; set; }
+    public bool? IsApprovedByRegulator { get; set; }
     public List<NationalAchievementRateModel> AchievementRates { get; set; } =
         new List<NationalAchievementRateModel>();
 
@@ -25,6 +26,7 @@ public class ProviderSummation
             Name = provider.LegalName,
             TradingName = provider.TradingName,
             ProviderHeadOfficeDistanceInMiles = (decimal?)provider.Distance,
+            IsApprovedByRegulator = provider.IsApprovedByRegulator
         };
     }
 }

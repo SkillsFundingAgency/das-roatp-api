@@ -109,8 +109,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
                 .ReturnsAsync(nationalAchievementRates);
             providerDetailsReadRepositoryMock.Setup(r => r.GetProviderLocationDetailsWithDistance(query.Ukprn, query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync((List<ProviderCourseLocationDetailsModel>)null);
             processProviderCourseLocationsService
-                .Setup(x => x.ConvertProviderLocationsToDeliveryModelWithAddress(It.IsAny<List<ProviderCourseLocationDetailsModel>>()))
-                .Returns(new List<DeliveryModelWithAddress>());
+                .Setup(x => x.ConvertProviderLocationsToDeliveryModels(It.IsAny<List<ProviderCourseLocationDetailsModel>>()))
+                .Returns(new List<DeliveryModel>());
 
             var result = await sut.Handle(query, cancellationToken);
 

@@ -7,4 +7,5 @@ public class ProviderCourseSummaryModel
     public string LegalName { get; set; }
     public string TradingName { get; set; }
     public double? Distance { get; set; }
+    public bool? IsApprovedByRegulator { get; set; }
 }

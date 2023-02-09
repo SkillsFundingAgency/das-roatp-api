@@ -1,7 +1,5 @@
 using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -12,8 +10,8 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SFA.DAS.Api.Common.AppStart;
 using SFA.DAS.Api.Common.Configuration;
-using SFA.DAS.Api.Common.Infrastructure;
 using SFA.DAS.Configuration.AzureTableStorage;
+using SFA.DAS.Roatp.Api.AppStart;
 using SFA.DAS.Roatp.Api.HealthCheck;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Extensions;
@@ -103,8 +101,8 @@ public class Startup
 
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc(Constants.EndpointGroups.Management, new OpenApiInfo { Title = "Course Management"});
-            options.SwaggerDoc(Constants.EndpointGroups.Integration, new OpenApiInfo { Title = "Roatp Integration"});
+            options.SwaggerDoc(Constants.EndpointGroups.Management, new OpenApiInfo { Title = "Course Management", Version = "v1" });
+            options.SwaggerDoc(Constants.EndpointGroups.Integration, new OpenApiInfo { Title = "Roatp Integration", Version = "v1" });
             options.OperationFilter<SwaggerHeaderFilter>();
         });
     }
@@ -130,24 +128,7 @@ public class Startup
 
         app.UseRouting();
 
-        app.UseHealthChecks("/health", new HealthCheckOptions
-        {
-            ResponseWriter = HealthCheckResponseWriter.WriteJsonResponse
-        });
-
-        if (!IsEnvironmentLocalOrDev)
-        {
-
-            app.UseHealthChecks("/ping", new HealthCheckOptions
-            {
-                Predicate = (_) => false,
-                ResponseWriter = (context, report) =>
-                {
-                    context.Response.ContentType = "application/json";
-                    return context.Response.WriteAsync("");
-                }
-            });
-        }
+        app.UseHealthChecks();
 
         app.UseFluentValidationExceptionHandler();
 

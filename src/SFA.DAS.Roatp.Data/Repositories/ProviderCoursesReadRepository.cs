@@ -59,7 +59,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
                     INNER JOIN Provider P on P.ID = PC.ProviderID
                     LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.ukprn = PRD.ukprn
                     where PC.larsCode ={larsCode}
-                    AND PRD.StatusId IN ({OrganisationStatus.Active},{OrganisationStatus.ActiveNotTakingOnApprentices})"; 
+                    AND PRD.StatusId IN ({OrganisationStatus.Active},{OrganisationStatus.ActiveNotTakingOnApprentices}) 
+                    AND PRD.ProviderTypeId={ProviderType.Main}"; 
             var result = await command.ExecuteScalarAsync();
             var success = TryParse(result?.ToString(), out var count);
             if (success)
