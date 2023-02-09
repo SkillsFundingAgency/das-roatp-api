@@ -14,5 +14,6 @@
         public int TotalProvidersOnTheRegister { get; set; }
         public int NumberOfProvidersAlreadyLoaded { get; set; }
         public int TotalNumberOfProvidersToBeLoaded { get; set; }
+        public string TimeTaken { get; set; }
     }
 }

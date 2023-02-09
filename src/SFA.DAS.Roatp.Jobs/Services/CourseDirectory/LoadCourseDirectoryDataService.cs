@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -37,11 +39,12 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
         public async Task<CourseDirectoryImportMetrics> LoadCourseDirectoryData(bool betaAndPilotProvidersOnly)
         {
-            var loadMetrics = new CourseDirectoryImportMetrics()
+
+        var loadMetrics = new CourseDirectoryImportMetrics()
             {
                 LocationDuplicationMetrics = new LocationDuplicationMetrics(),
                 LarsCodeDuplicationMetrics = new LarsCodeDuplicationMetrics(),
-                BetaAndPilotProvidersOnly = betaAndPilotProvidersOnly
+                BetaAndPilotProvidersOnly = betaAndPilotProvidersOnly,
             };
             
             var timeStarted = DateTime.UtcNow;
@@ -99,6 +102,8 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
             await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, loadMetrics.NumberOfProvidersLoadedSuccessfully, ImportType.CourseDirectory));
 
+            var timeSpent = DateTime.UtcNow - timeStarted;
+            loadMetrics.TimeTaken = string.Format($"{timeSpent:hh\\:mm\\:ss}"); ;
             return loadMetrics;
         }
 
