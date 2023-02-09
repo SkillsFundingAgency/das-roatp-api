@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Xsl;
+using Microsoft.Azure.Documents.SystemFunctions;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -84,7 +87,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             var metrics = new LocationDuplicationMetrics();
             
             var locationMappingsSameNameAddress1Postcode = new List<LocationIdMapping>();
-
+            
             var currentLocations = new List<CdProviderLocation>();
             var locationsToRemove = new List<CdProviderLocation>();
             var locationsWithSameNameDifferentAddress1Postcode = new List<CdProviderLocation>();
@@ -97,16 +100,16 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 }
                 else
                 {
-                    // check match for postcode.....
+                    // check match for postcode and address.....
                     var originalLocation = currentLocations.First(x =>
                         string.Equals(x.Name?.Trim(), location.Name?.Trim(), StringComparison.CurrentCultureIgnoreCase));
-
+            
                     var locationMappingSameNameAddress1Postcode = new LocationIdMapping
                     {
                         OriginalId = originalLocation.Id,
                         DuplicateId = location.Id
                     };
-
+            
                     if (originalLocation.Postcode == location.Postcode && originalLocation.AddressLine1 == location.AddressLine1)
                     {
                         locationMappingsSameNameAddress1Postcode.Add(locationMappingSameNameAddress1Postcode);
@@ -120,44 +123,42 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             }
 
             // remap any standards with name and address map to correct location
-            foreach (var standard in provider.Standards)
-            {
-                foreach (var location in standard.Locations)
-                {
-                    foreach (var locationMapping in locationMappingsSameNameAddress1Postcode.Where(locationMapping => location.Id == locationMapping.DuplicateId))
-                    {
-                        if (standard.Locations.All(x => x.Id != locationMapping.OriginalId))
-                        {
-                            location.Id = locationMapping.OriginalId;
-                        }
-                    }
-                }
-            }
-
-
+             foreach (var standard in provider.Standards)
+             {
+                 foreach (var location in standard.Locations)
+                 {
+                     foreach (var locationMapping in locationMappingsSameNameAddress1Postcode.Where(locationMapping => location.Id == locationMapping.DuplicateId))
+                     {
+                         if (standard.Locations.All(x => x.Id != locationMapping.OriginalId))
+                         {
+                             location.Id = locationMapping.OriginalId;
+                         }
+                     }
+                 }
+             }
+             
             if (locationsToRemove.Any())
             {
                 metrics.ProvidersWithDuplicateLocationNames++;
                 foreach (var locationToRemove in locationsToRemove)
                 {
-                    provider.Locations.Remove(locationToRemove);
-                    metrics.ProviderLocationsRemoved++;
-
                     if (locationsWithSameNameDifferentAddress1Postcode.Any(x => x.Id == locationToRemove.Id))
                     {
                         /* LOG WARNING 1 - losing venues of different address/type because name clash */
-                        _logger.LogWarning("Duplicate location name, different address/Type - provider UKPRN {ukprn}: removing location name '{name}', location type {locationType}, CD locationID {id}",
-                            provider.Ukprn,  locationToRemove.Name.Trim(), locationToRemove.LocationType, locationToRemove.Id);
+                        _logger.LogWarning("UKPRN:{ukprn},Course:, location:{id}, Duplicate location name different address/Type,  Name: '{name}' | Location type: '{locationType}' | address line 1: '{addressLine1}' | postcode: '{postcode}'",
+                            provider.Ukprn, locationToRemove.Id, locationToRemove.Name.Trim(), locationToRemove.LocationType, locationToRemove.AddressLine1, locationToRemove.Postcode);
                     }
                     else
                     {
                         //* LOG WARNING 2 - losing venues with duplicate name/address/postcode/type */
-                        _logger.LogWarning("Duplicate location name/address - provider UKPRN {ukprn}: removing location name '{name}', CD locationID {id}",
-                            provider.Ukprn, locationToRemove.Name.Trim(), locationToRemove.Id);
+                       _logger.LogWarning("UKPRN:{ukprn},Course:, location:{id}, Duplicate location name/address,  Name: '{name}' |  Location type: '{locationType}' | address line 1: '{addressLine1}' | postcode: '{postcode}'",
+                           provider.Ukprn, locationToRemove.Id, locationToRemove.Name.Trim(), locationToRemove.LocationType, locationToRemove.AddressLine1, locationToRemove.Postcode);
                     }
+                    provider.Locations.Remove(locationToRemove);
+                    metrics.ProviderLocationsRemoved++;
                 }
             }
-            
+
             return Task.FromResult(metrics);
         }
 
@@ -175,25 +176,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 }
                 else
                 {
-                    // compare delivery models between the original and one being removed, and augment the original with any deliverymodels missing
-                    var courseFirstInstance = coursesToSave.First(x => x.StandardCode == course.StandardCode);
-                    foreach (var providerCourseLocation in courseFirstInstance.Locations)
-                    {
-                        foreach (var location in course.Locations)
-                        {
-                            if (providerCourseLocation.Id == location.Id)
-                            {
-                                var firstInstanceDeliveryModes = providerCourseLocation.DeliveryModes;
-                                var courseToDeleteDeliveryModes = location.DeliveryModes;
-
-                                if (firstInstanceDeliveryModes.Equals(courseToDeleteDeliveryModes)) continue;
-                                foreach (var deliveryMode in courseToDeleteDeliveryModes.Where(deliveryMode => !firstInstanceDeliveryModes.Contains(deliveryMode)))
-                                {
-                                    firstInstanceDeliveryModes.Add(deliveryMode);
-                                }
-                            }
-                        }
-                    }
                     coursesToRemove.Add(course);
                 }
             }
@@ -203,11 +185,23 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 metrics.ProvidersWithDuplicateStandards++;
                 foreach (var courseToRemove in coursesToRemove)
                 {
+                    foreach (var location in courseToRemove.Locations)
+                    {
+                        var delModes = string.Join(":", location.DeliveryModes);
+                        _logger.LogWarning(
+                            "UKPRN:{ukprn},Course:{standardCode}, location:{id}, Removing duplicate larsCode location with deliverymodes '{deliveryModes}'",
+                            provider.Ukprn, courseToRemove.StandardCode, location.Id,delModes);
+                    }
+
+                    _logger.LogWarning(
+                        "UKPRN:{ukprn},Course:{standardCode}, location:{id}, Removing duplicate larsCode",
+                        provider.Ukprn, courseToRemove.StandardCode, "");
+
                     provider.Standards.Remove(courseToRemove);
                     metrics.ProviderStandardsRemoved++;
-                    _logger.LogWarning("Duplicate larsCode removed - provider UKPRN {ukprn}: removing duplicate larsCode {standardCode}",
-                        provider.Ukprn, courseToRemove.StandardCode);
+
                 }
+
             }
 
             return Task.FromResult(metrics); 
@@ -299,8 +293,9 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                         // there are numerous cases of the provider.location not existing for the providercourselocation id
                         // it seems reasonable to continue as the remaining data is coherent
                         // need to check this doesn't happen in prod, and if it does, how to deal with it
-                        _logger.LogWarning("Unmatched ProviderCourseLocation: Provider course location id {id} found no match in provider location for ukprn: {ukprn}, standardCode: {standardCode}",
-                            courseLocation.Id, cdProvider.Ukprn, cdProviderCourse.StandardCode);
+                        _logger.LogWarning(
+                            "UKPRN:{ukprn},Course: {StandardCode}, location:{id}, Unmatched ProviderCourseLocation, ", cdProvider.Ukprn, cdProviderCourse.StandardCode, courseLocation.Id);
+
                     }
                     else
                     {
@@ -355,8 +350,10 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
          
             regionId = regions.FirstOrDefault(x => x.SubregionName == cdProviderLocation.Name)?.Id;
             if (regionId != null) return true;
-    
-            _logger.LogWarning("Unmatched region name: Region location cannot be mapped to {name}", cdProviderLocation.Name);
+
+            _logger.LogWarning(
+                "UKPRN:,Course:, location:{id}, Unmatched Region name, Name: {name}  addressline1: {addressLine1}, Postcode {postcode}, LocationType {locationType}", 
+                cdProviderLocation.Id, cdProviderLocation.Name, cdProviderLocation.AddressLine1,cdProviderLocation.Postcode, cdProviderLocation.LocationType);
             return false;
         }
 
@@ -364,8 +361,9 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         {
             if (standard?.LarsCode == null || standard.LarsCode == 0)
             {
-                _logger.LogWarning("Unmatched StandardCode: LarsCode {standardCode} for ukprn {ukprn} found no match in courses-api",
-                    cdProviderCourseStandardCode, cdProviderUkprn);
+                _logger.LogWarning(
+                    "UKPRN: {ukprn}, Course: {StandardCode}, location:, Unmatched StandardCode, no match in courses-api for StandardCode", cdProviderUkprn, cdProviderCourseStandardCode);
+
                 return false;
             }
 
