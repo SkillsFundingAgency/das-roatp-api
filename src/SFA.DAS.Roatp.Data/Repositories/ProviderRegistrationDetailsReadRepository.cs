@@ -33,5 +33,11 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
             return activeProviders.ToList();
         }
+
+        public async Task<ProviderRegistrationDetail> GetProviderRegistrationDetail(int ukprn)
+        {
+            return await _roatpDataContext.ProviderRegistrationDetails
+                       .AsNoTracking().SingleOrDefaultAsync(p => p.Ukprn == ukprn);
+        }
     }
 }

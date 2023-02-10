@@ -5,6 +5,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProvider;
+using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -15,13 +16,17 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProvider
     {
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_ReturnsResult(
-            Domain.Entities.Provider provider,
-            [Frozen] Mock<IProvidersReadRepository> repoMock,
+            Provider provider,
+            ProviderRegistrationDetail providerRegistrationDetail,
+            [Frozen] Mock<IProvidersReadRepository> repoMockProvidersReadRepository,
+            [Frozen] Mock<IProviderRegistrationDetailsReadRepository> repoMockProviderRegistrationDetailsReadRepository,
             GetProviderQuery query,
             GetProviderQueryHandler sut,
             CancellationToken cancellationToken)
         {
-            repoMock.Setup(r => r.GetByUkprn(query.Ukprn)).ReturnsAsync(provider);
+            repoMockProvidersReadRepository.Setup(r => r.GetByUkprn(query.Ukprn)).ReturnsAsync(provider);
+
+            repoMockProviderRegistrationDetailsReadRepository.Setup(r => r.GetProviderRegistrationDetail(query.Ukprn)).ReturnsAsync(providerRegistrationDetail);
 
             var result = await sut.Handle(query, cancellationToken);
 
