@@ -19,14 +19,12 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
     {
         private readonly IProviderRegistrationDetailsReadRepository _getActiveProviderRegistrationsRepository;
         private readonly IProvidersReadRepository _providersReadRepository;
-        private readonly IGetBetaProvidersService _getBetaProvidersService;
         private readonly ILogger<CourseDirectoryDataProcessingService> _logger;
 
-        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IProviderRegistrationDetailsReadRepository getActiveProviderRegistrationsRepository, IProvidersReadRepository providersReadRepository, IGetBetaProvidersService getBetaProvidersService)
+        public CourseDirectoryDataProcessingService(ILogger<CourseDirectoryDataProcessingService> logger, IProviderRegistrationDetailsReadRepository getActiveProviderRegistrationsRepository, IProvidersReadRepository providersReadRepository)
         {
             _getActiveProviderRegistrationsRepository = getActiveProviderRegistrationsRepository;
             _providersReadRepository = providersReadRepository;
-            _getBetaProvidersService = getBetaProvidersService;
             _logger = logger;
         }
 
@@ -56,24 +54,21 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             return currentProviders.Count;
         }
 
-        public Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers)
+        public Task<PilotProviderMetrics> RemoveProvidersNotOnPilotList(List<CdProvider> providers)
         { 
-            var metrics = new BetaAndPilotProviderMetrics();
-            const string focusText = "beta and pilot providers";
+            var metrics = new PilotProviderMetrics();
+            const string focusText = "pilot providers";
 
-            var betaProviders = _getBetaProvidersService.GetBetaProviderUkprns();
 
-            var betaAndPilotUkprns = new List<int>();
-            betaAndPilotUkprns.AddRange(betaProviders);
-            betaAndPilotUkprns.AddRange(PilotProviders.Ukprns);
+            var pilotUkprns = new List<int>();
+            pilotUkprns.AddRange(PilotProviders.Ukprns);
 
             metrics.PilotProviders = PilotProviders.Ukprns.Count;
-            metrics.BetaProviders = betaProviders.Count;
 
-            metrics.CombinedBetaAndPilotProvidersProcessed = betaAndPilotUkprns.Distinct().Count();
+            metrics.PilotProvidersProcessed = pilotUkprns.Distinct().Count();
 
             _logger.LogInformation("{count} CD providers before removing non-{focus}", providers.Count, focusText);
-            providers.RemoveAll(x => !betaAndPilotUkprns.Distinct().Contains(x.Ukprn));
+            providers.RemoveAll(x => !pilotUkprns.Distinct().Contains(x.Ukprn));
             _logger.LogInformation("{count} CD providers to insert after removing non-{focus}",providers.Count, focusText);
 
             return Task.FromResult(metrics);

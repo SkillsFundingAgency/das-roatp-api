@@ -35,13 +35,13 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             _importAuditWriteRepository = importAuditWriteRepository;
         }
 
-        public async Task<CourseDirectoryImportMetrics> LoadCourseDirectoryData(bool betaAndPilotProvidersOnly)
+        public async Task<CourseDirectoryImportMetrics> LoadCourseDirectoryData(bool pilotProvidersOnly)
         {
             var loadMetrics = new CourseDirectoryImportMetrics()
             {
                 LocationDuplicationMetrics = new LocationDuplicationMetrics(),
                 LarsCodeDuplicationMetrics = new LarsCodeDuplicationMetrics(),
-                BetaAndPilotProvidersOnly = betaAndPilotProvidersOnly
+                PilotProvidersOnly = pilotProvidersOnly
             };
 
             var localRun = false;
@@ -61,9 +61,9 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             var cdProviders = await _getCourseDirectoryDataService.GetCourseDirectoryData();
             loadMetrics.TotalProvidersFromCourseDirectory = cdProviders.Count;
 
-            if (betaAndPilotProvidersOnly)
+            if (pilotProvidersOnly)
             {
-                loadMetrics.BetaAndPilotProviderMetrics = await _courseDirectoryDataProcessingService.RemoveProvidersNotOnBetaOrPilotList(cdProviders);
+                loadMetrics.PilotProviderMetrics = await _courseDirectoryDataProcessingService.RemoveProvidersNotOnPilotList(cdProviders);
             }
             else
             {

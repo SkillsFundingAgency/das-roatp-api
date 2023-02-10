@@ -8,8 +8,8 @@
         public int NumberOfProvidersFailedToLoad { get; set; }
         public LocationDuplicationMetrics LocationDuplicationMetrics { get; set; }
         public LarsCodeDuplicationMetrics LarsCodeDuplicationMetrics { get; set; }
-        public BetaAndPilotProviderMetrics BetaAndPilotProviderMetrics { get; set; }
-        public bool BetaAndPilotProvidersOnly { get; set; }
+        public PilotProviderMetrics PilotProviderMetrics { get; set; }
+        public bool PilotProvidersOnly { get; set; }
         public int TotalStandardsInCache { get; set; }
         public int TotalProvidersOnTheRegister { get; set; }
         public int NumberOfProvidersAlreadyLoaded { get; set; }
