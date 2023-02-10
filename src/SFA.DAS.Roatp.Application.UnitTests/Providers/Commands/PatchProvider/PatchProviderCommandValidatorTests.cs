@@ -177,6 +177,34 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
             Assert.IsTrue(result.Errors.Count == 1);
             Assert.IsTrue(result.Errors[0].ErrorMessage.Contains(MarketingInfoValidationMessages.MarketingInfoTooLong));
         }
+
+        [Test]
+        public async Task Validate_Patch_Provider_DescriptionEmpty_ExpectedErrorMessage()
+        {
+            var validator = new PatchProviderCommandValidator(_providersReadRepo.Object);
+            var ukprn = 10000001;
+
+            var command = new PatchProviderCommand
+            {
+                Ukprn = ukprn,
+                Patch = new JsonPatchDocument<Domain.Models.PatchProvider>()
+            };
+
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProvider>
+            {
+                Operations =
+                {
+                    new Operation<Domain.Models.PatchProvider>
+                        { op = Replace, path = MarketingInfo, value = ""}
+                }
+            };
+
+            var result = await validator.TestValidateAsync(command);
+
+            Assert.IsFalse(result.IsValid);
+            Assert.IsTrue(result.Errors.Count == 1);
+            Assert.IsTrue(result.Errors[0].ErrorMessage.Contains("'Marketing Info' must not be empty."));
+        }
     }
 }
 
