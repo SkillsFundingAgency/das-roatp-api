@@ -26,8 +26,6 @@ namespace SFA.DAS.Roatp.Jobs.Functions
                 [HttpTrigger(AuthorizationLevel.Function,  "POST", Route = "load-course-directory")] HttpRequest req, ILogger log)
 
         {
-            var pilotProvidersOnlyParameter = req.Query["betaAndPilotOnly"];
-
             log.LogInformation("LoadCourseDirectoryDataFunction started");
 
             var loadMetrics = await _loadCourseDirectoryDataService.LoadCourseDirectoryData();
