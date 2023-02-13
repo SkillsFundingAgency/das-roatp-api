@@ -54,26 +54,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             return currentProviders.Count;
         }
 
-        public Task<PilotProviderMetrics> RemoveProvidersNotOnPilotList(List<CdProvider> providers)
-        { 
-            var metrics = new PilotProviderMetrics();
-            const string focusText = "pilot providers";
-
-
-            var pilotUkprns = new List<int>();
-            pilotUkprns.AddRange(PilotProviders.Ukprns);
-
-            metrics.PilotProviders = PilotProviders.Ukprns.Count;
-
-            metrics.PilotProvidersProcessed = pilotUkprns.Distinct().Count();
-
-            _logger.LogInformation("{count} CD providers before removing non-{focus}", providers.Count, focusText);
-            providers.RemoveAll(x => !pilotUkprns.Distinct().Contains(x.Ukprn));
-            _logger.LogInformation("{count} CD providers to insert after removing non-{focus}",providers.Count, focusText);
-
-            return Task.FromResult(metrics);
-        }
-
         public Task<LocationDuplicationMetrics> CleanseDuplicateLocationNames(CdProvider provider)
         {
             var metrics = new LocationDuplicationMetrics();

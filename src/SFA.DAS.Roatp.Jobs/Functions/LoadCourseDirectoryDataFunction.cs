@@ -28,15 +28,9 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         {
             var pilotProvidersOnlyParameter = req.Query["betaAndPilotOnly"];
 
-            var pilotProvidersOnly = true;
-            if (pilotProvidersOnlyParameter.Count > 0 && bool.TryParse(pilotProvidersOnlyParameter[0], out var pilotProvidersOnlyValue))
-            {
-                pilotProvidersOnly = pilotProvidersOnlyValue;
-            }
-
             log.LogInformation("LoadCourseDirectoryDataFunction started");
 
-            var loadMetrics = await _loadCourseDirectoryDataService.LoadCourseDirectoryData(pilotProvidersOnly);
+            var loadMetrics = await _loadCourseDirectoryDataService.LoadCourseDirectoryData();
 
             log.LogInformation($"Course Directory load complete {JsonSerializer.Serialize(loadMetrics, new JsonSerializerOptions() { WriteIndented = true })}" );
 
