@@ -79,7 +79,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 
                 if (!successMapping)
                 {
-                    _logger.LogWarning("Unmapped Provider: Ukprn {ukprn} failed to map", cdProvider.Ukprn);
+                    _logger.LogWarning("UKPRN:{ukprn},Course:, location:, UKPRN failed to map", cdProvider.Ukprn);
                     loadMetrics.NumberOfProvidersFailedDuringMapping++;
                 }
                 else
@@ -94,7 +94,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                     }
                     else
                     {
-                        _logger.LogWarning("Unmapped Provider: Ukprn {ukprn} failed to load", provider.Ukprn);
+                        _logger.LogWarning("UKPRN:{ukprn},Course:, location:, UKPRN failed to load", cdProvider.Ukprn);
                         loadMetrics.NumberOfProvidersLoadedSuccessfully++;
                     }
                 }
