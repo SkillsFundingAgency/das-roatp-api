@@ -185,20 +185,13 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 metrics.ProvidersWithDuplicateStandards++;
                 foreach (var courseToRemove in coursesToRemove)
                 {
-                    var deliveryModes = new List<string>();
-                     foreach (var deliveryMode in from location in courseToRemove.Locations
-                              from deliveryMode in location.DeliveryModes
-                              where !deliveryModes.Contains(deliveryMode)
-                              select deliveryMode)
-                     {
-                         deliveryModes.Add(deliveryMode);
-                     }
-
-                     var delModes = string.Join(":", deliveryModes);
-
-                    _logger.LogWarning(
-                        "UKPRN:{ukprn},Course:{standardCode}, location:{id}, Removing duplicate larsCode with delivery modes [{deliveryModes}]",
-                        provider.Ukprn, courseToRemove.StandardCode, "",delModes);
+                    foreach (var location in courseToRemove.Locations)
+                    {
+                        var delModes = string.Join(":", location.DeliveryModes);
+                        _logger.LogWarning(
+                            "UKPRN:{ukprn},Course:{standardCode}, location:{id}, Removing duplicate larsCode location with deliverymodes '{deliveryModes}'",
+                            provider.Ukprn, courseToRemove.StandardCode, location.Id, delModes);
+                    }
 
                     provider.Standards.Remove(courseToRemove);
                     metrics.ProviderStandardsRemoved++;
