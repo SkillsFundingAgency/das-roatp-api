@@ -22,6 +22,7 @@ namespace SFA.DAS.Roatp.Jobs.Configuration
             if (string.IsNullOrEmpty(env) || env.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
             {
                 AddLocalTarget(config, appName);
+                AddLocalTargetForCourseDirectoryImport(config, appName);
             }
             else
             {
@@ -43,6 +44,19 @@ namespace SFA.DAS.Roatp.Jobs.Configuration
             config.AddTarget(fileTarget);
 
             config.AddRule(GetMinLogLevel(), LogLevel.Fatal, "Disk");
+        }
+
+        private static void AddLocalTargetForCourseDirectoryImport(LoggingConfiguration config, string appName)
+        {
+            InternalLogger.LogFile = Path.Combine(Directory.GetCurrentDirectory(), $"logs\\nlog-internal.{appName}.log");
+
+            var fileTarget = new FileTarget("Disk")
+            {
+                FileName = Path.Combine(Directory.GetCurrentDirectory(), $"LogFiles\\CourseDirectoryImport.${{shortdate}}${{shorttime}}.log"),
+                Layout = "${longdate},${uppercase:${level}}, ${message}"
+            };
+            config.AddTarget(fileTarget);
+            config.AddRule(LogLevel.FromString("Warning"), LogLevel.Fatal, "Disk");
         }
 
         private static void AddRedisTarget(LoggingConfiguration config, string appName)

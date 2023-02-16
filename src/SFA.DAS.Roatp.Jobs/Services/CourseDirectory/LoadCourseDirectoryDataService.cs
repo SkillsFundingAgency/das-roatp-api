@@ -43,7 +43,14 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
                 LarsCodeDuplicationMetrics = new LarsCodeDuplicationMetrics(),
                 BetaAndPilotProvidersOnly = betaAndPilotProvidersOnly
             };
-            
+
+            var localRun = false;
+            var env = Environment.GetEnvironmentVariable("EnvironmentName");
+            if (string.IsNullOrEmpty(env) || env.Equals("LOCAL", StringComparison.CurrentCultureIgnoreCase))
+            {
+                localRun = true;
+            }
+
             var timeStarted = DateTime.UtcNow;
 
             var standards = await GetStandards();
@@ -70,7 +77,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             foreach (var cdProvider in cdProviders)
             {
                 await CleanseDuplicateLocationNames(cdProvider, loadMetrics.LocationDuplicationMetrics);
-                await CleanseDuplicateLarsCodes(cdProvider, loadMetrics.LarsCodeDuplicationMetrics);
+                await CleanseDuplicateLarsCodes(cdProvider, loadMetrics.LarsCodeDuplicationMetrics, localRun);
                 
                 var(successMapping, provider) = await _courseDirectoryDataProcessingService.MapCourseDirectoryProvider(cdProvider, standards, regions);
 
@@ -103,9 +110,9 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
         }
 
         private async Task CleanseDuplicateLarsCodes(CdProvider cdProvider,
-            LarsCodeDuplicationMetrics larsCodeDuplicationMetrics)
+            LarsCodeDuplicationMetrics larsCodeDuplicationMetrics, bool localRun)
         {
-            var metrics = await _courseDirectoryDataProcessingService.CleanseDuplicateLarsCodes(cdProvider);
+            var metrics = await _courseDirectoryDataProcessingService.CleanseDuplicateLarsCodes(cdProvider, localRun);
             larsCodeDuplicationMetrics.ProviderStandardsRemoved += metrics.ProviderStandardsRemoved;
             larsCodeDuplicationMetrics.ProvidersWithDuplicateStandards += metrics.ProvidersWithDuplicateStandards;
         }

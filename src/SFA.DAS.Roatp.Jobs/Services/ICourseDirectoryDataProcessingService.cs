@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
         public Task<int> RemovePreviouslyLoadedProviders(List<CdProvider> providers);
         public Task<BetaAndPilotProviderMetrics> RemoveProvidersNotOnBetaOrPilotList(List<CdProvider> providers);
         public Task<LocationDuplicationMetrics> CleanseDuplicateLocationNames(CdProvider provider);
-        public Task<LarsCodeDuplicationMetrics> CleanseDuplicateLarsCodes(CdProvider provider);
+        public Task<LarsCodeDuplicationMetrics> CleanseDuplicateLarsCodes(CdProvider provider, bool localRun);
         public Task AugmentPilotData(Provider provider);
         public Task<(bool, Provider)> MapCourseDirectoryProvider(CdProvider cdProvider, List<Standard> standards, List<Region> regions);
     }
