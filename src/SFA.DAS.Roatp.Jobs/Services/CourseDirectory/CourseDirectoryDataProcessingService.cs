@@ -150,7 +150,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             return Task.FromResult(metrics);
         }
 
-        public Task<LarsCodeDuplicationMetrics> CleanseDuplicateLarsCodes(CdProvider provider)
+        public Task<LarsCodeDuplicationMetrics> CleanseDuplicateLarsCodes(CdProvider provider, bool localRun)
         {
             var metrics = new LarsCodeDuplicationMetrics();
 
@@ -171,15 +171,26 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             if (coursesToRemove.Any())
             {
                 metrics.ProvidersWithDuplicateStandards++;
+
                 foreach (var courseToRemove in coursesToRemove)
                 {
-                    foreach (var location in courseToRemove.Locations)
+                    if (localRun)
                     {
-                        var delModes = string.Join(":", location.DeliveryModes);
-                        _logger.LogWarning(
-                            "UKPRN:{ukprn},Course:{standardCode}, location:{id}, Removing duplicate larsCode location with deliverymodes '{deliveryModes}'",
-                            provider.Ukprn, courseToRemove.StandardCode, location.Id, delModes);
+                        foreach (var location in courseToRemove.Locations)
+                        {
+                            var delModes = string.Join(":", location.DeliveryModes);
+                            _logger.LogWarning(
+                                "UKPRN:{ukprn},Course:{standardCode}, location:{id}, Removing duplicate larsCode - location with deliverymodes '{deliveryModes}'",
+                                provider.Ukprn, courseToRemove.StandardCode, location.Id, delModes);
+                        }
                     }
+                    else
+                    {
+                        _logger.LogWarning(
+                            "UKPRN:{ukprn},Course:{standardCode}, location:, Removing duplicate larsCode",
+                            provider.Ukprn, courseToRemove.StandardCode);
+                    }
+
                     provider.Standards.Remove(courseToRemove);
                     metrics.ProviderStandardsRemoved++;
                 }
