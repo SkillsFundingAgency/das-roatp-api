@@ -26,17 +26,9 @@ namespace SFA.DAS.Roatp.Jobs.Functions
                 [HttpTrigger(AuthorizationLevel.Function,  "POST", Route = "load-course-directory")] HttpRequest req, ILogger log)
 
         {
-            var betaAndPilotProvidersOnlyParameter = req.Query["betaAndPilotOnly"];
-
-            var betaAndPilotProvidersOnly = true;
-            if (betaAndPilotProvidersOnlyParameter.Count > 0 && bool.TryParse(betaAndPilotProvidersOnlyParameter[0], out var betaAndPilotProvidersOnlyValue))
-            {
-                betaAndPilotProvidersOnly = betaAndPilotProvidersOnlyValue;
-            }
-
             log.LogInformation("LoadCourseDirectoryDataFunction started");
 
-            var loadMetrics = await _loadCourseDirectoryDataService.LoadCourseDirectoryData(betaAndPilotProvidersOnly);
+            var loadMetrics = await _loadCourseDirectoryDataService.LoadCourseDirectoryData();
 
             log.LogInformation($"Course Directory load complete {JsonSerializer.Serialize(loadMetrics, new JsonSerializerOptions() { WriteIndented = true })}" );
 

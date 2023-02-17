@@ -5,6 +5,6 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
 {
     public interface ILoadCourseDirectoryDataService
     {
-         Task<CourseDirectoryImportMetrics> LoadCourseDirectoryData(bool betaAndPilotProvidersOnly);
+         Task<CourseDirectoryImportMetrics> LoadCourseDirectoryData();
     }
 }

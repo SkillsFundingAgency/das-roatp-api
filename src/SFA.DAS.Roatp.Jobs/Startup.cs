@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 using NLog.Extensions.Logging;
-using SFA.DAS.Authorization.ProviderFeatures.Configuration;
 using SFA.DAS.Configuration.AzureTableStorage;
 using SFA.DAS.Roatp.Data.Extensions;
 using SFA.DAS.Roatp.Jobs;
@@ -63,12 +62,6 @@ namespace SFA.DAS.Roatp.Jobs
 
             _configuration = configBuilder.Build();
             builder.Services.Replace(ServiceDescriptor.Singleton(typeof(IConfiguration), _configuration));
-            
-            var providerFeaturesConfiguration = _configuration
-                .GetSection(nameof(ProviderFeaturesConfiguration))
-                .Get<ProviderFeaturesConfiguration>();
-               
-            builder.Services.AddSingleton(providerFeaturesConfiguration);
 
             builder.Services.AddRoatpDataContext(_configuration["SqlDatabaseConnectionString"], _configuration["EnvironmentName"]);
 
@@ -77,7 +70,6 @@ namespace SFA.DAS.Roatp.Jobs
             builder.Services.AddTransient<ILoadCourseDirectoryDataService, LoadCourseDirectoryDataService>();
             builder.Services.AddTransient<IGetCourseDirectoryDataService, GetCourseDirectoryDataService>();
             builder.Services.AddTransient<ICourseDirectoryDataProcessingService, CourseDirectoryDataProcessingService>();
-            builder.Services.AddTransient<IGetBetaProvidersService, GetBetaProvidersService>();
             builder.Services.AddTransient<IReloadNationalAcheivementRatesLookupService, ReloadNationalAcheivementRatesLookupService>();
             builder.Services.AddTransient<IReloadNationalAcheivementRatesService, ReloadNationalAcheivementRatesService>();
             builder.Services.AddTransient<IReloadNationalAcheivementRatesOverallService, ReloadNationalAcheivementRatesOverallService>();

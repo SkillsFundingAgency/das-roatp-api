@@ -35,13 +35,12 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             _importAuditWriteRepository = importAuditWriteRepository;
         }
 
-        public async Task<CourseDirectoryImportMetrics> LoadCourseDirectoryData(bool betaAndPilotProvidersOnly)
+        public async Task<CourseDirectoryImportMetrics> LoadCourseDirectoryData()
         {
             var loadMetrics = new CourseDirectoryImportMetrics()
             {
                 LocationDuplicationMetrics = new LocationDuplicationMetrics(),
-                LarsCodeDuplicationMetrics = new LarsCodeDuplicationMetrics(),
-                BetaAndPilotProvidersOnly = betaAndPilotProvidersOnly
+                LarsCodeDuplicationMetrics = new LarsCodeDuplicationMetrics()
             };
 
             var localRun = false;
@@ -61,15 +60,7 @@ namespace SFA.DAS.Roatp.Jobs.Services.CourseDirectory
             var cdProviders = await _getCourseDirectoryDataService.GetCourseDirectoryData();
             loadMetrics.TotalProvidersFromCourseDirectory = cdProviders.Count;
 
-            if (betaAndPilotProvidersOnly)
-            {
-                loadMetrics.BetaAndPilotProviderMetrics = await _courseDirectoryDataProcessingService.RemoveProvidersNotOnBetaOrPilotList(cdProviders);
-            }
-            else
-            {
-                loadMetrics.TotalProvidersOnTheRegister = await _courseDirectoryDataProcessingService.RemoveProvidersNotActiveOnRegister(cdProviders);
-            }
-
+            loadMetrics.TotalProvidersOnTheRegister = await _courseDirectoryDataProcessingService.RemoveProvidersNotActiveOnRegister(cdProviders);
             loadMetrics.NumberOfProvidersAlreadyLoaded = await _courseDirectoryDataProcessingService.RemovePreviouslyLoadedProviders(cdProviders);
 
             loadMetrics.TotalNumberOfProvidersToBeLoaded = cdProviders.Count;
