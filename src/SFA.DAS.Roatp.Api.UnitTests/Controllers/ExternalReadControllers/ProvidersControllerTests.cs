@@ -14,6 +14,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
 {
@@ -48,9 +49,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
            [Frozen] Mock<IMediator> mediatorMock,
            [Greedy] ProvidersController sut,
            int ukprn,
-           GetAllProviderCoursesQueryResult handlerResult)
+           List<ProviderCourseModel> handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync( new ValidatedResponse<GetAllProviderCoursesQueryResult>( handlerResult));
+            mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync( new ValidatedResponse<List<ProviderCourseModel>>( handlerResult));
             var result = await sut.GetAllProviderCourses(ukprn);
             result.As<OkObjectResult>().Value.Should().BeEquivalentTo(handlerResult);
         }

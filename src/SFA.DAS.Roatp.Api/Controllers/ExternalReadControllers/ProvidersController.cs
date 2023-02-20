@@ -64,7 +64,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         {
             var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn));
             if (response.IsValidResponse)
-                _logger.LogInformation("{count} Provider courses found for {ukprn}:", response.Result.Courses.Count, ukprn);
+                _logger.LogInformation("{count} Provider courses found for {ukprn}:", response.Result.Count, ukprn);
             return GetResponse(response);
         }
 

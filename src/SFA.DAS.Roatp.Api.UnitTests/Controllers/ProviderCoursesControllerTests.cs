@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
@@ -22,9 +23,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProviderCoursesController sut,
             int ukprn,
-            GetAllProviderCoursesQueryResult handlerResult)
+            List<ProviderCourseModel> handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderCoursesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetAllProviderCoursesQueryResult>(handlerResult));
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetAllProviderCoursesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<List<ProviderCourseModel>>(handlerResult));
             var result = await sut.GetAllCourses(ukprn);
             ((OkObjectResult)result).Value.Should().BeEquivalentTo(handlerResult);
         }

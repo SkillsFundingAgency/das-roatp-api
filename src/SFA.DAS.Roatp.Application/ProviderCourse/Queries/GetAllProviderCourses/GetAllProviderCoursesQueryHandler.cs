@@ -9,7 +9,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
 {
-    public class GetAllProviderCoursesQueryHandler : IRequestHandler<GetAllProviderCoursesQuery, ValidatedResponse<GetAllProviderCoursesQueryResult>>
+    public class GetAllProviderCoursesQueryHandler : IRequestHandler<GetAllProviderCoursesQuery, ValidatedResponse<List<ProviderCourseModel>>>
     {
         private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
         private readonly IStandardsReadRepository _standardsReadRepository;
@@ -21,14 +21,14 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
             _logger = logger;
         }
 
-        public async Task<ValidatedResponse<GetAllProviderCoursesQueryResult>> Handle(GetAllProviderCoursesQuery request, CancellationToken cancellationToken)
+        public async Task<ValidatedResponse<List<ProviderCourseModel>>> Handle(GetAllProviderCoursesQuery request, CancellationToken cancellationToken)
         {
             var providerCourses = await _providerCoursesReadRepository.GetAllProviderCourses(request.Ukprn);
 
             if (!providerCourses.Any())
             {
                 _logger.LogInformation("ProviderCourses data not found for {ukprn}", request.Ukprn);
-                return new ValidatedResponse<GetAllProviderCoursesQueryResult>(new GetAllProviderCoursesQueryResult { Courses = new List<ProviderCourseModel>() });
+                return new ValidatedResponse<List<ProviderCourseModel>>(new List<ProviderCourseModel>());
             }
 
             var standardsLookup = await _standardsReadRepository.GetAllStandards();
@@ -42,7 +42,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
                 p.AttachCourseDetails(course.IfateReferenceNumber, course.Level, course.Title, course.Version, course.ApprovalBody);
             }
 
-           return new ValidatedResponse<GetAllProviderCoursesQueryResult>(new GetAllProviderCoursesQueryResult { Courses = providerCourseModels });
+           return new ValidatedResponse<List<ProviderCourseModel>>(providerCourseModels);
         }
     }
 }
