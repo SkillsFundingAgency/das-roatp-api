@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
@@ -25,15 +26,16 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProvider
         {
             _logger.LogInformation("Getting provider for ukprn [{ukprn}]", request.Ukprn);
             var provider = await _providersReadRepository.GetByUkprn(request.Ukprn);
-
+            var getProviderQueryResult = (GetProviderQueryResult)provider;
             var providerRegistrationDetail = await _providerRegistrationDetailsReadRepository.GetProviderRegistrationDetail(request.Ukprn);
-            if(providerRegistrationDetail != null)
+        
+            if (providerRegistrationDetail != null)
             {
                 getProviderQueryResult.ProviderType = (ProviderType)providerRegistrationDetail.ProviderTypeId;
                 getProviderQueryResult.ProviderStatusType = (ProviderStatusType)providerRegistrationDetail.StatusId;
                 getProviderQueryResult.ProviderStatusUpdatedDate = providerRegistrationDetail.StatusDate;
             }
-            return new ValidatedResponse<GetProviderQueryResult>(providerRegistrationDetail);
+            return new ValidatedResponse<GetProviderQueryResult>(getProviderQueryResult);
         }
     }
 }
