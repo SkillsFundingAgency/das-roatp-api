@@ -38,7 +38,7 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
             request.Longitude);
 
         if (providerDetails == null)
-            return null;
+            return new ValidatedResponse<GetProviderDetailsForCourseQueryResult>((GetProviderDetailsForCourseQueryResult)null);
 
         var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByUkprn(request.Ukprn);
 
