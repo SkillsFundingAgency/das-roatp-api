@@ -29,7 +29,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [HttpGet]
         [Route("")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(List<ProviderSummary>), 200)]
+        [ProducesResponseType(typeof(GetProvidersQueryResult), 200)]
         public async Task<IActionResult> GetProviders()
         {
             var providerResult = await _mediator.Send(new GetProvidersQuery());
