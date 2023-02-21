@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
             var response = await _mediator.Send(new GetProviderCourseLocationsQuery(ukprn, larsCode));
 
             if (response.IsValidResponse)
-                _logger.LogInformation("Found {locationCount} locations for ukprn: {ukprn}, larsCode : {larsCode}", response.Result.ProviderCourseLocations.Count, ukprn, larsCode);
+                _logger.LogInformation("Found {locationCount} locations for ukprn: {ukprn}, larsCode : {larsCode}", response.Result.Count, ukprn, larsCode);
 
             return GetResponse(response);
         }

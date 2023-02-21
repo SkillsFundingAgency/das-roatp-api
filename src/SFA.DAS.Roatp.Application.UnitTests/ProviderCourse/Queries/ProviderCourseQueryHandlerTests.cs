@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             var response = await sut.Handle(query, cancellationToken);
 
             Assert.That(response, Is.Not.Null);
-            Assert.That(response.Result.Course.LarsCode, Is.EqualTo(course.LarsCode));
+            Assert.That(response.Result.LarsCode, Is.EqualTo(course.LarsCode));
         }
     }
 }

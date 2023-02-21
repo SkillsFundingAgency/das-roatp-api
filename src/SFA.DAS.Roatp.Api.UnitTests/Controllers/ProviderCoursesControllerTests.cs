@@ -36,9 +36,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Greedy] ProviderCoursesController sut,
             int ukprn,
             int larsCode,
-            GetProviderCourseQueryResult handlerResult)
+            ProviderCourseModel handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderCourseQueryResult>(handlerResult));
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<ProviderCourseModel>(handlerResult));
             var result = await sut.GetCourse(ukprn, larsCode);
             ((OkObjectResult)result).Value.Should().BeEquivalentTo(handlerResult);
         }

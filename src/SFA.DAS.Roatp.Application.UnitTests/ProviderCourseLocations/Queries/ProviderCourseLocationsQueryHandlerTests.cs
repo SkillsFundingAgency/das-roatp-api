@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             repoMockProviderCourseLocations.Verify(d => d.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
 
             Assert.That(response, Is.Not.Null);
-            Assert.That(response.Result.ProviderCourseLocations.Count, Is.EqualTo(locations.Count));
+            Assert.That(response.Result.Count, Is.EqualTo(locations.Count));
         }
 
         [Test, RecursiveMoqAutoData()]
@@ -63,7 +63,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             repoMockProviderCourseLocation.Verify(d => d.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
 
             Assert.That(response, Is.Not.Null);
-            Assert.That(response.Result.ProviderCourseLocations, Is.Empty);
+            Assert.That(response.Result, Is.Empty);
         }
     }
 }

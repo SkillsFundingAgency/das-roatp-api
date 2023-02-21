@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -22,9 +23,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Greedy] ProviderCourseLocationsController sut,
             int ukprn,
             int larsCode,
-            GetProviderCourseLocationsQueryResult handlerResult)
+            List<ProviderCourseLocationModel> handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderCourseLocationsQueryResult>(handlerResult));
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<List<ProviderCourseLocationModel>>(handlerResult));
             var result = await sut.GetProviderCourseLocations(ukprn, larsCode);
             ((OkObjectResult)result).Value.Should().BeEquivalentTo(handlerResult);
         }
