@@ -1,11 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
@@ -35,7 +33,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                .Providers
                .FindAsync(patchedProviderEntity.Id);
 
-                Audit audit = new(typeof(ProviderLocation).Name, patchedProviderEntity.Ukprn.ToString(), userId, userDisplayName, userAction, provider, patchedProviderEntity);
+                Audit audit = new(typeof(Provider).Name, patchedProviderEntity.Ukprn.ToString(), userId, userDisplayName, userAction, provider, patchedProviderEntity);
 
                 _roatpDataContext.Audits.Add(audit);
 
