@@ -1,19 +1,18 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.ProviderCourse;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.JsonPatch;
 using SFA.DAS.Roatp.Domain.Models;
-using System;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
+using SFA.DAS.Roatp.Api.Infrastructure;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    public class ProviderCourseEditController : ControllerBase
+    public class ProviderCourseEditController : ActionResponseControllerBase
     {
         private readonly IMediator _mediator;
         private readonly ILogger<ProviderCourseEditController> _logger;
@@ -30,7 +29,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         {
             _logger.LogInformation("Inner API: Request to patch course contact details for ukprn: {ukprn} larscode: {larscode}", ukprn, larsCode);
 
-            await _mediator.Send(new PatchProviderCourseCommand
+            var response = await _mediator.Send(new PatchProviderCourseCommand
             {
                 Ukprn = ukprn,
                 LarsCode = larsCode,
@@ -38,8 +37,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
                 UserDisplayName = userDisplayName,
                 Patch = request
             });
-            
-            return NoContent();
+
+            return GetNoContentResponse(response);
         }
 
         [Route("/providers/{ukprn}/courses/{larsCode}")]
@@ -54,9 +53,9 @@ namespace SFA.DAS.Roatp.Api.Controllers
             command.UserId = userId;
             command.UserDisplayName = userDisplayName;
 
-            var result = await _mediator.Send(command);
+            var response = await _mediator.Send(command);
 
-            return Created($"/providers/{ukprn}/courses", result);
+            return GetPostResponse(response, $"/providers/{ukprn}/courses");
         }
     }
 }

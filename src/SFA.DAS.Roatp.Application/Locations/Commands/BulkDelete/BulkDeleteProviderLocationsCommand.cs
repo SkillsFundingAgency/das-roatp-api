@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete
 {
-    public class BulkDeleteProviderLocationsCommand : IRequest<int>,  IUkprn, IUserInfo
+    public class BulkDeleteProviderLocationsCommand : IRequest<ValidatedResponse<int>>,  IUkprn, IUserInfo
     {
         public int Ukprn { get; set; }
         public string UserId { get; set; }

@@ -3,12 +3,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 
-public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProviderDetailsForCourseQuery, GetProviderDetailsForCourseQueryResult>
+public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProviderDetailsForCourseQuery, ValidatedResponse<GetProviderDetailsForCourseQueryResult>>
 {
     private readonly IProviderDetailsReadRepository _providerDetailsReadRepository;
     private readonly INationalAchievementRatesReadRepository _nationalAchievementRatesReadRepository;
@@ -24,7 +25,7 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
         _logger = logger;
     }
 
-    public async Task<GetProviderDetailsForCourseQueryResult> Handle(GetProviderDetailsForCourseQuery request, CancellationToken cancellationToken)
+    public async Task<ValidatedResponse<GetProviderDetailsForCourseQueryResult>> Handle(GetProviderDetailsForCourseQuery request, CancellationToken cancellationToken)
     {
         var standard = await _standardsReadRepository.GetStandard(request.LarsCode);
         ApprenticeshipLevel level;
@@ -37,7 +38,7 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
             request.Longitude);
 
         if (providerDetails == null)
-            return null;
+            return new ValidatedResponse<GetProviderDetailsForCourseQueryResult>((GetProviderDetailsForCourseQueryResult)null);
 
         var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByUkprn(request.Ukprn);
 
@@ -61,6 +62,6 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
             result.AchievementRates.Add(rate);
         }
 
-        return result;
+        return new ValidatedResponse<GetProviderDetailsForCourseQueryResult>(result);
     }
 }

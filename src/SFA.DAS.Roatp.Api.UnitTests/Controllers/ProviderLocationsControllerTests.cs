@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
@@ -10,6 +11,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
 using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails;
 using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
@@ -22,13 +24,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProviderLocationsController sut,
             int ukprn,
-            GetProviderLocationsQueryResult handlerResult)
+            List<ProviderLocationModel> locations)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
-
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<List<ProviderLocationModel>>(locations));
             var result = await sut.GetLocations(ukprn);
-
-            (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.Locations);
+            ((OkObjectResult)result).Value.Should().BeEquivalentTo(locations);
         }
 
         [Test, MoqAutoData]
@@ -37,13 +37,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Greedy] ProviderLocationsController sut,
             int ukprn,
             Guid id,
-            GetProviderLocationDetailsQueryResult handlerResult)
+            ProviderLocationModel handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderLocationDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
-
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderLocationDetailsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<ProviderLocationModel>(handlerResult));
             var result = await sut.GetLocation(ukprn, id);
-
-            (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.Location);
+            ((OkObjectResult)result).Value.Should().BeEquivalentTo(handlerResult);
         }
     }
 }

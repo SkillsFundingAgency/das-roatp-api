@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 using System.Collections.Generic;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 {
-    public class CreateProviderCourseCommand : IRequest<int>, IUkprn, ILarsCodeUkprn, ILarsCode, IUserInfo
+    public class CreateProviderCourseCommand : IRequest<ValidatedResponse<int>>, IUkprn, ILarsCodeUkprn, ILarsCode, IUserInfo
     {
         public string UserId { get; set; }
         public string UserDisplayName { get; set; }

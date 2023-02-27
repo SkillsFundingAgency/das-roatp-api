@@ -19,9 +19,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries.GetProvider
             repoMock.Setup(x => x.GetProvidersCount(larsCode)).ReturnsAsync(expectedCount);
             var sut = new GetProvidersCountForCourseQueryHandler(repoMock.Object);
 
-            var result = await sut.Handle(new GetProvidersCountForCourseQuery(larsCode), new CancellationToken());
+            var response = await sut.Handle(new GetProvidersCountForCourseQuery(larsCode), new CancellationToken());
 
-            Assert.AreEqual(expectedCount, result.ProvidersCount);
+            Assert.AreEqual(expectedCount, response.Result.ProvidersCount);
         }
     }
 }

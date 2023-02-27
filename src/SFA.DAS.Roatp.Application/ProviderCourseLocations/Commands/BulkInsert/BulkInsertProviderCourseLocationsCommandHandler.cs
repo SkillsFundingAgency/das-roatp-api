@@ -8,10 +8,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
 {
-    public class BulkInsertProviderCourseLocationsCommandHandler : IRequestHandler<BulkInsertProviderCourseLocationsCommand, int>
+    public class BulkInsertProviderCourseLocationsCommandHandler : IRequestHandler<BulkInsertProviderCourseLocationsCommand, ValidatedResponse<int>>
     {
         private readonly IProviderCourseLocationsBulkRepository _providerCourseLocationsBulkRepository;
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
@@ -29,7 +30,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
             _providerCoursesReadRepository = providerCoursesReadRepository;
         }
 
-        public async Task<int> Handle(BulkInsertProviderCourseLocationsCommand command, CancellationToken cancellationToken)
+        public async Task<ValidatedResponse<int>> Handle(BulkInsertProviderCourseLocationsCommand command, CancellationToken cancellationToken)
         {
             var providerCourses = await _providerCoursesReadRepository.GetAllProviderCourses(command.Ukprn);
             var providerLocations = await _providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
@@ -47,7 +48,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
             }
             _logger.LogInformation("{count} {locationType} locations will be inserted for Ukprn:{ukprn}", providerCourseLocationsToInsert.Count, LocationType.Regional, command.Ukprn);
             await _providerCourseLocationsBulkRepository.BulkInsert(providerCourseLocationsToInsert, command.UserId, command.UserDisplayName, command.Ukprn, AuditEventTypes.BulkInsertProviderCourseLocation);
-            return providerCourseLocationsToInsert.Count;
+            return new ValidatedResponse<int>(providerCourseLocationsToInsert.Count);
         }
     }
 }

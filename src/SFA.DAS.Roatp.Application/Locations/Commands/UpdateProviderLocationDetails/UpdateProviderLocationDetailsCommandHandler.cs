@@ -5,10 +5,11 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDetails
 {
-    public class UpdateProviderLocationDetailsCommandHandler : IRequestHandler<UpdateProviderLocationDetailsCommand, Unit>
+    public class UpdateProviderLocationDetailsCommandHandler : IRequestHandler<UpdateProviderLocationDetailsCommand, ValidatedResponse<bool>>
     {
         private readonly IProviderLocationsWriteRepository _providerLocationsWriteRepository;
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
@@ -21,7 +22,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
             _logger = logger;
         }
 
-        public async Task<Unit> Handle(UpdateProviderLocationDetailsCommand request, CancellationToken cancellationToken)
+        public async Task<ValidatedResponse<bool>> Handle(UpdateProviderLocationDetailsCommand request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Update provider location details for ukprn: {ukprn} Id: {id} by user: {userid}", request.Ukprn, request.Id, request.UserId);
             var providerLocation = await _providerLocationsReadRepository.GetProviderLocation(request.Ukprn, request.Id);
@@ -38,7 +39,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
 
             await _providerLocationsWriteRepository.UpdateProviderlocation(providerLocation, request.Ukprn, request.UserId, request.UserDisplayName, AuditEventTypes.UpdateProviderLocation);
 
-            return Unit.Value;
+            return new ValidatedResponse<bool>(true);
         }
     }
 }

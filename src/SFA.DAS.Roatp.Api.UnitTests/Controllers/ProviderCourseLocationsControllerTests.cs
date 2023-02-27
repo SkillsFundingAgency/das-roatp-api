@@ -1,4 +1,5 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,7 @@ using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderCours
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {
@@ -21,13 +23,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Greedy] ProviderCourseLocationsController sut,
             int ukprn,
             int larsCode,
-            GetProviderCourseLocationsQueryResult handlerResult)
+            List<ProviderCourseLocationModel> handlerResult)
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
-
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<List<ProviderCourseLocationModel>>(handlerResult));
             var result = await sut.GetProviderCourseLocations(ukprn, larsCode);
-
-            (result.Result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult.ProviderCourseLocations);
+            ((OkObjectResult)result).Value.Should().BeEquivalentTo(handlerResult);
         }
     }
 }

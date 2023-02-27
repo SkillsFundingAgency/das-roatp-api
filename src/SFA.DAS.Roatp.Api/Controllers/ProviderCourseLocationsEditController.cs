@@ -5,11 +5,12 @@ using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNationalLocation;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProviderCourseLocation;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Api.Infrastructure;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    public class ProviderCourseLocationsEditController : ControllerBase
+    public class ProviderCourseLocationsEditController : ActionResponseControllerBase
     {
         private readonly IMediator _mediator;
         private readonly ILogger<ProviderCourseLocationsEditController> _logger;
@@ -26,8 +27,9 @@ namespace SFA.DAS.Roatp.Api.Controllers
         {
             _logger.LogInformation("Inner API: Request to create national location received for ukprn: {ukprn} larsCode: {larscode}", ukprn, larsCode);
             var command = new AddNationalLocationToProviderCourseLocationsCommand(ukprn, larsCode, model.UserId, model.UserDisplayName);
-            var providerCourseLocation = await _mediator.Send(command);
-            return CreatedAtRoute(RouteNames.GetProviderCourseLocations, new { ukprn, larsCode }, providerCourseLocation.Id);
+            var response = await _mediator.Send(command);
+
+            return GetPostResponse(response,$"/providers/{ukprn}/courses/{larsCode}/locations");
         }
 
         [HttpPost]
@@ -36,8 +38,9 @@ namespace SFA.DAS.Roatp.Api.Controllers
         {
             _logger.LogInformation("Inner API: Request to create provider course location received for ukprn: {ukprn} larsCode: {larscode} locationNavigationId : {locationNavigationId}", ukprn, larsCode, model.LocationNavigationId);
             var command = new AddProviderCourseLocationCommand(ukprn, larsCode, model.UserId, model.UserDisplayName, model.LocationNavigationId, model.HasDayReleaseDeliveryOption, model.HasBlockReleaseDeliveryOption);
-            var providerCourseLocationId = await _mediator.Send(command);
-            return CreatedAtRoute(RouteNames.GetProviderCourseLocations, new { ukprn, larsCode }, providerCourseLocationId);
+            var response = await _mediator.Send(command);
+
+            return GetPostResponse(response, $"/providers/{ukprn}/courses/{larsCode}/locations");
         }
     }
 }

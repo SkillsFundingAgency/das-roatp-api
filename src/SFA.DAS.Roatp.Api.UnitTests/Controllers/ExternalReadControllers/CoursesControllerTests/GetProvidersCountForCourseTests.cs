@@ -9,6 +9,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProvidersCountForCours
 using SFA.DAS.Testing.AutoFixture;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests
 {
@@ -23,11 +24,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
         {
             var larsCode = 1;
             var expectedCount = 10;
-            mediatorMock.Setup(m => m.Send(It.Is<GetProvidersCountForCourseQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(new GetProvidersCountForCourseQueryResult { ProvidersCount = expectedCount });
-
+            mediatorMock.Setup(m => m.Send(It.Is<GetProvidersCountForCourseQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProvidersCountForCourseQueryResult>( new GetProvidersCountForCourseQueryResult { ProvidersCount = expectedCount }));
+    
             var result = await sut.GetProvidersCountForCourse(larsCode);
-
-            Assert.AreEqual(expectedCount, result.Result.As<OkObjectResult>().Value.As<GetProvidersCountForCourseQueryResult>().ProvidersCount);
+    
+            Assert.AreEqual(expectedCount, result.As<OkObjectResult>().Value.As<GetProvidersCountForCourseQueryResult>().ProvidersCount);
             mediatorMock.Verify(m => m.Send(It.Is<GetProvidersCountForCourseQuery>(q => q.LarsCode == larsCode), It.IsAny<CancellationToken>()));
         }
     }

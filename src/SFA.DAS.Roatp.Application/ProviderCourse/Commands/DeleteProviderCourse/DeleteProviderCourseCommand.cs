@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse
 {
-    public class DeleteProviderCourseCommand : IRequest<bool>, ILarsCodeUkprn, IUkprn, IUserInfo
+    public class DeleteProviderCourseCommand : IRequest<ValidatedResponse<bool>>, ILarsCodeUkprn, IUkprn, IUserInfo
     {
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }

@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
@@ -11,15 +11,13 @@ namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ProviderCoursesController : ControllerBase
+    public class ProviderCoursesController : ActionResponseControllerBase
+
     {
-        private readonly ILogger<ProviderCoursesController> _logger;
         private readonly IMediator _mediator;
 
-        public ProviderCoursesController(
-            ILogger<ProviderCoursesController> logger, IMediator mediator)
+        public ProviderCoursesController(IMediator mediator)
         {
-            _logger = logger;
             _mediator = mediator;
         }
 
@@ -34,12 +32,10 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
-        public async Task<ActionResult<List<ProviderCourseModel>>> GetAllCourses(int ukprn)
+        public async Task<IActionResult> GetAllCourses(int ukprn)
         {
-            var allCoursesResult = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn));
-            var result = allCoursesResult.Courses;
-            _logger.LogInformation("Courses data found for {ukprn}", ukprn);
-            return new OkObjectResult(result);
+            var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn));
+            return GetResponse(response);
         }
 
         /// <summary>
@@ -54,12 +50,10 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProviderCourseModel), 200)]
-        public async Task<ActionResult<ProviderCourseModel>> GetCourse(int ukprn, int larsCode)
+        public async Task<IActionResult> GetCourse(int ukprn, int larsCode)
         {
-            var courseResult = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
-            var result = courseResult.Course;
-            _logger.LogInformation("Course data found for {ukprn} and {larsCode}", ukprn, larsCode);
-            return new OkObjectResult(result);
+            var response = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
+            return GetResponse(response);
         }
     }
 }

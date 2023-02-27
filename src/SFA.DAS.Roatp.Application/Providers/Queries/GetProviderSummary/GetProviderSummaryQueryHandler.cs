@@ -4,10 +4,11 @@ using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary
 {
-    public class GetProviderSummaryQueryHandler : IRequestHandler<GetProviderSummaryQuery, GetProviderSummaryQueryResult>
+    public class GetProviderSummaryQueryHandler : IRequestHandler<GetProviderSummaryQuery, ValidatedResponse<GetProviderSummaryQueryResult>>
     {
         private readonly IProvidersReadRepository _providersReadRepository;
         private readonly ILogger<GetProviderSummaryQueryHandler> _logger;
@@ -18,14 +19,14 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary
             _logger = logger;
         }
         
-        public async Task<GetProviderSummaryQueryResult> Handle(GetProviderSummaryQuery request, CancellationToken cancellationToken)
+        public async Task<ValidatedResponse<GetProviderSummaryQueryResult>> Handle(GetProviderSummaryQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Getting provider summary for ukprn [{ukprn}]", request.Ukprn);
             var provider = await _providersReadRepository.GetByUkprn(request.Ukprn);
-            return new GetProviderSummaryQueryResult
+            return new ValidatedResponse<GetProviderSummaryQueryResult>(new GetProviderSummaryQueryResult
             {
                 ProviderSummary = (ProviderSummary)provider
-            };
+            });
         }
     }
 }

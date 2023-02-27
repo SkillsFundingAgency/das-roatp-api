@@ -33,11 +33,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
 
             command.SelectedSubregionIds = new List<int> { providerLocations.FirstOrDefault(a => a.RegionId.HasValue).RegionId.Value };
 
-            var result = await sut.Handle(command, cancellationToken);
+            var response = await sut.Handle(command, cancellationToken);
             providerLocationsBulkRepositoryMock.Verify(d => d.BulkInsert(It.IsAny<IEnumerable<ProviderLocation>>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<int>(), It.IsAny<string>()), Times.Once);
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result, Is.EqualTo(1));
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response.Result, Is.EqualTo(1));
         }
     }
 

@@ -49,8 +49,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
              .Setup(x => x.ConvertProviderLocationsToDeliveryModels(providerLocationsWithDistance))
              .Returns(deliveryModels);
 
-            var result = await sut.Handle(query, cancellationToken);
-
+            var response = await sut.Handle(query, cancellationToken);
+            var result = response.Result;
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual(result.CourseTitle,standard.Title);
             Assert.AreEqual(result.Level,standard.Level);
@@ -108,8 +108,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
              .Setup(x => x.ConvertProviderLocationsToDeliveryModels(providerLocationsWithDistance))
              .Returns(deliveryModels);
 
-            var result = await sut.Handle(query, cancellationToken);
-
+            var response = await sut.Handle(query, cancellationToken);
+            var result = response.Result;
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual(result.CourseTitle, standard.Title);
             Assert.AreEqual(result.Level, standard.Level);
@@ -162,8 +162,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
              .Setup(x => x.ConvertProviderLocationsToDeliveryModels(providerLocationsWithDistance))
              .Returns(deliveryModels);
 
-            var result = await sut.Handle(query, cancellationToken);
-
+            var response = await sut.Handle(query, cancellationToken);
+            var result = response.Result;
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual(result.CourseTitle, standard.Title);
             Assert.AreEqual(result.Level, standard.Level);

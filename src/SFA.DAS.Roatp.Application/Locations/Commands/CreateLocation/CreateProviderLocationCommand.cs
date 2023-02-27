@@ -3,10 +3,11 @@ using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Models;
 using System;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
 {
-    public class CreateProviderLocationCommand : IRequest<int>, IUkprn, IUserInfo
+    public class CreateProviderLocationCommand : IRequest<ValidatedResponse<int>>, IUkprn, IUserInfo
     {
         public int Ukprn { get; set; }
         public string UserId { get; set; }

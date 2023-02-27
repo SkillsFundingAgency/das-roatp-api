@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse;
 using System.Threading.Tasks;
@@ -9,7 +10,7 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    public class ProviderCourseDeleteController : Controller
+    public class ProviderCourseDeleteController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderCourseDeleteController> _logger;
         private readonly IMediator _mediator;
@@ -23,7 +24,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpDelete]
         [Route("/providers/{ukprn}/courses/{larsCode}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<ActionResult> DeleteProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, [FromQuery] string userId, [FromQuery] string UserDisplayName)
+        public async Task<IActionResult> DeleteProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, [FromQuery] string userId, [FromQuery] string UserDisplayName)
         {
             _logger.LogInformation("Inner API: Request received to delete provider course ukprn: {ukprn} larscode: {larscode} userid:{userid}", ukprn, larsCode, userId);
 
@@ -32,10 +33,12 @@ namespace SFA.DAS.Roatp.Api.Controllers
             _logger.LogInformation("Deleted provider course for Ukprn:{ukprn} LarsCode:{larscode}", ukprn, larsCode);
 
             var bulkDeleteProviderLocationsCommand = new BulkDeleteProviderLocationsCommand(ukprn, userId, UserDisplayName);
-            var result = await _mediator.Send(bulkDeleteProviderLocationsCommand);
+            var response = await _mediator.Send(bulkDeleteProviderLocationsCommand);
 
-            _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn}", result, ukprn);
-            return NoContent();
+            if (response.IsValidResponse)
+                _logger.LogInformation("Deleted {numberOfRecordsDeleted} provider locations for Ukprn:{ukprn}", response.Result, ukprn);
+
+            return GetNoContentResponse(response);
         }
     }
 }

@@ -8,10 +8,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
 {
-    public class BulkInsertProviderLocationsCommandHandler : IRequestHandler<BulkInsertProviderLocationsCommand, int>
+    public class
+        BulkInsertProviderLocationsCommandHandler : IRequestHandler<BulkInsertProviderLocationsCommand, ValidatedResponse<int>>
     {
         private readonly IRegionsReadRepository _regionsReadRepository;
         private readonly IProvidersReadRepository _providersReadRepository;
@@ -28,7 +30,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
             _logger = logger;
         }
 
-        public async Task<int> Handle(BulkInsertProviderLocationsCommand command, CancellationToken cancellationToken)
+        public async Task<ValidatedResponse<int>> Handle(BulkInsertProviderLocationsCommand command, CancellationToken cancellationToken)
         {
             var provider = await _providersReadRepository.GetByUkprn(command.Ukprn);
             var regions = await _regionsReadRepository.GetAllRegions();
@@ -49,12 +51,13 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert
                 };
                 locationsToInsert.Add(providerLocation);
             }
-            if(locationsToInsert.Any())
+            if (locationsToInsert.Any())
             {
                 _logger.LogInformation("{count} {locationType} locations will be inserted for Ukprn:{ukprn}", locationsToInsert.Count, LocationType.Regional, command.Ukprn);
-                await _providerLocationsBulkRepository.BulkInsert(locationsToInsert, command.UserId, command.UserDisplayName, command.Ukprn, AuditEventTypes.BulkInsertProviderLocation);
+                 await _providerLocationsBulkRepository.BulkInsert(locationsToInsert, command.UserId, command.UserDisplayName, command.Ukprn, AuditEventTypes.BulkInsertProviderLocation);
             }
-            return locationsToInsert.Count;
+
+            return new ValidatedResponse<int>(locationsToInsert.Count);
         }
     }
 }

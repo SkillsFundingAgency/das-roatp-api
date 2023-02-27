@@ -25,10 +25,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             providerCoursesReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(query.Ukprn, query.LarsCode)).ReturnsAsync(course);
             var standard =  new Standard { LarsCode = course.LarsCode };
             standardsReadRepositoryMock.Setup(r => r.GetStandard(course.LarsCode)).ReturnsAsync(standard);
-            var result = await sut.Handle(query, cancellationToken);
+            var response = await sut.Handle(query, cancellationToken);
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.Course.LarsCode, Is.EqualTo(course.LarsCode));
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response.Result.LarsCode, Is.EqualTo(course.LarsCode));
         }
     }
 }

@@ -32,12 +32,12 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
 
             repoMockProviderCourseLocations.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(locations);
 
-            var result = await sut.Handle(query, cancellationToken);
+            var response = await sut.Handle(query, cancellationToken);
 
             repoMockProviderCourseLocations.Verify(d => d.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.ProviderCourseLocations.Count, Is.EqualTo(locations.Count));
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response.Result.Count, Is.EqualTo(locations.Count));
         }
 
         [Test, RecursiveMoqAutoData()]
@@ -58,12 +58,12 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
 
             repoMockProviderCourseLocation.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(locations);
 
-            var result = await sut.Handle(query, cancellationToken);
+            var response = await sut.Handle(query, cancellationToken);
 
             repoMockProviderCourseLocation.Verify(d => d.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
 
-            Assert.That(result, Is.Not.Null);
-            Assert.That(result.ProviderCourseLocations, Is.Empty);
+            Assert.That(response, Is.Not.Null);
+            Assert.That(response.Result, Is.Empty);
         }
     }
 }

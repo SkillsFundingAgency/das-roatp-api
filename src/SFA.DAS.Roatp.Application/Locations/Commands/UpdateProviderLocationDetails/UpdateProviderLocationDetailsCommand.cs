@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 using System;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDetails
 {
-    public class UpdateProviderLocationDetailsCommand : IRequest, IUkprn, IUserInfo
+    public class UpdateProviderLocationDetailsCommand : IRequest<ValidatedResponse<bool>>, IUkprn, IUserInfo
     {
         public int Ukprn { get; set; }
         public Guid Id { get; set; }

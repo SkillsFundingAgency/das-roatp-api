@@ -5,10 +5,11 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProviderCourseLocation
 {
-    public class AddProviderCourseLocationCommandHandler : IRequestHandler<AddProviderCourseLocationCommand, int>
+    public class AddProviderCourseLocationCommandHandler : IRequestHandler<AddProviderCourseLocationCommand, ValidatedResponse<int>>
     {
         private readonly IProviderCourseLocationsWriteRepository _providerCourseLocationsWriteRepository;
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
@@ -26,7 +27,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
             _providerCoursesReadRepository = providerCoursesReadRepository;
         }
 
-        public async Task<int> Handle(AddProviderCourseLocationCommand command, CancellationToken cancellationToken)
+        public async Task<ValidatedResponse<int>> Handle(AddProviderCourseLocationCommand command, CancellationToken cancellationToken)
         {
             var providerCourse = await _providerCoursesReadRepository.GetProviderCourseByUkprn(command.Ukprn, command.LarsCode);
             var providerLocation = await _providerLocationsReadRepository.GetProviderLocation(command.Ukprn, command.LocationNavigationId);
@@ -41,7 +42,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
             };
             _logger.LogInformation("Creating provider course location for Ukprn: {ukprn} LarsCode: {larsCode}, ProviderLocationId: {Id}", command.Ukprn, command.LarsCode, providerLocation.Id);
             var createdProviderCourseLocation = await _providerCourseLocationsWriteRepository.Create(providerCourseLocation, command.Ukprn, command.UserId, command.UserDisplayName, AuditEventTypes.CreateProviderCourseLocation);
-            return createdProviderCourseLocation.Id;
+            return new ValidatedResponse<int>(createdProviderCourseLocation.Id);
         }
     }
 }

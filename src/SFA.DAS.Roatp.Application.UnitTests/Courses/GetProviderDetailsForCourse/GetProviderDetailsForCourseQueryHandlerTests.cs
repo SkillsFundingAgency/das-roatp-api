@@ -37,7 +37,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
                 .Setup(x => x.ConvertProviderLocationsToDeliveryModels(providerLocationsWithDistance))
                 .Returns(deliveryModels);
 
-            var result = await sut.Handle(query, cancellationToken);
+            var response = await sut.Handle(query, cancellationToken);
+
+            var result = response.Result;
 
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual(0,result.AchievementRates.Count);
@@ -50,9 +52,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
                 .Excluding(s=>s.Ukprn)
                 );
 
-            Assert.AreEqual(result.Name, providerCourseDetailsModel.LegalName);
-            Assert.AreEqual(result.ContactUrl, providerCourseDetailsModel.StandardContactUrl);
-            Assert.AreEqual(result.ProviderHeadOfficeDistanceInMiles, providerCourseDetailsModel.Distance);
+             Assert.AreEqual(result.Name, providerCourseDetailsModel.LegalName);
+             Assert.AreEqual(result.ContactUrl, providerCourseDetailsModel.StandardContactUrl);
+             Assert.AreEqual(result.ProviderHeadOfficeDistanceInMiles, providerCourseDetailsModel.Distance);
         }
 
         [Test, RecursiveMoqAutoData()]
@@ -74,25 +76,25 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             processProviderCourseLocationsService
                 .Setup(x => x.ConvertProviderLocationsToDeliveryModels(providerLocationsWithDistance))
                 .Returns(deliveryModels);
-
-            var result = await sut.Handle(query, cancellationToken);
-
+        
+            var response = await sut.Handle(query, cancellationToken);
+            var result = response.Result;
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual(0, result.AchievementRates.Count);
             Assert.AreEqual(result.DeliveryModels.Count, deliveryModels.Count);
-
+        
             result.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
                 .Excluding(s => s.LegalName)
                 .Excluding(s => s.StandardContactUrl)
                 .Excluding(s => s.Distance)
                 .Excluding(s=>s.Ukprn)
             );
-
+        
             Assert.AreEqual(result.Name, providerCourseDetailsModel.LegalName);
             Assert.AreEqual(result.ContactUrl, providerCourseDetailsModel.StandardContactUrl);
             Assert.AreEqual(result.ProviderHeadOfficeDistanceInMiles, providerCourseDetailsModel.Distance);
         }
-
+        
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_NoProvider_Locations_ReturnsResultWithEmptyList(
           ProviderCourseDetailsModel providerCourseDetailsModel,
@@ -111,20 +113,20 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             processProviderCourseLocationsService
                 .Setup(x => x.ConvertProviderLocationsToDeliveryModels(It.IsAny<List<ProviderCourseLocationDetailsModel>>()))
                 .Returns(new List<DeliveryModel>());
-
-            var result = await sut.Handle(query, cancellationToken);
-
+        
+            var response = await sut.Handle(query, cancellationToken);
+            var result = response.Result;
             Assert.That(result, Is.Not.Null);
             Assert.AreEqual(0, result.AchievementRates.Count);
             Assert.AreEqual(0, result.DeliveryModels.Count);
-
+        
             result.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
                 .Excluding(s => s.LegalName)
                 .Excluding(s => s.StandardContactUrl)
                 .Excluding(s => s.Distance)
                 .Excluding(s=>s.Ukprn)
                 );
-
+        
             Assert.AreEqual(result.Name, providerCourseDetailsModel.LegalName);
             Assert.AreEqual(result.ContactUrl, providerCourseDetailsModel.StandardContactUrl);
             Assert.AreEqual(result.ProviderHeadOfficeDistanceInMiles, providerCourseDetailsModel.Distance);

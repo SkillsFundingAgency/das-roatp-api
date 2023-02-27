@@ -29,9 +29,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.D
         [Test, AutoData]
         public async Task Handler_NoCourseLocations_ReturnsZero(DeleteProviderCourseLocationCommand request)
         {
-            var result = await _sut.Handle(request, new CancellationToken());
+            var response = await _sut.Handle(request, new CancellationToken());
 
-            result.Should().Be(Unit.Value);
+            response.Result.Should().Be(Unit.Value);
             _providerCourseLocationsWriteRepositoryMock.Verify(d => d.Delete(It.IsAny<Guid>(), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()), Times.Once);
         }
     }

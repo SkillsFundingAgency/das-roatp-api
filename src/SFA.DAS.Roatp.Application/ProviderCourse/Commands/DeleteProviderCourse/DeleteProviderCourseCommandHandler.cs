@@ -4,10 +4,11 @@ using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse
 {
-    public class DeleteProviderCourseCommandHandler : IRequestHandler<DeleteProviderCourseCommand, bool>
+    public class DeleteProviderCourseCommandHandler : IRequestHandler<DeleteProviderCourseCommand, ValidatedResponse<bool>>
     {
         private readonly IProviderCoursesWriteRepository _providerCoursesWriteRepository;
         private readonly ILogger<DeleteProviderCourseCommandHandler> _logger;
@@ -19,11 +20,11 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse
             _logger = logger;
         }
 
-        public async Task<bool> Handle(DeleteProviderCourseCommand command, CancellationToken cancellationToken)
+        public async Task<ValidatedResponse<bool>> Handle(DeleteProviderCourseCommand command, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Provider course will be deleted for Ukprn:{ukprn} Larscode:{larsCode} by User {userId}", command.Ukprn, command.LarsCode, command.UserId);
             await _providerCoursesWriteRepository.Delete(command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.DeleteProviderCourse);
-            return true;
+            return new ValidatedResponse<bool>(true);
         }
     }
 }

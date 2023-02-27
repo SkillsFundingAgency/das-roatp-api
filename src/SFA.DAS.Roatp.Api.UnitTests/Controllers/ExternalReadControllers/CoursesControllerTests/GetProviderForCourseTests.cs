@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests
 {
@@ -26,13 +27,14 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             var larsCode = 1;
             var ukprn = 11112222;
             var name = "test name";
-            mediatorMock.Setup(m => m.Send(It.Is<GetProviderDetailsForCourseQuery>(q => q.LarsCode == larsCode && q.Ukprn==ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new GetProviderDetailsForCourseQueryResult{Name=name});
-
+            mediatorMock.Setup(m => m.Send(It.Is<GetProviderDetailsForCourseQuery>(q => q.LarsCode == larsCode && q.Ukprn==ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderDetailsForCourseQueryResult>(new GetProviderDetailsForCourseQueryResult{Name=name}));
+        
             var result = await sut.GetProviderDetailsForCourse(larsCode, ukprn, null, null);
 
-            Assert.AreEqual(name, result.Result.As<OkObjectResult>().Value.As<GetProviderDetailsForCourseQueryResult>().Name);
+            Assert.AreEqual(name, result.As<OkObjectResult>().Value.As<GetProviderDetailsForCourseQueryResult>().Name);
             mediatorMock.Verify(m => m.Send(It.Is<GetProviderDetailsForCourseQuery>(q => q.LarsCode == larsCode && q.Ukprn==ukprn && q.Latitude==null && q.Longitude == null), It.IsAny<CancellationToken>()));
-        }
+       }
+
         [Test]
         public void ControllerConvention_HasRequiredNamespace()
         {
@@ -48,13 +50,13 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
         {
             var larsCode = 1;
             var ukprn = 11112222;
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderDetailsForCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync((GetProviderDetailsForCourseQueryResult) null);
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderDetailsForCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderDetailsForCourseQueryResult>((GetProviderDetailsForCourseQueryResult) null));
             
             var response = await sut.GetProviderDetailsForCourse(larsCode, ukprn, null, null);
-
+        
             mediatorMock.Verify(m => m.Send(It.Is<GetProviderDetailsForCourseQuery>(q => q.LarsCode == larsCode && q.Ukprn == ukprn && q.Latitude == null && q.Longitude == null), It.IsAny<CancellationToken>()));
-
-            Assert.AreEqual(StatusCodes.Status404NotFound, (((NotFoundResult)response.Result)!).StatusCode);
+        
+            Assert.AreEqual(StatusCodes.Status404NotFound, (((NotFoundResult)response)!).StatusCode);
         }
     }
 }

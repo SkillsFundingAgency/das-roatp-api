@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Azure;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails;
 using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    public class ProviderLocationsController : ControllerBase
+    public class ProviderLocationsController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderLocationsController> _logger;
         private readonly IMediator _mediator;
@@ -27,15 +29,16 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(List<ProviderLocationModel>), 200)]
-        public async Task<ActionResult<List<ProviderLocationModel>>> GetLocations(int ukprn)
+        public async Task<IActionResult> GetLocations(int ukprn)
         {
             _logger.LogInformation("Request received to get all locations for ukprn: {ukprn}", ukprn);
 
-            var result = await _mediator.Send(new GetProviderLocationsQuery(ukprn));
+            var response = await _mediator.Send(new GetProviderLocationsQuery(ukprn));
 
-            _logger.LogInformation("Found {locationCount} locations for {ukprn}", result.Locations.Count, ukprn);
+            if (response.IsValidResponse)
+                _logger.LogInformation("Found {locationCount} locations for {ukprn}", response.Result.Count, ukprn);
 
-            return new OkObjectResult(result.Locations);
+            return GetResponse(response);
         }
 
         [HttpGet]
@@ -43,15 +46,13 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(ProviderLocationModel), 200)]
-        public async Task<ActionResult<ProviderLocationModel>> GetLocation([FromRoute] int ukprn, [FromRoute] Guid id)
+        public async Task<IActionResult> GetLocation([FromRoute] int ukprn, [FromRoute] Guid id)
         {
             _logger.LogInformation("Request received to get provider location details for ukprn: {ukprn} and {id}", ukprn, id);
 
-            var result = await _mediator.Send(new GetProviderLocationDetailsQuery(ukprn, id));
+            var response = await _mediator.Send(new GetProviderLocationDetailsQuery(ukprn, id));
 
-            _logger.LogInformation("Found provider location details for {ukprn} and {id}", ukprn, id);
-
-            return new OkObjectResult(result.Location);
+            return GetResponse(response);
         }
     }
 }
