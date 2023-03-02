@@ -1,7 +1,7 @@
-﻿using Microsoft.Azure.WebJobs;
+﻿using System.Threading.Tasks;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Jobs.Services;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Jobs.Functions
 {
@@ -19,6 +19,8 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         {
             log.LogInformation("ReloadProviderRegistrationDetailsFunction function started");
             await _service.ReloadProviderRegistrationDetails();
+            //Below step is dependent on the step above so cannot run it in parallel 
+            await _service.ReloadAllAddresses();
             log.LogInformation("Provider registration details reload complete");
         }
     }
