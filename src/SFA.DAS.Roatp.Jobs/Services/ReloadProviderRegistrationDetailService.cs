@@ -14,16 +14,19 @@ namespace SFA.DAS.Roatp.Jobs.Services
 {
     public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrationDetailService
     {
-        private readonly IProviderRegistrationDetailsWriteRepository _providerRegistrationDetailsWriteRepository;
         private readonly IReloadProviderRegistrationDetailsRepository _reloadProviderRegistrationDetailsRepository;
         private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
         private readonly ILogger<ReloadProviderRegistrationDetailService> _logger;
-        private readonly IImportAuditWriteRepository _importAuditWriteRepository;
-        public ReloadProviderRegistrationDetailService(IReloadProviderRegistrationDetailsRepository reloadProviderRegistrationDetailsRepository, ICourseManagementOuterApiClient courseManagementOuterApiClient, IImportAuditWriteRepository importAuditWriteRepository, ILogger<ReloadProviderRegistrationDetailService> logger, IProviderRegistrationDetailsWriteRepository providerRegistrationDetailsWriteRepository)
+        private readonly IProviderRegistrationDetailsWriteRepository _providerRegistrationDetailsWriteRepository;
+
+        public ReloadProviderRegistrationDetailService(
+            IReloadProviderRegistrationDetailsRepository reloadProviderRegistrationDetailsRepository,
+            ICourseManagementOuterApiClient courseManagementOuterApiClient,
+            ILogger<ReloadProviderRegistrationDetailService> logger,
+            IProviderRegistrationDetailsWriteRepository providerRegistrationDetailsWriteRepository)
         {
             _reloadProviderRegistrationDetailsRepository = reloadProviderRegistrationDetailsRepository;
             _courseManagementOuterApiClient = courseManagementOuterApiClient;
-            _importAuditWriteRepository = importAuditWriteRepository;
             _logger = logger;
             _providerRegistrationDetailsWriteRepository = providerRegistrationDetailsWriteRepository;
         }
