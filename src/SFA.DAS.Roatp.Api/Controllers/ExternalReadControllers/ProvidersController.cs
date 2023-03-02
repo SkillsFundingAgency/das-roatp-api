@@ -1,15 +1,14 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
-using Azure;
-using SFA.DAS.Roatp.Api.Infrastructure;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {

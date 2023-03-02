@@ -21,6 +21,8 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public double? Longitude { get; set; }
 
 
+        public virtual Provider Provider { get; set; }
+
         public void UpdateAddress(UkrlpProviderAddress source)
         {
             AddressLine1 = source.Address1;
