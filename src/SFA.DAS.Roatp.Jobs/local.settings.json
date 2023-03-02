@@ -5,6 +5,13 @@
     "FUNCTIONS_WORKER_RUNTIME": "dotnet",
     "ConfigurationStorageConnectionString": "UseDevelopmentStorage=true;",
     "EnvironmentName": "LOCAL",
-    "LoggingRedisConnectionString": "localhost"
+    "LoggingRedisConnectionString": "localhost",
+    "AzureWebJobs.LoadAllProviderAddressesFunction.Disabled": true,
+    "AzureWebJobs.LoadCourseDirectoryDataFunction.Disabled": true,
+    "AzureWebJobs.LoadProvidersAddressFunction.Disabled": false,
+    "AzureWebJobs.ReloadNationalAcheivementRatesFunction.Disabled": false,
+    "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": false,
+    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": false,
+    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": false
   }
 }
