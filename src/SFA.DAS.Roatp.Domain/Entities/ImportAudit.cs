@@ -29,8 +29,9 @@ namespace SFA.DAS.Roatp.Domain.Entities
 
     public enum ImportType
     {
-        CourseDirectory, 
-        ProviderRegistrationDetails, 
+        CourseDirectory,
+        ProviderRegistrationDetails,
+        ProviderRegistrationAddresses,
         Standards,
         NationalAchievementRates,
         NationalAchievementRatesOverall,
