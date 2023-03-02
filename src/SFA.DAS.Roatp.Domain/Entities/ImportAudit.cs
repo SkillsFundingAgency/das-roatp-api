@@ -12,14 +12,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
             TimeFinished = DateTime.UtcNow;
         }
 
-        public ImportAudit(DateTime timeStarted, int rowsImported, ImportType importType, DateTime timeFinished)
-        {
-            TimeStarted = timeStarted;
-            RowsImported = rowsImported;
-            ImportType = importType;
-            TimeFinished = timeFinished;
-        }
-
         public int Id { get; set; }
         public DateTime TimeStarted { get; set; }
         public DateTime TimeFinished { get; set; }
@@ -32,6 +24,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         CourseDirectory,
         ProviderRegistrationDetails,
         ProviderRegistrationAddresses,
+        ProviderRegistrationAddressCoordinates,
         Standards,
         NationalAchievementRates,
         NationalAchievementRatesOverall,

@@ -6,5 +6,6 @@ namespace SFA.DAS.Roatp.Jobs.Services
     {
         Task ReloadProviderRegistrationDetails();
         Task ReloadAllAddresses();
+        Task ReloadAllCoordinates();
     }
 }

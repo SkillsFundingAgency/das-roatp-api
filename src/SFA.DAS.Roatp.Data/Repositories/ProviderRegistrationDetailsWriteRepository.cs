@@ -28,11 +28,11 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 x.StatusId == OrganisationStatus.Onboarding)
             .ToListAsync();
 
-        public async Task UpdateProviders(DateTime timeStarted, int providerCount)
+        public async Task UpdateProviders(DateTime timeStarted, int providerCount, ImportType importType)
         {
             // since the entities were retrieved with tracking on, it is assumed that when the call is made the tracked entities are already updated
             // hence just need to add the audit entity and commit the changes here
-            _roatpDataContext.ImportAudits.Add(new ImportAudit(timeStarted, providerCount, ImportType.ProviderRegistrationAddresses));
+            _roatpDataContext.ImportAudits.Add(new ImportAudit(timeStarted, providerCount, importType));
             await _roatpDataContext.SaveChangesAsync();
         }
     }

@@ -7,6 +7,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Roatp.Jobs.ApiClients;
+using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 using SFA.DAS.Roatp.Jobs.Requests;
 
 namespace SFA.DAS.Roatp.Jobs.Services
@@ -38,8 +39,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 throw new InvalidOperationException(errorMessage);
             }
             _logger.LogInformation($"Reloading {providerRegistrationDetails.Count} provider registration details");
-            await _reloadProviderRegistrationDetailsRepository.ReloadRegisteredProviders(providerRegistrationDetails);
-            await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, providerRegistrationDetails.Count, ImportType.ProviderRegistrationDetails));
+            await _reloadProviderRegistrationDetailsRepository.ReloadRegisteredProviders(providerRegistrationDetails, timeStarted);
         }
 
         public async Task ReloadAllAddresses()
@@ -74,9 +74,44 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 activeProvider.UpdateAddress(ukrlpProvider);
             }
 
-            await _providerRegistrationDetailsWriteRepository.UpdateProviders(timeStarted, ukrlpResponse.Count);
+            await _providerRegistrationDetailsWriteRepository.UpdateProviders(timeStarted, ukrlpResponse.Count, ImportType.ProviderRegistrationAddresses);
 
             _logger.LogInformation("Provider registration addresses reload complete");
+        }
+
+        public async Task ReloadAllCoordinates()
+        {
+            var timeStarted = DateTime.UtcNow;
+            var providers = await _providerRegistrationDetailsWriteRepository.GetActiveProviders();
+
+            foreach (var provider in providers)
+            {
+                if (string.IsNullOrWhiteSpace(provider.Postcode))
+                {
+                    _logger.LogWarning("Provider with Ukprn: {ukprn} has no postcode", provider.Ukprn);
+                    continue;
+                }
+
+                var (success, lookupAddresses) = await _courseManagementOuterApiClient.Get<AddressList>($"lookup/addresses?postcode={provider.Postcode}");
+
+                if (!success)
+                {
+                    _logger.LogWarning("Attempt to get address for Ukprn:{ukprn} Postcode: {postcode} failed", provider.Ukprn, provider.Postcode);
+                    continue;
+                }
+
+                if (!lookupAddresses.Addresses.Any())
+                {
+                    _logger.LogWarning("Attempt to get address for Ukprn:{ukprn} Postcode: {postcode} returned no addresses", provider.Ukprn, provider.Postcode);
+                    continue;
+                }
+
+                var firstAddress = lookupAddresses.Addresses[0];
+                provider.Latitude = firstAddress.Latitude;
+                provider.Longitude = firstAddress.Longitude;
+            }
+
+            await _providerRegistrationDetailsWriteRepository.UpdateProviders(timeStarted, providers.Count, ImportType.ProviderRegistrationAddressCoordinates);
         }
     }
 }

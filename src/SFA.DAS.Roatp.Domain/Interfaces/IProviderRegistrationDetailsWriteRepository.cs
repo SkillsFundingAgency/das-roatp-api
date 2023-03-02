@@ -8,6 +8,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     public interface IProviderRegistrationDetailsWriteRepository
     {
         Task<List<ProviderRegistrationDetail>> GetActiveProviders();
-        Task UpdateProviders(DateTime timeStarted, int providerCount);
+        Task UpdateProviders(DateTime timeStarted, int providerCount, ImportType importType);
     }
 }
