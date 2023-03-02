@@ -1,7 +1,7 @@
-﻿using AutoFixture.NUnit3;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Models;
+using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
 {
@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
     public class ProviderRegistraionDetailTests
     {
         [Test]
-        [AutoData]
+        [RecursiveMoqAutoData]
         public void UpdateAddress_UpdatesAddressFromModel(UkrlpProviderAddress source, ProviderRegistrationDetail sut)
         {
             sut.UpdateAddress(source);
