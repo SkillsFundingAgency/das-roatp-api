@@ -4,8 +4,6 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
 {
     public class ProviderAddressModel
     {
-        public int Id { get; set; }
-        public int ProviderId { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string AddressLine3 { get; set; }
@@ -35,8 +33,6 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
 
             return new ProviderAddressModel
             {
-                Id = source.Id,
-                ProviderId = source.ProviderId,
                 AddressLine1 = source.AddressLine1,
                 AddressLine2 = source.AddressLine2,
                 AddressLine3 = source.AddressLine3,

@@ -14,8 +14,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
         {
             var model = (ProviderAddressModel)source;
 
-            model.Id.Should().Be(source.Id);
-            model.ProviderId.Should().Be(source.ProviderId);
             model.AddressLine1.Should().Be(source.AddressLine1);
             model.AddressLine2.Should().Be(source.AddressLine2);
             model.AddressLine3.Should().Be(source.AddressLine3);
