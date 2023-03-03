@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
         public ProviderAddressModel Address { get; set; } = new ProviderAddressModel();
 
         public static implicit operator ProviderSummary(ProviderRegistrationDetail source) =>
-            new ProviderSummary
+            source == null ? null : new ProviderSummary
             {
                 Ukprn = source.Ukprn,
                 Name = source.LegalName,
@@ -22,18 +22,6 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
                 Phone = source.Provider?.Phone,
                 ContactUrl = source.Provider?.Website,
                 Address = source
-            };
-
-        public static implicit operator ProviderSummary(Provider source) =>
-            new ProviderSummary
-            {
-                Ukprn = source.Ukprn,
-                Name = source.LegalName,
-                TradingName = source.TradingName,
-                Email = source.Email,
-                Phone = source.Phone,
-                ContactUrl = source.Website,
-                Address = source.ProviderAddress
             };
     }
 }

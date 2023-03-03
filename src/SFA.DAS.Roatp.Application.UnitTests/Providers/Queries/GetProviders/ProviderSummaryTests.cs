@@ -10,16 +10,16 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
     public class ProviderSummaryTests
     {
         [Test, RecursiveMoqAutoData]
-        public void Operator_PopulatesModelFromEntity(Provider source)
+        public void Operator_PopulatesModelFromEntity(ProviderRegistrationDetail source)
         {
             var model = (ProviderSummary)source;
 
             model.Ukprn.Should().Be(source.Ukprn);
             model.Name.Should().Be(source.LegalName);
-            model.TradingName.Should().Be(source.TradingName);
-            model.Email.Should().Be(source.Email);
-            model.Phone.Should().Be(source.Phone);
-            model.ContactUrl.Should().Be(source.Website);
+            model.TradingName.Should().Be(source.Provider.TradingName);
+            model.Email.Should().Be(source.Provider.Email);
+            model.Phone.Should().Be(source.Provider.Phone);
+            model.ContactUrl.Should().Be(source.Provider.Website);
         }
     }
 }

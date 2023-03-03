@@ -1,31 +1,30 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
-using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
+using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary
 {
     public class GetProviderSummaryQueryHandler : IRequestHandler<GetProviderSummaryQuery, ValidatedResponse<GetProviderSummaryQueryResult>>
     {
-        private readonly IProvidersReadRepository _providersReadRepository;
+        private readonly IProviderRegistrationDetailsReadRepository _providersRegistrationDetailReadRepository;
         private readonly ILogger<GetProviderSummaryQueryHandler> _logger;
 
-        public GetProviderSummaryQueryHandler(IProvidersReadRepository providersReadRepository,  ILogger<GetProviderSummaryQueryHandler> logger)
+        public GetProviderSummaryQueryHandler(IProviderRegistrationDetailsReadRepository providersRegistrationDetailReadRepository, ILogger<GetProviderSummaryQueryHandler> logger)
         {
-            _providersReadRepository = providersReadRepository;
+            _providersRegistrationDetailReadRepository = providersRegistrationDetailReadRepository;
             _logger = logger;
         }
-        
+
         public async Task<ValidatedResponse<GetProviderSummaryQueryResult>> Handle(GetProviderSummaryQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Getting provider summary for ukprn [{ukprn}]", request.Ukprn);
-            var provider = await _providersReadRepository.GetByUkprn(request.Ukprn);
+            var provider = await _providersRegistrationDetailReadRepository.GetProviderRegistrationDetail(request.Ukprn);
             return new ValidatedResponse<GetProviderSummaryQueryResult>(new GetProviderSummaryQueryResult
             {
-                ProviderSummary = (ProviderSummary)provider
+                ProviderSummary = provider
             });
         }
     }
