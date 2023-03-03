@@ -39,7 +39,14 @@ namespace SFA.DAS.Roatp.Data.Repositories
         }
 
         public async Task<ProviderRegistrationDetail> GetProviderRegistrationDetail(int ukprn) =>
-            await _roatpDataContext.ProviderRegistrationDetails.Include(r => r.Provider)
-                       .AsNoTracking().SingleOrDefaultAsync(p => p.Ukprn == ukprn);
+            await _roatpDataContext
+                    .ProviderRegistrationDetails
+                    .Where(x =>
+                        x.StatusId == OrganisationStatus.Active ||
+                        x.StatusId == OrganisationStatus.ActiveNotTakingOnApprentices ||
+                        x.StatusId == OrganisationStatus.Onboarding)
+                    .Include(r => r.Provider)
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(p => p.Ukprn == ukprn);
     }
 }
