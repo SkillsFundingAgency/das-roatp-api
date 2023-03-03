@@ -50,6 +50,7 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<IProviderCourseLocationsBulkRepository, ProviderCourseLocationsBulkRepository>();
             services.AddTransient<ILoadProviderRepository, LoadProviderRepository>();
             services.AddTransient<IProviderRegistrationDetailsReadRepository, ProviderRegistrationDetailsReadRepository>();
+            services.AddTransient<IProviderRegistrationDetailsWriteRepository, ProviderRegistrationDetailsWriteRepository>();
             services.AddTransient<IProviderLocationsWriteRepository, ProviderLocationsWriteRepository>();
             services.AddTransient<IProviderCourseLocationsWriteRepository, ProviderCourseLocationsWriteRepository>();
             services.AddTransient<IImportAuditWriteRepository, ImportAuditWriteRepository>();
@@ -61,7 +62,7 @@ namespace SFA.DAS.Roatp.Data.Extensions
             services.AddTransient<INationalAchievementRatesOverallImportReadRepository, NationalAchievementRatesOverallImportReadRepository>();
             services.AddTransient<INationalAchievementRatesOverallWriteRepository, NationalAchievementRatesOverallWriteRepository>();
             services.AddTransient<INationalAchievementRatesOverallReadRepository, NationalAchievementRatesOverallReadRepository>();
-            services.AddTransient<IReloadProviderAddressesRepository,ReloadProviderAddressesRepository>();
+            services.AddTransient<IReloadProviderAddressesRepository, ReloadProviderAddressesRepository>();
             services.AddTransient<IProviderAddressReadRepository, ProviderAddressReadRepository>();
             services.AddTransient<IProviderAddressWriteRepository, ProviderAddressWriteRepository>();
             services.AddTransient<IProviderDetailsReadRepository, ProviderDetailsReadRepository>();

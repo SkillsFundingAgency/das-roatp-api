@@ -11,7 +11,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Data.Repositories
 {
     [ExcludeFromCodeCoverage]
-    public class ProviderRegistrationDetailsReadRepository: IProviderRegistrationDetailsReadRepository
+    public class ProviderRegistrationDetailsReadRepository : IProviderRegistrationDetailsReadRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
         private readonly ILogger<ProviderRegistrationDetailsReadRepository> _logger;
@@ -24,20 +24,29 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public async Task<List<ProviderRegistrationDetail>> GetActiveProviderRegistrations()
         {
-            var activeProviders =  await _roatpDataContext.ProviderRegistrationDetails.Where(x =>
-                                                x.StatusId == OrganisationStatus.Active || 
-                                                x.StatusId == OrganisationStatus.ActiveNotTakingOnApprentices ||
-                                                x.StatusId == OrganisationStatus.Onboarding).AsNoTracking().ToListAsync();
-            
+            var activeProviders = await _roatpDataContext.ProviderRegistrationDetails
+                .Where(x =>
+                        x.StatusId == OrganisationStatus.Active ||
+                        x.StatusId == OrganisationStatus.ActiveNotTakingOnApprentices ||
+                        x.StatusId == OrganisationStatus.Onboarding)
+                .Include(r => r.Provider)
+                .AsNoTracking()
+                .ToListAsync();
+
             _logger.LogInformation("Retrieved {count} active provider registration details from ProviderRegistrationDetail", activeProviders.Count);
 
             return activeProviders.ToList();
         }
 
-        public async Task<ProviderRegistrationDetail> GetProviderRegistrationDetail(int ukprn)
-        {
-            return await _roatpDataContext.ProviderRegistrationDetails
-                       .AsNoTracking().SingleOrDefaultAsync(p => p.Ukprn == ukprn);
-        }
+        public async Task<ProviderRegistrationDetail> GetProviderRegistrationDetail(int ukprn) =>
+            await _roatpDataContext
+                    .ProviderRegistrationDetails
+                    .Where(x =>
+                        x.StatusId == OrganisationStatus.Active ||
+                        x.StatusId == OrganisationStatus.ActiveNotTakingOnApprentices ||
+                        x.StatusId == OrganisationStatus.Onboarding)
+                    .Include(r => r.Provider)
+                    .AsNoTracking()
+                    .SingleOrDefaultAsync(p => p.Ukprn == ukprn);
     }
 }

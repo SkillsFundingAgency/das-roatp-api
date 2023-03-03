@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.Roatp.Domain.Entities;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Data.Configuration
 {
@@ -11,7 +11,8 @@ namespace SFA.DAS.Roatp.Data.Configuration
         public void Configure(EntityTypeBuilder<ProviderRegistrationDetail> builder)
         {
             builder.ToTable(nameof(ProviderRegistrationDetail));
-            builder.HasKey(p => p.Ukprn);
+            builder.HasKey(r => r.Ukprn);
+            builder.HasOne(r => r.Provider).WithOne(p => p.ProviderRegistrationDetail).HasForeignKey<Provider>(p => p.Ukprn);
         }
     }
 }
