@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -43,9 +44,22 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         public async Task<IActionResult> GetProvider(int ukprn)
         {
             var response = await _mediator.Send(new GetProviderSummaryQuery(ukprn));
+
+            if (response == null) return NotFound();
+
             if (response.IsValidResponse)
+            {
                 _logger.LogInformation("Provider summary data found for {ukprn}:", ukprn);
-            return GetResponse(response);
+                return new OkObjectResult(response.Result);
+            }
+
+            var formattedErrors =  response.Errors.Select(err => new ValidationError
+            {
+                PropertyName = err.PropertyName,
+                ErrorMessage = err.ErrorMessage
+            }).ToList();
+
+            return new BadRequestObjectResult(formattedErrors);
         }
 
         /// <summary>
