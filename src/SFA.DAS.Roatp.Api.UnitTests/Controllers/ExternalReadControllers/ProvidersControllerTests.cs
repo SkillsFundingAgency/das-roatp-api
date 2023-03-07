@@ -15,6 +15,9 @@ using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using System.Collections.Generic;
+using Azure;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Http;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
 {
@@ -43,7 +46,39 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             var result = await sut.GetProvider(ukprn);
             (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
         }
-        
+
+        [Test, MoqAutoData]
+        public async Task GetProvider_ProviderDoesNotExist_CallsMediator(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Greedy] ProvidersController sut,
+            int ukprn)
+        {
+            var handlerResult =  (GetProviderSummaryQueryResult)null;
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderSummaryQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync((ValidatedResponse<GetProviderSummaryQueryResult>)null);
+            var result = await sut.GetProvider(ukprn);
+            Assert.AreEqual(StatusCodes.Status404NotFound, (((NotFoundResult)result)!).StatusCode);
+        }
+
+        [Test, MoqAutoData]
+        public async Task GetProvider_ProviderBadRequest_CallsMediator(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Greedy] ProvidersController sut,
+            int ukprn)
+        {
+            var response = new ValidatedResponse<GetProviderSummaryQueryResult>(new List<ValidationFailure>
+            {
+                new()
+                {
+                    ErrorMessage = "error message",
+                    PropertyName = "property name"
+                }
+            });
+
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderSummaryQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
+            var result = await sut.GetProvider(ukprn);
+            Assert.AreEqual(StatusCodes.Status400BadRequest, (((BadRequestObjectResult)result)!).StatusCode);
+        }
+
         [Test, MoqAutoData]
         public async Task GetAllProviderCourses_InvokesMediator_ReturnsCoursesDetails(
            [Frozen] Mock<IMediator> mediatorMock,
