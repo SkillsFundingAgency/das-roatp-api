@@ -27,8 +27,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviderSumma
             var response = await sut.Handle(query, cancellationToken);
 
             response.Should().NotBeNull();
-            response.Result.ProviderSummary.Should().NotBeNull();
-            response.Result.ProviderSummary.Address.Should().NotBeNull();
+            response.Result.Should().NotBeNull();
+            response.Result.Address.Should().NotBeNull();
         }
     
         [Test, RecursiveMoqAutoData()]
@@ -40,7 +40,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviderSumma
         { 
             repoMock.Setup(r => r.GetProviderRegistrationDetail(query.Ukprn)).ReturnsAsync((ProviderRegistrationDetail)null);
             var response = await sut.Handle(query, cancellationToken);
-            response.Should().BeNull();
+            response.Should().NotBeNull();
+            response.Result.Should().BeNull();
+
         }
     }
 }

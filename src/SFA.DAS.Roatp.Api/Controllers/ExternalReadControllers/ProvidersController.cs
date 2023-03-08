@@ -40,26 +40,13 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [HttpGet]
         [Route("{ukprn}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(GetProviderSummaryQueryResult), 200)]
+        [ProducesResponseType(typeof(GetProviderSummaryQueryResult), 200)]  //MFCMFC TYPE!
         public async Task<IActionResult> GetProvider(int ukprn)
         {
             var response = await _mediator.Send(new GetProviderSummaryQuery(ukprn));
-
-            if (response == null) return NotFound();
-
-            if (response.IsValidResponse)
-            {
+ if (response.IsValidResponse)
                 _logger.LogInformation("Provider summary data found for {ukprn}:", ukprn);
-                return new OkObjectResult(response.Result);
-            }
-
-            var formattedErrors =  response.Errors.Select(err => new ValidationError
-            {
-                PropertyName = err.PropertyName,
-                ErrorMessage = err.ErrorMessage
-            }).ToList();
-
-            return new BadRequestObjectResult(formattedErrors);
+            return GetResponse(response);
         }
 
         /// <summary>

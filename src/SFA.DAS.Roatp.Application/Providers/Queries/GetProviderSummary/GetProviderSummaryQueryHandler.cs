@@ -21,15 +21,10 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary
         public async Task<ValidatedResponse<GetProviderSummaryQueryResult>> Handle(GetProviderSummaryQuery request, CancellationToken cancellationToken)
         {
             _logger.LogInformation("Getting provider summary for ukprn [{ukprn}]", request.Ukprn);
-            var provider = await _providersRegistrationDetailReadRepository.GetProviderRegistrationDetail(request.Ukprn);
+            var provider =
+                await _providersRegistrationDetailReadRepository.GetProviderRegistrationDetail(request.Ukprn);
 
-            if (provider == null)
-                return null;
-
-            return new ValidatedResponse<GetProviderSummaryQueryResult>(new GetProviderSummaryQueryResult
-            {
-                ProviderSummary = provider
-            });
+            return new ValidatedResponse<GetProviderSummaryQueryResult>(provider);
         }
     }
 }
