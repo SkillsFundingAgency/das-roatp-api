@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [HttpGet]
         [Route("{ukprn}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(GetProviderSummaryQueryResult), 200)]  //MFCMFC TYPE!
+        [ProducesResponseType(typeof(GetProviderSummaryQueryResult), 200)]  
         public async Task<IActionResult> GetProvider(int ukprn)
         {
             var response = await _mediator.Send(new GetProviderSummaryQuery(ukprn));
