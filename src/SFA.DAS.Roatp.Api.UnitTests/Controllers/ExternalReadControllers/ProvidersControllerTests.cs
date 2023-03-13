@@ -54,7 +54,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             int ukprn)
         {
             var handlerResult =  (GetProviderSummaryQueryResult)null;
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderSummaryQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderSummaryQueryResult>((GetProviderSummaryQueryResult)null));
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderSummaryQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderSummaryQueryResult>(handlerResult));
             var result = await sut.GetProvider(ukprn);
             Assert.AreEqual(StatusCodes.Status404NotFound, (((NotFoundResult)result)!).StatusCode);
         }
