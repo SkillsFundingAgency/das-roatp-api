@@ -48,7 +48,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         }
 
         [Test, MoqAutoData]
-        public async Task GetProvider_ProviderDoesNotExist_CallsMediator(
+        public async Task GetProvider_ProviderDoesNotExist_ReturnsNotFound(
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProvidersController sut,
             int ukprn)
@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         }
 
         [Test, MoqAutoData]
-        public async Task GetProvider_ProviderBadRequest_CallsMediator(
+        public async Task GetProvider_InvalidUkprn_ReturnsBadRequest(
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProvidersController sut,
             int ukprn)
