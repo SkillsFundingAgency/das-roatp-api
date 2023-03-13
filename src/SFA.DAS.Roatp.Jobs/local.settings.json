@@ -7,7 +7,6 @@
     "EnvironmentName": "LOCAL",
     "LoggingRedisConnectionString": "localhost",
     "AzureWebJobs.LoadAllProviderAddressesFunction.Disabled": true,
-    "AzureWebJobs.LoadCourseDirectoryDataFunction.Disabled": true,
     "AzureWebJobs.LoadProvidersAddressFunction.Disabled": false,
     "AzureWebJobs.ReloadNationalAcheivementRatesFunction.Disabled": false,
     "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": false,

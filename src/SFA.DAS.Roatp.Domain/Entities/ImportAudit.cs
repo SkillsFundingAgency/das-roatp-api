@@ -21,7 +21,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
 
     public enum ImportType
     {
-        CourseDirectory,
         ProviderRegistrationDetails,
         ProviderRegistrationAddresses,
         ProviderRegistrationAddressCoordinates,
