@@ -10,8 +10,6 @@ using SFA.DAS.Roatp.Application.Common;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.CreateProvider.CreateProviderCommandValidatorTests
 {
-
-
     [TestFixture]
     public class CreateProviderCommandValidatorTests
     {

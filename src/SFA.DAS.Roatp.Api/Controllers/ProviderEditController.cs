@@ -40,8 +40,6 @@ namespace SFA.DAS.Roatp.Api.Controllers
             return NoContent();
         }
 
-
-
         [Route("/providers/{ukprn}")]
         [HttpPost]
         public async Task<IActionResult> CreateProvider([FromRoute] int ukprn, ProviderAddModel providerAddModel, [FromQuery] string userId, [FromQuery] string userDisplayName)
