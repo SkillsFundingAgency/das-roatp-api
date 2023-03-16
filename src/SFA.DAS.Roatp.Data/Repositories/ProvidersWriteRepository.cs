@@ -18,12 +18,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _logger = logger;
         }
 
-        public async Task Create(Provider provider)
-        {
-            _roatpDataContext.Providers.Add(provider);
-            await _roatpDataContext.SaveChangesAsync();
-        }
-
         public async Task Patch(Provider patchedProviderEntity, string userId, string userDisplayName, string userAction)
         {
             await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
@@ -46,6 +40,31 @@ namespace SFA.DAS.Roatp.Data.Repositories
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Provider Update is failed for ukprn {ukprn} by userId {userId}", patchedProviderEntity.Ukprn, userId);
+                throw;
+            }
+        }
+
+        public async Task<Provider> Create(Provider provider, string userId, string userDisplayName,
+            string userAction)
+        {
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
+                    try
+                {
+                    _roatpDataContext.Providers.Add(provider);
+            
+                    Audit audit = new(nameof(Provider), provider.Ukprn.ToString(), userId, userDisplayName, userAction, provider, null);
+            
+                    _roatpDataContext.Audits.Add(audit);
+            
+                    await _roatpDataContext.SaveChangesAsync();
+            
+                    await transaction.CommitAsync();
+                    return provider;
+                }
+                catch (Exception ex)
+            {
+                await transaction.RollbackAsync();
+                _logger.LogError(ex, "Provider create is failed for ukprn {ukprn} by userId {userId}", provider.Ukprn, userId);
                 throw;
             }
         }

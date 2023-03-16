@@ -2,14 +2,17 @@
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider;
 using SFA.DAS.Roatp.Domain.Models;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    public class ProviderEditController : ControllerBase
+    public class ProviderEditController : ActionResponseControllerBase
     {
         private readonly IMediator _mediator;
         private readonly ILogger<ProviderEditController> _logger;
@@ -35,6 +38,24 @@ namespace SFA.DAS.Roatp.Api.Controllers
             });
             
             return NoContent();
+        }
+
+
+
+        [Route("/providers/{ukprn}")]
+        [HttpPost]
+        public async Task<IActionResult> CreateProvider([FromRoute] int ukprn, ProviderAddModel providerAddModel, [FromQuery] string userId, [FromQuery] string userDisplayName)
+        {
+            _logger.LogInformation("Inner API: Received command to add provider: {ukprn}", ukprn);
+
+            CreateProviderCommand command = providerAddModel;
+            command.Ukprn = ukprn;
+            command.UserId = userId;
+            command.UserDisplayName = userDisplayName;
+
+            var response = await _mediator.Send(command);
+
+            return GetPostResponse(response, $"/providers/{ukprn}");
         }
     }
 }

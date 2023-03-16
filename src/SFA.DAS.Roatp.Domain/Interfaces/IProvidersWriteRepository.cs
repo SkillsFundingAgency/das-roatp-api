@@ -5,8 +5,8 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
 {
     public interface IProvidersWriteRepository
     {
-        Task Create(Provider provider);
         Task Patch(Provider patchedProviderEntity, string userId, string userDisplayName, string userAction);
+        Task<Provider> Create(Provider provider, string userId, string userDisplayName, string userAction);
     }
 }
 
