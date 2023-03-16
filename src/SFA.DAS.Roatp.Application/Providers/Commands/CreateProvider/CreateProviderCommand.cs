@@ -6,7 +6,6 @@ namespace SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider;
 
 public class CreateProviderCommand : IRequest<ValidatedResponse<int>>, IUkprn, IUserInfo
 {
-    // validator to check it isn't in providers?
     public string UserId { get; set; }
     public string UserDisplayName { get; set; }
     public int Ukprn { get; set; }
