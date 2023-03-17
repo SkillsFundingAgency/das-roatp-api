@@ -20,8 +20,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public async Task Patch(Provider patchedProviderEntity, string userId, string userDisplayName, string userAction)
         {
-            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
-            try
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync(); 
+            try 
             {
                 var provider = await _roatpDataContext
                .Providers
@@ -47,21 +47,21 @@ namespace SFA.DAS.Roatp.Data.Repositories
         public async Task<Provider> Create(Provider provider, string userId, string userDisplayName,
             string userAction)
         {
-            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
-                    try
-                {
-                    _roatpDataContext.Providers.Add(provider);
-            
-                    Audit audit = new(nameof(Provider), provider.Ukprn.ToString(), userId, userDisplayName, userAction, provider, null);
-            
-                    _roatpDataContext.Audits.Add(audit);
-            
-                    await _roatpDataContext.SaveChangesAsync();
-            
-                    await transaction.CommitAsync();
-                    return provider;
-                }
-                catch (Exception ex)
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync(); 
+            try
+            {
+                _roatpDataContext.Providers.Add(provider);
+        
+                Audit audit = new(nameof(Provider), provider.Ukprn.ToString(), userId, userDisplayName, userAction, provider, null);
+        
+                _roatpDataContext.Audits.Add(audit);
+        
+                await _roatpDataContext.SaveChangesAsync();
+        
+                await transaction.CommitAsync();
+                return provider;
+            }
+            catch (Exception ex)
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "Provider create is failed for ukprn {ukprn} by userId {userId}", provider.Ukprn, userId);

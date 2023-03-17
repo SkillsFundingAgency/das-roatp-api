@@ -52,7 +52,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 
             (result as CreatedResult).Should().NotBeNull();
             result.As<CreatedResult>().Location.Should().Be($"/providers/{ukprn}");
-            mediatorMock.Verify(m => m.Send(It.Is<CreateProviderCommand>(c => c.Ukprn == ukprn), It.IsAny<CancellationToken>()));
+            mediatorMock.Verify(m => m.Send(It.Is<CreateProviderCommand>(c => c.Ukprn == ukprn && c.UserId==userId 
+                && c.UserDisplayName==userDisplayName && c.LegalName == model.LegalName && c.TradingName==model.TradingName), It.IsAny<CancellationToken>()));
         }
     }
 }

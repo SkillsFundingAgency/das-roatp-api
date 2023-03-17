@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.Domain.Models;
 using System.Threading.Tasks;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider;
+using Microsoft.AspNetCore.Http;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -42,6 +43,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
 
         [Route("/providers/{ukprn}")]
         [HttpPost]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
         public async Task<IActionResult> CreateProvider([FromRoute] int ukprn, ProviderAddModel providerAddModel, [FromQuery] string userId, [FromQuery] string userDisplayName)
         {
             _logger.LogInformation("Inner API: Received command to add provider: {ukprn}", ukprn);

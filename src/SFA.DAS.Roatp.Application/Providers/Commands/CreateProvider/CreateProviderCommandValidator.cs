@@ -26,9 +26,9 @@ namespace SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider
                 })
                 .WithMessage(UkprnAlreadyPresent);
 
-                RuleFor((c) => c.LegalName)
-                    .NotEmpty()
-                    .WithMessage(LegalNameRequired);
+            RuleFor((c) => c.LegalName)
+                .NotEmpty()
+                .WithMessage(LegalNameRequired);
         }
     }
 }
