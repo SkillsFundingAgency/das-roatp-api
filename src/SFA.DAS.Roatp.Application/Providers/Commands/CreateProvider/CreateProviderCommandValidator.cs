@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
@@ -9,7 +8,7 @@ namespace SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider
     {
         public const string UkprnAlreadyPresent = "Ukprn already present";
         public const string LegalNameRequired = "Legal name is required";
-        
+
         public CreateProviderCommandValidator(
             IProvidersReadRepository providersReadRepository)
         {

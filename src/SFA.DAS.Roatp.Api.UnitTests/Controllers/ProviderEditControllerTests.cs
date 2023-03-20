@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
@@ -9,13 +11,10 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
-using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
+using SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider;
 using SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading;
-using System.Threading.Tasks;
-using SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {
@@ -44,16 +43,24 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         public async Task CreateProvider_InvokesRequest(
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProviderEditController sut,
-            int ukprn,  ProviderAddModel model, int providerId, string userId, string userDisplayName)
+            ProviderAddModel model,
+            int providerId,
+            string userId,
+            string userDisplayName)
         {
-            mediatorMock.Setup(m => m.Send(It.Is<CreateProviderCommand>(c => c.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<int>(providerId));
+            mediatorMock.Setup(m => m.Send(It.IsAny<CreateProviderCommand>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<int>(providerId));
 
-            var result = await sut.CreateProvider(ukprn, model, userId, userDisplayName);
+            var result = await sut.CreateProvider(model, userId, userDisplayName);
 
             (result as CreatedResult).Should().NotBeNull();
-            result.As<CreatedResult>().Location.Should().Be($"/providers/{ukprn}");
-            mediatorMock.Verify(m => m.Send(It.Is<CreateProviderCommand>(c => c.Ukprn == ukprn && c.UserId==userId 
-                && c.UserDisplayName==userDisplayName && c.LegalName == model.LegalName && c.TradingName==model.TradingName), It.IsAny<CancellationToken>()));
+            result.As<CreatedResult>().Location.Should().Be($"/providers/{model.Ukprn}");
+            mediatorMock.Verify(m => m.Send(It.Is<CreateProviderCommand>(c =>
+                c.Ukprn == model.Ukprn
+                && c.UserId == userId
+                && c.UserDisplayName == userDisplayName
+                && c.LegalName == model.LegalName
+                && c.TradingName == model.TradingName),
+                It.IsAny<CancellationToken>()));
         }
     }
 }
