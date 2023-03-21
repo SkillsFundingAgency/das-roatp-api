@@ -27,6 +27,4 @@ namespace SFA.DAS.Roatp.Api.Models
                 SubregionIds = source.SubregionIds
             };
     }
-
-
 }
