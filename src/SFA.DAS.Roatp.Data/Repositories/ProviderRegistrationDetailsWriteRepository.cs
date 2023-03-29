@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Data.Constants;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
@@ -15,11 +15,9 @@ namespace SFA.DAS.Roatp.Data.Repositories
     public class ProviderRegistrationDetailsWriteRepository : IProviderRegistrationDetailsWriteRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
-        private readonly ILogger<ProviderRegistrationDetailsWriteRepository> _logger;
-        public ProviderRegistrationDetailsWriteRepository(RoatpDataContext roatpDataContext, ILogger<ProviderRegistrationDetailsWriteRepository> logger)
+        public ProviderRegistrationDetailsWriteRepository(RoatpDataContext roatpDataContext)
         {
             _roatpDataContext = roatpDataContext;
-            _logger = logger;
         }
 
         public async Task<List<ProviderRegistrationDetail>> GetActiveProviders() =>
@@ -36,30 +34,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
             // hence just need to add the audit entity and commit the changes here
             _roatpDataContext.ImportAudits.Add(new ImportAudit(timeStarted, providerCount, importType));
             await _roatpDataContext.SaveChangesAsync();
-        }
-
-        public async Task<ProviderRegistrationDetail> Create(ProviderRegistrationDetail providerRegistrationDetail, string userId, string userDisplayName, string userAction)
-        {
-            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
-            try
-            {
-                _roatpDataContext.ProviderRegistrationDetails.Add(providerRegistrationDetail);
-            
-                Audit audit = new(nameof(ProviderRegistrationDetail), providerRegistrationDetail.Ukprn.ToString(), userId, userDisplayName, userAction, providerRegistrationDetail, null);
-            
-                _roatpDataContext.Audits.Add(audit);
-            
-                await _roatpDataContext.SaveChangesAsync();
-            
-                await transaction.CommitAsync();
-                return providerRegistrationDetail;
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, "ProviderRegistrationDetail create is failed for ukprn {ukprn} by userId {userId}", providerRegistrationDetail.Ukprn, userId);
-                throw;
-            }
         }
     }
 }

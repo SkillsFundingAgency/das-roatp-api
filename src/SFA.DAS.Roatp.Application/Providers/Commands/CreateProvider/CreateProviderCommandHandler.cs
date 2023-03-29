@@ -6,7 +6,6 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
-using SFA.DAS.Roatp.Data.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider
@@ -27,23 +26,8 @@ namespace SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider
 
         public async Task<ValidatedResponse<int>> Handle(CreateProviderCommand command, CancellationToken cancellationToken)
         {
-            var organisationTypeUnassigned = 0;
             Provider provider = command;
             await _providerWriteRepository.Create(provider,command.UserId,command.UserDisplayName, AuditEventTypes.CreateProvider);
-
-            var providerRegistrationDetail = new ProviderRegistrationDetail
-            {
-                Ukprn = command.Ukprn,
-                LegalName = command.LegalName,
-                StatusId = OrganisationStatus.Onboarding,
-                StatusDate = DateTime.UtcNow,
-                OrganisationTypeId = organisationTypeUnassigned,
-                ProviderTypeId = ProviderType.Main
-            };
-
-            await _providerRegistrationDetailsWriteRepository.Create(providerRegistrationDetail, command.UserId,
-                command.UserDisplayName, AuditEventTypes.CreateProviderRegistrationDetail);
-
             _logger.LogInformation("Added provider: {ukprn}", command.Ukprn);
             return new ValidatedResponse<int>(provider.Id);
         }

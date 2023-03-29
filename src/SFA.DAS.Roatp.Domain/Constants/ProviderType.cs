@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Roatp.Data.Constants
+﻿namespace SFA.DAS.Roatp.Domain.Constants
 {
     public static class ProviderType
     {

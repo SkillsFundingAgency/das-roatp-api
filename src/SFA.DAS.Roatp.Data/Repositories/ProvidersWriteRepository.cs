@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
@@ -51,7 +54,23 @@ namespace SFA.DAS.Roatp.Data.Repositories
             try
             {
                 _roatpDataContext.Providers.Add(provider);
-        
+
+                if (!_roatpDataContext.ProviderRegistrationDetails.Any(p => p.Ukprn == provider.Ukprn))
+                {
+                    var organisationTypeUnassigned = 0;
+                    var providerRegistrationDetail = new ProviderRegistrationDetail
+                    {
+                        Ukprn = provider.Ukprn,
+                        LegalName = provider.LegalName,
+                        StatusId = OrganisationStatus.Onboarding,
+                        StatusDate = DateTime.UtcNow,
+                        OrganisationTypeId = organisationTypeUnassigned,
+                        ProviderTypeId = ProviderType.Main
+                    };
+                    _roatpDataContext.ProviderRegistrationDetails.Add(providerRegistrationDetail);
+
+                }
+
                 Audit audit = new(nameof(Provider), provider.Ukprn.ToString(), userId, userDisplayName, userAction, provider, null);
         
                 _roatpDataContext.Audits.Add(audit);

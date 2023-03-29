@@ -4,10 +4,10 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Data.Constants;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
-using ProviderType = SFA.DAS.Roatp.Data.Constants.ProviderType;
+using ProviderType = SFA.DAS.Roatp.Domain.Constants.ProviderType;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
