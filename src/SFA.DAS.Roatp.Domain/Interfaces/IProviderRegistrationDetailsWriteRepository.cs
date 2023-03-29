@@ -9,5 +9,5 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     {
         Task<List<ProviderRegistrationDetail>> GetActiveProviders();
         Task UpdateProviders(DateTime timeStarted, int providerCount, ImportType importType);
-      }
+    }
 }

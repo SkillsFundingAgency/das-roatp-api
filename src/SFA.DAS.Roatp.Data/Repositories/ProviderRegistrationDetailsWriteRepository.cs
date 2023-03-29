@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -14,6 +13,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
     [ExcludeFromCodeCoverage]
     public class ProviderRegistrationDetailsWriteRepository : IProviderRegistrationDetailsWriteRepository
     {
+
         private readonly RoatpDataContext _roatpDataContext;
         public ProviderRegistrationDetailsWriteRepository(RoatpDataContext roatpDataContext)
         {

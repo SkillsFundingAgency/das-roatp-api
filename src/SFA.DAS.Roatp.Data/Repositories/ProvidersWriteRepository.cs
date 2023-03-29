@@ -68,7 +68,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
                         ProviderTypeId = ProviderType.Main
                     };
                     _roatpDataContext.ProviderRegistrationDetails.Add(providerRegistrationDetail);
-
                 }
 
                 Audit audit = new(nameof(Provider), provider.Ukprn.ToString(), userId, userDisplayName, userAction, provider, null);
