@@ -55,20 +55,19 @@ namespace SFA.DAS.Roatp.Data.Repositories
             {
                 _roatpDataContext.Providers.Add(provider);
 
-                if (!_roatpDataContext.ProviderRegistrationDetails.Any(p => p.Ukprn == provider.Ukprn))
+
+                var organisationTypeUnassigned = 0;
+                var providerRegistrationDetail = new ProviderRegistrationDetail
                 {
-                    var organisationTypeUnassigned = 0;
-                    var providerRegistrationDetail = new ProviderRegistrationDetail
-                    {
-                        Ukprn = provider.Ukprn,
-                        LegalName = provider.LegalName,
-                        StatusId = OrganisationStatus.Onboarding,
-                        StatusDate = DateTime.UtcNow,
-                        OrganisationTypeId = organisationTypeUnassigned,
-                        ProviderTypeId = ProviderType.Main
-                    };
-                    _roatpDataContext.ProviderRegistrationDetails.Add(providerRegistrationDetail);
-                }
+                    Ukprn = provider.Ukprn,
+                    LegalName = provider.LegalName,
+                    StatusId = OrganisationStatus.Onboarding,
+                    StatusDate = DateTime.UtcNow,
+                    OrganisationTypeId = organisationTypeUnassigned,
+                    ProviderTypeId = ProviderType.Main
+                };
+                _roatpDataContext.ProviderRegistrationDetails.Add(providerRegistrationDetail);
+                
 
                 Audit audit = new(nameof(Provider), provider.Ukprn.ToString(), userId, userDisplayName, userAction, provider, null);
         
