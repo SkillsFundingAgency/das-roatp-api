@@ -15,5 +15,6 @@
         public const string CreateProviderCourseLocation = "CreateProviderCourseLocation";
         public const string UpdateProviderDescription = "UpdateProviderDescription";
         public const string CreateProvider = "CreateProvider";
+        public const string CreateProviderRegistrationDetail = "CreateProviderRegistrationDetail";
     }
 }
