@@ -4,7 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
-using SFA.DAS.Roatp.Data.Constants;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using static System.Int32;
