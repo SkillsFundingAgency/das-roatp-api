@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         }
 
         [FunctionName(nameof(LoadProvidersAddressFunction))]
-        public async Task Run([TimerTrigger("%UpdateUkrlpDataSchedule%",RunOnStartup = true)] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("%UpdateUkrlpDataSchedule%",RunOnStartup = false)] TimerInfo myTimer, ILogger log)
         {
             log.LogInformation("LoadProvidersAddressFunction function started");
             var result = await _loadUkrlpAddressesService.LoadProvidersAddresses();
