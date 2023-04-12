@@ -6,15 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="providers-lookup.json" />
     <None Remove="registered-providers.json" />
     <None Remove="standards-lookup.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="providers-lookup.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="registered-providers.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

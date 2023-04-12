@@ -10,7 +10,6 @@ using SFA.DAS.Roatp.Jobs;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.Configuration;
 using SFA.DAS.Roatp.Jobs.Services;
-using SFA.DAS.Roatp.Jobs.Services.CourseDirectory;
 using System;
 using System.Diagnostics.CodeAnalysis;
 
@@ -66,10 +65,7 @@ namespace SFA.DAS.Roatp.Jobs
             builder.Services.AddRoatpDataContext(_configuration["SqlDatabaseConnectionString"], _configuration["EnvironmentName"]);
 
             builder.Services.AddTransient<IReloadStandardsCacheService, ReloadStandardsCacheService>();
-            builder.Services.AddTransient<IReloadProviderRegistrationDetailService, ReloadProviderRegistrationDetailService>();
-            builder.Services.AddTransient<ILoadCourseDirectoryDataService, LoadCourseDirectoryDataService>();
-            builder.Services.AddTransient<IGetCourseDirectoryDataService, GetCourseDirectoryDataService>();
-            builder.Services.AddTransient<ICourseDirectoryDataProcessingService, CourseDirectoryDataProcessingService>();
+            builder.Services.AddTransient<IReloadProviderRegistrationDetailService, ReloadProviderRegistrationDetailService>(); 
             builder.Services.AddTransient<IReloadNationalAcheivementRatesLookupService, ReloadNationalAcheivementRatesLookupService>();
             builder.Services.AddTransient<IReloadNationalAcheivementRatesService, ReloadNationalAcheivementRatesService>();
             builder.Services.AddTransient<IReloadNationalAcheivementRatesOverallService, ReloadNationalAcheivementRatesOverallService>();
