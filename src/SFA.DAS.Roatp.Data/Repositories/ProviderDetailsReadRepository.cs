@@ -64,7 +64,7 @@ public class ProviderDetailsReadRepository : IProviderDetailsReadRepository
     private static FormattableString GetProviderForUkprnAndLarsCodeWithDistanceSql(int ukprn, int larsCode, decimal? lat, decimal? lon)
     {
         return $@"
-                   select   p.ukprn,
+                    SELECT  p.ukprn,
                             pc.LarsCode,
                             p.LegalName,
                             p.TradingName,
@@ -83,11 +83,11 @@ public class ProviderDetailsReadRepository : IProviderDetailsReadRepository
                             p.Id as ProviderId,
                             CASE  WHEN ({lat} is null) THEN null
                                 WHEN ({lon} is null) THEN null
-                                WHEN (pa.Latitude is null) THEN null
-                                ELSE
-                                    geography::Point(pa.Latitude, pa.Longitude, 4326)
-                                            .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
-			                                as Distance
+                                WHEN (isnull(pa.Latitude,0) = 0) THEN null
+                            ELSE
+                                geography::Point(pa.Latitude, pa.Longitude, 4326)
+                                        .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
+			                            as Distance
                             FROM provider P
 		                    INNER JOIN ProviderCourse pc on p.Id = pc.ProviderId
 							LEFT OUTER JOIN [ProviderAddress] PA on P.Id = PA.ProviderId
@@ -100,7 +100,7 @@ public class ProviderDetailsReadRepository : IProviderDetailsReadRepository
     private static FormattableString GetProvidersForLarsCodeWithDistanceSql(int larsCode, decimal? lat, decimal? lon)
     {
         return $@"
-                   select p.Id as ProviderId,
+                    SELECT  p.Id as ProviderId,
                             p.ukprn,
                             pc.LarsCode,
                             p.LegalName,
@@ -109,14 +109,14 @@ public class ProviderDetailsReadRepository : IProviderDetailsReadRepository
                                 ELSE pc.IsApprovedByRegulator End IsApprovedByRegulator,
                             CASE  WHEN ({lat} is null) THEN null
                                 WHEN ({lon} is null) THEN null
-                                WHEN (pa.Latitude is null) THEN null
+                                WHEN (isnull(pa.Latitude,0) = 0) THEN null
                                 ELSE
                                     geography::Point(pa.Latitude, pa.Longitude, 4326)
                                             .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
 			                                as Distance
                             FROM provider P
 		                    INNER JOIN ProviderCourse pc on p.Id = pc.ProviderId
-							LEFT OUTER JOIN [ProviderAddress] PA on P.Id = PA.ProviderId
+				            LEFT OUTER JOIN [ProviderAddress] PA on P.Id = PA.ProviderId
                             LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
                             LEFT OUTER JOIN Standard S on PC.LarsCode = S.LarsCode
 		                    WHERE pc.LarsCode={larsCode}
@@ -128,63 +128,63 @@ public class ProviderDetailsReadRepository : IProviderDetailsReadRepository
     {
         return $@"
                     SELECT  P.Id as providerId,
-                    LocationType,
-                    PL.AddressLine1,
-                    PL.AddressLine2,
-                    PL.Town,
-                    PL.County,
-                    PL.Postcode,
-	                PCL.HasDayReleaseDeliveryOption,
-	                PCL.HasBlockReleaseDeliveryOption,
-	                CASE	WHEN ({lat} is null) THEN null
-			                WHEN ({lon} is null) THEN null
-			                WHEN (PL.Latitude = 0) THEN null
-	                ELSE
-	                  geography::Point(isnull(PL.Latitude,0), isnull(PL.Longitude,0), 4326)
-				                .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
-				                as Distance
-                      FROM Provider P
-                      INNER JOIN ProviderCourse PC
-                      ON p.Id = PC.ProviderID
-                      INNER JOIN ProviderCourseLocation PCL on PC.Id = PCL.ProviderCourseId
-                      INNER JOIN ProviderLocation PL On PCL.ProviderLocationId = PL.Id
-                      LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
-                      WHERE P.Ukprn={ukprn}
-                      AND LarsCode={larsCode}
-                      AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
+                            LocationType,
+                            PL.AddressLine1,
+                            PL.AddressLine2,
+                            PL.Town,
+                            PL.County,
+                            PL.Postcode,
+	                        PCL.HasDayReleaseDeliveryOption,
+	                        PCL.HasBlockReleaseDeliveryOption,
+	                        CASE	WHEN ({lat} is null) THEN null
+			                        WHEN ({lon} is null) THEN null
+			                        WHEN (PL.Latitude = 0) THEN null
+	                        ELSE
+                                geography::Point(isnull(PL.Latitude,0), isnull(PL.Longitude,0), 4326)
+		                                .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
+		                                as Distance
+                            FROM Provider P
+                            INNER JOIN ProviderCourse PC
+                            ON p.Id = PC.ProviderID
+                            INNER JOIN ProviderCourseLocation PCL on PC.Id = PCL.ProviderCourseId
+                            INNER JOIN ProviderLocation PL On PCL.ProviderLocationId = PL.Id
+                            LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
+                            WHERE P.Ukprn={ukprn}
+                            AND LarsCode={larsCode}
+                            AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
 
     }
 
     private static FormattableString GetAllProviderLocationDetailsWithDistanceSql(int larsCode, decimal? lat, decimal? lon)
     {
         return $@"
-                    SELECT P.Ukprn,
-                    P.Id as providerId,
-                    PC.LarsCode,
-                    LocationType,
-                    PL.AddressLine1,
-                    PL.AddressLine2,
-                    PL.Town,
-                    PL.County,
-                    PL.Postcode,
-	                PCL.HasDayReleaseDeliveryOption,
-	                PCL.HasBlockReleaseDeliveryOption,
-	                CASE	WHEN ({lat} is null) THEN null
-			                WHEN ({lon} is null) THEN null
-			                WHEN (PL.Latitude = 0) THEN null
-	                ELSE
-	                  geography::Point(isnull(PL.Latitude,0), isnull(PL.Longitude,0), 4326)
-				                .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
-				                as Distance
-                FROM Provider P
-                INNER JOIN ProviderCourse PC
-                ON p.Id = PC.ProviderID
-                INNER JOIN ProviderCourseLocation PCL on PC.Id = PCL.ProviderCourseId
-                INNER JOIN ProviderLocation PL On PCL.ProviderLocationId = PL.Id
-                LEFT OUTER JOIN Region R on R.Id =PL.RegionId
-                LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
-                WHERE  LarsCode={larsCode}
-                AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})
-                AND PRD.ProviderTypeId={ProviderType.Main}";
+                    SELECT  P.Ukprn,
+                            P.Id as providerId,
+                            PC.LarsCode,
+                            LocationType,
+                            PL.AddressLine1,
+                            PL.AddressLine2,
+                            PL.Town,
+                            PL.County,
+                            PL.Postcode,
+	                        PCL.HasDayReleaseDeliveryOption,
+	                        PCL.HasBlockReleaseDeliveryOption,
+	                        CASE	WHEN ({lat} is null) THEN null
+			                        WHEN ({lon} is null) THEN null
+			                        WHEN (PL.Latitude = 0) THEN null
+	                        ELSE
+	                          geography::Point(isnull(PL.Latitude,0), isnull(PL.Longitude,0), 4326)
+				                        .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
+				                        as Distance
+                            FROM Provider P
+                            INNER JOIN ProviderCourse PC
+                            ON p.Id = PC.ProviderID
+                            INNER JOIN ProviderCourseLocation PCL on PC.Id = PCL.ProviderCourseId
+                            INNER JOIN ProviderLocation PL On PCL.ProviderLocationId = PL.Id
+                            LEFT OUTER JOIN Region R on R.Id =PL.RegionId
+                            LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
+                            WHERE  LarsCode={larsCode}
+                            AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})
+                            AND PRD.ProviderTypeId={ProviderType.Main}";
     }
 }
