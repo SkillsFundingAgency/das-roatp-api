@@ -81,9 +81,9 @@ public class ProviderDetailsReadRepository : IProviderDetailsReadRepository
                             pa.Town as Town,
                             PA.Postcode as Postcode,
                             p.Id as ProviderId,
-                            CASE  WHEN ({lat} is null) THEN null
-                                WHEN ({lon} is null) THEN null
-                                WHEN (isnull(pa.Latitude,0) = 0) THEN null
+                            CASE  WHEN ({lat} is null) THEN -1
+                                WHEN ({lon} is null) THEN -1
+                                WHEN (isnull(pa.Latitude,0) = 0) THEN -1
                             ELSE
                                 geography::Point(pa.Latitude, pa.Longitude, 4326)
                                         .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
