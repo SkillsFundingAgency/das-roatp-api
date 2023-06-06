@@ -439,15 +439,6 @@
                     "uri": "[concat(variables('deploymentUrlBase'),'function-app-v2.json')]",
                     "contentVersion": "1.0.0.0"
                 },
-                "cors": {
-                    "allowedOrigins": [
-                        "https://functions-next.azure.com",
-                        "https://functions-staging.azure.com",
-                        "https://functions.azure.com",
-                        "https://portal.azure.com"
-                    ],
-                    "supportCredentials": false
-                },
 
                 "parameters": {
                     "functionAppName": {
