@@ -16,6 +16,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
 
             model.Ukprn.Should().Be(source.Ukprn);
             model.Name.Should().Be(source.LegalName);
+            model.ProviderTypeId.Should().Be(source.ProviderTypeId);
             model.TradingName.Should().Be(source.Provider.TradingName);
             model.Email.Should().Be(source.Provider.Email);
             model.Phone.Should().Be(source.Provider.Phone);
