@@ -2,7 +2,6 @@
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
@@ -18,7 +17,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
             model.Ukprn.Should().Be(source.Ukprn);
             model.Name.Should().Be(source.LegalName);
             model.ProviderTypeId.Should().Be(source.ProviderTypeId);
-            model.ProviderStatusType.Should().Be((ProviderStatusType)source.StatusId);
+            model.StatusId.Should().Be(source.StatusId);
             model.TradingName.Should().Be(source.Provider.TradingName);
             model.Email.Should().Be(source.Provider.Email);
             model.Phone.Should().Be(source.Provider.Phone);
