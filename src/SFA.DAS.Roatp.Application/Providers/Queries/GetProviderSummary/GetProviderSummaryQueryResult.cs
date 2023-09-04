@@ -11,6 +11,8 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary
         public string Email { get; set; }
         public string Phone { get; set; }
         public string ContactUrl { get; set; }
+        public int ProviderTypeId { get; set; }
+        public int StatusId { get; set; }
         public ProviderAddressModel Address { get; set; } = new ProviderAddressModel();
 
         public static implicit operator GetProviderSummaryQueryResult(ProviderRegistrationDetail source) =>
@@ -22,6 +24,8 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary
                 Email = source.Provider?.Email,
                 Phone = source.Provider?.Phone,
                 ContactUrl = source.Provider?.Website,
+                ProviderTypeId = source.ProviderTypeId,
+                StatusId = source.StatusId,
                 Address = source
             };
     }
