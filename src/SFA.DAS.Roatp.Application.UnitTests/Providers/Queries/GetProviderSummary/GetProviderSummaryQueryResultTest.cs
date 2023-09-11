@@ -1,18 +1,18 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
+using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
+namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviderSummary
 {
     [TestFixture]
-    public class ProviderSummaryTests
+    public class GetProviderSummaryQueryResultTest
     {
         [Test, RecursiveMoqAutoData]
         public void Operator_PopulatesModelFromEntity(ProviderRegistrationDetail source)
         {
-            var model = (ProviderSummary)source;
+            var model = (GetProviderSummaryQueryResult)source;
 
             model.Ukprn.Should().Be(source.Ukprn);
             model.Name.Should().Be(source.LegalName);
