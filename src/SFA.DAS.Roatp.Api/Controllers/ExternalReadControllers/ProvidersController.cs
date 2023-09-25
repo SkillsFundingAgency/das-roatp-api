@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,8 +6,9 @@ using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
-using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderStatus;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
@@ -80,27 +78,6 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
             var response = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
             if (response.IsValidResponse)
                 _logger.LogInformation("Course data found for {ukprn} and {larsCode}", ukprn, larsCode);
-            return GetResponse(response);
-        }
-
-        /// <summary>
-        /// Endpoint to check if the given provider ukprn number is valid.
-        /// Checks if the provider is a Main or Employer Profile.
-        /// Checks if the Provider status is Active or On-boarding.
-        /// </summary>
-        /// <param name="ukprn">int.</param>
-        /// <returns>GetProviderStatusResult.</returns>
-        [HttpGet]
-        [Route("{ukprn}/validate")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(GetProviderStatusResult), 200)]
-        public async Task<IActionResult> Validate(int ukprn)
-        {
-            var response = await _mediator.Send(new GetProviderStatusQuery(ukprn));
-            if (response.IsValidResponse)
-                _logger.LogInformation("Provider validation status found for {ukprn}:", ukprn);
             return GetResponse(response);
         }
     }

@@ -11,7 +11,6 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
-using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderStatus;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Testing.AutoFixture;
 using System.Collections.Generic;
@@ -108,51 +107,6 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         {
             mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<ProviderCourseModel>(handlerResult));
             var result = await sut.GetProviderCourse(ukprn, larsCode);
-            (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
-        }
-
-        [Test, MoqAutoData]
-        public async Task When_Validate_Provider_InvalidUkprn_ReturnsBadRequest(
-            [Frozen] Mock<IMediator> mediatorMock,
-            [Greedy] ProvidersController sut,
-            int ukprn)
-        {
-            var response = new ValidatedResponse<GetProviderStatusResult>(new List<ValidationFailure>
-            {
-                new()
-                {
-                    ErrorMessage = "error message",
-                    PropertyName = "property name"
-                }
-            });
-
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderStatusQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
-            var result = await sut.Validate(ukprn);
-            Assert.AreEqual(StatusCodes.Status400BadRequest, (((BadRequestObjectResult)result)!).StatusCode);
-        }
-
-        [Test, MoqAutoData]
-        public async Task When_Validate_Provider_ValidUkprn_ReturnsResult(
-            [Frozen] Mock<IMediator> mediatorMock,
-            [Greedy] ProvidersController sut,
-            int ukprn)
-        {
-            var response = new ValidatedResponse<GetProviderStatusResult>(new GetProviderStatusResult{ IsValidProvider = true });
-
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderStatusQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
-            var result = await sut.Validate(ukprn);
-            Assert.AreEqual(StatusCodes.Status200OK, (((OkObjectResult)result)!).StatusCode);
-        }
-
-        [Test, MoqAutoData]
-        public async Task Validate_CallsMediator(
-            [Frozen] Mock<IMediator> mediatorMock,
-            [Greedy] ProvidersController sut,
-            int ukprn,
-            GetProviderStatusResult handlerResult)
-        {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderStatusQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderStatusResult>(handlerResult));
-            var result = await sut.Validate(ukprn);
             (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
         }
     }
