@@ -351,3 +351,5 @@ MigrationBackup/
 
 # Git merge Files
 *.orig
+
+src/.idea/.idea.SFA.DAS.Roatp/.idea/
