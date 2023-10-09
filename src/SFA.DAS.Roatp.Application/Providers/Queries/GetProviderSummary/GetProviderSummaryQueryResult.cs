@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary
         /// Read only property to get the value of Provider can access Apprenticeship Service.
         /// </summary>
         public bool CanAccessApprenticeshipService => (ProviderType)ProviderTypeId is ProviderType.Main or ProviderType.Employer
-                                                      && (ProviderStatusType)StatusId is ProviderStatusType.Active or ProviderStatusType.Onboarding;
+                                                      && (ProviderStatusType)StatusId is ProviderStatusType.Active or ProviderStatusType.Onboarding or ProviderStatusType.ActiveButNotTakingOnApprentices;
         public ProviderAddressModel Address { get; set; } = new ProviderAddressModel();
 
         public static implicit operator GetProviderSummaryQueryResult(ProviderRegistrationDetail source) =>

@@ -66,13 +66,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviderSumma
         }
 
         [Test, RecursiveMoqAutoData]
-        public void Status_ActiveButNotTakingOnApprentices_PopulatesModelFromEntity_Property_ReturnsFalse(ProviderRegistrationDetail source)
+        public void Status_ActiveButNotTakingOnApprentices_PopulatesModelFromEntity_Property_ReturnsTrue(ProviderRegistrationDetail source)
         {
             source.ProviderTypeId = (int)ProviderType.Main;
             source.StatusId = (int)ProviderStatusType.ActiveButNotTakingOnApprentices;
             var model = (GetProviderSummaryQueryResult)source;
 
-            model.CanAccessApprenticeshipService.Should().BeFalse();
+            model.CanAccessApprenticeshipService.Should().BeTrue();
         }
     }
 }
