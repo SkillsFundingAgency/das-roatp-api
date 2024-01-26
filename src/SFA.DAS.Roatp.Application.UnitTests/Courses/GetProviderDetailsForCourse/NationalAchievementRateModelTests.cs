@@ -1,12 +1,12 @@
-﻿using NUnit.Framework;
-using FluentAssertions;
+﻿using FluentAssertions;
+using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCourse
 {
-    [TestFixture] 
+    [TestFixture]
     public class NationalAchievementRateModelTests
     {
         [Test, RecursiveMoqAutoData]
@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
                 .Excluding(s => s.ProviderId)
                 .Excluding(s => s.ApprenticeshipLevel)
                 .Excluding(s => s.Provider)
-                );
+                .Excluding(s => s.SectorSubjectAreaTier1));
         }
     }
 }

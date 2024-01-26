@@ -1,4 +1,6 @@
-﻿using Microsoft.Azure.Functions.Extensions.DependencyInjection;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.Azure.Functions.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -10,8 +12,6 @@ using SFA.DAS.Roatp.Jobs;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.Configuration;
 using SFA.DAS.Roatp.Jobs.Services;
-using System;
-using System.Diagnostics.CodeAnalysis;
 
 [assembly: FunctionsStartup(typeof(Startup))]
 namespace SFA.DAS.Roatp.Jobs
@@ -38,7 +38,6 @@ namespace SFA.DAS.Roatp.Jobs
                     CaptureMessageTemplates = true,
                     CaptureMessageProperties = true
                 });
-                options.AddConsole();
 
                 NLogConfiguration.ConfigureNLog();
             });
@@ -47,10 +46,10 @@ namespace SFA.DAS.Roatp.Jobs
         private void BuildConfiguration(IFunctionsHostBuilder builder)
         {
             var configuration = builder.GetContext().Configuration;
-         
+
             var configBuilder = new ConfigurationBuilder()
                 .AddConfiguration(configuration);
-            
+
             configBuilder.AddAzureTableStorage(options =>
                 {
                     options.ConfigurationKeys = new[] { "SFA.DAS.Roatp.Jobs", "SFA.DAS.Roatp.CourseManagement.Web" };
@@ -65,12 +64,15 @@ namespace SFA.DAS.Roatp.Jobs
             builder.Services.AddRoatpDataContext(_configuration["SqlDatabaseConnectionString"], _configuration["EnvironmentName"]);
 
             builder.Services.AddTransient<IReloadStandardsCacheService, ReloadStandardsCacheService>();
-            builder.Services.AddTransient<IReloadProviderRegistrationDetailService, ReloadProviderRegistrationDetailService>(); 
+            builder.Services.AddTransient<IReloadProviderRegistrationDetailService, ReloadProviderRegistrationDetailService>();
             builder.Services.AddTransient<IReloadNationalAcheivementRatesLookupService, ReloadNationalAcheivementRatesLookupService>();
             builder.Services.AddTransient<IReloadNationalAcheivementRatesService, ReloadNationalAcheivementRatesService>();
             builder.Services.AddTransient<IReloadNationalAcheivementRatesOverallService, ReloadNationalAcheivementRatesOverallService>();
             builder.Services.AddTransient<ILoadUkrlpAddressesService, LoadUkrlpAddressesService>();
             builder.Services.AddTransient<IUpdateProviderAddressCoordinatesService, UpdateProviderAddressCoordinatesService>();
+            builder.Services.AddTransient<IDataExtractorService, DataExtractorService>();
+            builder.Services.AddTransient<IImportNationalAchievementRateOverallService, ImportNationalAchievementRateOverallService>();
+            builder.Services.AddTransient<IImportNationalAchievementRateService, ImportNationalAchievementRateService>();
         }
 
         private void ConfigureHttpClient(IServiceCollection services)

@@ -17,7 +17,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.OverallNationalAchievementRates.Qu
             model.Should().BeEquivalentTo(source, s => s
                 .Excluding(s => s.ApprenticeshipLevel)
                 .Excluding(s => s.Id)
-            );
+                .Excluding(s => s.SectorSubjectAreaTier1));
 
             model.Level.Should().Be(source.ApprenticeshipLevel);
         }
