@@ -1,14 +1,15 @@
-﻿using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Domain.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Jobs.Services
 {
+    [Obsolete]
     public class ReloadNationalAcheivementRatesOverallService : IReloadNationalAcheivementRatesOverallService
     {
         private readonly ILogger<ReloadNationalAcheivementRatesOverallService> _logger;

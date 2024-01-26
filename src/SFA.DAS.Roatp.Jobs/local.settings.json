@@ -1,4 +1,11 @@
 {
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
   "IsEncrypted": false,
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true;",
@@ -7,10 +14,11 @@
     "EnvironmentName": "LOCAL",
     "LoggingRedisConnectionString": "localhost",
     "AzureWebJobs.LoadAllProviderAddressesFunction.Disabled": true,
-    "AzureWebJobs.LoadProvidersAddressFunction.Disabled": false,
-    "AzureWebJobs.ReloadNationalAcheivementRatesFunction.Disabled": false,
-    "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": false,
-    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": false,
-    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": false
+    "AzureWebJobs.LoadCourseDirectoryDataFunction.Disabled": true,
+    "AzureWebJobs.LoadProvidersAddressFunction.Disabled": true,
+    "AzureWebJobs.ReloadNationalAcheivementRatesFunction.Disabled": true,
+    "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": true,
+    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": true,
+    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true
   }
 }

@@ -1,5 +1,8 @@
+using System;
+
 namespace SFA.DAS.Roatp.Domain.Models
 {
+    [Obsolete]
     public class NationalAchievementRatesOverallApiModel
     {
         public Age Age { get; set; }

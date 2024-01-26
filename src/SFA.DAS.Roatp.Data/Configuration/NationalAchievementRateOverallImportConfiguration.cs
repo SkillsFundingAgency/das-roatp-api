@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.Roatp.Domain.Entities;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Data.Configuration
 {
@@ -15,7 +15,6 @@ namespace SFA.DAS.Roatp.Data.Configuration
 
             builder.Property(x => x.Id).UseIdentityColumn();
             builder.Property(x => x.Age).IsRequired().HasConversion<int>();
-            builder.Property(x => x.SectorSubjectArea).HasMaxLength(1000).IsRequired();
             builder.Property(x => x.ApprenticeshipLevel).IsRequired().HasConversion<int>();
             builder.Property(x => x.OverallCohort).IsRequired(false);
             builder.Property(x => x.OverallAchievementRate).HasColumnType("decimal").IsRequired(false);
