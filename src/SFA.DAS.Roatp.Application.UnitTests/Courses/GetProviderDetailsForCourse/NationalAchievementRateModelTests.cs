@@ -22,7 +22,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
                 .Excluding(s => s.ProviderId)
                 .Excluding(s => s.ApprenticeshipLevel)
                 .Excluding(s => s.Provider)
-                .Excluding(s => s.SectorSubjectAreaTier1));
+                .Excluding(s => s.SectorSubjectAreaTier1)
+                .Excluding(s => s.Ukprn));
         }
     }
 }
