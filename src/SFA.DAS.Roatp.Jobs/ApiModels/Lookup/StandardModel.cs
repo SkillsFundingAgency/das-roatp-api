@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup
 {
-    public class Standard
+    public class StandardModel
     {
         public string StandardUId { get; set; }
         public int LarsCode { get; set; }
@@ -11,9 +11,9 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup
         public string Version { get; set; }
         public string Title { get; set; }
         public string ApprovalBody { get; set; }
-        public string SectorSubjectAreaTier2Description { get; set; }
+        public int SectorSubjectAreaTier1 { get; set; }
 
-        public static implicit operator Domain.Entities.Standard(Standard standard) =>
+        public static implicit operator Domain.Entities.Standard(StandardModel standard) =>
             new Domain.Entities.Standard
             {
                 StandardUId = standard.StandardUId,
@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup
                 Version = standard.Version,
                 Level = Convert.ToInt32(standard.Level),
                 ApprovalBody = string.IsNullOrWhiteSpace(standard.ApprovalBody) ? null : standard.ApprovalBody,
-                SectorSubjectArea = standard.SectorSubjectAreaTier2Description
+                SectorSubjectAreaTier1 = standard.SectorSubjectAreaTier1
             };
     }
 }
