@@ -6,6 +6,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
     public class NationalAchievementRate
     {
         public long Id { get; set; }
+        public int Ukprn { get; set; }
         public int ProviderId { get; set; }
         public Age Age { get; set; }
         [Obsolete]
@@ -24,7 +25,8 @@ namespace SFA.DAS.Roatp.Domain.Entities
                 ApprenticeshipLevel = source.ApprenticeshipLevel,
                 OverallCohort = source.OverallCohort,
                 OverallAchievementRate = source.OverallAchievementRate,
-                SectorSubjectAreaTier1 = source.SectorSubjectAreaTier1
+                SectorSubjectAreaTier1 = source.SectorSubjectAreaTier1,
+                Ukprn = source.Ukprn
             };
         }
     }
