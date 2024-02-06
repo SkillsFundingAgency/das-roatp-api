@@ -29,9 +29,9 @@ public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersFor
 
     public async Task<ValidatedResponse<GetProvidersForCourseQueryResult>> Handle(GetProvidersForCourseQuery request, CancellationToken cancellationToken)
     {
-        var providerDetails = 
-            await _providerDetailsReadRepository.GetProvidersForLarsCodeWithDistance( request.LarsCode, request.Latitude, request.Longitude);
-        
+        var providerDetails =
+            await _providerDetailsReadRepository.GetProvidersForLarsCodeWithDistance(request.LarsCode, request.Latitude, request.Longitude);
+
         var standard = await _standardsReadRepository.GetStandard(request.LarsCode);
 
         ApprenticeshipLevel apprenticeshipLevel;
@@ -41,9 +41,9 @@ public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersFor
             apprenticeshipLevel = (ApprenticeshipLevel)standard.Level;
 
         var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByProvidersLevelsSectorSubjectArea(
-            providerDetails.Select(p=>p.ProviderId).ToList(), 
-            new List<ApprenticeshipLevel>{ApprenticeshipLevel.AllLevels, apprenticeshipLevel},
-            standard.SectorSubjectArea);
+            providerDetails.Select(p => p.Ukprn).ToList(),
+            new List<ApprenticeshipLevel> { ApprenticeshipLevel.AllLevels, apprenticeshipLevel },
+            standard.SectorSubjectAreaTier1);
 
         var providerLocations =
             await _providerDetailsReadRepository.GetAllProviderlocationDetailsWithDistance(request.LarsCode,
@@ -56,23 +56,25 @@ public class GetProvidersForCourseQueryHandler : IRequestHandler<GetProvidersFor
             _logger.LogInformation("Provider: {ukprn}", provider.Ukprn);
 
             var result = (ProviderSummation)provider;
-            var rate= nationalAchievementRates.Where(r => r.ProviderId == provider.ProviderId).MaxBy(a=>a.ApprenticeshipLevel);
+            var rate = nationalAchievementRates.Where(r => r.Ukprn == provider.Ukprn).MaxBy(a => a.ApprenticeshipLevel);
 
-            _logger.LogInformation("Provider {ukprn} has apprenticeship level: {apprenticeshipLevel}",provider.Ukprn,rate?.ApprenticeshipLevel);
-            
-            if (rate!=null)
+            _logger.LogInformation("Provider {ukprn} has apprenticeship level: {apprenticeshipLevel}", provider.Ukprn, rate?.ApprenticeshipLevel);
+
+            if (rate != null)
                 result.AchievementRates.Add(rate);
 
-            result.DeliveryModels = _processProviderCourseLocationsService.ConvertProviderLocationsToDeliveryModels(providerLocations.Where(p=>p.ProviderId==provider.ProviderId).ToList());
-            
+            result.DeliveryModels = _processProviderCourseLocationsService.ConvertProviderLocationsToDeliveryModels(providerLocations.Where(p => p.ProviderId == provider.ProviderId).ToList());
+
             providers.Add(result);
         }
 
         return new ValidatedResponse<GetProvidersForCourseQueryResult>(
             new GetProvidersForCourseQueryResult
-        {
-            LarsCode = standard.LarsCode, Level = standard.Level, CourseTitle = standard.Title,
-            Providers = providers.OrderBy(x=>x.Ukprn).ToList()
-        });
+            {
+                LarsCode = standard.LarsCode,
+                Level = standard.Level,
+                CourseTitle = standard.Title,
+                Providers = providers.OrderBy(x => x.Ukprn).ToList()
+            });
     }
 }

@@ -21,8 +21,7 @@ internal class NationalAchievementRatesReadRepository : INationalAchievementRate
 
     public async Task<List<NationalAchievementRate>> GetByUkprn(int ukprn)
     {
-        var results = await _roatpDataContext.NationalAchievementRates.Where(c =>
-            c.Provider.Ukprn == ukprn).ToListAsync();
+        var results = await _roatpDataContext.NationalAchievementRates.Where(c => c.Provider.Ukprn == ukprn).ToListAsync();
 
         return results;
     }
@@ -32,13 +31,13 @@ internal class NationalAchievementRatesReadRepository : INationalAchievementRate
         return await _roatpDataContext.NationalAchievementRates.ToListAsync();
     }
 
-    public async Task<List<NationalAchievementRate>> GetByProvidersLevelsSectorSubjectArea(List<int> providerIds, List<ApprenticeshipLevel> levels, string sectorSubjectArea)
+    public async Task<List<NationalAchievementRate>> GetByProvidersLevelsSectorSubjectArea(List<int> ukprns, List<ApprenticeshipLevel> levels, int sectorSubjectAreaTier1)
     {
         return await _roatpDataContext.NationalAchievementRates
-          .Where(x=>(levels.Contains(x.ApprenticeshipLevel)) 
-                                            && x.Age==Age.AllAges 
-                                            && x.SectorSubjectArea==sectorSubjectArea 
-                                            && providerIds.Contains(x.ProviderId))  
+          .Where(x => (levels.Contains(x.ApprenticeshipLevel))
+                        && x.Age == Age.AllAges
+                        && x.SectorSubjectAreaTier1 == sectorSubjectAreaTier1
+                        && ukprns.Contains(x.Ukprn))
           .ToListAsync();
     }
 }
