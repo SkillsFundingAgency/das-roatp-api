@@ -4,6 +4,6 @@ namespace SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries.GetO
 {
     public class GetOverallAchievementRatesQuery : IRequest<GetOverallAchievementRatesQueryResult>
     {
-        public string SectorSubjectArea { get; set; }
+        public int SectorSubjectAreaTier1Code { get; set; }
     }
 }

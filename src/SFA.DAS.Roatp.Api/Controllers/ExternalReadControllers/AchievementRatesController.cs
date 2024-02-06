@@ -1,10 +1,10 @@
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries.GetOverallAchievementRates;
 using SFA.DAS.Roatp.Domain.Entities;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         private readonly IMediator _mediator;
         private readonly ILogger<AchievementRatesController> _logger;
 
-        public AchievementRatesController (IMediator mediator, ILogger<AchievementRatesController> logger)
+        public AchievementRatesController(IMediator mediator, ILogger<AchievementRatesController> logger)
         {
             _mediator = mediator;
             _logger = logger;
@@ -25,12 +25,12 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Route("Overall")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(List<NationalAchievementRateOverall>), 200)]
-        public async Task<IActionResult> GetOverallAchievementRates([FromQuery] string sector)
+        public async Task<IActionResult> GetOverallAchievementRates([FromQuery] int sectorSubjectAreaTier1Code)
         {
-            _logger.LogInformation("Request received to get overall achievement rates by:{sector}", sector);
+            _logger.LogInformation("Request received to get overall achievement rates by:{sector}", sectorSubjectAreaTier1Code);
 
-            var queryResult = await _mediator.Send(new GetOverallAchievementRatesQuery { SectorSubjectArea = sector });
-            
+            var queryResult = await _mediator.Send(new GetOverallAchievementRatesQuery { SectorSubjectAreaTier1Code = sectorSubjectAreaTier1Code });
+
             _logger.LogInformation("Found {overallAchievementRatesCount} overall achievement rates", queryResult.OverallAchievementRates.Count);
 
             return Ok(queryResult);

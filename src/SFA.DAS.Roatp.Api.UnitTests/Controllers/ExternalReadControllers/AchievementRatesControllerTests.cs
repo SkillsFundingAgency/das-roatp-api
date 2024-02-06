@@ -1,4 +1,8 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Linq;
+using System.Net;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -7,10 +11,6 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 using SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries.GetOverallAchievementRates;
 using SFA.DAS.Testing.AutoFixture;
-using System.Linq;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
 {
@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         {
             mediatorMock.Setup(m => m.Send(It.IsAny<GetOverallAchievementRatesQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
 
-            var response = await sut.GetOverallAchievementRates(It.IsAny<string>());
+            var response = await sut.GetOverallAchievementRates(It.IsAny<int>());
 
             var result = response as OkObjectResult;
             result.Should().NotBeNull();
