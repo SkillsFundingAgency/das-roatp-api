@@ -6,6 +6,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
 {
     public interface INationalAchievementRatesOverallReadRepository
     {
-        Task<List<NationalAchievementRateOverall>> GetBySectorSubjectArea(string expectedSectorSubjectArea);
+        Task<List<NationalAchievementRateOverall>> GetBySectorSubjectArea(int sectorSubjectAreaTier1Code);
     }
 }

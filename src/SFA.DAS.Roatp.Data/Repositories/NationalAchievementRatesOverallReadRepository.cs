@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
@@ -18,11 +18,9 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = roatpDataContext;
         }
 
-        public async Task<List<NationalAchievementRateOverall>> GetBySectorSubjectArea(string expectedSectorSubjectArea)
+        public async Task<List<NationalAchievementRateOverall>> GetBySectorSubjectArea(int sectorSubjectAreaTier1Code)
         {
-            var results = await _roatpDataContext.NationalAchievementRateOverall.Where(c =>
-                    c.SectorSubjectArea.Equals(expectedSectorSubjectArea))
-                .ToListAsync();
+            var results = await _roatpDataContext.NationalAchievementRateOverall.Where(c => c.SectorSubjectAreaTier1 == sectorSubjectAreaTier1Code).ToListAsync();
 
             return results;
         }
