@@ -1,11 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
-using System;
-using System.Linq;
-using System.Threading.Tasks;
-using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Jobs.Services
 {
@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Jobs.Services
                 throw new InvalidOperationException("No standards were retrieved from courses api");
             }
 
-            var standardsToReload = standardList.Standards.Select(standard => (Domain.Entities.Standard)standard).ToList();
+            var standardsToReload = standardList.Standards.Select(standardModel => (Standard)standardModel).ToList();
 
             await _reloadStandardsRepository.ReloadStandards(standardsToReload);
 
