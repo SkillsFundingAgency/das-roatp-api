@@ -24,10 +24,9 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
         public string MarketingInfo { get; set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
-        public decimal? ProviderHeadOfficeDistanceInMiles { get; set; }
-        
-        public List<NationalAchievementRateModel> AchievementRates { get; set; } =
-            new List<NationalAchievementRateModel>();
+        public double? ProviderHeadOfficeDistanceInMiles { get; set; }
+
+        public List<NationalAchievementRateModel> AchievementRates { get; set; } = new();
 
         public List<DeliveryModel> DeliveryModels { get; set; } = new List<DeliveryModel>();
 
@@ -53,7 +52,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse
                 Address4 = providerCourseDetails.Address4,
                 Town = providerCourseDetails.Town,
                 Postcode = providerCourseDetails.Postcode,
-                ProviderHeadOfficeDistanceInMiles = (decimal?)providerCourseDetails.Distance
+                ProviderHeadOfficeDistanceInMiles = providerCourseDetails.Distance
             };
         }
     }

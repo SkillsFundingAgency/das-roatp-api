@@ -14,7 +14,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public ApprenticeshipLevel ApprenticeshipLevel { get; set; }
         public int? OverallCohort { get; set; }
         public decimal? OverallAchievementRate { get; set; }
-        public virtual Provider Provider { get; set; }
         public int SectorSubjectAreaTier1 { get; set; }
 
         public static implicit operator NationalAchievementRate(NationalAchievementRateImport source)

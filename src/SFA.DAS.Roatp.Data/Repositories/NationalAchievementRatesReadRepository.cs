@@ -21,7 +21,7 @@ internal class NationalAchievementRatesReadRepository : INationalAchievementRate
 
     public async Task<List<NationalAchievementRate>> GetByUkprn(int ukprn)
     {
-        var results = await _roatpDataContext.NationalAchievementRates.Where(c => c.Provider.Ukprn == ukprn).ToListAsync();
+        var results = await _roatpDataContext.NationalAchievementRates.Where(c => c.Ukprn == ukprn).ToListAsync();
 
         return results;
     }

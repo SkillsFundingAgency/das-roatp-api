@@ -1,12 +1,12 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 using ProviderType = SFA.DAS.Roatp.Domain.Constants.ProviderType;
 
 namespace SFA.DAS.Roatp.Data.Repositories;
@@ -87,13 +87,13 @@ public class ProviderDetailsReadRepository : IProviderDetailsReadRepository
                             ELSE
                                 geography::Point(pa.Latitude, pa.Longitude, 4326)
                                         .STDistance(geography::Point({lat}, {lon}, 4326)) * 0.0006213712 END
-			                            as Distance
+                                        as Distance
                             FROM provider P
-		                    INNER JOIN ProviderCourse pc on p.Id = pc.ProviderId
-							LEFT OUTER JOIN [ProviderAddress] PA on P.Id = PA.ProviderId
+                            INNER JOIN ProviderCourse pc on p.Id = pc.ProviderId
+                            LEFT OUTER JOIN [ProviderAddress] PA on P.Id = PA.ProviderId
                             LEFT OUTER JOIN ProviderRegistrationDetail PRD on P.Ukprn = PRD.Ukprn 
-		                    Where P.ukprn={ukprn}
-		                    AND pc.LarsCode={larsCode}
+                            Where P.ukprn={ukprn}
+                            AND pc.LarsCode={larsCode}
                             AND PRD.StatusId in ({OrganisationStatus.Active}, {OrganisationStatus.ActiveNotTakingOnApprentices})";
     }
 
