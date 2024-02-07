@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
+using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
@@ -27,41 +28,37 @@ public class GetProviderDetailsForCourseQueryHandler : IRequestHandler<GetProvid
 
     public async Task<ValidatedResponse<GetProviderDetailsForCourseQueryResult>> Handle(GetProviderDetailsForCourseQuery request, CancellationToken cancellationToken)
     {
-        var standard = await _standardsReadRepository.GetStandard(request.LarsCode);
-        ApprenticeshipLevel level;
-        if (standard.Level >= (int)ApprenticeshipLevel.FourPlus)
-            level = ApprenticeshipLevel.FourPlus;
-        else
-            level = (ApprenticeshipLevel)standard.Level;
+        Standard standard = await _standardsReadRepository.GetStandard(request.LarsCode);
 
-        var providerDetails = await _providerDetailsReadRepository.GetProviderForUkprnAndLarsCodeWithDistance(request.Ukprn, request.LarsCode, request.Latitude,
-            request.Longitude);
+        var providerDetails = await _providerDetailsReadRepository.GetProviderForUkprnAndLarsCodeWithDistance(request.Ukprn, request.LarsCode, request.Latitude, request.Longitude);
 
         if (providerDetails == null)
             return new ValidatedResponse<GetProviderDetailsForCourseQueryResult>((GetProviderDetailsForCourseQueryResult)null);
 
-        var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByUkprn(request.Ukprn);
+        var providerLocations = await _providerDetailsReadRepository.GetProviderLocationDetailsWithDistance(request.Ukprn, request.LarsCode, request.Latitude, request.Longitude);
 
-        var filteredNationalAchievementRates =
-            nationalAchievementRates.Where(x => (x.ApprenticeshipLevel == ApprenticeshipLevel.AllLevels || x.ApprenticeshipLevel == level)
-                                                && x.Age == Age.AllAges && x.SectorSubjectArea == standard.SectorSubjectArea);
-        var rate = filteredNationalAchievementRates?.MaxBy(a => a.ApprenticeshipLevel);
-
-        _logger.LogInformation("Provider {ukprn} has apprenticeship level {apprenticeshipLevel}", request.Ukprn, rate?.ApprenticeshipLevel);
-
-        var providerLocations = await _providerDetailsReadRepository.GetProviderLocationDetailsWithDistance(
-            request.Ukprn, request.LarsCode, request.Latitude,
-            request.Longitude);
-
-        var result = (GetProviderDetailsForCourseQueryResult)providerDetails;
+        GetProviderDetailsForCourseQueryResult result = providerDetails;
 
         result.DeliveryModels = _processProviderCourseLocationsService.ConvertProviderLocationsToDeliveryModels(providerLocations);
 
-        if (rate != null)
-        {
-            result.AchievementRates.Add(rate);
-        }
+        await FindAndAddProviderRatingsForCourse(result, request.Ukprn, standard.SectorSubjectAreaTier1, standard.Level);
 
         return new ValidatedResponse<GetProviderDetailsForCourseQueryResult>(result);
+    }
+
+    private async Task FindAndAddProviderRatingsForCourse(GetProviderDetailsForCourseQueryResult result, int ukprn, int sectorSubjectAreaTier1, int standardLevel)
+    {
+        var nationalAchievementRates = await _nationalAchievementRatesReadRepository.GetByUkprn(ukprn);
+
+        var apprenticeshipLevel = standardLevel >= (int)ApprenticeshipLevel.FourPlus ? ApprenticeshipLevel.FourPlus : (ApprenticeshipLevel)standardLevel;
+
+        var filteredNationalAchievementRates = nationalAchievementRates.Where(
+                x => (x.ApprenticeshipLevel == ApprenticeshipLevel.AllLevels || x.ApprenticeshipLevel == apprenticeshipLevel)
+                    && x.Age == Age.AllAges
+                    && x.SectorSubjectAreaTier1 == sectorSubjectAreaTier1);
+
+        var rate = filteredNationalAchievementRates.MaxBy(a => a.ApprenticeshipLevel);
+
+        if (rate != null) result.AchievementRates.Add(rate);
     }
 }

@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.Roatp.Domain.Entities;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Data.Configuration
 {
@@ -31,11 +31,6 @@ namespace SFA.DAS.Roatp.Data.Configuration
                 .WithOne(c => c.Provider)
                 .HasPrincipalKey(p => p.Id)
                 .HasForeignKey(p => p.ProviderId);
-
-            builder.HasMany(p => p.NationalAchievementRates)
-               .WithOne(c => c.Provider)
-               .HasPrincipalKey(p => p.Id)
-               .HasForeignKey(p => p.ProviderId);
 
             builder.HasOne(p => p.ProviderAddress)
                .WithOne(c => c.Provider)

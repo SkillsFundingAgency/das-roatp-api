@@ -19,7 +19,6 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
             destination.ApprenticeshipLevel.Should().Be(source.ApprenticeshipLevel);
             destination.OverallCohort.Should().Be(source.OverallCohort);
             destination.OverallAchievementRate.Should().Be(source.OverallAchievementRate);
-            destination.Provider.Should().BeNull();
             destination.SectorSubjectAreaTier1.Should().Be(source.SectorSubjectAreaTier1);
         }
     }

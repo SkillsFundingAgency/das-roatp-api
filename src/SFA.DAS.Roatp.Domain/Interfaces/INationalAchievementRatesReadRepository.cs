@@ -9,6 +9,6 @@ public interface INationalAchievementRatesReadRepository
 {
     Task<List<NationalAchievementRate>> GetByUkprn(int ukprn);
     Task<List<NationalAchievementRate>> GetAll();
-    Task<List<NationalAchievementRate>> GetByProvidersLevelsSectorSubjectArea(List<int> providerIds, List<ApprenticeshipLevel> levels,
+    Task<List<NationalAchievementRate>> GetByProvidersLevelsSectorSubjectArea(List<int> ukprns, List<ApprenticeshipLevel> levels,
         int sectorSubjectAreaTier1);
 }
