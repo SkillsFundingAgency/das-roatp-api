@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace SFA.DAS.Roatp.Domain.Entities
+﻿namespace SFA.DAS.Roatp.Domain.Entities
 {
     public class Standard
     {
@@ -11,8 +9,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string Title { get; set; }
         public string Version { get; set; }
         public string ApprovalBody { get; set; }
-        [Obsolete]
-        public string SectorSubjectArea { get; set; }
         public int SectorSubjectAreaTier1 { get; set; }
     }
 }

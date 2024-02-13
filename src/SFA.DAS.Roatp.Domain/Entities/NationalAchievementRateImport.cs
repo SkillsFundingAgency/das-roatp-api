@@ -1,4 +1,3 @@
-using System;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Domain.Entities
@@ -12,18 +11,5 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public int? OverallCohort { get; set; }
         public decimal? OverallAchievementRate { get; set; }
         public int SectorSubjectAreaTier1 { get; set; }
-
-        [Obsolete]
-        public static implicit operator NationalAchievementRateImport(NationalAchievementRatesApiModel source)
-        {
-            return new NationalAchievementRateImport
-            {
-                Age = source.Age,
-                Ukprn = source.Ukprn,
-                ApprenticeshipLevel = source.ApprenticeshipLevel,
-                OverallCohort = source.OverallCohort,
-                OverallAchievementRate = source.OverallAchievementRate,
-            };
-        }
     }
 }
