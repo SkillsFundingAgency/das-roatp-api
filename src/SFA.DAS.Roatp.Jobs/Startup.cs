@@ -65,9 +65,6 @@ namespace SFA.DAS.Roatp.Jobs
 
             builder.Services.AddTransient<IReloadStandardsCacheService, ReloadStandardsCacheService>();
             builder.Services.AddTransient<IReloadProviderRegistrationDetailService, ReloadProviderRegistrationDetailService>();
-            builder.Services.AddTransient<IReloadNationalAcheivementRatesLookupService, ReloadNationalAcheivementRatesLookupService>();
-            builder.Services.AddTransient<IReloadNationalAcheivementRatesService, ReloadNationalAcheivementRatesService>();
-            builder.Services.AddTransient<IReloadNationalAcheivementRatesOverallService, ReloadNationalAcheivementRatesOverallService>();
             builder.Services.AddTransient<ILoadUkrlpAddressesService, LoadUkrlpAddressesService>();
             builder.Services.AddTransient<IUpdateProviderAddressCoordinatesService, UpdateProviderAddressCoordinatesService>();
             builder.Services.AddTransient<IDataExtractorService, DataExtractorService>();

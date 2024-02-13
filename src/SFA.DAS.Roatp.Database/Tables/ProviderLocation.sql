@@ -30,6 +30,6 @@ WHERE LocationName IS NOT NULL;
 
 GO
 CREATE UNIQUE NONCLUSTERED INDEX UK_ProviderLocation_ProviderId_RegionId
-ON providerLocation([ProviderId], [RegionId])
+ON ProviderLocation([ProviderId], [RegionId])
 WHERE RegionId IS NOT NULL
 GO

@@ -18,7 +18,8 @@
     "AzureWebJobs.LoadProvidersAddressFunction.Disabled": true,
     "AzureWebJobs.ReloadNationalAcheivementRatesFunction.Disabled": true,
     "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": true,
-    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": true,
-    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true
+    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": false,
+    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true,
+    "AzureWebJobs.ImportAchievementRatesFunction.Disabled": true
   }
 }
