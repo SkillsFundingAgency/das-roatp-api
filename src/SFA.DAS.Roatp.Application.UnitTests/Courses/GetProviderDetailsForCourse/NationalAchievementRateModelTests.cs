@@ -19,7 +19,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
 
             model.Should().BeEquivalentTo(nar, c => c
                 .Excluding(s => s.Id)
-                .Excluding(s => s.ProviderId)
                 .Excluding(s => s.ApprenticeshipLevel)
                 .Excluding(s => s.SectorSubjectAreaTier1)
                 .Excluding(s => s.Ukprn));
