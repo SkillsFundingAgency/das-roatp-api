@@ -2,7 +2,6 @@
 (
 	[Id] BIGINT IDENTITY (1,1),
 	[Age] INT NOT NULL DEFAULT 0,
-	[SectorSubjectArea] VARCHAR(1000) NULL,
 	[ApprenticeshipLevel] INT NOT NULL DEFAULT 0,
 	[OverallCohort] INT NULL,
 	[OverallAchievementRate] decimal(10,4) NULL,
@@ -11,11 +10,11 @@
 )
 GO
 
-CREATE NONCLUSTERED INDEX [IDX_NationalAchievementRateOverall_Sector_Age_Level] ON [dbo].[NationalAchievementRateOverall] (SectorSubjectArea, Age, ApprenticeshipLevel) 
+CREATE NONCLUSTERED INDEX [IDX_NationalAchievementRateOverall_SectorSubjectAreaTier1_Age_Level] ON [dbo].[NationalAchievementRateOverall] (SectorSubjectAreaTier1, Age, ApprenticeshipLevel) 
 INCLUDE (Id, OverallCohort, OverallAchievementRate) WITH (ONLINE = ON) 
 GO 
 
 
-CREATE NONCLUSTERED INDEX [IDX_NationalAchievementRateOverall_Sectordescription] ON [dbo].[NationalAchievementRateOverall] (SectorSubjectArea) 
+CREATE NONCLUSTERED INDEX [IDX_NationalAchievementRateOverall_SectorSubjectAreaTier1] ON [dbo].[NationalAchievementRateOverall] (SectorSubjectAreaTier1) 
 INCLUDE (Id, OverallCohort, OverallAchievementRate, Age, ApprenticeshipLevel) WITH (ONLINE = ON) 
 GO 
