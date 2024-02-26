@@ -38,6 +38,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
             standardsReadMock.Setup(x => x.GetStandard(query.LarsCode)).ReturnsAsync(standard);
 
             var firstProviderModel = providerCourseDetailsSummaryModels.First();
+            foreach (var rate in nationalAchievementRates)
+            {
+                rate.ProviderId = firstProviderModel.ProviderId;
+            }
             nationalAchievementRatesReadRepositoryMock.Setup(x => x.GetByProvidersLevelsSectorSubjectArea(It.IsAny<List<int>>(), It.IsAny<List<ApprenticeshipLevel>>(), It.IsAny<int>()))
              .ReturnsAsync(nationalAchievementRates);
             providerDetailsReadRepositoryMock.Setup(r => r.GetAllProviderlocationDetailsWithDistance(query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerLocationsWithDistance);
@@ -93,6 +97,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
             standardsReadMock.Setup(x => x.GetStandard(query.LarsCode)).ReturnsAsync(standard);
 
             var firstProviderModel = providerCourseDetailsSummaryModels.First();
+            foreach (var rate in nationalAchievementRates)
+            {
+                rate.ProviderId = firstProviderModel.ProviderId;
+            }
             nationalAchievementRatesReadRepositoryMock.Setup(x => x.GetByProvidersLevelsSectorSubjectArea(It.IsAny<List<int>>(), new List<ApprenticeshipLevel> { ApprenticeshipLevel.AllLevels, ApprenticeshipLevel.FourPlus }, It.IsAny<int>()))
              .ReturnsAsync(nationalAchievementRates);
             providerDetailsReadRepositoryMock.Setup(r => r.GetAllProviderlocationDetailsWithDistance(query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerLocationsWithDistance);

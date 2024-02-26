@@ -21,8 +21,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.OverallNationalAchievementRates.Qu
 
             model.Level.Should().Be(source.ApprenticeshipLevel);
         }
-        [Test]
-        public void MyTest() => Assert.Pass();
     }
 }
 
