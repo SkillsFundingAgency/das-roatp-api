@@ -1,7 +1,7 @@
 ﻿CREATE TABLE [dbo].[NationalAchievementRate]
 (
     [Id] BIGINT IDENTITY (1,1),
-    [ProviderId] INT NOT NULL,
+    [ProviderId] INT NULL,
     [Age] INT NOT NULL DEFAULT 0,
     [SectorSubjectArea] VARCHAR(1000) NULL,
     [ApprenticeshipLevel] INT NOT NULL DEFAULT 0,
