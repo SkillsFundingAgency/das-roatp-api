@@ -10,7 +10,7 @@
     [SectorSubjectAreaTier1] INT NOT NULL DEFAULT 0, 
     [Ukprn] INT NOT NULL DEFAULT 0, 
     CONSTRAINT PK_NationalAchievementRate PRIMARY KEY (Id),
-    CONSTRAINT FK_NationalAchievementRate_Provider FOREIGN KEY (ProviderId) REFERENCES [Provider] (Id)
+
 )
 GO
 
