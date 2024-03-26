@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 using SFA.DAS.Roatp.Jobs.Models;
 using SFA.DAS.Roatp.Jobs.Services;
+using Microsoft.Azure.Functions.Worker;
 
 namespace SFA.DAS.Roatp.Jobs.Functions;
 
@@ -31,7 +31,7 @@ public class ImportAchievementRatesFunction
         _importNationalAchievementRateService = importNationalAchievementRateService;
     }
 
-    [FunctionName("Achievement-Rates-Import")]
+    [Function("Achievement-Rates-Import")]
     public async Task Run([BlobTrigger("qar-updates/{name}")] Stream blobStream, string name, ILogger log)
     {
         log.LogInformation($"Beginning to process blob\n Name:{name}\n Size:{blobStream.Length} bytes");
