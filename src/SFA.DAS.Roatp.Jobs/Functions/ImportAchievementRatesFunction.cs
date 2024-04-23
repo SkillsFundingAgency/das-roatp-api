@@ -3,52 +3,79 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.Azure.Functions.Worker;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 using SFA.DAS.Roatp.Jobs.Models;
 using SFA.DAS.Roatp.Jobs.Services;
-using Microsoft.Azure.Functions.Worker;
 
 namespace SFA.DAS.Roatp.Jobs.Functions;
 
 public class ImportAchievementRatesFunction
 {
-    public const string ProviderRatingsImportFileName = "apps_narts_provider_level_fwk_std.csv";
-    public const string OverallRatingsImportFileName = "apps_narts_subject_and_level_detailed.csv";
     public const string Total = nameof(Total);
 
     private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
     private readonly IDataExtractorService _dataExtractorService;
     private readonly IImportNationalAchievementRateOverallService _importAchievementRateOverallService;
     private readonly IImportNationalAchievementRateService _importNationalAchievementRateService;
+    private readonly string _timePeriod;
+    public readonly string _providerRatingsImportFileName;
+    public readonly string _overallRatingsImportFileName;
 
-    public ImportAchievementRatesFunction(IDataExtractorService dataExtractorService, ICourseManagementOuterApiClient courseManagementOuterApiClient, IImportNationalAchievementRateOverallService importAchievementRateOverallService, IImportNationalAchievementRateService importNationalAchievementRateService)
+    public ImportAchievementRatesFunction(IDataExtractorService dataExtractorService, ICourseManagementOuterApiClient courseManagementOuterApiClient, IImportNationalAchievementRateOverallService importAchievementRateOverallService, IImportNationalAchievementRateService importNationalAchievementRateService, IConfiguration configuration)
     {
         _dataExtractorService = dataExtractorService;
         _courseManagementOuterApiClient = courseManagementOuterApiClient;
         _importAchievementRateOverallService = importAchievementRateOverallService;
         _importNationalAchievementRateService = importNationalAchievementRateService;
+        _timePeriod = configuration["QarTimePeriod"];
+        _providerRatingsImportFileName = configuration["QarProviderLevelImportFileName"];
+        _overallRatingsImportFileName = configuration["QarOverallImportFileName"];
     }
 
     [Function("Achievement-Rates-Import")]
     public async Task Run([BlobTrigger("qar-updates/{name}")] Stream blobStream, string name, ILogger log)
     {
-        log.LogInformation($"Beginning to process blob\n Name:{name}\n Size:{blobStream.Length} bytes");
+        log.LogInformation("Beginning to process blob\n Name:{QarImportFileName}\n Size:{QarImportFileSize} bytes", name, blobStream.Length);
+
+        if (string.IsNullOrWhiteSpace(_timePeriod) || !int.TryParse(_timePeriod, out var timePeriod))
+        {
+            throw new ArgumentException("QarTimePeriod is either not set in environment value or is invalid. Expected a number i.e. 202223");
+        }
 
         var ssa1s = await GetStandardSectorAreaTier1LookupData();
 
-        var rawOverallData = _dataExtractorService.DeserializeCsvDataFromZipStream<OverallAchievementRateCsvModel>(blobStream, OverallRatingsImportFileName);
-        log.LogInformation($"Overall achievement rates import data total row count: {rawOverallData.Count}");
+        var rawOverallData = _dataExtractorService.DeserializeCsvDataFromZipStream<OverallAchievementRateCsvModel>(blobStream, _overallRatingsImportFileName);
+        log.LogInformation("Overall achievement rates import data total row count: {QarImportOverallCount}", rawOverallData.Count);
 
-        var filteredOverallRatingsData = rawOverallData.Where(o => o.FrameworkStandardFlag == Total && o.SectorSubjectAreaTier1Desc != Total && o.SectorSubjectAreaTier2Desc == Total && o.StandardFrameworkNameAndSTCode == Total && o.DetailedLevel == Total && o.AgeYouthAdult == Total && o.AgeGroup == Total && o.FundingType == Total && int.TryParse(o.OverallCohort, out _) && decimal.TryParse(o.OverallAchievementRate, out _));
+        var filteredOverallRatingsData = rawOverallData.Where(o =>
+               o.TimePeriod == timePeriod
+            && o.FrameworkStandardFlag == Total
+            && o.SectorSubjectAreaTier1Desc != Total
+            && o.SectorSubjectAreaTier2Desc == Total
+            && o.StandardFrameworkNameAndSTCode == Total
+            && o.DetailedLevel == Total
+            && o.AgeYouthAdult == Total
+            && o.AgeGroup == Total
+            && o.FundingType == Total
+            && int.TryParse(o.OverallCohort, out _) && decimal.TryParse(o.OverallAchievementRate, out _));
 
         if (rawOverallData.Any()) await _importAchievementRateOverallService.ImportData(filteredOverallRatingsData, ssa1s);
 
-        var rawProviderData = _dataExtractorService.DeserializeCsvDataFromZipStream<ProviderAchievementRateCsvModel>(blobStream, ProviderRatingsImportFileName);
-        log.LogInformation($"Provider achievement rates import data total row count: {rawProviderData.Count}");
+        var rawProviderData = _dataExtractorService.DeserializeCsvDataFromZipStream<ProviderAchievementRateCsvModel>(blobStream, _providerRatingsImportFileName);
+        log.LogInformation("Provider achievement rates import data total row count: {QarImportProviderLevelCount}", rawProviderData.Count);
 
-        var filteredProviderRatingsData = rawProviderData.Where(p => p.StandardFrameworkNameAndSTCode == Total && p.SectorSubjectAreaTier1Desc != Total && p.AgeYouthAdult == Total && p.AgeGroup == Total && int.TryParse(p.OverallCohort, out _) && decimal.TryParse(p.OverallAchievementRate, out _));
+        var filteredProviderRatingsData = rawProviderData.Where(p =>
+               p.TimePeriod == timePeriod
+            && p.StandardFrameworkNameAndSTCode == Total
+            && p.SectorSubjectAreaTier1Desc != Total
+            && p.AgeYouthAdult == Total
+            && p.AgeGroup == Total
+            && int.TryParse(p.OverallCohort, out _)
+            && decimal.TryParse(p.OverallAchievementRate, out _));
 
         if (rawProviderData.Any()) await _importNationalAchievementRateService.ImportData(filteredProviderRatingsData, ssa1s);
     }

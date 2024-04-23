@@ -13,17 +13,21 @@
     "ConfigurationStorageConnectionString": "UseDevelopmentStorage=true;",
     "EnvironmentName": "LOCAL",
     "LoggingRedisConnectionString": "localhost",
+    "UpdateUkrlpDataSchedule": "0 0 23 * * 1-5",
+    "ReloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
+    "ReloadStandardsCacheSchedule": "0 0 20 * * 1-5",
+    "UpdateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
+    "QarTimePeriod": "202223",
+    "QarOverallImportFileName": "app-narts-subject-and-level-detailed.csv",
+    "QarProviderLevelImportFileName": "app-narts-provider-level-fwk-std.csv",
+
     "AzureWebJobs.LoadAllProviderAddressesFunction.Disabled": true,
     "AzureWebJobs.LoadCourseDirectoryDataFunction.Disabled": true,
     "AzureWebJobs.LoadProvidersAddressFunction.Disabled": true,
     "AzureWebJobs.ReloadNationalAcheivementRatesFunction.Disabled": true,
     "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": true,
-    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": false,
+    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": true,
     "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true,
-    "AzureWebJobs.ImportAchievementRatesFunction.Disabled": true,
-    "UpdateUkrlpDataSchedule": "0 0 23 * * 1-5",
-    "ReloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
-    "ReloadStandardsCacheSchedule": "0 0 20 * * 1-5",
-    "UpdateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5"
+    "AzureWebJobs.ImportAchievementRatesFunction.Disabled": true
   }
 }

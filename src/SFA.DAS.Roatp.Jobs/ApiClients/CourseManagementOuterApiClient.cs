@@ -1,9 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace SFA.DAS.Roatp.Jobs.ApiClients;
 
@@ -35,7 +35,7 @@ public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
         }
         catch (HttpRequestException ex)
         {
-            Logger.LogError(ex, $"Error when processing request: {HttpMethod.Get} - {uri}");
+            Logger.LogError(ex, "Error when processing request: GET - {Uri}", uri);
             throw;
         }
     }
@@ -62,7 +62,7 @@ public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
         }
         catch (HttpRequestException ex)
         {
-            Logger.LogError(ex, $"Error when processing request: {HttpMethod.Post} - {uri}");
+            Logger.LogError(ex, "Error when processing request: POST - {Uri}", uri);
             throw;
         }
     }

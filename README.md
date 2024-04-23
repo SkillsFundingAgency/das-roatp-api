@@ -76,7 +76,6 @@ In addition, you will need the following repo set up and running for the jobs to
 
 ##### Open the Jobs project within the solution
 
-- Open Visual studio as an administrator
 - Open the solution
 - Set SFA.DAS.RoATP.Jobs as the startup project
 - Publish the database project SFA.DAS.RoATP.Database to your local SQL Server instance
