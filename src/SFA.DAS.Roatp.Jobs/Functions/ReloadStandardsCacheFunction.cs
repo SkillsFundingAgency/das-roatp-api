@@ -1,7 +1,6 @@
-using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Jobs.Services;
 using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
+using SFA.DAS.Roatp.Jobs.Services;
 
 namespace SFA.DAS.Roatp.Jobs.Functions
 {
@@ -16,13 +15,9 @@ namespace SFA.DAS.Roatp.Jobs.Functions
 
 
         [Function(nameof(ReloadStandardsCacheFunction))]
-        public async Task Run([TimerTrigger("%ReloadStandardsCacheSchedule%")] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("%ReloadStandardsCacheSchedule%")] TimerInfo myTimer)
         {
-            log.LogInformation("ReloadStandardsCacheFunction function started");
-
             await _reloadStandardsCacheService.ReloadStandardsCache();
-
-            log.LogInformation("Standards reload complete");
         }
     }
 }

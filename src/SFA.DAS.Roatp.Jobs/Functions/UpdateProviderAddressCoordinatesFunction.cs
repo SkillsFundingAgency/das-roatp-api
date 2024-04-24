@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Jobs.Services;
 using Microsoft.Azure.Functions.Worker;
+using SFA.DAS.Roatp.Jobs.Services;
 
 namespace SFA.DAS.Roatp.Jobs.Functions
 {
@@ -15,11 +14,9 @@ namespace SFA.DAS.Roatp.Jobs.Functions
         }
 
         [Function(nameof(UpdateProviderAddressCoordinatesFunction))]
-        public async Task Run([TimerTrigger("%UpdateProviderAddressCoordinatesSchedule%", RunOnStartup = false)] TimerInfo myTimer, ILogger log)
+        public async Task Run([TimerTrigger("%UpdateProviderAddressCoordinatesSchedule%", RunOnStartup = false)] TimerInfo myTimer)
         {
-            log.LogInformation("UpdateProviderAddressCoordinatesFunction function started");
             await _updateProviderAddressCoordinatesService.UpdateProviderAddressCoordinates();
-            log.LogInformation("UpdateProviderAddressCoordinatesFunction complete");
         }
     }
 }
