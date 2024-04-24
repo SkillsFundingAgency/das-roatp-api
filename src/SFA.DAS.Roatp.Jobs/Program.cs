@@ -8,8 +8,6 @@ using SFA.DAS.Roatp.Data.Extensions;
 using SFA.DAS.Roatp.Jobs.Configuration;
 using SFA.DAS.Roatp.Jobs.Extensions;
 
-var config = new ConfigurationBuilder();
-
 var host = new HostBuilder()
     .ConfigureFunctionsWebApplication()
     .ConfigureAppConfiguration(
