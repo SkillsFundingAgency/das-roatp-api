@@ -1,84 +1,89 @@
 ﻿using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
+using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
-namespace SFA.DAS.Roatp.Jobs.ApiClients;
-
-public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
+namespace SFA.DAS.Roatp.Jobs.ApiClients
 {
-    protected readonly HttpClient _httpClient;
-    protected readonly ILogger<CourseManagementOuterApiClient> Logger;
-
-    protected const string ContentType = "application/json";
-
-    public CourseManagementOuterApiClient(HttpClient httpClient, ILogger<CourseManagementOuterApiClient> logger)
+    public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
     {
-        _httpClient = httpClient;
-        Logger = logger;
-    }
+        protected readonly HttpClient _httpClient;
+        protected readonly ILogger<CourseManagementOuterApiClient> _logger;
 
-    public async Task<(bool, T)> Get<T>(string uri)
-    {
-        try
+        protected const string _contentType = "application/json";
+
+        public CourseManagementOuterApiClient(HttpClient httpClient, ILogger<CourseManagementOuterApiClient> logger)
         {
-            using var response = await _httpClient.GetAsync(new Uri(uri, UriKind.Relative));
-            if (response.IsSuccessStatusCode)
-            {
-                var content = await response.Content.ReadAsAsync<T>();
-                return (true, content);
-            }
-            await LogErrorIfUnsuccessfulResponse(response);
-            return (false, default(T));
+            _httpClient = httpClient;
+            _logger = logger;
         }
-        catch (HttpRequestException ex)
-        {
-            Logger.LogError(ex, $"Error when processing request: {HttpMethod.Get} - {uri}");
-            throw;
-        }
-    }
 
-    public async Task<(bool, U)> Post<T, U>(string uri, T model)
-    {
-        var serializeObject = JsonConvert.SerializeObject(model);
-
-        try
+        public async Task<(bool, T)> Get<T>(string uri)
         {
-            using (var response = await _httpClient.PostAsync(new Uri(uri, UriKind.Relative),
-                       new StringContent(serializeObject, Encoding.UTF8,
-                           ContentType)))
+            try
             {
-                if (response.IsSuccessStatusCode)
+                using (var response = await _httpClient.GetAsync(new Uri(uri, UriKind.Relative)))
                 {
-                    return (true, await response.Content.ReadAsAsync<U>());
+                    var content = default(T);
+                    if (response.IsSuccessStatusCode)
+                    {
+                        content = await response.Content.ReadAsAsync<T>();
+                        return (true, content);
+                    }
+                    await LogErrorIfUnsuccessfulResponse(response);
+                    return (false, default(T));
                 }
-
-                await LogErrorIfUnsuccessfulResponse(response);
-                return (false, default(U));
-
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, $"Error when processing request: {HttpMethod.Get} - {uri}");
+                throw;
             }
         }
-        catch (HttpRequestException ex)
+
+        public async Task<(bool,U)> Post<T, U>(string uri, T model) 
         {
-            Logger.LogError(ex, $"Error when processing request: {HttpMethod.Post} - {uri}");
-            throw;
+            var serializeObject = JsonConvert.SerializeObject(model);
+        
+            try
+            {
+                using (var response = await _httpClient.PostAsync(new Uri(uri, UriKind.Relative),
+                           new StringContent(serializeObject, Encoding.UTF8,
+                               _contentType)))
+                {
+                    if (response.IsSuccessStatusCode)
+                    {
+                        return (true, await response.Content.ReadAsAsync<U>());
+                    }
+        
+                    await LogErrorIfUnsuccessfulResponse(response);
+                    return (false, default(U));
+                  
+                }
+            }
+            catch (HttpRequestException ex)
+            {
+                _logger.LogError(ex, $"Error when processing request: {HttpMethod.Post} - {uri}");
+                throw;
+            }
         }
-    }
 
-    private async Task LogErrorIfUnsuccessfulResponse(HttpResponseMessage response)
-    {
-        var callingMethod = new System.Diagnostics.StackFrame(1).GetMethod()?.Name;
+        private async Task LogErrorIfUnsuccessfulResponse(HttpResponseMessage response)
+        {
+            var callingMethod = new System.Diagnostics.StackFrame(1).GetMethod().Name;
 
-        var httpMethod = response.RequestMessage?.Method.ToString();
-        var statusCode = (int)response.StatusCode;
-        var reasonPhrase = response.ReasonPhrase;
-        var requestUri = response.RequestMessage?.RequestUri;
+            var httpMethod = response.RequestMessage.Method.ToString();
+            var statusCode = (int)response.StatusCode;
+            var reasonPhrase = response.ReasonPhrase;
+            var requestUri = response.RequestMessage.RequestUri;
 
-        var responseContent = await response.Content.ReadAsStringAsync();
-        var apiErrorMessage = responseContent;
+            var responseContent = await response.Content.ReadAsStringAsync();
+            var apiErrorMessage = responseContent;
 
-        Logger.LogError($"Method: {callingMethod} || HTTP {statusCode} {reasonPhrase} || {httpMethod}: {requestUri} || Message: {apiErrorMessage}");
+            _logger.LogError($"Method: {callingMethod} || HTTP {statusCode} {reasonPhrase} || {httpMethod}: {requestUri} || Message: {apiErrorMessage}");
+        }
     }
 }
