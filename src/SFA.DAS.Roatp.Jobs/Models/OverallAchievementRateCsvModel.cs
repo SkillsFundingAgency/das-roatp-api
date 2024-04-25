@@ -4,11 +4,13 @@ namespace SFA.DAS.Roatp.Jobs.Models;
 
 public class OverallAchievementRateCsvModel
 {
-    [Name("fwk_std_flag")]
+    [Name("time_period")]
+    public int TimePeriod { get; set; }
+    [Name("std_fwk_flag")]
     public string FrameworkStandardFlag { get; set; }
-    [Name("ssa1")]
+    [Name("ssa_tier_1")]
     public string SectorSubjectAreaTier1Desc { get; set; }
-    [Name("ssa2")]
+    [Name("ssa_tier_2")]
     public string SectorSubjectAreaTier2Desc { get; set; }
     [Name("std_fwk_name_stcode")]
     public string StandardFrameworkNameAndSTCode { get; set; }

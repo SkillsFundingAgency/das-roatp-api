@@ -7,7 +7,6 @@ using CsvHelper;
 using CsvHelper.Configuration;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Jobs.Functions;
 using SFA.DAS.Roatp.Jobs.Models;
 using SFA.DAS.Roatp.Jobs.Services;
 using SFA.DAS.Roatp.Jobs.UnitTests.Functions.ImportAchievementRatesFunctionTests;
@@ -16,16 +15,17 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services;
 
 public class DataExtractorServiceTest
 {
+    const string OverallFileName = "app-narts-subject-and-level-detailed.csv";
     [Test]
     public void ThenExtractsAndDeserializesCsvDataFromZipFile()
     {
         DataExtractorService sut = new();
         List<OverallAchievementRateCsvModel> expected = AchievementRatesTestDataHelper.GetAllOverallRatingsRawData();
         using var zipStream = new MemoryStream();
-        AddToZip(expected, ImportAchievementRatesFunction.OverallRatingsImportFileName, zipStream);
+        AddToZip(expected, OverallFileName, zipStream);
 
         //Act
-        var actual = sut.DeserializeCsvDataFromZipStream<OverallAchievementRateCsvModel>(zipStream, ImportAchievementRatesFunction.OverallRatingsImportFileName);
+        var actual = sut.DeserializeCsvDataFromZipStream<OverallAchievementRateCsvModel>(zipStream, OverallFileName);
 
         //Assert
         actual.Should().BeEquivalentTo(expected);

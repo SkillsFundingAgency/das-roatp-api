@@ -13,13 +13,17 @@
     "ConfigurationStorageConnectionString": "UseDevelopmentStorage=true;",
     "EnvironmentName": "LOCAL",
     "LoggingRedisConnectionString": "localhost",
+    "QarTimePeriod": "202223",
+    "QarOverallImportFileName": "app-narts-subject-and-level-detailed.csv",
+    "QarProviderLevelImportFileName": "app-narts-provider-level-fwk-std.csv",
+
     "AzureWebJobs.LoadAllProviderAddressesFunction.Disabled": true,
     "AzureWebJobs.LoadCourseDirectoryDataFunction.Disabled": true,
     "AzureWebJobs.LoadProvidersAddressFunction.Disabled": true,
     "AzureWebJobs.ReloadNationalAcheivementRatesFunction.Disabled": true,
     "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": true,
-    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": false,
+    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": true,
     "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true,
-    "AzureWebJobs.ImportAchievementRatesFunction.Disabled": true
+    "AzureWebJobs.ImportAchievementRatesFunction.Disabled": false
   }
 }

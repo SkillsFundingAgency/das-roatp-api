@@ -4,9 +4,11 @@ namespace SFA.DAS.Roatp.Jobs.Models;
 
 public class ProviderAchievementRateCsvModel
 {
+    [Name("time_period")]
+    public int TimePeriod { get; set; }
     [Name("std_fwk_name_stcode")]
     public string StandardFrameworkNameAndSTCode { get; set; }
-    [Name("ssa1")]
+    [Name("ssa_tier_1")]
     public string SectorSubjectAreaTier1Desc { get; set; }
     [Name("age_youth_adult")]
     public string AgeYouthAdult { get; set; }
