@@ -3,6 +3,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AutoFixture;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
@@ -16,11 +17,21 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions.ImportAchievementRatesFunctionT
 
 public class WhenAValidZipFileIsDroppedInBlob
 {
+    const string OverallFileName = "app-narts-subject-and-level-detailed.csv";
+    const string ProviderLevelFileName = "app-narts-provider-level-fwk-std.csv";
+
     private Mock<IDataExtractorService> _dataExtractorServiceMock;
     private Mock<ICourseManagementOuterApiClient> _coursesApiClientMock;
     private Mock<IImportNationalAchievementRateOverallService> _importAchievementRateOverallServiceMock;
     private Mock<IImportNationalAchievementRateService> _importNationalAchievementRateServiceMock;
     private List<SectorSubjectAreaTier1Model> Ssa1s;
+
+    private static Dictionary<string, string> _config = new Dictionary<string, string>()
+    {
+        {"QarTimePeriod", "202223" },
+        {"QarOverallImportFileName",  OverallFileName},
+        {"QarProviderLevelImportFileName", ProviderLevelFileName}
+    };
 
     [SetUp]
     public async Task SetUp()
@@ -34,13 +45,15 @@ public class WhenAValidZipFileIsDroppedInBlob
         _importAchievementRateOverallServiceMock = new();
         _importNationalAchievementRateServiceMock = new();
 
+        var config = new ConfigurationBuilder().AddInMemoryCollection(_config).Build();
+
         _coursesApiClientMock.Setup(c => c.Get<GetAllSectorSubjectAreaTier1Response>(It.IsAny<string>())).ReturnsAsync((true, new GetAllSectorSubjectAreaTier1Response(Ssa1s)));
 
-        _dataExtractorServiceMock.Setup(d => d.DeserializeCsvDataFromZipStream<OverallAchievementRateCsvModel>(It.IsAny<Stream>(), ImportAchievementRatesFunction.OverallRatingsImportFileName)).Returns(AchievementRatesTestDataHelper.GetAllOverallRatingsRawData());
+        _dataExtractorServiceMock.Setup(d => d.DeserializeCsvDataFromZipStream<OverallAchievementRateCsvModel>(It.IsAny<Stream>(), OverallFileName)).Returns(AchievementRatesTestDataHelper.GetAllOverallRatingsRawData());
 
-        _dataExtractorServiceMock.Setup(d => d.DeserializeCsvDataFromZipStream<ProviderAchievementRateCsvModel>(It.IsAny<Stream>(), ImportAchievementRatesFunction.ProviderRatingsImportFileName)).Returns(AchievementRatesTestDataHelper.GetAllProviderRatingsRawData());
+        _dataExtractorServiceMock.Setup(d => d.DeserializeCsvDataFromZipStream<ProviderAchievementRateCsvModel>(It.IsAny<Stream>(), ProviderLevelFileName)).Returns(AchievementRatesTestDataHelper.GetAllProviderRatingsRawData());
 
-        ImportAchievementRatesFunction sut = new(_dataExtractorServiceMock.Object, _coursesApiClientMock.Object, _importAchievementRateOverallServiceMock.Object, _importNationalAchievementRateServiceMock.Object);
+        ImportAchievementRatesFunction sut = new(_dataExtractorServiceMock.Object, _coursesApiClientMock.Object, _importAchievementRateOverallServiceMock.Object, _importNationalAchievementRateServiceMock.Object, config);
 
         using var zipStream = new MemoryStream();
 
@@ -54,11 +67,11 @@ public class WhenAValidZipFileIsDroppedInBlob
 
     [Test]
     public void ThenExtractsOverallRatingsDataFromBlob()
-        => _dataExtractorServiceMock.Verify(d => d.DeserializeCsvDataFromZipStream<OverallAchievementRateCsvModel>(It.IsAny<Stream>(), ImportAchievementRatesFunction.OverallRatingsImportFileName), Times.Once);
+        => _dataExtractorServiceMock.Verify(d => d.DeserializeCsvDataFromZipStream<OverallAchievementRateCsvModel>(It.IsAny<Stream>(), OverallFileName), Times.Once);
 
     [Test]
     public void ThenExtractsProviderRatingsDataFromBlob()
-        => _dataExtractorServiceMock.Verify(d => d.DeserializeCsvDataFromZipStream<ProviderAchievementRateCsvModel>(It.IsAny<Stream>(), ImportAchievementRatesFunction.ProviderRatingsImportFileName), Times.Once);
+        => _dataExtractorServiceMock.Verify(d => d.DeserializeCsvDataFromZipStream<ProviderAchievementRateCsvModel>(It.IsAny<Stream>(), ProviderLevelFileName), Times.Once);
 
     [Test]
     public void ThenSendsFilteredOverallRatingsDataForImport()
