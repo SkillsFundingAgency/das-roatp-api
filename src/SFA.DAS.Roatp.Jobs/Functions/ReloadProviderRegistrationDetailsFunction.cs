@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Microsoft.Azure.WebJobs;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Jobs.Services;
-using Microsoft.Azure.Functions.Worker;
 
 namespace SFA.DAS.Roatp.Jobs.Functions
 {
@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
             _service = service;
         }
 
-        [Function(nameof(ReloadProviderRegistrationDetailsFunction))]
+        [FunctionName(nameof(ReloadProviderRegistrationDetailsFunction))]
         public async Task Run([TimerTrigger("%ReloadProviderRegistrationDetailsSchedule%", RunOnStartup = false)] TimerInfo myTimer, ILogger log)
         {
             log.LogInformation("ReloadProviderRegistrationDetailsFunction function started");

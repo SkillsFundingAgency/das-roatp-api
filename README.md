@@ -43,7 +43,7 @@ In addition, you will need the following repo set up and running for the jobs to
 #### Requirements
 - Clone this repository
 - Install [Visual Studio 2022](https://www.visualstudio.com/downloads/) with these workloads:
-    - .NET 8 and web development
+    - ASP.NET and web development
     - Azure development
 - Install [SQL Management Studio](https://docs.microsoft.com/en-us/sql/ssms/download-sql-server-management-studio-ssms)
 - Install [Azure Storage Emulator]
@@ -53,7 +53,7 @@ In addition, you will need the following repo set up and running for the jobs to
 #### Setup
 
 - Create a Configuration table in your (Development) local storage account.
-- Obtain the local config json from the das-employer-config for roatp-api repo (https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-roatp-api/SFA.DAS.Roatp.Api.json) and adjust the SqlConnectionString property to match your local setup (eg Data Source=<local database name>;Initial Catalog=SFA.DAS.RoATP.Database;Integrated Security=True;MultipleActiveResultSets=True;TrustServerCertificate=true;")
+- Obtain the local config json from the das-employer-config for roatp-api repo (https://github.com/SkillsFundingAgency/das-employer-config/blob/master/das-roatp-api/SFA.DAS.Roatp.Api.json) and adjust the SqlConnectionString property to match your local setup (eg Data Source=<local database name>;Initial Catalog=SFA.DAS.RoATP.Database;Integrated Security=True;MultipleActiveResultSets=True;")
 - Add a row to the Configuration table with fields: 
   - PartitionKey: LOCAL
   - RowKey: SFA.DAS.Roatp.Api_1.0
