@@ -61,12 +61,13 @@ INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude])
 		('Tower Hamlets','London',51.5203,-0.0293),
 		('Waltham Forest','London',51.5886,-0.0118),
 		('Wandsworth','London',51.4571,-0.1818),
-		('Westminster','London',51.4975,-0.1357)
+		('Westminster','London',51.4975,-0.1357),
+		('Enfield','London',51.6521,-0.08153)
 
 -- North East 12
 INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude]) 
 		VALUES ('County Durham','North East',54.77869,-1.55961),
-		('Darlington','North East',54.52873,-54.52873),
+		('Darlington','North East',54.52873,1.5595),
 		('Gateshead','North East',54.95937,-1.60182),
 		('Hartlepool','North East',54.68249,-1.2167),
 		('Middlesbrough','North East',54.57301,-1.23791),
@@ -186,3 +187,5 @@ if not exists(select * from Region where SubregionName='Enfield')
 		INSERT INTO [dbo].[Region] ([SubregionName],[RegionName],[Latitude],[Longitude]) 
 			VALUES ('Enfield','London',51.6521,-0.08153)
 	END
+
+update [dbo].[Region] set Longitude = 1.5595 where subregionName = 'Darlington' and longitude = '-54.52873'
