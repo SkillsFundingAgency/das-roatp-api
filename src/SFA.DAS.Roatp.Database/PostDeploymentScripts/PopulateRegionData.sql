@@ -188,4 +188,4 @@ if not exists(select * from Region where SubregionName='Enfield')
 			VALUES ('Enfield','London',51.6521,-0.08153)
 	END
 
-update [dbo].[Region] set Longitude = -1.5595 where subregionName = 'Darlington' and longitude = '-54.52873'
+update [dbo].[Region] set Longitude = -1.5595 where subregionName = 'Darlington'
