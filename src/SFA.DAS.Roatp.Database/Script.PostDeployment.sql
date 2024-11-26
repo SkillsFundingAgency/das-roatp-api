@@ -16,4 +16,3 @@ ALTER TABLE [dbo].[ProviderLocation] DROP CONSTRAINT [UK_ProviderLocation_Provid
 GO
 
 :r .\PostDeploymentScripts\PopulateRegionData.sql
-:r .\PostDeploymentScripts\P2-2272.sql
