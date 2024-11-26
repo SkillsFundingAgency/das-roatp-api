@@ -10,6 +10,7 @@
     [IsApprovedByRegulator] BIT NULL,
     [IsImported] BIT NOT NULL DEFAULT 0,
     [HasPortableFlexiJobOption] BIT NOT NULL DEFAULT 0, 
+    [CreatedDate] DATETIME2 DEFAULT GETUTCDATE(),
     CONSTRAINT PK_ProviderCourse PRIMARY KEY (Id),
     CONSTRAINT UK_ProviderCourse_ProviderId_LarsCode UNIQUE (ProviderId, LarsCode),
     CONSTRAINT FK_ProviderCourse_Provider FOREIGN KEY (ProviderId) REFERENCES [Provider] (Id)
