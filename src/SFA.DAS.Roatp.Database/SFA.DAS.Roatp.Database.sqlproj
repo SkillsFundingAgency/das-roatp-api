@@ -78,6 +78,14 @@
     <Build Include="Tables\NationalAchievementRateOverall.sql" />
     <Build Include="Tables\NationalAchievementRateOverallImport.sql" />
     <Build Include="Tables\Audit.sql" />
+    <Build Include="Tables\StandardQAR.sql" />
+    <Build Include="Tables\StandardProviderQAR.sql" />
+    <Build Include="Tables\QARStandardStaging.sql" />
+    <Build Include="Tables\NationalQAR.sql" />
+    <Build Include="Tables\ProviderQAR.sql" />
+    <Build Include="Tables\QARStaging.sql" />
+    <Build Include="Tables\ProviderApprenticeStars.sql" />
+    <Build Include="Tables\ProviderEmployerStars.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
