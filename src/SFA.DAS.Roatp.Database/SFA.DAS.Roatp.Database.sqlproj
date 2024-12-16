@@ -15,7 +15,7 @@
     <ModelCollation>1033, CI</ModelCollation>
     <DefaultFileStructure>BySchemaAndSchemaType</DefaultFileStructure>
     <DeployToDatabase>True</DeployToDatabase>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <TargetLanguage>CS</TargetLanguage>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <SqlServerVerification>False</SqlServerVerification>
@@ -78,8 +78,22 @@
     <Build Include="Tables\NationalAchievementRateOverall.sql" />
     <Build Include="Tables\NationalAchievementRateOverallImport.sql" />
     <Build Include="Tables\Audit.sql" />
+    <Build Include="Tables\StandardQAR.sql" />
+    <Build Include="Tables\StandardProviderQAR.sql" />
+    <Build Include="Tables\QARStandardStaging.sql" />
+    <Build Include="Tables\NationalQAR.sql" />
+    <Build Include="Tables\ProviderQAR.sql" />
+    <Build Include="Tables\QARStaging.sql" />
+    <Build Include="Tables\ProviderApprenticeStars.sql" />
+    <Build Include="Tables\ProviderEmployerStars.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
+    <None Include="PostDeploymentScripts\CSP-1832-Insert_ProviderApprenticeStars.sql" />
+    <None Include="PostDeploymentScripts\CSP-1832-Insert_ProviderEmployerStars.sql" />
+    <None Include="PostDeploymentScripts\CSP-1831-Insert_NationalQAR.sql" />
+    <None Include="PostDeploymentScripts\CSP-1831-Insert_ProviderQAR.sql" />
+    <None Include="PostDeploymentScripts\CSP-1831-Insert_StandardQAR.sql" />
+    <None Include="PostDeploymentScripts\CSP-1831-Insert_StandardProviderQAR.sql" />
   </ItemGroup>
 </Project>
