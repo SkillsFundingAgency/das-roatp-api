@@ -1,6 +1,6 @@
 ﻿CREATE TABLE [dbo].[ProviderQAR]
 (
-[Timeperiod] varchar(4),
+[TimePeriod] varchar(4),
 [Ukprn] bigint,
 [Leavers] varchar(10),
 [AchievementRate] varchar(10),

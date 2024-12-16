@@ -89,11 +89,5 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
-    <None Include="PostDeploymentScripts\CSP-1832-Insert_ProviderApprenticeStars.sql" />
-    <None Include="PostDeploymentScripts\CSP-1832-Insert_ProviderEmployerStars.sql" />
-    <None Include="PostDeploymentScripts\CSP-1831-Insert_NationalQAR.sql" />
-    <None Include="PostDeploymentScripts\CSP-1831-Insert_ProviderQAR.sql" />
-    <None Include="PostDeploymentScripts\CSP-1831-Insert_StandardQAR.sql" />
-    <None Include="PostDeploymentScripts\CSP-1831-Insert_StandardProviderQAR.sql" />
   </ItemGroup>
 </Project>
