@@ -71,8 +71,7 @@ In addition, you will need the following repo set up and running for the jobs to
 - Open Visual studio as an administrator
 - Open the solution
 - Set SFA.DAS.RoATP.Api as the startup project
-- Publish the database project SFA.DAS.RoATP.Database to your local SQL Server instance. This will pre-populate data including QAR and Feedback (but only if have not been previously populated)
-- Running the solution will launch the API in your browser
+- Publish the database project SFA.DAS.RoATP.Database to your local SQL Server instance
 
 ##### Open the Jobs project within the solution
 
