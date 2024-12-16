@@ -16,3 +16,10 @@ ALTER TABLE [dbo].[ProviderLocation] DROP CONSTRAINT [UK_ProviderLocation_Provid
 GO
 
 :r .\PostDeploymentScripts\PopulateRegionData.sql
+-- preset QAR and Feedback
+:r .\PostDeploymentScripts\CSP-1831-Insert_NationalQAR.sql
+:r .\PostDeploymentScripts\CSP-1831-Insert_ProviderQAR.sql
+:r .\PostDeploymentScripts\CSP-1831-Insert_StandardProviderQAR.sql
+:r .\PostDeploymentScripts\CSP-1831-Insert_StandardQAR.sql
+:r .\PostDeploymentScripts\CSP-1832-Insert_ProviderApprenticeStars.sql
+:r .\PostDeploymentScripts\CSP-1832-Insert_ProviderEmployerStars.sql
