@@ -1,13 +1,11 @@
 ﻿CREATE TABLE [dbo].[ProviderQAR]
 (
-[TimePeriod] varchar(4),
-[Ukprn] bigint,
-[Leavers] varchar(10),
-[AchievementRate] varchar(10),
-[CreatedDate] Datetime2 DEFAULT GETUTCDATE()
+  [TimePeriod] VARCHAR(4) NOT NULL,
+  [Ukprn] BIGINT  NOT NULL,
+  [Leavers] VARCHAR(10) NOT NULL,
+  [AchievementRate] VARCHAR(10) NOT NULL,
+  [CreatedDate] DATETIME2  NOT NULL DEFAULT GETUTCDATE(),
+  CONSTRAINT PK_ProviderQAR PRIMARY KEY ([TimePeriod], [Ukprn])
 );
 GO
 
-CREATE UNIQUE INDEX [IXU_ProviderQAR] ON [dbo].[ProviderQAR] ([TimePeriod],[Ukprn]) 
-INCLUDE ([Leavers], [AchievementRate]);
-GO

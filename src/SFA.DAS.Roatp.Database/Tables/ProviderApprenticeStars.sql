@@ -1,12 +1,9 @@
 ﻿CREATE TABLE [dbo].[ProviderApprenticeStars]
 (
-    [Ukprn] [bigint] NOT NULL,
-    [ReviewCount] [int] NOT NULL,
-    [Stars] [int] NOT NULL,
-    [TimePeriod] NVARCHAR(50) NOT NULL
+    [Ukprn] BIGINT NOT NULL,
+    [ReviewCount] INT NOT NULL,
+    [Stars] INT NOT NULL,
+    [TimePeriod] NVARCHAR(50) NOT NULL,
+    CONSTRAINT PK_ProviderApprenticeStars PRIMARY KEY ([TimePeriod], [Ukprn])
 );
-GO
-
-CREATE INDEX IXU_ProviderApprenticeStars ON [dbo].[ProviderApprenticeStars] ([Ukprn],[TimePeriod]) 
-INCLUDE ([ReviewCount],[Stars]);
 GO

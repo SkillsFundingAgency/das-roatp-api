@@ -1,12 +1,9 @@
 ﻿CREATE TABLE [dbo].[NationalQAR]
 (
-[TimePeriod] varchar(4),
-[Leavers] varchar(10),
-[AchievementRate] varchar(10),
-[CreatedDate] Datetime2 DEFAULT GETUTCDATE()
+  [TimePeriod] VARCHAR(4) NOT NULL,
+  [Leavers] VARCHAR(10) NOT NULL,
+  [AchievementRate] VARCHAR(10) NOT NULL,
+  [CreatedDate] DATETIME2  NOT NULL DEFAULT GETUTCDATE(),
+  CONSTRAINT PK_NationalQAR PRIMARY KEY ([TimePeriod])
 );
-GO
-
-CREATE UNIQUE INDEX [IXU_NationalQAR] ON [dbo].[NationalQAR] ([TimePeriod]) 
-INCLUDE ([Leavers], [AchievementRate]);
 GO
