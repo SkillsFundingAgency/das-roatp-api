@@ -61,6 +61,7 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: AT DevTest Shared Resources
+  - group: AT das-roatp-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
@@ -74,6 +75,7 @@ stages:
   variables:
   - group: DevTest Management Resources
   - group: TEST DevTest Shared Resources
+  - group: TEST das-roatp-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
