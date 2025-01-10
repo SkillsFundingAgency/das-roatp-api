@@ -1,10 +1,10 @@
-﻿using Microsoft.Azure.WebJobs;
+﻿using System.Threading.Tasks;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Jobs.Functions;
 using SFA.DAS.Roatp.Jobs.Services;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions
 {

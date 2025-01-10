@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;

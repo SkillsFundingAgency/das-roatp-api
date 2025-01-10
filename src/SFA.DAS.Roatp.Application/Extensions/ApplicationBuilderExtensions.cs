@@ -11,10 +11,10 @@ namespace SFA.DAS.Roatp.Application.Extensions
 {
     [ExcludeFromCodeCoverage]
     public static class ApplicationBuilderExtensions
-    {
+    {   
         public static void UseFluentValidationExceptionHandler(this IApplicationBuilder app)
         {
-            app.UseExceptionHandler(x =>
+            app.UseFluentValidationExceptionHandler(x =>
             {
                 x.Run(async context =>
                 {

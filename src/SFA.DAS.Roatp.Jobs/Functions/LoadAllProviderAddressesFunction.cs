@@ -1,10 +1,9 @@
 ﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Azure.WebJobs;
-using Microsoft.Azure.WebJobs.Extensions.Http;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Jobs.Services;
+using Microsoft.Azure.Functions.Worker;
 
 namespace SFA.DAS.Roatp.Jobs.Functions
 {
@@ -17,7 +16,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions
             _loadUkrlpAddressesService = loadUkrlpAddressesService;
         }
 
-        [FunctionName(nameof(LoadAllProviderAddressesFunction))]
+        [Function(nameof(LoadAllProviderAddressesFunction))]
         public async Task<IActionResult> Run(
             [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "LoadAllProviderAddresses")] HttpRequest req, ILogger log)
         {
