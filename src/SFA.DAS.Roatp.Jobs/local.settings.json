@@ -9,7 +9,7 @@
   "IsEncrypted": false,
   "Values": {
     "AzureWebJobsStorage": "UseDevelopmentStorage=true;",
-    "FUNCTIONS_WORKER_RUNTIME": "dotnet",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
     "ConfigurationStorageConnectionString": "UseDevelopmentStorage=true;",
     "EnvironmentName": "LOCAL",
     "LoggingRedisConnectionString": "localhost",
@@ -25,7 +25,7 @@
     "AzureWebJobs.LoadProvidersAddressFunction.Disabled": true,
     "AzureWebJobs.ReloadNationalAcheivementRatesFunction.Disabled": true,
     "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": true,
-    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": true,
+    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": false,
     "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true,
     "AzureWebJobs.ImportAchievementRatesFunction.Disabled": false
   }

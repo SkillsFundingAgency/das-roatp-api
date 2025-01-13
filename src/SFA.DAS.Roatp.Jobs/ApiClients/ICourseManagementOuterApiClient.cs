@@ -1,10 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿namespace SFA.DAS.Roatp.Jobs.ApiClients;
 
-namespace SFA.DAS.Roatp.Jobs.ApiClients
+public interface ICourseManagementOuterApiClient
 {
-    public interface ICourseManagementOuterApiClient
-    {
-        Task<(bool, T)> Get<T>(string uri);
-        Task<(bool,U)> Post<T, U>(string uri, T model);
-    }
+    Task<(bool, T)> Get<T>(string uri);
+    Task<(bool, U)> Post<T, U>(string uri, T model);
 }

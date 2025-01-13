@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiClients;
@@ -41,7 +38,7 @@ public class UpdateProviderAddressCoordinatesService : IUpdateProviderAddressCoo
                 continue;
             }
 
-            var (success,lookupAddresses) = await _courseManagementOuterApiClient.Get<AddressList>($"lookup/addresses?postcode={address.Postcode}");
+            var (success, lookupAddresses) = await _courseManagementOuterApiClient.Get<AddressList>($"lookup/addresses?postcode={address.Postcode}");
 
             if (!success)
             {
@@ -67,14 +64,14 @@ public class UpdateProviderAddressCoordinatesService : IUpdateProviderAddressCoo
             if (!successfulUpdate)
                 noOfFailures++;
         }
-        if (noOfFailures==0)
+        if (noOfFailures == 0)
             _logger.LogInformation($"ProviderAddress coordinates update for {providerAddressesToProcess.Count} records has completed, with no failures");
         else
         {
             _logger.LogWarning($"ProviderAddress coordinates update for {providerAddressesToProcess.Count} records has completed, with {noOfFailures} failure(s)");
         }
 
-        await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, providerAddressesToProcess.Count-noOfFailures,
+        await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, providerAddressesToProcess.Count - noOfFailures,
             ImportType.ProviderAddressesLatLong));
     }
 }
