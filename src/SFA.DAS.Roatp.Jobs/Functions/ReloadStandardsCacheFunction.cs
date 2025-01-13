@@ -1,28 +1,18 @@
-using Microsoft.Azure.WebJobs;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Jobs.Services;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.Jobs.Functions
+namespace SFA.DAS.Roatp.Jobs.Functions;
+
+public class ReloadStandardsCacheFunction(IReloadStandardsCacheService _reloadStandardsCacheService, ILogger<ReloadStandardsCacheFunction> _logger)
 {
-    public class ReloadStandardsCacheFunction
+    [Function(nameof(ReloadStandardsCacheFunction))]
+    public async Task Run([TimerTrigger("%ReloadStandardsCacheSchedule%")] TimerInfo myTimer)
     {
-        private readonly IReloadStandardsCacheService _reloadStandardsCacheService;
+        _logger.LogInformation("ReloadStandardsCacheFunction function started");
 
-        public ReloadStandardsCacheFunction(IReloadStandardsCacheService reloadStandardsCacheService)
-        {
-            _reloadStandardsCacheService = reloadStandardsCacheService;
-        }
+        await _reloadStandardsCacheService.ReloadStandardsCache();
 
-
-        [FunctionName(nameof(ReloadStandardsCacheFunction))]
-        public async Task Run([TimerTrigger("%ReloadStandardsCacheSchedule%")] TimerInfo myTimer, ILogger log)
-        {
-            log.LogInformation("ReloadStandardsCacheFunction function started");
-
-            await _reloadStandardsCacheService.ReloadStandardsCache();
-
-            log.LogInformation("Standards reload complete");
-        }
+        _logger.LogInformation("Standards reload complete");
     }
 }

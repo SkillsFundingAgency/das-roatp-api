@@ -1,25 +1,23 @@
-﻿using Microsoft.Azure.WebJobs;
+﻿using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Jobs.Functions;
 using SFA.DAS.Roatp.Jobs.Services;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions
+namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions;
+
+[TestFixture]
+public class ReloadProviderRegistrationDetailsFunctionTests
 {
-    [TestFixture]
-    public class ReloadProviderRegistrationDetailsFunctionTests
+    [Test]
+    public async Task Run_InvokesService()
     {
-        [Test]
-        public async Task Run_InvokesService()
-        {
-            var serviceMock = new Mock<IReloadProviderRegistrationDetailService>();
-            var sut = new ReloadProviderRegistrationDetailsFunction(serviceMock.Object);
+        var serviceMock = new Mock<IReloadProviderRegistrationDetailService>();
+        var sut = new ReloadProviderRegistrationDetailsFunction(serviceMock.Object, Mock.Of<ILogger<ReloadProviderRegistrationDetailsFunction>>());
 
-            await sut.Run(default(TimerInfo), Mock.Of<ILogger>());
+        await sut.Run(default);
 
-            serviceMock.Verify(s => s.ReloadProviderRegistrationDetails());
-        }
+        serviceMock.Verify(s => s.ReloadProviderRegistrationDetails());
     }
 }

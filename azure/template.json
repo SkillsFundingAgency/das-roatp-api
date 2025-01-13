@@ -124,7 +124,11 @@
     "configNames": "SFA.DAS.Roatp.Api",
     "qarTimePeriod": "202223",
     "qarOverallImportFileName": "app-narts-subject-and-level-detailed.csv",
-    "qarProviderLevelImportFileName": "app-narts-provider-level-fwk-std.csv"
+    "qarProviderLevelImportFileName": "app-narts-provider-level-fwk-std.csv",
+    "reloadStandardsCacheSchedule": "0 0 20 * * 1-5",
+    "reloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
+    "updateUkrlpDataSchedule": "0 0 23 * * 1-5",
+    "updateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5"
   },
   "resources": [
     {
@@ -497,7 +501,7 @@
                 },
                 {
                   "name": "FUNCTIONS_WORKER_RUNTIME",
-                  "value": "dotnet"
+                  "value": "dotnet-isolated"
                 },
                 {
                   "name": "WEBSITE_RUN_FROM_PACKAGE",
@@ -514,6 +518,22 @@
                 {
                   "name": "QarProviderLevelImportFileName",
                   "value": "[variables('qarProviderLevelImportFileName')]"
+                },
+                {
+                  "name": "ReloadStandardsCacheSchedule",
+                  "value": "[variables('reloadStandardsCacheSchedule')]"
+                },
+                {
+                  "name": "ReloadProviderRegistrationDetailsSchedule",
+                  "value": "[variables('reloadProviderRegistrationDetailsSchedule')]"
+                },
+                {
+                  "name": "UpdateUkrlpDataSchedule",
+                  "value": "[variables('updateUkrlpDataSchedule')]"
+                },
+                {
+                  "name": "UpdateProviderAddressCoordinatesSchedule",
+                  "value": "[variables('updateProviderAddressCoordinatesSchedule')]"
                 }
               ]
             }

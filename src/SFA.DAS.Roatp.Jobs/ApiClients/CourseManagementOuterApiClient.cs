@@ -1,9 +1,6 @@
-﻿using Microsoft.Extensions.Logging;
-using System;
-using System.Net;
-using System.Net.Http;
+﻿using System.Net.Http.Json;
 using System.Text;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace SFA.DAS.Roatp.Jobs.ApiClients
@@ -30,7 +27,7 @@ namespace SFA.DAS.Roatp.Jobs.ApiClients
                     var content = default(T);
                     if (response.IsSuccessStatusCode)
                     {
-                        content = await response.Content.ReadAsAsync<T>();
+                        content = await response.Content.ReadFromJsonAsync<T>();
                         return (true, content);
                     }
                     await LogErrorIfUnsuccessfulResponse(response);
@@ -50,13 +47,13 @@ namespace SFA.DAS.Roatp.Jobs.ApiClients
         
             try
             {
-                using (var response = await _httpClient.PostAsync(new Uri(uri, UriKind.Relative),
+                using (HttpResponseMessage response = await _httpClient.PostAsync(new Uri(uri, UriKind.Relative),
                            new StringContent(serializeObject, Encoding.UTF8,
                                _contentType)))
                 {
                     if (response.IsSuccessStatusCode)
                     {
-                        return (true, await response.Content.ReadAsAsync<U>());
+                        return (true, await response.Content.ReadFromJsonAsync<U>());
                     }
         
                     await LogErrorIfUnsuccessfulResponse(response);

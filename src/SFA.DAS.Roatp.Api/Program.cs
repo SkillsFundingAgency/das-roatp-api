@@ -1,7 +1,6 @@
+using System.Diagnostics.CodeAnalysis;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
-using NLog.Web;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Api
 {
@@ -10,7 +9,6 @@ namespace SFA.DAS.Roatp.Api
     {
         public static void Main(string[] args)
         {
-            NLogBuilder.ConfigureNLog("nlog.config");
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -19,7 +17,6 @@ namespace SFA.DAS.Roatp.Api
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseNLog();
                 });
     }
 }
