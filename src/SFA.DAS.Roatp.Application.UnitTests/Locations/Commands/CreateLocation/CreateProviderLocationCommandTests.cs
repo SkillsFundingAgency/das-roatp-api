@@ -1,10 +1,10 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Models;
-using System;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
 {
@@ -16,8 +16,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.CreateLocation
         {
             var entity = (ProviderLocation)sut;
 
-            Assert.IsNotNull(entity);
-            entity.Should().BeEquivalentTo(sut, options => 
+            entity.Should().NotBeNull();
+            entity.Should().BeEquivalentTo(sut, options =>
             {
                 options.Excluding(c => c.Ukprn);
                 options.Excluding(c => c.UserId);

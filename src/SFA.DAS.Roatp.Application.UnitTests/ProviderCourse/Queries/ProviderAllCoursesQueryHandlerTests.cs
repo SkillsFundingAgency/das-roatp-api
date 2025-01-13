@@ -3,6 +3,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
@@ -29,8 +30,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             standardsReadRepositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
             var response = await sut.Handle(query, cancellationToken);
 
-            Assert.That(response, Is.Not.Null);
-            Assert.AreEqual( courses.Count, response.Result.Count);
+            response.Should().NotBeNull();
+            response.Result.Count.Should().Be(courses.Count);
         }
 
         [Test, MoqAutoData()]
@@ -41,11 +42,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             CancellationToken cancellationToken)
         {
             repoMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(new List<Domain.Entities.ProviderCourse>());
-        
+
             var response = await sut.Handle(query, cancellationToken);
-        
-            Assert.That(response, Is.Not.Null);
-            Assert.AreEqual(0,response.Result.Count);
+
+            response.Should().NotBeNull();
+            response.Result.Should().BeEmpty();
         }
     }
 }

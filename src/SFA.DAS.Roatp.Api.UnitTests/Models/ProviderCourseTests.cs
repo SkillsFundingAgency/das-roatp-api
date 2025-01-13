@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
 
             var expectedPatchProvider = (Domain.Models.ProviderCourse)entity;
 
-            expectedPatchProvider.Should().BeEquivalentTo(patchProviderCourse, c=>c
+            expectedPatchProvider.Should().BeEquivalentTo(patchProviderCourse, c => c
                 .Excluding(s => s.Id)
                 .Excluding(s => s.ProviderId)
                 .Excluding(s => s.Provider)
@@ -50,7 +50,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
         public void ImplicitOperator_NullEntityReturnsNull()
         {
             var expectedPatchProvider = (Domain.Models.ProviderCourse)null;
-            Assert.IsNull(expectedPatchProvider);
+            expectedPatchProvider.Should().BeNull();
         }
     }
 }

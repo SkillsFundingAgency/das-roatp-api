@@ -1,11 +1,12 @@
-﻿using FluentValidation.TestHelper;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using FluentAssertions;
+using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Locations.Commands.BulkInsert;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
 {
@@ -93,7 +94,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             var result = await sut.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.SelectedSubregionIds);
-            Assert.IsTrue(result.Errors.Exists(a => a.ErrorMessage.Contains(EmptptySubregionIdsErrorMessage)));
+            result.Errors.Exists(a => a.ErrorMessage.Contains(EmptptySubregionIdsErrorMessage)).Should().BeTrue();
         }
 
         [Test]
@@ -116,14 +117,14 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             providerCoursesReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), command.LarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
             Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
-            providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(command.Ukprn)).ReturnsAsync(new List<ProviderLocation> { new ProviderLocation { Id = 1, RegionId = 1} });
+            providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(command.Ukprn)).ReturnsAsync(new List<ProviderLocation> { new ProviderLocation { Id = 1, RegionId = 1 } });
 
             var sut = new BulkInsertProviderLocationsCommandValidator(providersReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object);
 
             var result = await sut.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.SelectedSubregionIds);
-            Assert.IsTrue(result.Errors.Exists(a => a.ErrorMessage.Contains(SubRegionsAlreadyExistsErrorMessage)));
+            result.Errors.Exists(a => a.ErrorMessage.Contains(SubRegionsAlreadyExistsErrorMessage)).Should().BeTrue();
         }
     }
 }

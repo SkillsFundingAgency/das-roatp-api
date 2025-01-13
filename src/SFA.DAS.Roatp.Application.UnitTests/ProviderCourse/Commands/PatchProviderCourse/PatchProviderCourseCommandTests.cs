@@ -1,9 +1,8 @@
-﻿using Microsoft.AspNetCore.JsonPatch;
+﻿using FluentAssertions;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.ProviderCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
-using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProviderCourse
 {
@@ -33,8 +32,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                 Patch = patchCommand
             };
 
-            Assert.AreEqual(testValue, command.StandardInfoUrl);
-            Assert.IsTrue(command.IsPresentStandardInfoUrl);
+            testValue.Should().Be(command.StandardInfoUrl);
+            command.IsPresentStandardInfoUrl.Should().BeTrue();
         }
 
         [Test]
@@ -53,8 +52,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                 Patch = patchCommand
             };
 
-            Assert.AreEqual(testValue, command.ContactUsEmail);
-            Assert.IsTrue(command.IsPresentContactUsEmail);
+            testValue.Should().Be(command.ContactUsEmail);
+            command.IsPresentContactUsEmail.Should().BeTrue();
         }
 
         [Test]
@@ -73,8 +72,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                 Patch = patchCommand
             };
 
-            Assert.AreEqual(testValue, command.ContactUsPhoneNumber);
-            Assert.IsTrue(command.IsPresentContactUsPhoneNumber);
+            testValue.Should().Be(command.ContactUsPhoneNumber);
+            command.IsPresentContactUsPhoneNumber.Should().BeTrue();
         }
 
         [Test]
@@ -93,8 +92,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                 Patch = patchCommand
             };
 
-            Assert.AreEqual(testValue, command.ContactUsPageUrl);
-            Assert.IsTrue(command.IsPresentContactUsPageUrl);
+            testValue.Should().Be(command.ContactUsPageUrl);
+            command.IsPresentContactUsPageUrl.Should().BeTrue();
         }
 
         [Test]
@@ -113,8 +112,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                 Patch = patchCommand
             };
 
-            Assert.AreEqual(true, command.IsApprovedByRegulator);
-            Assert.IsTrue(command.IsPresentIsApprovedByRegulator);
+            command.IsApprovedByRegulator.Should().BeTrue();
+            command.IsPresentIsApprovedByRegulator.Should().BeTrue();
         }
 
         [Test]
@@ -131,16 +130,16 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                 Patch = patchCommand
             };
 
-            Assert.AreEqual(null, command.IsApprovedByRegulator);
-            Assert.IsFalse(command.IsPresentIsApprovedByRegulator);
-            Assert.AreEqual(null, command.ContactUsEmail);
-            Assert.IsFalse(command.IsPresentContactUsEmail);
-            Assert.AreEqual(null, command.ContactUsPageUrl);
-            Assert.IsFalse(command.IsPresentContactUsPageUrl);
-            Assert.AreEqual(null, command.ContactUsPhoneNumber);
-            Assert.IsFalse(command.IsPresentContactUsPhoneNumber);
-            Assert.AreEqual(null, command.StandardInfoUrl);
-            Assert.IsFalse(command.IsPresentStandardInfoUrl);
+            command.IsApprovedByRegulator.Should().BeNull();
+            command.IsPresentIsApprovedByRegulator.Should().BeFalse();
+            command.ContactUsEmail.Should().BeNull();
+            command.IsPresentContactUsEmail.Should().BeFalse();
+            command.ContactUsPageUrl.Should().BeNull();
+            command.IsPresentContactUsPageUrl.Should().BeFalse();
+            command.ContactUsPhoneNumber.Should().BeNull();
+            command.IsPresentContactUsPhoneNumber.Should().BeFalse();
+            command.StandardInfoUrl.Should().BeNull();
+            command.IsPresentStandardInfoUrl.Should().BeFalse();
         }
     }
 }

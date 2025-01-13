@@ -15,15 +15,15 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
         {
             var model = (GetProviderDetailsForCourseQueryResult)providerCourseDetailsModel;
 
-            Assert.That(model, Is.Not.Null);
+            model.Should().NotBeNull();
             model.Should().BeEquivalentTo(providerCourseDetailsModel, c => c
                 .Excluding(s => s.LegalName)
                 .Excluding(s => s.StandardContactUrl)
                 .Excluding(s => s.Distance)
-                .Excluding(s=>s.Ukprn));
-            Assert.AreEqual(providerCourseDetailsModel.LegalName, model.Name);
-            Assert.AreEqual(providerCourseDetailsModel.StandardContactUrl, model.ContactUrl);
-            Assert.AreEqual(providerCourseDetailsModel.Distance, model.ProviderHeadOfficeDistanceInMiles);
+                .Excluding(s => s.Ukprn));
+            providerCourseDetailsModel.LegalName.Should().Be(model.Name);
+            providerCourseDetailsModel.StandardContactUrl.Should().Be(model.ContactUrl);
+            providerCourseDetailsModel.Distance.Should().Be(model.ProviderHeadOfficeDistanceInMiles);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             var details = (ProviderCourseDetailsModel)null;
             var model = (GetProviderDetailsForCourseQueryResult)details;
 
-            Assert.IsNull(model);
+            model.Should().BeNull();
         }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Common;
@@ -25,7 +26,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
 
             var result = await sut.ValidateAsync(query);
 
-            Assert.AreEqual(expectedResult, result.IsValid);
+            result.IsValid.Should().Be(expectedResult);
         }
 
         [Test]
@@ -40,16 +41,16 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             var repoMockProvideCourse = new Mock<IProviderCoursesReadRepository>();
             var repoMock = new Mock<IProvidersReadRepository>();
             var sut = new GetProviderCourseQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
-        
+
             var result = await sut.ValidateAsync(query);
-        
+
             repoMock.Verify(x => x.GetByUkprn(It.IsAny<int>()), Times.Exactly(expectedTimesRepoIsInvoked));
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 2);
-            Assert.AreEqual(expectedErrorMessage1, result.Errors[0].ErrorMessage);
-            Assert.AreEqual(expectedErrorMessage2, result.Errors[1].ErrorMessage);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(2);
+            expectedErrorMessage1.Should().Be(result.Errors[0].ErrorMessage);
+            expectedErrorMessage2.Should().Be(result.Errors[1].ErrorMessage);
         }
-        
+
         [Test]
         public async Task Validate_InvalidUkprnLarsCode_CourseDataNotFound()
         {
@@ -63,13 +64,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             repoMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
             repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync((Domain.Entities.ProviderCourse)null);
             var sut = new GetProviderCourseQueryValidator(repoMock.Object, repoMockProvideCourse.Object);
-        
+
             var result = await sut.ValidateAsync(query);
-        
+
             repoMock.Verify(x => x.GetByUkprn(It.IsAny<int>()), Times.Exactly(expectedTimesRepoIsInvoked));
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(expectedErrorMessage1, result.Errors[0].ErrorMessage);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            expectedErrorMessage1.Should().Be(result.Errors[0].ErrorMessage);
         }
     }
 }
