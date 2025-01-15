@@ -4,7 +4,6 @@
     <EnableNETAnalyzers>false</EnableNETAnalyzers>
   </PropertyGroup>
   <ItemGroup>
-    <Content Remove="appsettings.Development.json" />
     <Content Remove="appsettings.json" />
   </ItemGroup>
 
