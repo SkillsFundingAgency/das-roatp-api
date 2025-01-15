@@ -42,7 +42,6 @@ public static class ServiceCollectionExtensions
         services.AddTransient<IProviderCourseLocationsReadRepository, ProviderCourseLocationsReadRepository>();
         services.AddTransient<IProviderCourseLocationsWriteRepository, ProviderCourseLocationsWriteRepository>();
         services.AddTransient<IProviderCourseLocationsBulkRepository, ProviderCourseLocationsBulkRepository>();
-        services.AddTransient<ILoadProviderRepository, LoadProviderRepository>();
         services.AddTransient<IProviderRegistrationDetailsReadRepository, ProviderRegistrationDetailsReadRepository>();
         services.AddTransient<IProviderRegistrationDetailsWriteRepository, ProviderRegistrationDetailsWriteRepository>();
         services.AddTransient<IProviderLocationsWriteRepository, ProviderLocationsWriteRepository>();
