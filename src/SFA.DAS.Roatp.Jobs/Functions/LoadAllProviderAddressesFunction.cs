@@ -4,28 +4,20 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Jobs.Services;
 
-namespace SFA.DAS.Roatp.Jobs.Functions
+namespace SFA.DAS.Roatp.Jobs.Functions;
+
+public class LoadAllProviderAddressesFunction(ILoadUkrlpAddressesService _loadUkrlpAddressesService, ILogger<LoadAllProviderAddressesFunction> _logger)
 {
-    public class LoadAllProviderAddressesFunction
+    [Function(nameof(LoadAllProviderAddressesFunction))]
+    public async Task<IActionResult> Run(
+        [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "LoadAllProviderAddresses")] HttpRequest req)
     {
-        private readonly ILoadUkrlpAddressesService _loadUkrlpAddressesService;
+        var result = await _loadUkrlpAddressesService.LoadAllProvidersAddresses();
+        if (result)
+            _logger.LogInformation("Ukrlp Addresses updated");
+        else
+            _logger.LogWarning("Ukrlp addresses not updated");
 
-        public LoadAllProviderAddressesFunction(ILoadUkrlpAddressesService loadUkrlpAddressesService)
-        {
-            _loadUkrlpAddressesService = loadUkrlpAddressesService;
-        }
-
-        [Function(nameof(LoadAllProviderAddressesFunction))]
-        public async Task<IActionResult> Run(
-            [HttpTrigger(AuthorizationLevel.Function, "POST", Route = "LoadAllProviderAddresses")] HttpRequest req, ILogger log)
-        {
-            var result = await _loadUkrlpAddressesService.LoadAllProvidersAddresses();
-            if (result)
-                log.LogInformation("Ukrlp Addresses updated");
-            else
-                log.LogWarning("Ukrlp addresses not updated");
-
-            return new OkObjectResult(result);
-        }
+        return new OkObjectResult(result);
     }
 }

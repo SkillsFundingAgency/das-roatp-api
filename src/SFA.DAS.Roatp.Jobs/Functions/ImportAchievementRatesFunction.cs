@@ -16,16 +16,18 @@ public class ImportAchievementRatesFunction
     private readonly IDataExtractorService _dataExtractorService;
     private readonly IImportNationalAchievementRateOverallService _importAchievementRateOverallService;
     private readonly IImportNationalAchievementRateService _importNationalAchievementRateService;
+    private readonly ILogger<ImportAchievementRatesFunction> _logger;
     private readonly string _timePeriod;
     private readonly string _providerRatingsImportFileName;
     private readonly string _overallRatingsImportFileName;
 
-    public ImportAchievementRatesFunction(IDataExtractorService dataExtractorService, ICourseManagementOuterApiClient courseManagementOuterApiClient, IImportNationalAchievementRateOverallService importAchievementRateOverallService, IImportNationalAchievementRateService importNationalAchievementRateService, IConfiguration configuration)
+    public ImportAchievementRatesFunction(IDataExtractorService dataExtractorService, ICourseManagementOuterApiClient courseManagementOuterApiClient, IImportNationalAchievementRateOverallService importAchievementRateOverallService, IImportNationalAchievementRateService importNationalAchievementRateService, IConfiguration configuration, ILogger<ImportAchievementRatesFunction> logger)
     {
         _dataExtractorService = dataExtractorService;
         _courseManagementOuterApiClient = courseManagementOuterApiClient;
         _importAchievementRateOverallService = importAchievementRateOverallService;
         _importNationalAchievementRateService = importNationalAchievementRateService;
+        _logger = logger;
 
         _timePeriod = configuration["QarTimePeriod"];
         _providerRatingsImportFileName = configuration["QarProviderLevelImportFileName"];
@@ -33,9 +35,9 @@ public class ImportAchievementRatesFunction
     }
 
     //[Function("Achievement-Rates-Import")]
-    public async Task Run([BlobTrigger("qar-updates/{name}")] Stream blobStream, string name, ILogger log)
+    public async Task Run([BlobTrigger("qar-updates/{name}")] Stream blobStream, string name)
     {
-        log.LogInformation("Beginning to process blob\n Name:{FileName}\n Size:{BlobStreamLength} bytes", name, blobStream.Length);
+        _logger.LogInformation("Beginning to process blob\n Name:{FileName}\n Size:{BlobStreamLength} bytes", name, blobStream.Length);
 
         if (string.IsNullOrWhiteSpace(_timePeriod) || !int.TryParse(_timePeriod, out var timePeriod))
         {
@@ -45,7 +47,7 @@ public class ImportAchievementRatesFunction
         var ssa1s = await GetStandardSectorAreaTier1LookupData();
 
         var rawOverallData = _dataExtractorService.DeserializeCsvDataFromZipStream<OverallAchievementRateCsvModel>(blobStream, _overallRatingsImportFileName);
-        log.LogInformation("Overall achievement rates import data total row count: {QarImportOverallCount}", rawOverallData.Count);
+        _logger.LogInformation("Overall achievement rates import data total row count: {QarImportOverallCount}", rawOverallData.Count);
 
         var filteredOverallRatingsData = rawOverallData.Where(o =>
                o.TimePeriod == timePeriod
@@ -63,7 +65,7 @@ public class ImportAchievementRatesFunction
         if (rawOverallData.Count > 0) await _importAchievementRateOverallService.ImportData(filteredOverallRatingsData, ssa1s);
 
         var rawProviderData = _dataExtractorService.DeserializeCsvDataFromZipStream<ProviderAchievementRateCsvModel>(blobStream, _providerRatingsImportFileName);
-        log.LogInformation("Provider achievement rates import data total row count: {QarImportProviderLevelCount}", rawProviderData.Count);
+        _logger.LogInformation("Provider achievement rates import data total row count: {QarImportProviderLevelCount}", rawProviderData.Count);
 
         var filteredProviderRatingsData = rawProviderData.Where(p =>
                p.TimePeriod == timePeriod

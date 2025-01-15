@@ -15,12 +15,12 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions
         [Test]
         public async Task Run_ServiceReturnsTrue_LogInformation()
         {
-            var loggerMock = new Mock<ILogger>();
+            var loggerMock = new Mock<ILogger<LoadAllProviderAddressesFunction>>();
             var serviceMock = new Mock<ILoadUkrlpAddressesService>();
             serviceMock.Setup(x => x.LoadAllProvidersAddresses()).ReturnsAsync(true);
-            var sut = new LoadAllProviderAddressesFunction(serviceMock.Object);
+            var sut = new LoadAllProviderAddressesFunction(serviceMock.Object, loggerMock.Object);
 
-            await sut.Run(It.IsAny<HttpRequest>(),loggerMock.Object);
+            await sut.Run(It.IsAny<HttpRequest>());
 
             serviceMock.Verify(s => s.LoadAllProvidersAddresses());
 
@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions
                     It.IsAny<EventId>(),
                     It.IsAny<It.IsAnyType>(),
                     It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),Times.Once);
+                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Once);
 
             loggerMock.Verify(
                 x => x.Log(
@@ -45,12 +45,12 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions
         [Test]
         public async Task Run_ServiceReturnsFalse_LogWarning()
         {
-            var loggerMock = new Mock<ILogger>();
+            var loggerMock = new Mock<ILogger<LoadAllProviderAddressesFunction>>();
             var serviceMock = new Mock<ILoadUkrlpAddressesService>();
             serviceMock.Setup(x => x.LoadAllProvidersAddresses()).ReturnsAsync(false);
-            var sut = new LoadAllProviderAddressesFunction(serviceMock.Object);
+            var sut = new LoadAllProviderAddressesFunction(serviceMock.Object, loggerMock.Object);
 
-            await sut.Run(It.IsAny<HttpRequest>(), loggerMock.Object);
+            await sut.Run(It.IsAny<HttpRequest>());
 
             serviceMock.Verify(s => s.LoadAllProvidersAddresses());
 
@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions
                     It.IsAny<EventId>(),
                     It.IsAny<It.IsAnyType>(),
                     It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)),Times.Never);
+                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Never);
 
 
             loggerMock.Verify(
