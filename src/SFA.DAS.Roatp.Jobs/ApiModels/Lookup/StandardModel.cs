@@ -5,7 +5,7 @@ public class StandardModel
     public string StandardUId { get; set; }
     public int LarsCode { get; set; }
     public string IfateReferenceNumber { get; set; }
-    public string Level { get; set; }
+    public int Level { get; set; }
     public string Version { get; set; }
     public string Title { get; set; }
     public string ApprovalBody { get; set; }
@@ -19,7 +19,7 @@ public class StandardModel
             LarsCode = standard.LarsCode,
             Title = standard.Title,
             Version = standard.Version,
-            Level = Convert.ToInt32(standard.Level),
+            Level = standard.Level,
             ApprovalBody = string.IsNullOrWhiteSpace(standard.ApprovalBody) ? null : standard.ApprovalBody,
             SectorSubjectAreaTier1 = standard.SectorSubjectAreaTier1
         };

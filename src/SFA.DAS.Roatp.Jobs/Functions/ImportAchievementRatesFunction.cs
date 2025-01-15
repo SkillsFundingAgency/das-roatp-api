@@ -32,7 +32,7 @@ public class ImportAchievementRatesFunction
         _overallRatingsImportFileName = configuration["QarOverallImportFileName"];
     }
 
-    [Function("Achievement-Rates-Import")]
+    //[Function("Achievement-Rates-Import")]
     public async Task Run([BlobTrigger("qar-updates/{name}")] Stream blobStream, string name, ILogger log)
     {
         log.LogInformation("Beginning to process blob\n Name:{FileName}\n Size:{BlobStreamLength} bytes", name, blobStream.Length);
