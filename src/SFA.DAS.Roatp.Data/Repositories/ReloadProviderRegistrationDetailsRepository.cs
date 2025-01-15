@@ -8,21 +8,25 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Data.Repositories
+namespace SFA.DAS.Roatp.Data.Repositories;
+
+[ExcludeFromCodeCoverage]
+internal class ReloadProviderRegistrationDetailsRepository : IReloadProviderRegistrationDetailsRepository
 {
-    [ExcludeFromCodeCoverage]
-    internal class ReloadProviderRegistrationDetailsRepository : IReloadProviderRegistrationDetailsRepository
+    private readonly RoatpDataContext _roatpDataContext;
+    private readonly ILogger<ReloadProviderRegistrationDetailsRepository> _logger;
+
+    public ReloadProviderRegistrationDetailsRepository(RoatpDataContext roatpDataContext, ILogger<ReloadProviderRegistrationDetailsRepository> logger)
     {
-        private readonly RoatpDataContext _roatpDataContext;
-        private readonly ILogger<ReloadProviderRegistrationDetailsRepository> _logger;
+        _roatpDataContext = roatpDataContext;
+        _logger = logger;
+    }
 
-        public ReloadProviderRegistrationDetailsRepository(RoatpDataContext roatpDataContext, ILogger<ReloadProviderRegistrationDetailsRepository> logger)
-        {
-            _roatpDataContext = roatpDataContext;
-            _logger = logger;
-        }
+    public async Task<bool> ReloadRegisteredProviders(List<ProviderRegistrationDetail> providerRegistrationDetails, DateTime timeStarted)
+    {
+        var strategy = _roatpDataContext.Database.CreateExecutionStrategy();
 
-        public async Task<bool> ReloadRegisteredProviders(List<ProviderRegistrationDetail> providerRegistrationDetails, DateTime timeStarted)
+        await strategy.ExecuteAsync(async () =>
         {
             await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
             try
@@ -39,8 +43,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 _logger.LogError(ex, "ProviderRegistrationDetail reload failed on database update");
                 throw;
             }
+        });
 
-            return true;
-        }
+        return true;
     }
 }

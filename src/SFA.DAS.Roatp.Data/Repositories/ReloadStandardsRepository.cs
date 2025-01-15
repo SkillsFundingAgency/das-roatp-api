@@ -33,20 +33,25 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public async Task<bool> ReloadStandards(List<Standard> standards)
         {
-            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
-            try
+            var strategy = _roatpDataContext.Database.CreateExecutionStrategy();
+
+            await strategy.ExecuteAsync(async () =>
             {
-                await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM Standard");
-                await _roatpDataContext.BulkInsertAsync(standards);
-                await _roatpDataContext.SaveChangesAsync();
-                await transaction.CommitAsync();
-            }
-            catch (Exception ex)
-            {
-                await transaction.RollbackAsync();
-                _logger.LogError(ex, "Standards reload failed on database update");
-                throw;
-            }
+                using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
+                try
+                {
+                    await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM Standard");
+                    await _roatpDataContext.BulkInsertAsync(standards);
+                    await _roatpDataContext.SaveChangesAsync();
+                    await transaction.CommitAsync();
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    _logger.LogError(ex, "Standards reload failed on database update");
+                    throw;
+                }
+            });
 
             return true;
         }
