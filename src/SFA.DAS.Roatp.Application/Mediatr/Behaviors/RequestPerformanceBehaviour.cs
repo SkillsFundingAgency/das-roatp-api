@@ -11,9 +11,9 @@ namespace SFA.DAS.Roatp.Application.Mediatr.Behaviors
     public class RequestPerformanceBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>
     {
-        private readonly ILogger<TRequest> _logger;
+        private readonly ILogger<RequestPerformanceBehaviour<TRequest, TResponse>> _logger;
 
-        public RequestPerformanceBehaviour(ILogger<TRequest> logger)
+        public RequestPerformanceBehaviour(ILogger<RequestPerformanceBehaviour<TRequest, TResponse>> logger)
         {
             _logger = logger;
         }

@@ -1,6 +1,4 @@
-# ![crest](https://assets.publishing.service.gov.uk/government/assets/crests/org_crest_27px-916806dcf065e7273830577de490d5c7c42f36ddec83e907efe62086785f24fb.png) Digital Apprenticeships Service
-
-# Register of Apprenticeship Training Providers (RoATP) Course Management API
+# Register of Apprenticeship Training Providers (RoATP v2) Course Management API
 
 <img src="https://avatars.githubusercontent.com/u/9841374?s=200&v=4" align="right" alt="UK Government logo">
 

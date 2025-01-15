@@ -60,7 +60,7 @@ public class ImportAchievementRatesFunction
             && int.TryParse(o.OverallCohort, out _)
             && decimal.TryParse(o.OverallAchievementRate, out _));
 
-        if (rawOverallData.Any()) await _importAchievementRateOverallService.ImportData(filteredOverallRatingsData, ssa1s);
+        if (rawOverallData.Count > 0) await _importAchievementRateOverallService.ImportData(filteredOverallRatingsData, ssa1s);
 
         var rawProviderData = _dataExtractorService.DeserializeCsvDataFromZipStream<ProviderAchievementRateCsvModel>(blobStream, _providerRatingsImportFileName);
         log.LogInformation("Provider achievement rates import data total row count: {QarImportProviderLevelCount}", rawProviderData.Count);
@@ -74,7 +74,7 @@ public class ImportAchievementRatesFunction
             && int.TryParse(p.OverallCohort, out _)
             && decimal.TryParse(p.OverallAchievementRate, out _));
 
-        if (rawProviderData.Any()) await _importNationalAchievementRateService.ImportData(filteredProviderRatingsData, ssa1s);
+        if (rawProviderData.Count > 0) await _importNationalAchievementRateService.ImportData(filteredProviderRatingsData, ssa1s);
     }
 
     private async Task<List<SectorSubjectAreaTier1Model>> GetStandardSectorAreaTier1LookupData()

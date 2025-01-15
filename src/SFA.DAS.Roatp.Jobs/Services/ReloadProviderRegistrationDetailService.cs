@@ -37,7 +37,7 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
             _logger.LogError(errorMessage);
             throw new InvalidOperationException(errorMessage);
         }
-        _logger.LogInformation($"Reloading {providerRegistrationDetails.Count} provider registration details");
+        _logger.LogInformation("Reloading {Count} provider registration details", providerRegistrationDetails.Count);
         await _reloadProviderRegistrationDetailsRepository.ReloadRegisteredProviders(providerRegistrationDetails, timeStarted);
     }
 
@@ -55,18 +55,18 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
 
         var (success, ukrlpResponse) = await _courseManagementOuterApiClient.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", request);
 
-        if (!success || !ukrlpResponse.Any())
+        if (!success || ukrlpResponse.Count == 0)
         {
-            _logger.LogError($"LoadAllProviderAddressesFunction function failed to get ukrlp addresses");
+            _logger.LogError("LoadAllProviderAddressesFunction function failed to get ukrlp addresses");
             return;
         }
 
         foreach (var activeProvider in activeProvidersOnRegister)
         {
-            var ukrlpProvider = ukrlpResponse.FirstOrDefault(x => x.Ukprn == activeProvider.Ukprn);
+            var ukrlpProvider = ukrlpResponse.Find(x => x.Ukprn == activeProvider.Ukprn);
             if (ukrlpProvider == null)
             {
-                _logger.LogWarning($"Unable to get address from UKRLP for provider ukprn: {activeProvider.Ukprn}");
+                _logger.LogWarning("Unable to get address from UKRLP for provider ukprn: {Ukprn}", activeProvider.Ukprn);
                 continue;
 
             }
@@ -87,7 +87,7 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
         {
             if (string.IsNullOrWhiteSpace(provider.Postcode))
             {
-                _logger.LogWarning("Provider with Ukprn: {ukprn} has no postcode", provider.Ukprn);
+                _logger.LogWarning("Provider with Ukprn: {Ukprn} has no postcode", provider.Ukprn);
                 continue;
             }
 
@@ -95,13 +95,13 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
 
             if (!success)
             {
-                _logger.LogWarning("Attempt to get address for Ukprn:{ukprn} Postcode: {postcode} failed", provider.Ukprn, provider.Postcode);
+                _logger.LogWarning("Attempt to get address for Ukprn:{Ukprn} Postcode: {Postcode} failed", provider.Ukprn, provider.Postcode);
                 continue;
             }
 
-            if (!lookupAddresses.Addresses.Any())
+            if (lookupAddresses.Addresses.Count == 0)
             {
-                _logger.LogWarning("Attempt to get address for Ukprn:{ukprn} Postcode: {postcode} returned no addresses", provider.Ukprn, provider.Postcode);
+                _logger.LogWarning("Attempt to get address for Ukprn:{Ukprn} Postcode: {Postcode} returned no addresses", provider.Ukprn, provider.Postcode);
                 continue;
             }
 

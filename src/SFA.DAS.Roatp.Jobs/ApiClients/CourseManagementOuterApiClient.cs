@@ -36,7 +36,7 @@ public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, $"Error when processing request: {HttpMethod.Get} - {uri}");
+            _logger.LogError(ex, "Error when processing request: Get - {Uri}", uri);
             throw;
         }
     }
@@ -63,7 +63,7 @@ public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
         }
         catch (HttpRequestException ex)
         {
-            _logger.LogError(ex, $"Error when processing request: {HttpMethod.Post} - {uri}");
+            _logger.LogError(ex, "Error when processing request: Post - {Uri}", uri);
             throw;
         }
     }
@@ -80,6 +80,6 @@ public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
         var responseContent = await response.Content.ReadAsStringAsync();
         var apiErrorMessage = responseContent;
 
-        _logger.LogError($"Method: {callingMethod} || HTTP {statusCode} {reasonPhrase} || {httpMethod}: {requestUri} || Message: {apiErrorMessage}");
+        _logger.LogError("Method: {CallingMethod} || HTTP {StatusCode} {ReasonPhrase} || {HttpMethod}: {RequestUri} || Message: {ApiErrorMessage}", callingMethod, statusCode, reasonPhrase, httpMethod, requestUri, apiErrorMessage);
     }
 }

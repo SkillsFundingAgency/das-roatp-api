@@ -15,9 +15,9 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
     where TRequest : IRequest<TResponse>
 {
     private readonly IValidator<TRequest> _compositeValidator;
-    private readonly ILogger<TRequest> _logger;
+    private readonly ILogger<ValidationBehavior<TRequest, TResponse>> _logger;
 
-    public ValidationBehavior(IValidator<TRequest> compositeValidator, ILogger<TRequest> logger)
+    public ValidationBehavior(IValidator<TRequest> compositeValidator, ILogger<ValidationBehavior<TRequest, TResponse>> logger)
     {
         _compositeValidator = compositeValidator;
         _logger = logger;

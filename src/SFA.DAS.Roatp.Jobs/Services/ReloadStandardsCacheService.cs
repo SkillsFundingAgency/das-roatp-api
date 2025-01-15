@@ -25,7 +25,7 @@ public class ReloadStandardsCacheService : IReloadStandardsCacheService
     {
         var timeStarted = DateTime.UtcNow;
         var (success, standardList) = await _courseManagementOuterApiClient.Get<StandardList>("lookup/standards");
-        if (!success || !standardList.Standards.Any())
+        if (!success || standardList.Standards.Count == 0)
         {
             _logger.LogError("ReloadStandardsCacheFunction function failed to get active standards");
             throw new InvalidOperationException("No standards were retrieved from courses api");

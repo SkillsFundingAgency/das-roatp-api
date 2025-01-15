@@ -33,7 +33,7 @@ public class UpdateProviderAddressCoordinatesService : IUpdateProviderAddressCoo
         {
             if (address.Postcode == null)
             {
-                _logger.LogInformation($"ProviderAddress Id: {address.Id} has no postcode");
+                _logger.LogInformation("ProviderAddress Id: {AddressId} has no postcode", address.Id);
                 noOfFailures++;
                 continue;
             }
@@ -42,14 +42,14 @@ public class UpdateProviderAddressCoordinatesService : IUpdateProviderAddressCoo
 
             if (!success)
             {
-                _logger.LogWarning($"Attempt to get address for  postcode {address.Postcode} failed");
+                _logger.LogWarning("Attempt to get address for  postcode {Postcode} failed", address.Postcode);
                 noOfFailures++;
                 continue;
             }
 
             if (!lookupAddresses.Addresses.Any())
             {
-                _logger.LogWarning($"Attempt to get address for  postcode {address.Postcode} returned no addresses");
+                _logger.LogWarning("Attempt to get address for  postcode {Postcode} returned no addresses", address.Postcode);
                 noOfFailures++;
                 continue;
             }
@@ -65,10 +65,10 @@ public class UpdateProviderAddressCoordinatesService : IUpdateProviderAddressCoo
                 noOfFailures++;
         }
         if (noOfFailures == 0)
-            _logger.LogInformation($"ProviderAddress coordinates update for {providerAddressesToProcess.Count} records has completed, with no failures");
+            _logger.LogInformation("ProviderAddress coordinates update for {Count} records has completed, with no failures", providerAddressesToProcess.Count);
         else
         {
-            _logger.LogWarning($"ProviderAddress coordinates update for {providerAddressesToProcess.Count} records has completed, with {noOfFailures} failure(s)");
+            _logger.LogWarning("ProviderAddress coordinates update for {Count} records has completed, with {NoOfFailures} failure(s)", providerAddressesToProcess.Count, noOfFailures);
         }
 
         await _importAuditWriteRepository.Insert(new ImportAudit(timeStarted, providerAddressesToProcess.Count - noOfFailures,

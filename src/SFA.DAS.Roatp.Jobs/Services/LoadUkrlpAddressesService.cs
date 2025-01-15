@@ -40,23 +40,23 @@ public class LoadUkrlpAddressesService : ILoadUkrlpAddressesService
 
         var (success, ukrlpResponse) = await _courseManagementOuterApiClient.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", request);
 
-        if (!success || !ukrlpResponse.Any())
+        if (!success || ukrlpResponse.Count == 0)
         {
-            _logger.LogError($"LoadAllProviderAddressesFunction function failed to get ukrlp addresses");
+            _logger.LogError("LoadAllProviderAddressesFunction function failed to get ukrlp addresses");
             return false;
         }
 
         var providerAddresses = new List<ProviderAddress>();
         foreach (var ukrlpProvider in ukrlpResponse)
         {
-            var providerId = providers.FirstOrDefault(x => x.Ukprn == ukrlpProvider.Ukprn)?.Id;
+            var providerId = providers.Find(x => x.Ukprn == ukrlpProvider.Ukprn)?.Id;
             if (providerId != null)
             {
                 providerAddresses.Add(MapProviderAddress(ukrlpProvider, providerId.GetValueOrDefault()));
             }
             else
             {
-                _logger.LogInformation($"There was no matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was not added to ProviderAddress");
+                _logger.LogInformation("There was no matching ProviderId for ukprn {Ukprn}, so this was not added to ProviderAddress", ukrlpProvider.Ukprn);
             }
         }
 
@@ -83,38 +83,38 @@ public class LoadUkrlpAddressesService : ILoadUkrlpAddressesService
 
         var (success, ukrlpResponse) = await _courseManagementOuterApiClient.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", request);
 
-        if (!success || !ukrlpResponse.Any())
+        if (!success || ukrlpResponse.Count == 0)
         {
-            _logger.LogError($"LoadProviderAddressesFunction function failed to get ukrlp addresses");
+            _logger.LogError("LoadProviderAddressesFunction function failed to get ukrlp addresses");
             return false;
         }
 
-        _logger.LogInformation($"LoadProviderAddressesFunction function returned {ukrlpResponse.Count} ukrlp addresses");
+        _logger.LogInformation("LoadProviderAddressesFunction function returned {Count} ukrlp addresses", ukrlpResponse.Count);
         var providers = await _providersReadRepository.GetAllProviders();
 
 
         var providerAddresses = new List<ProviderAddress>();
         foreach (var ukrlpProvider in ukrlpResponse)
         {
-            var providerId = providers.FirstOrDefault(x => x.Ukprn == ukrlpProvider.Ukprn)?.Id;
+            var providerId = providers.Find(x => x.Ukprn == ukrlpProvider.Ukprn)?.Id;
             if (providerId != null)
             {
                 providerAddresses.Add(MapProviderAddress(ukrlpProvider, providerId.GetValueOrDefault()));
-                _logger.LogInformation($"There is a matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was added to ProviderAddresses to process");
+                _logger.LogInformation("There is a matching ProviderId for ukprn {Ukprn}, so this was added to ProviderAddresses to process", ukrlpProvider.Ukprn);
             }
             else
             {
-                _logger.LogInformation($"There was no matching ProviderId for ukprn {ukrlpProvider.Ukprn}, so this was not added to ProviderAddresses to process");
+                _logger.LogInformation("There was no matching ProviderId for ukprn {Ukprn}, so this was not added to ProviderAddresses to process", ukrlpProvider.Ukprn);
             }
         }
 
-        if (!providerAddresses.Any())
+        if (providerAddresses.Count == 0)
         {
             _logger.LogInformation("No providers to update from the ProviderAddress upsert");
             return true;
         }
 
-        _logger.LogInformation($"{providerAddresses.Count} providers found to update from the ProviderAddress upsert");
+        _logger.LogInformation("{Count} providers found to update from the ProviderAddress upsert", providerAddresses.Count);
 
         var successfulUpsert = await _providerAddressesRepository.UpsertProviderAddresses(providerAddresses);
 
