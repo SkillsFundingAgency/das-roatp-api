@@ -10,7 +10,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Data.Extensions;
 
 [ExcludeFromCodeCoverage]
-public static class ServiceCollectionExtensions
+public static class AddRoatpDataContextExtension
 {
     public static IServiceCollection AddRoatpDataContext(this IServiceCollection services, IConfiguration configuration)
     {

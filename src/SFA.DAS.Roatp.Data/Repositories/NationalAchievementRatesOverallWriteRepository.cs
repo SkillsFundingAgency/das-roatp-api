@@ -1,28 +1,32 @@
-﻿using EFCore.BulkExtensions;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using EFCore.BulkExtensions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 
-namespace SFA.DAS.Roatp.Data.Repositories
+namespace SFA.DAS.Roatp.Data.Repositories;
+
+[ExcludeFromCodeCoverage]
+internal class NationalAchievementRatesOverallWriteRepository : INationalAchievementRatesOverallWriteRepository
 {
-    [ExcludeFromCodeCoverage]
-    internal class NationalAchievementRatesOverallWriteRepository : INationalAchievementRatesOverallWriteRepository
+    private readonly RoatpDataContext _roatpDataContext;
+    private readonly ILogger<NationalAchievementRatesOverallWriteRepository> _logger;
+
+    public NationalAchievementRatesOverallWriteRepository(RoatpDataContext roatpDataContext, ILogger<NationalAchievementRatesOverallWriteRepository> logger)
     {
-        private readonly RoatpDataContext _roatpDataContext;
-        private readonly ILogger<NationalAchievementRatesOverallWriteRepository> _logger;
+        _roatpDataContext = roatpDataContext;
+        _logger = logger;
+    }
 
-        public NationalAchievementRatesOverallWriteRepository(RoatpDataContext roatpDataContext, ILogger<NationalAchievementRatesOverallWriteRepository> logger)
-        {
-            _roatpDataContext = roatpDataContext;
-            _logger = logger;
-        }
+    public async Task Reload(List<NationalAchievementRateOverall> items)
+    {
+        var strategy = _roatpDataContext.Database.CreateExecutionStrategy();
 
-        public async Task Reload(List<NationalAchievementRateOverall> items)
+        await strategy.ExecuteAsync(async () =>
         {
             await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
             try
@@ -38,6 +42,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 _logger.LogError(ex, "NationalAchievementRateOverall reload failed on database update");
                 throw;
             }
-        }
+        });
     }
 }
