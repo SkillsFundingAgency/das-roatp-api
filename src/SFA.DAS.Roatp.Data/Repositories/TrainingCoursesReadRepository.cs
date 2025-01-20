@@ -1,14 +1,15 @@
 ﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using System.Collections.Generic;
 using System.Data.Common;
+using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Data.Repositories;
 
+[ExcludeFromCodeCoverage]
 public sealed class TrainingCoursesReadRepository : ITrainingCoursesReadRepository
 {
     private readonly DbConnection _dbConnection;
