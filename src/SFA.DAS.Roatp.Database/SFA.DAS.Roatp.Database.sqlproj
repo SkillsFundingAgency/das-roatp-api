@@ -58,6 +58,7 @@
     <Folder Include="Tables" />
     <Folder Include="PostDeploymentScripts" />
     <Folder Include="Scripts" />
+    <Folder Include="StoredProcedures" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
@@ -91,6 +92,7 @@
     <None Include="Scripts\CSP-1831-Insert_StandardQAR.sql" />
     <None Include="Scripts\CSP-1832-Insert_ProviderApprenticeStars.sql" />
     <None Include="Scripts\CSP-1832-Insert_ProviderEmployerStars.sql" />
+    <Build Include="StoredProcedures\GetCoursesByDistance.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />

@@ -2,10 +2,12 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProvidersCountForCourse;
-using System.Threading.Tasks;
 using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetCourses;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProvidersCountForCourse;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
@@ -20,6 +22,15 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         {
             _mediator = mediator;
             _logger = logger;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(GetCoursesQueryResult), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetCourses([FromQuery]GetCoursesQuery query, CancellationToken cancellationToken)
+        {
+            var response = await _mediator.Send(query, cancellationToken);
+            return GetResponse(response);
         }
 
         [HttpGet]
