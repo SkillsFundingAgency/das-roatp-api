@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider
 {
-    public class PatchProviderCommandHandler : IRequestHandler<PatchProviderCommand, Unit>
+    public class PatchProviderCommandHandler : IRequestHandler<PatchProviderCommand>
     {
         private readonly IProvidersWriteRepository _providersWriteRepository;
         private readonly IProvidersReadRepository _providersReadRepository;
@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider
             _logger = logger;
         }
 
-        public async Task<Unit> Handle(PatchProviderCommand command, CancellationToken cancellationToken)
+        public async Task Handle(PatchProviderCommand command, CancellationToken cancellationToken)
         {
             var provider = await
                 _providersReadRepository.GetByUkprn(command.Ukprn);
@@ -39,8 +39,6 @@ namespace SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider
             provider.MarketingInfo = patchedProvider.MarketingInfo;
 
             await _providersWriteRepository.Patch(provider, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderDescription);
-
-            return Unit.Value;
         }
     }
 }

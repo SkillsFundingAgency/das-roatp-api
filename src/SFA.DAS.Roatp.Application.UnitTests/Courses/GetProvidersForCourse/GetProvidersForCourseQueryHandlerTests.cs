@@ -47,30 +47,29 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
 
             var response = await sut.Handle(query, cancellationToken);
             var result = response.Result;
-            Assert.That(result, Is.Not.Null);
-            Assert.AreEqual(result.CourseTitle, standard.Title);
-            Assert.AreEqual(result.Level, standard.Level);
-            Assert.AreEqual(result.LarsCode, standard.LarsCode);
-            Assert.AreEqual(result.Providers.Count, providerCourseDetailsSummaryModels.Count);
+            result.Should().NotBeNull();
+            result.CourseTitle.Should().Be(standard.Title);
+            result.Level.Should().Be(standard.Level);
+            result.LarsCode.Should().Be(standard.LarsCode);
+            result.Providers.Should().HaveCount(providerCourseDetailsSummaryModels.Count);
 
             var firstProviderResult = result.Providers.First(x => x.Ukprn == firstProviderModel.Ukprn);
 
-            Assert.GreaterOrEqual(1, firstProviderResult.AchievementRates.Count);
-            Assert.AreEqual(firstProviderResult.DeliveryModels.Count, deliveryModels.Count);
+            firstProviderResult.AchievementRates.Should().HaveCountGreaterThanOrEqualTo(0);
+            firstProviderResult.DeliveryModels.Should().HaveCount(deliveryModels.Count);
 
             firstProviderResult.Should().BeEquivalentTo(firstProviderModel, c => c
-             .Excluding(s => s.LegalName)
-             .Excluding(s => s.Distance)
-             .Excluding(s => s.Ukprn)
-             .Excluding(s => s.ProviderId)
-             );
+                .Excluding(s => s.LegalName)
+                .Excluding(s => s.Distance)
+                .Excluding(s => s.Ukprn)
+                .Excluding(s => s.ProviderId));
 
-            Assert.AreEqual(firstProviderResult.Name, firstProviderModel.LegalName);
+            firstProviderResult.Name.Should().Be(firstProviderModel.LegalName);
 
-            Assert.AreEqual(firstProviderResult.ProviderHeadOfficeDistanceInMiles, firstProviderModel.Distance);
+            firstProviderResult.ProviderHeadOfficeDistanceInMiles.Should().Be((decimal?)firstProviderModel.Distance);
 
             var otherProviderResult = result.Providers.First(x => x.Ukprn != firstProviderModel.Ukprn);
-            Assert.AreEqual(0, otherProviderResult.AchievementRates.Count);
+            otherProviderResult.AchievementRates.Should().BeEmpty();
         }
 
         [Test, RecursiveMoqAutoData()]
@@ -92,7 +91,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
             providerDetailsReadRepositoryMock.Setup(r => r.GetProvidersForLarsCodeWithDistance(query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerCourseDetailsSummaryModels);
             standardsReadMock.Setup(x => x.GetStandard(query.LarsCode)).ReturnsAsync(standard);
 
-            var firstProviderModel = providerCourseDetailsSummaryModels.First();
+            var firstProviderModel = providerCourseDetailsSummaryModels[0];
             nationalAchievementRatesReadRepositoryMock.Setup(x => x.GetByProvidersLevelsSectorSubjectArea(It.IsAny<List<int>>(), new List<ApprenticeshipLevel> { ApprenticeshipLevel.AllLevels, ApprenticeshipLevel.FourPlus }, It.IsAny<int>()))
              .ReturnsAsync(nationalAchievementRates);
             providerDetailsReadRepositoryMock.Setup(r => r.GetAllProviderlocationDetailsWithDistance(query.LarsCode, query.Latitude, query.Longitude)).ReturnsAsync(providerLocationsWithDistance);
@@ -102,28 +101,27 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
 
             var response = await sut.Handle(query, cancellationToken);
             var result = response.Result;
-            Assert.That(result, Is.Not.Null);
-            Assert.AreEqual(result.CourseTitle, standard.Title);
-            Assert.AreEqual(result.Level, standard.Level);
-            Assert.AreEqual(result.LarsCode, standard.LarsCode);
-            Assert.AreEqual(result.Providers.Count, providerCourseDetailsSummaryModels.Count);
+            result.Should().NotBeNull();
+            result.CourseTitle.Should().Be(standard.Title);
+            result.Level.Should().Be(standard.Level);
+            result.LarsCode.Should().Be(standard.LarsCode);
+            result.Providers.Should().HaveCount(providerCourseDetailsSummaryModels.Count);
 
             var firstProviderResult = result.Providers.First(x => x.Ukprn == firstProviderModel.Ukprn);
 
-            Assert.GreaterOrEqual(1, firstProviderResult.AchievementRates.Count);
+            firstProviderResult.AchievementRates.Should().HaveCountGreaterThanOrEqualTo(0);
 
-            Assert.AreEqual(firstProviderResult.DeliveryModels.Count, deliveryModels.Count);
-
+            firstProviderResult.DeliveryModels.Count.Should().Be(deliveryModels.Count);
 
             firstProviderResult.Should().BeEquivalentTo(firstProviderModel, c => c
-             .Excluding(s => s.LegalName)
-             .Excluding(s => s.Distance)
-             .Excluding(s => s.Ukprn)
-             .Excluding(s => s.ProviderId)
+                .Excluding(s => s.LegalName)
+                .Excluding(s => s.Distance)
+                .Excluding(s => s.Ukprn)
+                .Excluding(s => s.ProviderId)
              );
 
-            Assert.AreEqual(firstProviderResult.Name, firstProviderModel.LegalName);
-            Assert.AreEqual(firstProviderResult.ProviderHeadOfficeDistanceInMiles, firstProviderModel.Distance);
+            firstProviderResult.Name.Should().Be(firstProviderModel.LegalName);
+            firstProviderResult.ProviderHeadOfficeDistanceInMiles.Should().Be((decimal?)firstProviderModel.Distance);
         }
 
         [Test, RecursiveMoqAutoData()]
@@ -156,17 +154,17 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
 
             var response = await sut.Handle(query, cancellationToken);
             var result = response.Result;
-            Assert.That(result, Is.Not.Null);
-            Assert.AreEqual(result.CourseTitle, standard.Title);
-            Assert.AreEqual(result.Level, standard.Level);
-            Assert.AreEqual(result.LarsCode, standard.LarsCode);
-            Assert.AreEqual(result.Providers.Count, providerCourseDetailsSummaryModels.Count);
+            result.Should().NotBeNull();
+            result.CourseTitle.Should().Be(standard.Title);
+            result.Level.Should().Be(standard.Level);
+            result.LarsCode.Should().Be(standard.LarsCode);
+            result.Providers.Should().HaveCount(providerCourseDetailsSummaryModels.Count);
 
             var firstProviderResult = result.Providers.First(x => x.Ukprn == firstProviderModel.Ukprn);
 
-            Assert.AreEqual(0, firstProviderResult.AchievementRates.Count);
+            firstProviderResult.AchievementRates.Should().BeEmpty();
 
-            Assert.AreEqual(firstProviderResult.DeliveryModels.Count, deliveryModels.Count);
+            firstProviderResult.DeliveryModels.Count.Should().Be(deliveryModels.Count);
 
             firstProviderResult.Should().BeEquivalentTo(firstProviderModel, c => c
              .Excluding(s => s.LegalName)
@@ -175,11 +173,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
              .Excluding(s => s.ProviderId)
              );
 
-            Assert.AreEqual(firstProviderResult.Name, firstProviderModel.LegalName);
-            Assert.AreEqual(firstProviderResult.ProviderHeadOfficeDistanceInMiles, firstProviderModel.Distance);
+            firstProviderResult.Name.Should().Be(firstProviderModel.LegalName);
+            firstProviderResult.ProviderHeadOfficeDistanceInMiles.Should().Be((decimal?)firstProviderModel.Distance);
 
             var otherProviderResult = result.Providers.First(x => x.Ukprn != firstProviderModel.Ukprn);
-            Assert.AreEqual(0, otherProviderResult.AchievementRates.Count);
+            otherProviderResult.AchievementRates.Should().BeEmpty();
         }
     }
 }

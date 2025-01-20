@@ -1,12 +1,13 @@
-﻿using FluentValidation.TestHelper;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
+using FluentAssertions;
+using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.BulkInsert
 {
@@ -105,7 +106,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var result = await sut.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.SelectedSubregionIds);
-            Assert.IsTrue(result.Errors.Exists(a => a.ErrorMessage.Contains(EmptptySubregionIdsErrorMessage)));
+            result.Errors.Exists(a => a.ErrorMessage.Contains(EmptptySubregionIdsErrorMessage)).Should().BeTrue();
         }
 
         [Test]
@@ -123,11 +124,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var result = await sut.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.SelectedSubregionIds);
-            Assert.IsTrue(result.Errors.Exists(a => a.ErrorMessage.Contains(SelectedSubregionIdsNotExistsinProviderLocationsErrorMessage)));
+            result.Errors.Exists(a => a.ErrorMessage.Contains(SelectedSubregionIdsNotExistsinProviderLocationsErrorMessage)).Should().BeTrue();
         }
 
         [Test]
-        public async Task ValidateSelectedSubregionIds_SubregionIdsAlreadyExistsinProviderCourseLocations_ReturnsError()
+        public async Task ValidateSelectedSubregionIds_SubregionIdsAlreadyExistsInProviderCourseLocations_ReturnsError()
         {
             var command = new BulkInsertProviderCourseLocationsCommand
             {
@@ -141,7 +142,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var result = await sut.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.SelectedSubregionIds);
-            Assert.IsTrue(result.Errors.Exists(a => a.ErrorMessage.Contains(SelectedSubregionIdsAlreadyExistsinProviderCourseLocationsErrorMessage)));
+            result.Errors.Exists(a => a.ErrorMessage.Contains(SelectedSubregionIdsAlreadyExistsinProviderCourseLocationsErrorMessage)).Should().BeTrue();
         }
     }
 }

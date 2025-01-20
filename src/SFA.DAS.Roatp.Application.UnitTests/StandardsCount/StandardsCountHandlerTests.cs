@@ -1,10 +1,11 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.StandardsCount;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.StandardsCount
 {
@@ -29,7 +30,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.StandardsCount
         {
             _repository.Setup(x => x.GetStandardsCount()).ReturnsAsync(standardsCount);
             var result = await _handler.Handle(new StandardsCountRequest(), new CancellationToken());
-            Assert.AreEqual(standardsCount,result);
+            result.Should().Be(standardsCount);
             _repository.Verify(x => x.GetStandardsCount(), Times.Once);
         }
     }

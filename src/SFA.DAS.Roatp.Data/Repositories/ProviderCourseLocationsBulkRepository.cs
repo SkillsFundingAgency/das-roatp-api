@@ -1,28 +1,32 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Data.Repositories
+namespace SFA.DAS.Roatp.Data.Repositories;
+
+[ExcludeFromCodeCoverage]
+internal class ProviderCourseLocationsBulkRepository : IProviderCourseLocationsBulkRepository
 {
-    [ExcludeFromCodeCoverage]
-    internal class ProviderCourseLocationsBulkRepository : IProviderCourseLocationsBulkRepository
+    private readonly RoatpDataContext _roatpDataContext;
+    private readonly ILogger<ProviderCourseLocationsBulkRepository> _logger;
+
+    public ProviderCourseLocationsBulkRepository(RoatpDataContext roatpDataContext, ILogger<ProviderCourseLocationsBulkRepository> logger)
     {
-        private readonly RoatpDataContext _roatpDataContext;
-        private readonly ILogger<ProviderCourseLocationsBulkRepository> _logger;
+        _roatpDataContext = roatpDataContext;
+        _logger = logger;
+    }
 
-        public ProviderCourseLocationsBulkRepository(RoatpDataContext roatpDataContext, ILogger<ProviderCourseLocationsBulkRepository> logger)
-        {
-            _roatpDataContext = roatpDataContext;
-            _logger = logger;
-        }
+    public async Task BulkInsert(IEnumerable<ProviderCourseLocation> providerCourseLocations, string userId, string userDisplayName, int ukprn, string userAction)
+    {
+        var strategy = _roatpDataContext.Database.CreateExecutionStrategy();
 
-        public async Task BulkInsert(IEnumerable<ProviderCourseLocation> providerCourseLocations, string userId, string userDisplayName, int ukprn, string userAction)
+        await strategy.ExecuteAsync(async () =>
         {
             await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
             try
@@ -40,11 +44,16 @@ namespace SFA.DAS.Roatp.Data.Repositories
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "ProviderCourseLocation bulk insert failed for ukprn {ukprn} by userId {userId}", ukprn, userId);
+                _logger.LogError(ex, "ProviderCourseLocation bulk insert failed for ukprn {Ukprn} by userId {UserId}", ukprn, userId);
                 throw;
             }
-        }
-        public async Task BulkDelete(IEnumerable<int> providerCourseLocationIds, string userId, string userDisplayName, int ukprn, string userAction)
+        });
+    }
+    public async Task BulkDelete(IEnumerable<int> providerCourseLocationIds, string userId, string userDisplayName, int ukprn, string userAction)
+    {
+        var strategy = _roatpDataContext.Database.CreateExecutionStrategy();
+
+        await strategy.ExecuteAsync(async () =>
         {
             await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
             try
@@ -66,9 +75,9 @@ namespace SFA.DAS.Roatp.Data.Repositories
             catch (Exception ex)
             {
                 await transaction.RollbackAsync();
-                _logger.LogError(ex, "ProviderCourseLocation bulk delete failed for ukprn {ukprn} by userId {userId}", ukprn, userId);
+                _logger.LogError(ex, "ProviderCourseLocation bulk delete failed for ukprn {Ukprn} by userId {UserId}", ukprn, userId);
                 throw;
             }
-        }
+        });
     }
 }

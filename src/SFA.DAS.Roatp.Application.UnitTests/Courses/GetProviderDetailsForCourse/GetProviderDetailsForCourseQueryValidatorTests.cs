@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentAssertions;
 using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
@@ -77,9 +78,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             var validator = new GetProviderDetailsForCourseQueryValidator(_providersReadRepo.Object, _standardsReadRepo.Object);
             var result = await validator.TestValidateAsync(new GetProviderDetailsForCourseQuery(larsCode, ukprn, lat, lon));
 
-            Assert.AreEqual(isValid, result.IsValid);
-            if (!result.IsValid)
-                Assert.AreEqual(result.Errors[0].ErrorMessage, errorMessage);
+            result.IsValid.Should().Be(isValid);
+            if (!result.IsValid) result.Errors[0].ErrorMessage.Should().Be(errorMessage);
         }
     }
 }

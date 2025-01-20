@@ -1,4 +1,6 @@
-﻿using FluentValidation.TestHelper;
+﻿using System.Threading.Tasks;
+using FluentAssertions;
+using FluentValidation.TestHelper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
 using Moq;
@@ -7,8 +9,6 @@ using NUnit.Framework.Internal;
 using SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Linq;
-using System.Threading.Tasks;
 using static SFA.DAS.Roatp.Application.Common.ValidationMessages;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
@@ -67,7 +67,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
             var result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
-            Assert.IsTrue(result.IsValid);
+            result.IsValid.Should().BeTrue();
         }
 
         [Test]
@@ -95,9 +95,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
 
             var result = await validator.TestValidateAsync(command);
 
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCommandValidator.PatchOperationContainsUnavailableFieldErrorMessage, result.Errors[0].ErrorMessage);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            PatchProviderCommandValidator.PatchOperationContainsUnavailableFieldErrorMessage.Should().Be(result.Errors[0].ErrorMessage);
         }
 
         [Test]
@@ -123,9 +123,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
 
             var result = await validator.TestValidateAsync(command);
 
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCommandValidator.PatchOperationContainsUnavailableOperationErrorMessage, result.Errors[0].ErrorMessage);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            PatchProviderCommandValidator.PatchOperationContainsUnavailableOperationErrorMessage.Should().Be(result.Errors[0].ErrorMessage);
         }
 
 
@@ -144,9 +144,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
             var result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.Patch.Operations.Count);
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCommandValidator.NoPatchOperationsPresentErrorMessage, result.Errors[0].ErrorMessage);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            PatchProviderCommandValidator.NoPatchOperationsPresentErrorMessage.Should().Be(result.Errors[0].ErrorMessage);
         }
 
 
@@ -173,9 +173,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
 
             var result = await validator.TestValidateAsync(command);
 
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.IsTrue(result.Errors[0].ErrorMessage.Contains(MarketingInfoValidationMessages.MarketingInfoTooLong));
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            result.Errors[0].ErrorMessage.Contains(MarketingInfoValidationMessages.MarketingInfoTooLong).Should().BeTrue();
         }
 
         [Test]
@@ -201,9 +201,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
 
             var result = await validator.TestValidateAsync(command);
 
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.IsTrue(result.Errors[0].ErrorMessage.Contains("'Marketing Info' must not be empty."));
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            result.Errors[0].ErrorMessage.Contains("'Marketing Info' must not be empty.").Should().BeTrue();
         }
     }
 }
