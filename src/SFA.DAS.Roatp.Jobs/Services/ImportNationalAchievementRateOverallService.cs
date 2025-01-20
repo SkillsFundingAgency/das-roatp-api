@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using SFA.DAS.Roatp.Domain.Entities;
+﻿using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 using SFA.DAS.Roatp.Jobs.Extensions;

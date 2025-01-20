@@ -14,8 +14,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
         {
             var model = (NationalAchievementRateModel)nar;
 
-            Assert.That(model, Is.Not.Null);
-            Assert.AreEqual(nar.ApprenticeshipLevel, model.Level);
+            model.Should().NotBeNull();
+            nar.ApprenticeshipLevel.Should().Be(model.Level);
 
             model.Should().BeEquivalentTo(nar, c => c
                 .Excluding(s => s.Id)

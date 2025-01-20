@@ -1,6 +1,10 @@
+using System;
+using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
+using Asp.Versioning;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
@@ -17,24 +21,18 @@ using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Extensions;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Text.Json.Serialization;
+using SFA.DAS.Telemetry.Startup;
 
 namespace SFA.DAS.Roatp.Api;
 
 [ExcludeFromCodeCoverage]
 public class Startup
 {
-    private readonly string _initialEnvironment;
     public IConfiguration Configuration { get; }
     public Startup(IConfiguration configuration)
     {
         var config = new ConfigurationBuilder()
             .AddConfiguration(configuration);
-
-        _initialEnvironment = configuration["Environment"];
 
         config.AddAzureTableStorage(options =>
         {
@@ -49,6 +47,11 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
+        services
+            .AddLogging()
+            .AddApplicationInsightsTelemetry()
+            .AddTelemetryNotFoundAsSuccessfulResponse();
+
         if (!IsEnvironmentLocalOrDev)
         {
             var azureAdConfiguration = Configuration
@@ -71,12 +74,12 @@ public class Startup
                 failureStatus: HealthStatus.Unhealthy,
                 tags: new[] { "ready" });
 
-        services.AddRoatpDataContext(Configuration["SqlDatabaseConnectionString"], _initialEnvironment);
+        services.AddRoatpDataContext(Configuration);
 
         services.AddApiVersioning(opt =>
         {
             opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
-            opt.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+            opt.DefaultApiVersion = new ApiVersion(1, 0);
         });
 
         services.AddApplicationRegistrations();
@@ -97,7 +100,6 @@ public class Startup
                 options.SerializerSettings.Converters.Add(new StringEnumConverter());
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
-        services.AddApplicationInsightsTelemetry();
 
         services.AddSwaggerGen(options =>
         {
@@ -107,7 +109,7 @@ public class Startup
         });
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
         {
@@ -129,8 +131,6 @@ public class Startup
         app.UseRouting();
 
         app.UseHealthChecks();
-
-        app.UseFluentValidationExceptionHandler();
 
         app.UseEndpoints(endpoints =>
         {

@@ -1,9 +1,10 @@
-﻿using Moq;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProvidersCountForCourse;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries.GetProvidersCountForCourse
 {
@@ -21,7 +22,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries.GetProvider
 
             var response = await sut.Handle(new GetProvidersCountForCourseQuery(larsCode), new CancellationToken());
 
-            Assert.AreEqual(expectedCount, response.Result.ProvidersCount);
+            response.Result.ProvidersCount.Should().Be(expectedCount);
         }
     }
 }

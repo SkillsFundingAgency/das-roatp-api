@@ -124,27 +124,31 @@
     "configNames": "SFA.DAS.Roatp.Api",
     "qarTimePeriod": "202223",
     "qarOverallImportFileName": "app-narts-subject-and-level-detailed.csv",
-    "qarProviderLevelImportFileName": "app-narts-provider-level-fwk-std.csv"
+    "qarProviderLevelImportFileName": "app-narts-provider-level-fwk-std.csv",
+    "reloadStandardsCacheSchedule": "0 0 20 * * 1-5",
+    "reloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
+    "updateUkrlpDataSchedule": "0 0 23 * * 1-5",
+    "updateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5"
   },
   "resources": [
     {
       "apiVersion": "2021-04-01",
-      "name": "[variables('resourceGroupName')]",
       "type": "Microsoft.Resources/resourceGroups",
+      "name": "[variables('resourceGroupName')]",
       "location": "[parameters('resourceGroupLocation')]",
       "tags": "[parameters('tags')]",
       "properties": {}
     },
     {
       "apiVersion": "2021-04-01",
-      "name": "[concat(parameters('subnetObject').name, '-', parameters('utcValue'))]",
       "type": "Microsoft.Resources/deployments",
+      "name": "[concat(parameters('subnetObject').name, '-', parameters('utcValue'))]",
       "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
           "uri": "[concat(variables('deploymentUrlBase'),'subnet.json')]",
-          "contentVersion": "1.0.0.0"
+          "contentVersion": "1.0.0.0" 
         },
         "parameters": {
           "virtualNetworkName": {
@@ -170,8 +174,8 @@
     },
     {
       "apiVersion": "2021-04-01",
-      "name": "[concat(variables('appServiceName'), '-app-service-certificate-', parameters('utcValue'))]",
       "type": "Microsoft.Resources/deployments",
+      "name": "[concat(variables('appServiceName'), '-app-service-certificate-', parameters('utcValue'))]",
       "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
       "properties": {
         "mode": "Incremental",
@@ -194,8 +198,8 @@
     },
     {
       "apiVersion": "2021-04-01",
-      "name": "[concat(variables('appServiceName'), '-application-insights-', parameters('utcValue'))]",
       "type": "Microsoft.Resources/deployments",
+      "name": "[concat(variables('appServiceName'), '-application-insights-', parameters('utcValue'))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
         "mode": "Incremental",
@@ -221,8 +225,8 @@
     },
     {
       "apiVersion": "2021-04-01",
-      "name": "[concat(variables('appServiceName'), '-', parameters('utcValue'))]",
       "type": "Microsoft.Resources/deployments",
+      "name": "[concat(variables('appServiceName'), '-', parameters('utcValue'))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
         "mode": "Incremental",
@@ -298,8 +302,8 @@
     },
     {
       "apiVersion": "2020-06-01",
-      "name": "[concat(variables('databaseName'), '-', parameters('utcValue'))]",
       "type": "Microsoft.Resources/deployments",
+      "name": "[concat(variables('databaseName'), '-', parameters('utcValue'))]",
       "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
       "properties": {
         "mode": "Incremental",
@@ -337,8 +341,8 @@
     },
     {
       "apiVersion": "2021-04-01",
-      "name": "[concat(variables('appServicePlanName'), '-', parameters('utcValue'))]",
       "type": "Microsoft.Resources/deployments",
+      "name": "[concat(variables('appServicePlanName'), '-', parameters('utcValue'))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
         "mode": "Incremental",
@@ -364,9 +368,9 @@
     },
     {
       "apiVersion": "2021-04-01",
+      "type": "Microsoft.Resources/deployments",
       "name": "[concat(parameters('subnetObject').name, '-sql-firewall-rule-', parameters('utcValue'))]",
       "resourceGroup": "[parameters('sharedEnvResourceGroup')]",
-      "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -385,8 +389,8 @@
     },
     {
       "apiVersion": "2021-04-01",
-      "name": "[concat(variables('functionAppName'), '-application-insights-', parameters('utcValue'))]",
       "type": "Microsoft.Resources/deployments",
+      "name": "[concat(variables('functionAppName'), '-application-insights-', parameters('utcValue'))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
         "mode": "Incremental",
@@ -409,9 +413,9 @@
     },
     {
       "apiVersion": "2020-06-01",
+      "type": "Microsoft.Resources/deployments",
       "name": "[concat(variables('functionAppName'), '-apim-product-subsc-', parameters('utcValue'))]",
       "resourceGroup": "[parameters('sharedApimResourceGroup')]",
-      "type": "Microsoft.Resources/deployments",
       "properties": {
         "mode": "Incremental",
         "templateLink": {
@@ -433,8 +437,8 @@
     },
     {
       "apiVersion": "2021-04-01",
-      "name": "[concat(variables('functionAppName'), '-', parameters('utcValue'))]",
       "type": "Microsoft.Resources/deployments",
+      "name": "[concat(variables('functionAppName'), '-', parameters('utcValue'))]",
       "resourceGroup": "[variables('resourceGroupName')]",
       "properties": {
         "mode": "Incremental",
@@ -452,6 +456,9 @@
           },
           "appServicePlanResourceGroup": {
             "value": "[variables('resourceGroupName')]"
+          },
+          "netFrameworkVersion": {
+            "value": "v8.0"
           },
           "subnetResourceId": {
             "value": "[reference(concat(parameters('subnetObject').name, '-', parameters('utcValue'))).outputs.SubnetResourceId.value]"
@@ -497,7 +504,7 @@
                 },
                 {
                   "name": "FUNCTIONS_WORKER_RUNTIME",
-                  "value": "dotnet"
+                  "value": "dotnet-isolated"
                 },
                 {
                   "name": "WEBSITE_RUN_FROM_PACKAGE",
@@ -514,6 +521,22 @@
                 {
                   "name": "QarProviderLevelImportFileName",
                   "value": "[variables('qarProviderLevelImportFileName')]"
+                },
+                {
+                  "name": "ReloadStandardsCacheSchedule",
+                  "value": "[variables('reloadStandardsCacheSchedule')]"
+                },
+                {
+                  "name": "ReloadProviderRegistrationDetailsSchedule",
+                  "value": "[variables('reloadProviderRegistrationDetailsSchedule')]"
+                },
+                {
+                  "name": "UpdateUkrlpDataSchedule",
+                  "value": "[variables('updateUkrlpDataSchedule')]"
+                },
+                {
+                  "name": "UpdateProviderAddressCoordinatesSchedule",
+                  "value": "[variables('updateProviderAddressCoordinatesSchedule')]"
                 }
               ]
             }
@@ -524,7 +547,6 @@
         }
       },
       "dependsOn": [
-        "[variables('resourceGroupName')]",
         "[concat(variables('appServicePlanName'), '-', parameters('utcValue'))]"
       ]
     }

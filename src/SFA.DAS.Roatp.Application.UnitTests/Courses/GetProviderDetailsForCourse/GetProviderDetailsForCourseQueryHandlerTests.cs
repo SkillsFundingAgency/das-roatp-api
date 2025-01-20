@@ -2,6 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
@@ -30,8 +31,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
 
             var response = await sut.Handle(query, cancellationToken);
 
-            Assert.That(response.Result, Is.Not.Null);
-            Assert.AreEqual(0, response.Result.AchievementRates.Count);
+            response.Result.Should().NotBeNull();
+            response.Result.AchievementRates.Should().HaveCount(0);
         }
 
         [Test, RecursiveMoqAutoData()]
@@ -51,8 +52,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
 
             var response = await sut.Handle(query, cancellationToken);
 
-            Assert.That(response.Result, Is.Not.Null);
-            Assert.AreEqual(0, response.Result.DeliveryModels.Count);
+            response.Result.Should().NotBeNull();
+            response.Result.DeliveryModels.Should().HaveCount(0);
         }
     }
 }

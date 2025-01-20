@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using FluentAssertions;
 using FluentValidation.TestHelper;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.JsonPatch.Operations;
@@ -92,7 +93,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
             var result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
-            Assert.IsTrue(result.IsValid);
+            result.IsValid.Should().BeTrue();
         }
 
         [TestCase("True", true)]
@@ -127,13 +128,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
             if (isNoErrorExpected)
             {
                 result.ShouldNotHaveAnyValidationErrors();
-                Assert.IsTrue(result.IsValid);
+                result.IsValid.Should().BeTrue();
             }
             else
             {
-                Assert.IsFalse(result.IsValid);
-                Assert.IsTrue(result.Errors.Count == 1);
-                Assert.AreEqual(PatchProviderCourseCommandValidator.IsApprovedByRegulatorIsNotABooleanErrorMessage, result.Errors[0].ErrorMessage);
+                result.IsValid.Should().BeFalse();
+                result.Errors.Should().HaveCount(1);
+                PatchProviderCourseCommandValidator.IsApprovedByRegulatorIsNotABooleanErrorMessage.Should().Be(result.Errors[0].ErrorMessage);
             }
         }
 
@@ -171,7 +172,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
             var result = await validator.TestValidateAsync(command);
 
             result.ShouldNotHaveAnyValidationErrors();
-            Assert.IsTrue(result.IsValid);
+            result.IsValid.Should().BeTrue();
         }
 
         [Test]
@@ -209,9 +210,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
 
             var result = await validator.TestValidateAsync(command);
 
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableFieldErrorMessage, result.Errors[0].ErrorMessage);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableFieldErrorMessage.Should().Be(result.Errors[0].ErrorMessage);
         }
 
         [Test]
@@ -247,9 +248,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
 
             var result = await validator.TestValidateAsync(command);
 
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableOperationErrorMessage, result.Errors[0].ErrorMessage);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            PatchProviderCourseCommandValidator.PatchOperationContainsUnavailableOperationErrorMessage.Should().Be(result.Errors[0].ErrorMessage);
         }
 
 
@@ -270,9 +271,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
             var result = await validator.TestValidateAsync(command);
 
             result.ShouldHaveValidationErrorFor(c => c.Patch.Operations.Count);
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(PatchProviderCourseCommandValidator.NoPatchOperationsPresentErrorMessage, result.Errors[0].ErrorMessage);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            PatchProviderCourseCommandValidator.NoPatchOperationsPresentErrorMessage.Should().Be(result.Errors[0].ErrorMessage);
         }
 
         [Test]
@@ -306,9 +307,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
 
             var result = await validator.TestValidateAsync(command);
 
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(EmailValidationMessages.EmailAddressWrongFormat, result.Errors[0].ErrorMessage);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            EmailValidationMessages.EmailAddressWrongFormat.Should().Be(result.Errors[0].ErrorMessage);
         }
 
         [Test]
@@ -342,9 +343,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
 
             var result = await validator.TestValidateAsync(command);
 
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(EmailValidationMessages.EmailAddressTooLong, result.Errors[0].ErrorMessage);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            EmailValidationMessages.EmailAddressTooLong.Should().Be(result.Errors[0].ErrorMessage);
         }
 
         [Test]
@@ -378,10 +379,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
 
             var result = await validator.TestValidateAsync(command);
 
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 2);
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == EmailValidationMessages.EmailAddressTooLong));
-            Assert.IsTrue(result.Errors.Any(x => x.ErrorMessage == EmailValidationMessages.EmailAddressWrongFormat));
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(2);
+            result.Errors.Any(x => x.ErrorMessage == EmailValidationMessages.EmailAddressTooLong).Should().BeTrue();
+            result.Errors.Any(x => x.ErrorMessage == EmailValidationMessages.EmailAddressWrongFormat).Should().BeTrue();
         }
 
         [TestCase(1, true)]
@@ -430,16 +431,15 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
 
             var result = await validator.TestValidateAsync(command);
 
-            Assert.IsTrue(result.IsValid == !isErrorExpected);
+            result.IsValid.Should().Be(!isErrorExpected);
             if (isErrorExpected)
             {
-                Assert.IsTrue(result.Errors.Count == 1);
-                Assert.AreEqual(PhoneNumberValidationMessages.PhoneNumberWrongLength,
-                    result.Errors[0].ErrorMessage);
+                result.Errors.Should().HaveCount(1);
+                PhoneNumberValidationMessages.PhoneNumberWrongLength.Should().Be(result.Errors[0].ErrorMessage);
             }
             else
             {
-                Assert.IsTrue(!result.Errors.Any());
+                result.Errors.Should().BeEmpty();
             }
         }
 
@@ -474,8 +474,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
 
             var result = await validator.TestValidateAsync(command);
 
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 2);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(2);
             result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage(UrlValidationMessages.UrlWrongFormat("Website"));
             result.ShouldHaveValidationErrorFor(c => c.ContactUsPageUrl).WithErrorMessage(UrlValidationMessages.UrlWrongFormat("Contact page"));
         }
@@ -512,8 +512,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
 
             var result = await validator.TestValidateAsync(command);
 
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 2);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(2);
             result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage(UrlValidationMessages.UrlTooLong("Website"));
             result.ShouldHaveValidationErrorFor(c => c.ContactUsPageUrl).WithErrorMessage(UrlValidationMessages.UrlTooLong("Contact page"));
         }

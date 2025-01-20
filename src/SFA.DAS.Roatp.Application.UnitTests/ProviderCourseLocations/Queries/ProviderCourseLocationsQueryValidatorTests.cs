@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Common;
@@ -25,7 +26,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
 
             var result = await sut.ValidateAsync(query);
 
-            Assert.AreEqual(expectedResult, result.IsValid);
+            expectedResult.Should().Be(result.IsValid);
         }
 
         [Test]
@@ -44,13 +45,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             var result = await sut.ValidateAsync(query);
 
             repoMock.Verify(x => x.GetByUkprn(It.IsAny<int>()), Times.Exactly(expectedTimesRepoIsInvoked));
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 2);
-            Assert.AreEqual(expectedErrorMessage1, result.Errors[0].ErrorMessage);
-            Assert.AreEqual(expectedErrorMessage2, result.Errors[1].ErrorMessage);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(2);
+            expectedErrorMessage1.Should().Be(result.Errors[0].ErrorMessage);
+            expectedErrorMessage2.Should().Be(result.Errors[1].ErrorMessage);
         }
 
-       [Test]
+        [Test]
         public async Task Validate_InvalidUkprnLarsCode_CourseDataNotFound()
         {
             int ukprn = 10012002;
@@ -67,9 +68,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             var result = await sut.ValidateAsync(query);
 
             repoMock.Verify(x => x.GetByUkprn(It.IsAny<int>()), Times.Exactly(expectedTimesRepoIsInvoked));
-            Assert.IsFalse(result.IsValid);
-            Assert.IsTrue(result.Errors.Count == 1);
-            Assert.AreEqual(expectedErrorMessage1, result.Errors[0].ErrorMessage);
+            result.IsValid.Should().BeFalse();
+            result.Errors.Should().HaveCount(1);
+            expectedErrorMessage1.Should().Be(result.Errors[0].ErrorMessage);
         }
     }
 }

@@ -28,8 +28,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForCourse
                 .Excluding(s => s.Distance)
                 .Excluding(s => s.ProviderId)
             );
-            Assert.AreEqual(summaryModel.LegalName, model.Name);
-            Assert.AreEqual(summaryModel.Distance, model.ProviderHeadOfficeDistanceInMiles);
+            summaryModel.LegalName.Should().Be(model.Name);
+            summaryModel.Distance.Should().Be((double?)model.ProviderHeadOfficeDistanceInMiles);
         }
     }
 }

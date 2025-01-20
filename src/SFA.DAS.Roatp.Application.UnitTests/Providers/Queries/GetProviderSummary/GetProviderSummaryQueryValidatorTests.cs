@@ -1,9 +1,10 @@
-﻿using Moq;
+﻿using System.Threading.Tasks;
+using FluentAssertions;
+using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviderSummary
 {
@@ -22,7 +23,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviderSumma
 
             var result = await sut.ValidateAsync(query);
 
-            Assert.AreEqual(expectedResult, result.IsValid);
+            result.IsValid.Should().Be(expectedResult);
         }
     }
 }

@@ -1,12 +1,11 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace SFA.DAS.Roatp.Jobs.Configuration
+namespace SFA.DAS.Roatp.Jobs.Configuration;
+
+[ExcludeFromCodeCoverage]
+public class RoatpV2ApiConfiguration
 {
-    [ExcludeFromCodeCoverage]
-    public class RoatpV2ApiConfiguration
-    {
-        public string Identifier { get; set; }
-        public string Url { get; set; }
-    }
+    public string Identifier { get; set; }
+    public string Url { get; set; }
 }
 

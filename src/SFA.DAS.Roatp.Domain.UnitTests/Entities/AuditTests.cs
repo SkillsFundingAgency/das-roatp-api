@@ -1,12 +1,12 @@
-using FluentAssertions;
-using NUnit.Framework;
-using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Testing.AutoFixture;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
+using FluentAssertions;
+using NUnit.Framework;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Testing.AutoFixture;
 using ProviderCourse = SFA.DAS.Roatp.Domain.Entities.ProviderCourse;
 
 namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
@@ -23,8 +23,9 @@ namespace SFA.DAS.Roatp.Domain.UnitTests.Entities
 
         [TearDown]
         public void Cleanup()
-        { 
-            unitTestActivity.Stop(); 
+        {
+            unitTestActivity.Stop();
+            unitTestActivity.Dispose();
         }
 
         [Test]

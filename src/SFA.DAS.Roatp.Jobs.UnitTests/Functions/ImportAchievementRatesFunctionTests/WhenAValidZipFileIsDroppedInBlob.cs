@@ -53,12 +53,12 @@ public class WhenAValidZipFileIsDroppedInBlob
 
         _dataExtractorServiceMock.Setup(d => d.DeserializeCsvDataFromZipStream<ProviderAchievementRateCsvModel>(It.IsAny<Stream>(), ProviderLevelFileName)).Returns(AchievementRatesTestDataHelper.GetAllProviderRatingsRawData());
 
-        ImportAchievementRatesFunction sut = new(_dataExtractorServiceMock.Object, _coursesApiClientMock.Object, _importAchievementRateOverallServiceMock.Object, _importNationalAchievementRateServiceMock.Object, config);
+        ImportAchievementRatesFunction sut = new(_dataExtractorServiceMock.Object, _coursesApiClientMock.Object, _importAchievementRateOverallServiceMock.Object, _importNationalAchievementRateServiceMock.Object, config, Mock.Of<ILogger<ImportAchievementRatesFunction>>());
 
         using var zipStream = new MemoryStream();
 
         //Act
-        await sut.Run(zipStream, "filename.zip", Mock.Of<ILogger>());
+        await sut.Run(zipStream, "filename.zip");
     }
 
     [Test]

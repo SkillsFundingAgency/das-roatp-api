@@ -19,12 +19,12 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
             model.Should().BeEquivalentTo(summaryModel, c => c
                 .Excluding(s => s.LegalName)
                 .Excluding(s => s.Distance)
-                .Excluding(s=>s.ProviderId)
-                .Excluding(s=>s.IsApprovedByRegulator)
+                .Excluding(s => s.ProviderId)
+                .Excluding(s => s.IsApprovedByRegulator)
             );
 
-            Assert.AreEqual(summaryModel.LegalName, model.Name);
-            Assert.AreEqual(summaryModel.Distance, model.ProviderHeadOfficeDistanceInMiles);
+            summaryModel.LegalName.Should().Be(model.Name);
+            summaryModel.Distance.Should().Be((double?)model.ProviderHeadOfficeDistanceInMiles);
         }
 
         [Test, RecursiveMoqAutoData]
@@ -39,10 +39,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCours
                 .Excluding(s => s.StandardContactUrl)
                 .Excluding(s => s.Distance)
             );
-            Assert.AreEqual(providerCourseDetailsModel.LegalName, model.Name);
-            Assert.AreEqual(providerCourseDetailsModel.StandardContactUrl, model.ContactUrl);
-            Assert.AreEqual(providerCourseDetailsModel.Distance, model.ProviderHeadOfficeDistanceInMiles);
-            Assert.AreEqual(providerCourseDetailsModel.MarketingInfo,model.MarketingInfo);
+            providerCourseDetailsModel.LegalName.Should().Be(model.Name);
+            providerCourseDetailsModel.StandardContactUrl.Should().Be(model.ContactUrl);
+            providerCourseDetailsModel.Distance.Should().Be((double?)model.ProviderHeadOfficeDistanceInMiles);
+            providerCourseDetailsModel.MarketingInfo.Should().Be(model.MarketingInfo);
         }
 
         [Test]
