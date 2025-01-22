@@ -1,12 +1,10 @@
-﻿using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetCourses;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProvidersCountForCourse;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -25,25 +23,12 @@ public class CoursesController : ActionResponseControllerBase
         _logger = logger;
     }
 
-    [HttpGet]
+    [HttpGet("providers/count")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(GetCoursesQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCourses([FromQuery] GetCoursesQuery query, CancellationToken cancellationToken)
+    [ProducesResponseType(typeof(GetCourseTrainingProvidersCountQueryResult), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetTrainingProvidersCount([FromQuery] GetCourseTrainingProvidersCountQuery query, CancellationToken cancellationToken)
     {
         var response = await _mediator.Send(query, cancellationToken);
-        return GetResponse(response);
-    }
-
-    [HttpGet]
-    [Route("{larsCode}/providers/count")]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(GetProvidersCountForCourseQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProvidersCountForCourse(int larsCode)
-    {
-        _logger.LogInformation("Received request to get total providers associated with LarsCode:{LarsCode}", larsCode);
-        var response = await _mediator.Send(new GetProvidersCountForCourseQuery(larsCode));
-        if (response.IsValidResponse)
-            _logger.LogInformation("Found {ProvidersCount} providers that are associated with LarsCode:{LarsCode}", response.Result.ProvidersCount, larsCode);
         return GetResponse(response);
     }
 

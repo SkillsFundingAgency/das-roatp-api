@@ -1,8 +1,9 @@
 ﻿using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Domain.Models;
+using System;
 using System.Collections.Generic;
-using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -10,24 +11,26 @@ using System.Threading.Tasks;
 namespace SFA.DAS.Roatp.Data.Repositories;
 
 [ExcludeFromCodeCoverage]
-public sealed class TrainingCoursesReadRepository : ITrainingCoursesReadRepository
+public sealed class ProvidersCountReadRepository : IProvidersCountReadRepository
 {
-    private readonly DbConnection _dbConnection;
+    private readonly RoatpDataContext _roatpDataContext;
 
-    public TrainingCoursesReadRepository(DbConnection dbConnection)
+    public ProvidersCountReadRepository(RoatpDataContext roatpDataContext)
     {
-        _dbConnection = dbConnection;
+        _roatpDataContext = roatpDataContext;
     }
 
     public async Task<List<CourseInformation>> GetProviderTrainingCourses(int[] larsCodes, decimal? longitude, decimal? latitude, int? distance, CancellationToken cancellationToken)
     {
-        using var command = _dbConnection.CreateCommand();
-        command.CommandText = "dbo.GetCoursesByDistance";
+        var connection = _roatpDataContext.Database.GetDbConnection();
+        await using var command = connection.CreateCommand();
+
+        command.CommandText = "dbo.GetTrainingProvidersCount";
         command.CommandType = System.Data.CommandType.StoredProcedure;
 
-        command.Parameters.Add(new SqlParameter("@Latitude", latitude));
-        command.Parameters.Add(new SqlParameter("@Longitude", longitude));
-        command.Parameters.Add(new SqlParameter("@Distance", distance));
+        command.Parameters.Add(new SqlParameter("@Latitude", latitude ?? (object)DBNull.Value));
+        command.Parameters.Add(new SqlParameter("@Longitude", longitude ?? (object)DBNull.Value));
+        command.Parameters.Add(new SqlParameter("@Distance", distance ?? (object)DBNull.Value));
         command.Parameters.Add(new SqlParameter("@LarsCodes", string.Join(',', larsCodes)));
 
         if (command.Connection.State != System.Data.ConnectionState.Open)

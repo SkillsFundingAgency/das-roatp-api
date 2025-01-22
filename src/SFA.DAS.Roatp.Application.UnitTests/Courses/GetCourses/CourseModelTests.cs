@@ -1,6 +1,6 @@
 ﻿using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetCourses;
-using SFA.DAS.Roatp.Domain.Models;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
+using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetCourses;
 
@@ -16,7 +16,7 @@ public sealed class CourseModelTests
             TotalProvidersCount = 20
         };
 
-        CourseModel courseModel = courseInformation;
+        CourseTrainingProviderCountModel courseModel = courseInformation;
 
         Assert.Multiple(() =>
         {

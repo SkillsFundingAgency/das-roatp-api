@@ -1,15 +1,15 @@
 ﻿using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetCourses;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 
-public sealed class GetCoursesQueryValidator : AbstractValidator<GetCoursesQuery>
+public sealed class GetCourseTrainingProvidersCountValidator : AbstractValidator<GetCourseTrainingProvidersCountQuery>
 {
     public const string DistanceValidationMessage = "Distance should always be set when Longitude and Latitude have values.";
 
     public const string LarsCodesValidationMessage = "At least one lars code must be provided.";
 
-    public GetCoursesQueryValidator()
+    public GetCourseTrainingProvidersCountValidator()
     {
         Include(new CoordinatesValidator());
 

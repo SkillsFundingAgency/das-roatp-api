@@ -1,9 +1,9 @@
 ﻿using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetCourses;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
+using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 using System.Collections.Generic;
 using System.Threading;
@@ -16,9 +16,9 @@ public sealed class GetCoursesQueryHandlerTests
     [Test]
     [RecursiveMoqAutoData()]
     public async Task Handle_Returns_ListOfCourses(
-        [Frozen] Mock<ITrainingCoursesReadRepository> trainingCoursesReadRepository,
-        GetCoursesQuery query,
-        GetCoursesQueryHandler sut,
+        [Frozen] Mock<IProvidersCountReadRepository> trainingCoursesReadRepository,
+        GetCourseTrainingProvidersCountQuery query,
+        GetCourseTrainingProvidersCountQueryHandler sut,
         CourseInformation course,
         CancellationToken cancellationToken
     )

@@ -1,7 +1,7 @@
 CREATE PROCEDURE [dbo].[GetCoursesByDistance]
-    @Latitude FLOAT,
-    @Longitude FLOAT,
-    @Distance INT,
+    @Latitude FLOAT NULL,
+    @Longitude FLOAT NULL,
+    @Distance INT NULL,
     @LarsCodes VARCHAR(2000)
 AS
 BEGIN

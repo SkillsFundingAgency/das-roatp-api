@@ -1,14 +1,14 @@
-﻿using SFA.DAS.Roatp.Domain.Models;
+﻿using SFA.DAS.Roatp.Domain.Entities;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetCourses;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 
-public sealed class CourseModel
+public sealed class CourseTrainingProviderCountModel
 {
     public int LarsCode { get; set; }
     public int ProvidersCount { get; set; }
     public int TotalProvidersCount { get; set; }
 
-    public static implicit operator CourseModel(CourseInformation source) => new()
+    public static implicit operator CourseTrainingProviderCountModel(CourseInformation source) => new()
     {
         LarsCode = source.LarsCode,
         ProvidersCount = source.ProvidersCount,

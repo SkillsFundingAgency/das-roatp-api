@@ -1,11 +1,10 @@
 ﻿using AutoFixture.NUnit3;
-using Azure;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetCourses;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
 using System.Collections.Generic;
@@ -14,20 +13,20 @@ using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests;
 
-public sealed class GetCoursesTests
+public sealed class GetTrainingProvidersCountTests
 {
     [Test]
     [MoqAutoData]
-    public async Task GetCourses_InvokesQueryHandler(
+    public async Task GetTrainingProvidersCount_InvokesQueryHandler(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] CoursesController sut,
-        CourseModel courseModel,
-        GetCoursesQuery courseQuery
+        CourseTrainingProviderCountModel courseModel,
+        GetCourseTrainingProvidersCountQuery courseQuery
     )
     {
         mediatorMock.Setup(m => 
             m.Send(
-                It.Is<GetCoursesQuery>(q => 
+                It.Is<GetCourseTrainingProvidersCountQuery>(q => 
                     q.LarsCodes == courseQuery.LarsCodes &&
                     q.Distance == courseQuery.Distance && 
                     q.Latitude == courseQuery.Latitude && 
@@ -36,9 +35,9 @@ public sealed class GetCoursesTests
                 It.IsAny<CancellationToken>()
             )
         ).ReturnsAsync(
-            new ValidatedResponse<GetCoursesQueryResult>(
-                new GetCoursesQueryResult(
-                    new List<CourseModel>() 
+            new ValidatedResponse<GetCourseTrainingProvidersCountQueryResult>(
+                new GetCourseTrainingProvidersCountQueryResult(
+                    new List<CourseTrainingProviderCountModel>() 
                     { 
                         courseModel 
                     }
@@ -46,10 +45,10 @@ public sealed class GetCoursesTests
             )
         );
 
-        var result = await sut.GetCourses(courseQuery, CancellationToken.None);
+        var result = await sut.GetTrainingProvidersCount(courseQuery, CancellationToken.None);
 
         mediatorMock.Verify(m => 
-            m.Send(It.Is<GetCoursesQuery>(q => 
+            m.Send(It.Is<GetCourseTrainingProvidersCountQuery>(q => 
                 q.LarsCodes == courseQuery.LarsCodes && 
                 q.Longitude == courseQuery.Longitude && 
                 q.Latitude == courseQuery.Latitude && 
@@ -61,7 +60,7 @@ public sealed class GetCoursesTests
         var okResult = result as OkObjectResult;
         Assert.That(okResult, Is.Not.Null);
 
-        var response = okResult.Value as GetCoursesQueryResult;
+        var response = okResult.Value as GetCourseTrainingProvidersCountQueryResult;
         
         Assert.Multiple(() =>
         {

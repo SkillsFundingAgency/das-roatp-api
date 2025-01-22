@@ -3,9 +3,9 @@ using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using System;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetCourses;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 
-public sealed class GetCoursesQuery : IRequest<ValidatedResponse<GetCoursesQueryResult>>, ICoordinates
+public sealed class GetCourseTrainingProvidersCountQuery : IRequest<ValidatedResponse<GetCourseTrainingProvidersCountQueryResult>>, ICoordinates
 {
     public int[] LarsCodes { get; set; } = Array.Empty<int>();
 

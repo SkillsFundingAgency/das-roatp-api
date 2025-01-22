@@ -60,6 +60,6 @@ public static class AddRoatpDataContextExtension
         services.AddTransient<IProviderAddressWriteRepository, ProviderAddressWriteRepository>();
         services.AddTransient<IProviderDetailsReadRepository, ProviderDetailsReadRepository>();
         services.AddTransient<INationalAchievementRatesReadRepository, NationalAchievementRatesReadRepository>();
-        services.AddTransient<ITrainingCoursesReadRepository, TrainingCoursesReadRepository>();
+        services.AddTransient<IProvidersCountReadRepository, ProvidersCountReadRepository>();
     }
 }
