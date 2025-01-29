@@ -58,6 +58,10 @@
     <Folder Include="Tables" />
     <Folder Include="PostDeploymentScripts" />
     <Folder Include="Scripts" />
+<<<<<<< HEAD
+=======
+    <Folder Include="StoredProcedures" />
+>>>>>>> CSP-1866 get providers from larscode
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
@@ -91,7 +95,11 @@
     <None Include="Scripts\CSP-1831-Insert_StandardQAR.sql" />
     <None Include="Scripts\CSP-1832-Insert_ProviderApprenticeStars.sql" />
     <None Include="Scripts\CSP-1832-Insert_ProviderEmployerStars.sql" />
+<<<<<<< HEAD
     <Build Include="Tables\Shortlist.sql" />
+=======
+    <Build Include="StoredProcedures\GetProvidersByLarsCode.sql" />
+>>>>>>> CSP-1866 get providers from larscode
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />

@@ -21,4 +21,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Roatp.Api\SFA.DAS.Roatp.Api.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Requests\" />
+  </ItemGroup>
 </Project>
