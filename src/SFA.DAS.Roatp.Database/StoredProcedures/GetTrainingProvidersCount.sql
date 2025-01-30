@@ -1,6 +1,6 @@
 -- this calculates the distance from Training Provider training locations / regions
 
-CREATE PROCEDURE dbo.GetTrainingProvidersCount
+CREATE PROCEDURE [dbo].[GetTrainingProvidersCount]
     @Latitude FLOAT NULL,
     @Longitude FLOAT NULL,
     @Distance INT NULL,
@@ -19,7 +19,7 @@ BEGIN
 			@MetersToMilesMetric FLOAT = 0.0006213712;
 
 	IF @Latitude IS NOT NULL 
-		-- match to nearest region (which may have an alternative with same co-ordinates)
+	-- match to nearest region (which may have an alternative with same co-ordinates)
 		SELECT TOP 1 @NearestRegionId = reg1.[Id] , @NearestRegion = reg1.SubregionName + ' (' + reg1.RegionName + ')' , @AlternativeRegionid = reg2.[id]
 		FROM [dbo].[Region] reg1
 		LEFT JOIN [dbo].[Region] reg2 ON reg1.[Latitude] = reg2.[Latitude] AND reg1.[Longitude]= reg2.[Longitude] AND reg1.[Id] != reg2.[id]
@@ -56,7 +56,7 @@ BEGIN
 		-- order by given order
 		 COUNT(DISTINCT UKPRN) AS 'ProvidersCount'
 		,ISNULL(AllProviders,0) AS 'AllProvidersCount'
-		,st1.[LarsCode]
+		,st1.[LarsCode] as 'LarsCode'
 	FROM StandardsList st1
 	LEFT JOIN ActiveProviders act on act.[LarsCode] = st1.[LarsCode]
 	LEFT JOIN (
