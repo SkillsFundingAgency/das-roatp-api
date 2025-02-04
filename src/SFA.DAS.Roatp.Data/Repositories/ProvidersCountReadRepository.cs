@@ -4,6 +4,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,7 +24,7 @@ public sealed class ProvidersCountReadRepository : IProvidersCountReadRepository
     public async Task<List<CourseInformation>> GetProviderTrainingCourses(int[] larsCodes, decimal? longitude, decimal? latitude, int? distance, CancellationToken cancellationToken)
     {
         var connection = _roatpDataContext.Database.GetDbConnection();
-        await using var command = connection.CreateCommand();
+        await using DbCommand command = connection.CreateCommand();
 
         command.CommandText = "dbo.GetTrainingProvidersCount";
         command.CommandType = System.Data.CommandType.StoredProcedure;
@@ -39,7 +40,7 @@ public sealed class ProvidersCountReadRepository : IProvidersCountReadRepository
         }
 
         var courseInformation = new List<CourseInformation>();
-        using var reader = await command.ExecuteReaderAsync(cancellationToken);
+        using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
         while (await reader.ReadAsync(cancellationToken))
         {
             courseInformation.Add(
