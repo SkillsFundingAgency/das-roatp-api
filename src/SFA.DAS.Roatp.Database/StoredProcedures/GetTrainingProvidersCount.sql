@@ -1,6 +1,13 @@
+USE [SFA.DAS.Roatp.Database]
+GO
+/****** Object:  StoredProcedure [dbo].[GetTrainingProvidersCount]    Script Date: 10/02/2025 14:19:55 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
 -- this calculates the distance from Training Provider training locations / regions
 
-CREATE PROCEDURE [dbo].[GetTrainingProvidersCount]
+ALTER PROCEDURE [dbo].[GetTrainingProvidersCount]
     @Latitude FLOAT NULL,
     @Longitude FLOAT NULL,
     @Distance INT NULL,
@@ -17,6 +24,8 @@ BEGIN
 			@Regional INT = 2,
 			@EPSG_COORDINATE_SYSTEM_ID INT = 4326,
 			@MetersToMilesMetric FLOAT = 0.0006213712;
+
+    
 
 	IF @Latitude IS NOT NULL 
 	-- match to nearest region (which may have an alternative with same co-ordinates)
@@ -54,9 +63,10 @@ BEGIN
 	-- Main Query
 	SELECT 
 		-- order by given order
-		 COUNT(DISTINCT UKPRN) AS 'ProvidersCount'
-		,ISNULL(AllProviders,0) AS 'AllProvidersCount'
-		,st1.[LarsCode] as 'LarsCode'
+		 st1.[LarsCode] as 'LarsCode'
+		,COUNT(DISTINCT UKPRN) AS 'ProvidersCount'
+		,ISNULL(AllProviders,0) AS 'TotalProvidersCount'
+		
 	FROM StandardsList st1
 	LEFT JOIN ActiveProviders act on act.[LarsCode] = st1.[LarsCode]
 	LEFT JOIN (
