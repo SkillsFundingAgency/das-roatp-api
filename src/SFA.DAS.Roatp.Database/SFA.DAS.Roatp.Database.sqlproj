@@ -93,6 +93,7 @@
     <None Include="Scripts\CSP-1832-Insert_ProviderApprenticeStars.sql" />
     <None Include="Scripts\CSP-1832-Insert_ProviderEmployerStars.sql" />
     <Build Include="StoredProcedures\GetTrainingProvidersCount.sql" />
+    <Build Include="Tables\Shortlist.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
