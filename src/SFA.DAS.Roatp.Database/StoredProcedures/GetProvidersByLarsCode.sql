@@ -110,7 +110,6 @@ EmployerStars
 AS
 (
     SELECT *
-    ,CONVERT(varchar(20),CASE [Stars] WHEN 4 THEN 'Excellent' When 3 Then 'Good' When 2 Then 'Poor' When 1 Then 'VeryPoor' END) Rating
     FROM [dbo].[ProviderEmployerStars] 
     WHERE TimePeriod = @feedbackperiod
 ),
@@ -119,8 +118,7 @@ ApprenticeStars
 AS
 (
     SELECT *
-    ,CONVERT(varchar(20),CASE [Stars] WHEN 4 THEN 'Excellent' When 3 Then 'Good' When 2 Then 'Poor'  When 1 Then 'VeryPoor' END) Rating
-    FROM [dbo].[ProviderApprenticeStars] 
+	FROM [dbo].[ProviderApprenticeStars] 
     WHERE TimePeriod = @feedbackperiod
 ),
 -- Results query
@@ -176,10 +174,10 @@ AS
         -- Star Ratings
         ,ISNULL(CONVERT(varchar,pes.ReviewCount),'None') "providers.employerReviews"
         ,ISNULL(CONVERT(varchar,pes.Stars),'-') "providers.employerStars"
-        ,ISNULL(CONVERT(varchar(20),pes.Rating),'NotYetReviewed') "providers.employerRating"
+        ,ISNULL(pes.Rating,'NotYetReviewed') "providers.employerRating"
         ,ISNULL(CONVERT(varchar,pas.ReviewCount),'None') "providers.apprenticeReviews"
         ,ISNULL(CONVERT(varchar,pas.Stars),'-') "providers.apprenticeStars"
-        ,ISNULL(CONVERT(varchar(20),pas.Rating),'NotYetReviewed') "providers.apprenticeRating"
+        ,ISNULL(pas.Rating,'NotYetReviewed') "providers.apprenticeRating"
     FROM 
         (
         SELECT Ukprn, LegalName
@@ -335,4 +333,3 @@ SELECT
 FROM Standards
 LEFT JOIN Results on Results.Larscode = Standards.Larscode
 ;
-
