@@ -1,13 +1,6 @@
-USE [SFA.DAS.Roatp.Database]
-GO
-/****** Object:  StoredProcedure [dbo].[GetTrainingProvidersCount]    Script Date: 10/02/2025 14:19:55 ******/
-SET ANSI_NULLS ON
-GO
-SET QUOTED_IDENTIFIER ON
-GO
 -- this calculates the distance from Training Provider training locations / regions
 
-ALTER PROCEDURE [dbo].[GetTrainingProvidersCount]
+CREATE PROCEDURE [dbo].[GetTrainingProvidersCount]
     @Latitude FLOAT NULL,
     @Longitude FLOAT NULL,
     @Distance INT NULL,
