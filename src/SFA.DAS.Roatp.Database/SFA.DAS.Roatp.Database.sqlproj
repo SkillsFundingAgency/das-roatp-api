@@ -58,6 +58,7 @@
     <Folder Include="Tables" />
     <Folder Include="PostDeploymentScripts" />
     <Folder Include="Scripts" />
+    <Folder Include="StoredProcedures" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
@@ -70,6 +71,7 @@
     <Build Include="Tables\ProviderCourseLocation.sql" />
     <Build Include="Tables\Standard.sql" />
     <Build Include="Tables\Region.sql" />
+    <Build Include="Tables\Shortlist.sql" />
     <None Include="PostDeploymentScripts\PopulateRegionData.sql" />
     <Build Include="Tables\ProvderRegistrationDetail.sql" />
     <Build Include="Tables\ImportAudit.sql" />
@@ -91,7 +93,7 @@
     <None Include="Scripts\CSP-1831-Insert_StandardQAR.sql" />
     <None Include="Scripts\CSP-1832-Insert_ProviderApprenticeStars.sql" />
     <None Include="Scripts\CSP-1832-Insert_ProviderEmployerStars.sql" />
-    <Build Include="Tables\Shortlist.sql" />
+    <Build Include="StoredProcedures\GetProvidersByLarsCode.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
