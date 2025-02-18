@@ -11,5 +11,7 @@ public class ShortlistConfiguration : IEntityTypeConfiguration<Shortlist>
     public void Configure(EntityTypeBuilder<Shortlist> builder)
     {
         builder.ToTable(nameof(Shortlist));
+        builder.Property(p => p.Latitude).HasColumnType("float");
+        builder.Property(p => p.Longitude).HasColumnType("float");
     }
 }
