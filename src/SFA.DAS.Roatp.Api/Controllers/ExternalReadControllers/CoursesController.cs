@@ -5,9 +5,8 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
-using System.Threading;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProvidersCountForCourse;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
