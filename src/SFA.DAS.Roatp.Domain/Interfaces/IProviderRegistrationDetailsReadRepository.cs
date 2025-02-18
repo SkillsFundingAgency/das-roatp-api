@@ -8,5 +8,7 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
     {
         Task<List<ProviderRegistrationDetail>> GetActiveProviderRegistrations();
         Task<ProviderRegistrationDetail> GetProviderRegistrationDetail(int ukprn);
+
+        Task<bool> IsMainActiveProvider(int ukprn, int larsCode);
     }
 }
