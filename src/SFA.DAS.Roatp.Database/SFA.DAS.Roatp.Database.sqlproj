@@ -57,8 +57,8 @@
     <Folder Include="Properties" />
     <Folder Include="Tables" />
     <Folder Include="PostDeploymentScripts" />
-    <Folder Include="Scripts" />
     <Folder Include="StoredProcedures" />
+    <Folder Include="Scripts" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
@@ -87,11 +87,14 @@
     <Build Include="Tables\ProviderQAR.sql" />
     <Build Include="Tables\ProviderApprenticeStars.sql" />
     <Build Include="Tables\ProviderEmployerStars.sql" />
+    <Build Include="Tables\Shortlist.sql" />
     <None Include="Scripts\CSP-1831-Insert_NationalQAR.sql" />
     <None Include="Scripts\CSP-1831-Insert_ProviderQAR.sql" />
     <None Include="Scripts\CSP-1831-Insert_StandardProviderQAR.sql" />
     <None Include="Scripts\CSP-1831-Insert_StandardQAR.sql" />
     <None Include="Scripts\CSP-1832-Insert_ProviderApprenticeStars.sql" />
+    <None Include="Scripts\CSP-1832-Insert_ProviderEmployerStars.sql" />
+    <Build Include="StoredProcedures\GetTrainingProvidersCount.sql" />
     <None Include="Scripts\CSP-1832-Insert_ProviderEmployerStars.sql" />
     <Build Include="StoredProcedures\GetProvidersByLarsCode.sql" />
   </ItemGroup>
