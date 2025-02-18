@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using SFA.DAS.Roatp.Application.Mediatr.Responses;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Api.Infrastructure
 {
@@ -26,10 +26,10 @@ namespace SFA.DAS.Roatp.Api.Infrastructure
             return new BadRequestObjectResult(FormatErrors(response.Errors));
         }
 
-        protected IActionResult GetPostResponse<T>(ValidatedResponse<T> response, string uri) 
+        protected IActionResult GetPostResponse<T>(ValidatedResponse<T> response, string uri)
         {
             if (response.IsValidResponse)
-                return new CreatedResult(uri,response.Result);
+                return new CreatedResult(uri, response.Result);
 
             return new BadRequestObjectResult(FormatErrors(response.Errors));
         }
