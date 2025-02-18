@@ -61,6 +61,7 @@ public static class AddRoatpDataContextExtension
         services.AddTransient<IProviderDetailsReadRepository, ProviderDetailsReadRepository>();
         services.AddTransient<INationalAchievementRatesReadRepository, NationalAchievementRatesReadRepository>();
         services.AddTransient<IProvidersCountReadRepository, ProvidersCountReadRepository>();
+        services.AddTransient<IShortlistWriteRepository, ShortlistWriteRepository>();
         services.AddTransient<INationalQarReadRepository, NationalQarReadRepository>();
         services.AddTransient<IProviderEmployerStarsReadRepository, ProviderEmployerStarsReadRepository>();
     }
