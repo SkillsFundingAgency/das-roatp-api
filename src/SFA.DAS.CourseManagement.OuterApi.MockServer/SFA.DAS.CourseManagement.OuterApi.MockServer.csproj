@@ -19,4 +19,10 @@
     <PackageReference Include="WireMock.Net" Version="1.6.11" />
     <PackageReference Include="WireMock.Net.StandAlone" Version="1.6.11" />
   </ItemGroup>
+
+  <!--TRANSITIVE PACKAGES -->
+  <ItemGroup>
+    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.6.0.1" />
+  </ItemGroup>
+  <!--END OF TRANSITIVE PACKAGES-->
 </Project>
