@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
@@ -7,6 +6,7 @@ using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProviderDetailsForCourse
 {
