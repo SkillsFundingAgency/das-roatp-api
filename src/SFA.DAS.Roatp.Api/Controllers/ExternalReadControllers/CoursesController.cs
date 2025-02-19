@@ -7,7 +7,6 @@ using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 using System.Threading;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProvidersCountForCourse;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
@@ -55,6 +54,4 @@ public class CoursesController : ActionResponseControllerBase
         var response = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode, request));
         return GetResponse(response);
     }
-
-
 }
