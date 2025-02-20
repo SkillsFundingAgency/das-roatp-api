@@ -5,7 +5,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces;
 
-public interface IShortlistWriteRepository
+public interface IShortlistsRepository
 {
     Task<Shortlist> Get(Guid userId, int ukprn, int larsCode, string locationDescription, CancellationToken cancellationToken);
 
