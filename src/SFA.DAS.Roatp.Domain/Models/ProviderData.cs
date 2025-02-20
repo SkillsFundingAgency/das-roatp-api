@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Domain.Models;
 
@@ -16,4 +17,5 @@ public class ProviderData
     public string ApprenticeReviews { get; set; }
     public string ApprenticeStars { get; set; }
     public ProviderRating ApprenticeRating { get; set; }
+    public Guid? ShortlistId { get; set; }
 }

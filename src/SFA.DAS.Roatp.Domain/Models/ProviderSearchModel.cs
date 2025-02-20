@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Roatp.Domain.Models;
+﻿using System;
+
+namespace SFA.DAS.Roatp.Domain.Models;
 public class ProviderSearchModel
 {
     public int Page { get; set; }
@@ -26,6 +28,6 @@ public class ProviderSearchModel
     public string ApprenticeReviews { get; set; }
     public string ApprenticeStars { get; set; }
     public ProviderRating ApprenticeRating { get; set; }
-
+    public Guid? ShortlistId { get; set; }
 
 }
