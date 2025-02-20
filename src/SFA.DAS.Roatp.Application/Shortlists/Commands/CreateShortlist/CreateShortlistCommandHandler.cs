@@ -36,6 +36,7 @@ public class CreateShortlistCommandHandler(IShortlistsRepository _shortlistWrite
             LarsCode = command.LarsCode,
             LocationDescription = command.LocationDescription,
             Latitude = string.IsNullOrEmpty(command.LocationDescription) ? null : command.Latitude,
-            Longitude = string.IsNullOrEmpty(command.LocationDescription) ? null : command.Longitude
+            Longitude = string.IsNullOrEmpty(command.LocationDescription) ? null : command.Longitude,
+            CreatedDate = DateTime.UtcNow
         };
 }

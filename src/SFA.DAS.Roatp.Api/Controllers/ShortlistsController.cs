@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.Shortlists.Commands.CreateShortlist;
+using SFA.DAS.Roatp.Application.Shortlists.Commands.DeleteShortlist;
 using SFA.DAS.Roatp.Application.Shortlists.Queries.GetShortlistCountForUser;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
@@ -45,5 +46,14 @@ public class ShortlistsController(IMediator _mediator) : ActionResponseControlle
     {
         var result = await _mediator.Send(new GetShortlistsCountForUserQuery(userId), cancellationToken);
         return GetResponse(result);
+    }
+
+    [HttpDelete]
+    [Route("{id}")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    public async Task<IActionResult> DeleteShortlist([FromRoute] Guid id, CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new DeleteShortlistCommand(id), cancellationToken);
+        return Accepted();
     }
 }
