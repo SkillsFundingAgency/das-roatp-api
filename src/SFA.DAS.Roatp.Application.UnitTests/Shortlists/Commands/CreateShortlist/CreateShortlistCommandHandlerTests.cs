@@ -10,14 +10,14 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.Shortlists.Commands;
+namespace SFA.DAS.Roatp.Application.UnitTests.Shortlists.Commands.CreateShortlist;
 
 public class CreateShortlistCommandHandlerTests
 {
     [Test, MoqAutoData]
     public async Task Handle_ShortlistExists_ReturnsExistingShortlist(
         CreateShortlistCommand command,
-        [Frozen] Mock<IShortlistWriteRepository> shortlistWriteRepositoryMock,
+        [Frozen] Mock<IShortlistsRepository> shortlistWriteRepositoryMock,
         CreateShortlistCommandHandler sut,
         Shortlist shortlist,
         CancellationToken cancellationToken)
@@ -34,7 +34,7 @@ public class CreateShortlistCommandHandlerTests
     [Test, MoqAutoData]
     public async Task Handle_ShortlistDoesNotExist_CreatesNewShortlist(
         CreateShortlistCommand command,
-        [Frozen] Mock<IShortlistWriteRepository> shortlistWriteRepositoryMock,
+        [Frozen] Mock<IShortlistsRepository> shortlistWriteRepositoryMock,
         CreateShortlistCommandHandler sut,
         CancellationToken cancellationToken)
     {
@@ -50,7 +50,7 @@ public class CreateShortlistCommandHandlerTests
     [Test, MoqAutoData]
     public async Task Handle_ShortlistDoesNotExist_LocationNotGiven_CreatesNewShortlistWithoutCoordinates(
         CreateShortlistCommand command,
-        [Frozen] Mock<IShortlistWriteRepository> shortlistWriteRepositoryMock,
+        [Frozen] Mock<IShortlistsRepository> shortlistWriteRepositoryMock,
         CreateShortlistCommandHandler sut,
         CancellationToken cancellationToken)
     {
@@ -69,7 +69,7 @@ public class CreateShortlistCommandHandlerTests
     [Test, MoqAutoData]
     public async Task Handle_ShortlistDoesNotExist_LocationGiven_CreatesNewShortlistWithCoordinates(
         CreateShortlistCommand command,
-        [Frozen] Mock<IShortlistWriteRepository> shortlistWriteRepositoryMock,
+        [Frozen] Mock<IShortlistsRepository> shortlistWriteRepositoryMock,
         CreateShortlistCommandHandler sut,
         CancellationToken cancellationToken)
     {

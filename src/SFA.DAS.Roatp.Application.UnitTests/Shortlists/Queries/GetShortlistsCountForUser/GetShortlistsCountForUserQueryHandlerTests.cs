@@ -15,7 +15,7 @@ public class GetShortlistsCountForUserQueryHandlerTests
     [Test, AutoData]
     public async Task Handle_ReturnsResult(Guid userId, int count, CancellationToken cancellationToken)
     {
-        Mock<IShortlistWriteRepository> repoMock = new();
+        Mock<IShortlistsRepository> repoMock = new();
         repoMock.Setup(r => r.GetShortlistCount(userId, cancellationToken)).ReturnsAsync(count);
 
         GetShortlistsCountForUserQueryHandler sut = new(repoMock.Object);

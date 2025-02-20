@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Shortlists.Queries.GetShortlistCountForUser;
 
-public class GetShortlistsCountForUserQueryHandler(IShortlistWriteRepository shortlistWriteRepository) : IRequestHandler<GetShortlistsCountForUserQuery, ValidatedResponse<GetShortlistsCountForUserQueryResult>>
+public class GetShortlistsCountForUserQueryHandler(IShortlistsRepository shortlistWriteRepository) : IRequestHandler<GetShortlistsCountForUserQuery, ValidatedResponse<GetShortlistsCountForUserQueryResult>>
 {
     public async Task<ValidatedResponse<GetShortlistsCountForUserQueryResult>> Handle(GetShortlistsCountForUserQuery request, CancellationToken cancellationToken)
     {
