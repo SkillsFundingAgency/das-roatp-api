@@ -12,4 +12,6 @@ public interface IShortlistsRepository
     Task Create(Shortlist shortlist, CancellationToken cancellationToken);
 
     Task<int> GetShortlistCount(Guid userId, CancellationToken cancellationToken);
+
+    Task Delete(Guid shortlistId, CancellationToken cancellationToken);
 }
