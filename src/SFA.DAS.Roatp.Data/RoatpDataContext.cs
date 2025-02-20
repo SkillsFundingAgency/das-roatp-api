@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
-using System.Diagnostics.CodeAnalysis;
 using SFA.DAS.Roatp.Domain.Models;
+using System.Diagnostics.CodeAnalysis;
 using ProviderCourse = SFA.DAS.Roatp.Domain.Entities.ProviderCourse;
 
 namespace SFA.DAS.Roatp.Data
@@ -29,7 +29,12 @@ namespace SFA.DAS.Roatp.Data
         public DbSet<ProviderCourseSummaryModel> ProviderSummaryDetailsWithDistance { get; set; }
 
         public DbSet<ProviderCourseLocationDetailsModel> ProviderLocationDetailsWithDistance { get; set; }
-        public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) {}
+
+        public DbSet<NationalQar> NationalQars { get; set; }
+
+        public DbSet<ProviderEmployerStars> ProviderEmployerStars { get; set; }
+
+        public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
