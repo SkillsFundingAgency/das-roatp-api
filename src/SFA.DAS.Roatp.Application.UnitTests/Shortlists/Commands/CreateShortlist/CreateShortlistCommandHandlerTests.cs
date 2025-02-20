@@ -44,7 +44,7 @@ public class CreateShortlistCommandHandlerTests
 
         actual.Result.IsCreated.Should().BeTrue();
         actual.Result.ShortlistId.Should().NotBeEmpty();
-        shortlistWriteRepositoryMock.Verify(s => s.Create(It.Is<Shortlist>(s => s.Id != Guid.Empty && s.UserId == command.UserId && s.Ukprn == command.Ukprn && s.LarsCode == command.LarsCode && s.LocationDescription == command.LocationDescription), cancellationToken), Times.Once);
+        shortlistWriteRepositoryMock.Verify(s => s.Create(It.Is<Shortlist>(s => s.Id != Guid.Empty && s.UserId == command.UserId && s.Ukprn == command.Ukprn && s.LarsCode == command.LarsCode && s.LocationDescription == command.LocationDescription && s.CreatedDate != DateTime.MinValue), cancellationToken), Times.Once);
     }
 
     [Test, MoqAutoData]

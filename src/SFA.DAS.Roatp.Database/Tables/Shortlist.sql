@@ -7,7 +7,7 @@
     [LocationDescription] VARCHAR(1000) NULL,
     [Latitude] FLOAT NULL,
     [Longitude] FLOAT NULL,
-    [CreatedDate] DATETIME2 NOT NULL DEFAULT GETDATE(),
+    [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     CONSTRAINT PK_Shortlist PRIMARY KEY ([Id]) 
 );
 GO
