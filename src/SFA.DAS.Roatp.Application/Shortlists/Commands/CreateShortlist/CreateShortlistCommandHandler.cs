@@ -12,15 +12,19 @@ public class CreateShortlistCommandHandler(IShortlistWriteRepository _shortlistW
 {
     public async Task<ValidatedResponse<CreateShortlistCommandResult>> Handle(CreateShortlistCommand request, CancellationToken cancellationToken)
     {
+        CreateShortlistCommandResult result = new();
+
         Shortlist shortlist = await _shortlistWriteRepository.Get(request.UserId, request.Ukprn, request.LarsCode, request.LocationDescription, cancellationToken);
 
         if (shortlist == null)
         {
             shortlist = ConvertToShortlist(request);
+            result.IsCreated = true;
             await _shortlistWriteRepository.Create(shortlist, cancellationToken);
         }
 
-        return new ValidatedResponse<CreateShortlistCommandResult>(new CreateShortlistCommandResult(shortlist));
+        result.ShortlistId = shortlist.Id;
+        return new ValidatedResponse<CreateShortlistCommandResult>(result);
     }
 
     private static Shortlist ConvertToShortlist(CreateShortlistCommand command)
@@ -31,7 +35,7 @@ public class CreateShortlistCommandHandler(IShortlistWriteRepository _shortlistW
             Ukprn = command.Ukprn,
             LarsCode = command.LarsCode,
             LocationDescription = command.LocationDescription,
-            Latitude = command.Latitude,
-            Longitude = command.Longitude
+            Latitude = string.IsNullOrEmpty(command.LocationDescription) ? null : command.Latitude,
+            Longitude = string.IsNullOrEmpty(command.LocationDescription) ? null : command.Longitude
         };
 }

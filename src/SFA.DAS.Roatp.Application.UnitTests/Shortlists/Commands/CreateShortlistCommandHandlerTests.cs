@@ -26,7 +26,8 @@ public class CreateShortlistCommandHandlerTests
 
         var actual = await sut.Handle(command, cancellationToken);
 
-        actual.Result.Shortlist.Should().Be(shortlist);
+        actual.Result.ShortlistId.Should().Be(shortlist.Id);
+        actual.Result.IsCreated.Should().BeFalse();
         shortlistWriteRepositoryMock.Verify(s => s.Create(It.IsAny<Shortlist>(), cancellationToken), Times.Never);
     }
 
@@ -41,7 +42,46 @@ public class CreateShortlistCommandHandlerTests
 
         var actual = await sut.Handle(command, cancellationToken);
 
-        actual.Result.Shortlist.Should().BeEquivalentTo(command, config => config.ExcludingMissingMembers());
+        actual.Result.IsCreated.Should().BeTrue();
+        actual.Result.ShortlistId.Should().NotBeEmpty();
         shortlistWriteRepositoryMock.Verify(s => s.Create(It.Is<Shortlist>(s => s.Id != Guid.Empty && s.UserId == command.UserId && s.Ukprn == command.Ukprn && s.LarsCode == command.LarsCode && s.LocationDescription == command.LocationDescription), cancellationToken), Times.Once);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Handle_ShortlistDoesNotExist_LocationNotGiven_CreatesNewShortlistWithoutCoordinates(
+        CreateShortlistCommand command,
+        [Frozen] Mock<IShortlistWriteRepository> shortlistWriteRepositoryMock,
+        CreateShortlistCommandHandler sut,
+        CancellationToken cancellationToken)
+    {
+        command.LocationDescription = null;
+        command.Latitude = 1;
+        command.Longitude = 2;
+        shortlistWriteRepositoryMock.Setup(s => s.Get(command.UserId, command.Ukprn, command.LarsCode, command.LocationDescription, cancellationToken)).ReturnsAsync((Shortlist)null);
+
+        var actual = await sut.Handle(command, cancellationToken);
+
+        actual.Result.IsCreated.Should().BeTrue();
+        actual.Result.ShortlistId.Should().NotBeEmpty();
+        shortlistWriteRepositoryMock.Verify(s => s.Create(It.Is<Shortlist>(s => s.Id != Guid.Empty && s.UserId == command.UserId && s.Ukprn == command.Ukprn && s.LarsCode == command.LarsCode && s.LocationDescription == null && s.Latitude == null && s.Longitude == null), cancellationToken), Times.Once);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Handle_ShortlistDoesNotExist_LocationGiven_CreatesNewShortlistWithCoordinates(
+        CreateShortlistCommand command,
+        [Frozen] Mock<IShortlistWriteRepository> shortlistWriteRepositoryMock,
+        CreateShortlistCommandHandler sut,
+        CancellationToken cancellationToken)
+    {
+        command.LocationDescription = "MK4 4ET";
+        command.Longitude = 1;
+        command.Latitude = 2;
+        shortlistWriteRepositoryMock.Setup(s => s.Get(command.UserId, command.Ukprn, command.LarsCode, command.LocationDescription, cancellationToken)).ReturnsAsync((Shortlist)null);
+
+        var actual = await sut.Handle(command, cancellationToken);
+
+        actual.Result.IsCreated.Should().BeTrue();
+        actual.Result.ShortlistId.Should().NotBeEmpty();
+        shortlistWriteRepositoryMock.Verify(s => s.Create(It.Is<Shortlist>(s => s.Id != Guid.Empty && s.UserId == command.UserId && s.Ukprn == command.Ukprn && s.LarsCode == command.LarsCode && s.LocationDescription == command.LocationDescription && s.Latitude == command.Latitude && s.Longitude == command.Longitude), cancellationToken), Times.Once);
     }
 }
