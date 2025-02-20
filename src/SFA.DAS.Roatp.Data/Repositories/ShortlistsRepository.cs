@@ -10,7 +10,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Data.Repositories;
 
 [ExcludeFromCodeCoverage]
-public class ShortlistWriteRepository(RoatpDataContext _roatpDataContext) : IShortlistWriteRepository
+public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortlistsRepository
 {
     public Task Create(Shortlist shortlist, CancellationToken cancellationToken)
     {

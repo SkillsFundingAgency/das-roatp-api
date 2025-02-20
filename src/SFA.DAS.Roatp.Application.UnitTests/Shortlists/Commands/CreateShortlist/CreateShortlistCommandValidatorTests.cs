@@ -10,7 +10,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.Shortlists.Commands;
+namespace SFA.DAS.Roatp.Application.UnitTests.Shortlists.Commands.CreateShortlist;
 
 public class CreateShortlistCommandValidatorTests
 {
@@ -26,7 +26,7 @@ public class CreateShortlistCommandValidatorTests
 
     [Test, MoqAutoData]
     public async Task Validate_UserExceededShortlist_Invalid(
-        [Frozen] Mock<IShortlistWriteRepository> repoMock,
+        [Frozen] Mock<IShortlistsRepository> repoMock,
         CreateShortlistCommandValidator sut,
         CreateShortlistCommand command)
     {
@@ -40,7 +40,7 @@ public class CreateShortlistCommandValidatorTests
 
     [Test, MoqAutoData]
     public async Task Validate_UserDoesNotExceedsShortlistCount_Valid(
-        [Frozen] Mock<IShortlistWriteRepository> repoMock,
+        [Frozen] Mock<IShortlistsRepository> repoMock,
         CreateShortlistCommandValidator sut,
         CreateShortlistCommand command)
     {
