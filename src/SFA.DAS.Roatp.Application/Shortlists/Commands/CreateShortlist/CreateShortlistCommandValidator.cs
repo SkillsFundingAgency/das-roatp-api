@@ -15,7 +15,7 @@ public class CreateShortlistCommandValidator : AbstractValidator<CreateShortlist
         IProviderRegistrationDetailsReadRepository providerRegistrationDetailsReadRepository,
         IStandardsReadRepository standardsReadRepository,
         IProvidersReadRepository providersReadRepository,
-        IShortlistWriteRepository shortlistWriteRepository)
+        IShortlistsRepository shortlistWriteRepository)
     {
         Include(new LarsCodeValidator(standardsReadRepository));
 

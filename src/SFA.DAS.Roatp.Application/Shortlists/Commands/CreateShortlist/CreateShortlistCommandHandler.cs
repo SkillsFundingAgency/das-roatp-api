@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Shortlists.Commands.CreateShortlist;
 
-public class CreateShortlistCommandHandler(IShortlistWriteRepository _shortlistWriteRepository) : IRequestHandler<CreateShortlistCommand, ValidatedResponse<CreateShortlistCommandResult>>
+public class CreateShortlistCommandHandler(IShortlistsRepository _shortlistWriteRepository) : IRequestHandler<CreateShortlistCommand, ValidatedResponse<CreateShortlistCommandResult>>
 {
     public async Task<ValidatedResponse<CreateShortlistCommandResult>> Handle(CreateShortlistCommand request, CancellationToken cancellationToken)
     {
