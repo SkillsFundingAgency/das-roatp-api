@@ -18,7 +18,7 @@ public class GetShortlistsCountForUserQueryValidatorTests
     }
 
     [Test]
-    public void Validate_UserIdGiven_Invalid()
+    public void Validate_UserIdGiven_Valid()
     {
         GetShortlistsCountForUserQueryValidator sut = new();
 
