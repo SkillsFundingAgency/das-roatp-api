@@ -1,9 +1,11 @@
 ﻿using System;
 using MediatR;
+using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.Shortlists.Commands.CreateShortlist;
 
-public class CreateShortlistCommand : IRequest<CreateShortlistCommandResult>
+public class CreateShortlistCommand : IRequest<ValidatedResponse<CreateShortlistCommandResult>>, IUkprn, ILarsCode
 {
     public Guid UserId { get; set; }
     public int Ukprn { get; set; }

@@ -19,10 +19,11 @@ public class ShortlistWriteRepository(RoatpDataContext _roatpDataContext) : ISho
     }
 
     public Task<Shortlist> Get(Guid userId, int ukprn, int larsCode, string locationDescription, CancellationToken cancellationToken)
-    {
-        return _roatpDataContext
+        => _roatpDataContext
             .Shortlists
             .Where(s => s.UserId == userId && s.Ukprn == ukprn && s.LarsCode == larsCode && s.LocationDescription == locationDescription)
             .FirstOrDefaultAsync(cancellationToken);
-    }
+
+    public Task<int> GetShortlistCount(Guid userId, CancellationToken cancellationToken)
+        => _roatpDataContext.Shortlists.CountAsync(s => s.UserId == userId, cancellationToken);
 }

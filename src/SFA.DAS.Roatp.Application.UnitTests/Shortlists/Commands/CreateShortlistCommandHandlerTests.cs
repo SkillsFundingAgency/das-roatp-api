@@ -26,7 +26,7 @@ public class CreateShortlistCommandHandlerTests
 
         var actual = await sut.Handle(command, cancellationToken);
 
-        actual.Shortlist.Should().Be(shortlist);
+        actual.Result.Shortlist.Should().Be(shortlist);
         shortlistWriteRepositoryMock.Verify(s => s.Create(It.IsAny<Shortlist>(), cancellationToken), Times.Never);
     }
 
@@ -41,7 +41,7 @@ public class CreateShortlistCommandHandlerTests
 
         var actual = await sut.Handle(command, cancellationToken);
 
-        actual.Shortlist.Should().BeEquivalentTo(command, config => config.ExcludingMissingMembers());
+        actual.Result.Shortlist.Should().BeEquivalentTo(command, config => config.ExcludingMissingMembers());
         shortlistWriteRepositoryMock.Verify(s => s.Create(It.Is<Shortlist>(s => s.Id != Guid.Empty && s.UserId == command.UserId && s.Ukprn == command.Ukprn && s.LarsCode == command.LarsCode && s.LocationDescription == command.LocationDescription), cancellationToken), Times.Once);
     }
 }

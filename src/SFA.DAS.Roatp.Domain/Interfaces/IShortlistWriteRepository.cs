@@ -10,4 +10,6 @@ public interface IShortlistWriteRepository
     Task<Shortlist> Get(Guid userId, int ukprn, int larsCode, string locationDescription, CancellationToken cancellationToken);
 
     Task Create(Shortlist shortlist, CancellationToken cancellationToken);
+
+    Task<int> GetShortlistCount(Guid userId, CancellationToken cancellationToken);
 }
