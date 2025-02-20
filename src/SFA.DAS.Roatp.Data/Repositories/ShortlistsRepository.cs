@@ -12,10 +12,10 @@ namespace SFA.DAS.Roatp.Data.Repositories;
 [ExcludeFromCodeCoverage]
 public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortlistsRepository
 {
-    public Task Create(Shortlist shortlist, CancellationToken cancellationToken)
+    public async Task Create(Shortlist shortlist, CancellationToken cancellationToken)
     {
         _roatpDataContext.Shortlists.Add(shortlist);
-        return _roatpDataContext.SaveChangesAsync(cancellationToken);
+        await _roatpDataContext.SaveChangesAsync(cancellationToken);
     }
 
     public Task<Shortlist> Get(Guid userId, int ukprn, int larsCode, string locationDescription, CancellationToken cancellationToken)
@@ -26,4 +26,7 @@ public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortli
 
     public Task<int> GetShortlistCount(Guid userId, CancellationToken cancellationToken)
         => _roatpDataContext.Shortlists.CountAsync(s => s.UserId == userId, cancellationToken);
+
+    public Task Delete(Guid shortlistId, CancellationToken cancellationToken)
+        => _roatpDataContext.Shortlists.Where(s => s.Id == shortlistId).ExecuteDeleteAsync(cancellationToken);
 }
