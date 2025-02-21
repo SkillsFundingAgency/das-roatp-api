@@ -8,6 +8,7 @@ public class ProviderData
     public long Ordering { get; set; }
     public int Ukprn { get; set; }
     public string ProviderName { get; set; }
+    public Guid? ShortlistId { get; set; }
     public List<ProviderLocationModel> Locations { get; set; }
     public string Leavers { get; set; }
     public string AchievementRate { get; set; }
@@ -17,5 +18,4 @@ public class ProviderData
     public string ApprenticeReviews { get; set; }
     public string ApprenticeStars { get; set; }
     public ProviderRating ApprenticeRating { get; set; }
-    public Guid? ShortlistId { get; set; }
 }

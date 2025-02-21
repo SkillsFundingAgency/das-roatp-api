@@ -29,5 +29,4 @@ public class ProviderSearchModel
     public string ApprenticeStars { get; set; }
     public ProviderRating ApprenticeRating { get; set; }
     public Guid? ShortlistId { get; set; }
-
 }
