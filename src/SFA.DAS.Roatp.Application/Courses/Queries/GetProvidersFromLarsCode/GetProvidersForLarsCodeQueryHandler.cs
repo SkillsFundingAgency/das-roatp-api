@@ -62,10 +62,12 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             IsDayRelease = isDayRelease,
             Latitude = request.Latitude,
             Longitude = request.Longitude,
+            Location = request.Location,
             Distance = request.Distance,
             QarRange = qar,
             EmployerProviderRatings = employerProviderRatings,
-            ApprenticeProviderRatings = apprenticeProviderRatings
+            ApprenticeProviderRatings = apprenticeProviderRatings,
+            UserId = request.UserId
         };
 
         var results = await _providersReadRepository.GetProvidersByLarsCode(request.LarsCode,
@@ -95,6 +97,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
                 Ordering = item.Ordering,
                 Ukprn = item.Ukprn,
                 ProviderName = item.ProviderName,
+                ShortlistId = item.ShortlistId,
                 Leavers = item.Leavers,
                 AchievementRate = item.AchievementRate,
                 EmployerReviews = item.EmployerReviews,

@@ -2,6 +2,7 @@
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,6 +16,7 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
     public decimal? Distance { get; }
     public decimal? Latitude { get; }
     public decimal? Longitude { get; }
+    public string Location { get; }
     public List<DeliveryMode> DeliveryModes { get; } = new();
 
     public List<ProviderRating> EmployerProviderRatings { get; } = new();
@@ -24,15 +26,18 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
 
     public int? Page { get; }
     public int? PageSize { get; }
+    public Guid? UserId { get; }
     public GetProvidersForLarsCodeQuery(int larsCode, GetProvidersFromLarsCodeRequest request)
     {
         LarsCode = larsCode;
         Latitude = request.Latitude;
+        Location = request.Location;
         Longitude = request.Longitude;
         OrderBy = request.OrderBy;
         Distance = request.Distance;
         Page = request.Page;
         PageSize = request.PageSize;
+        UserId = request.UserId;
 
         if (request.DeliveryModes != null)
         {

@@ -5,6 +5,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
@@ -43,7 +44,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             await using DbCommand command = connection.CreateCommand();
 
             command.CommandText = "dbo.GetProvidersByLarsCode";
-            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.CommandType = CommandType.StoredProcedure;
 
             command.Parameters.Add(new SqlParameter("@larsCode", larsCode));
             command.Parameters.Add(new SqlParameter("@sortOrder", sortOrder));
@@ -56,12 +57,14 @@ namespace SFA.DAS.Roatp.Data.Repositories
             command.Parameters.Add(new SqlParameter("@blockrelease", parameters.IsBlockRelease));
             command.Parameters.Add(new SqlParameter("@Latitude", parameters.Latitude));
             command.Parameters.Add(new SqlParameter("@Longitude", parameters.Longitude));
+            command.Parameters.Add(new SqlParameter("@Location", parameters.Location));
             command.Parameters.Add(new SqlParameter("@distance", parameters.Distance));
             command.Parameters.Add(new SqlParameter("@QarRange", parameters.QarRange));
             command.Parameters.Add(new SqlParameter("@employerProviderRatings", parameters.EmployerProviderRatings));
             command.Parameters.Add(new SqlParameter("@apprenticeProviderRatings", parameters.ApprenticeProviderRatings));
+            command.Parameters.Add(new SqlParameter("@UserId", parameters.UserId));
 
-            if (command.Connection!.State != System.Data.ConnectionState.Open)
+            if (command.Connection!.State != ConnectionState.Open)
             {
                 await command.Connection.OpenAsync(cancellationToken);
             }
@@ -114,7 +117,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
                             EmployerRating = (ProviderRating)Enum.Parse(typeof(ProviderRating), (string)reader["providers.employerRating"]),
                             ApprenticeReviews = (string)reader["providers.apprenticeReviews"],
                             ApprenticeStars = (string)reader["providers.apprenticeStars"],
-                            ApprenticeRating = (ProviderRating)Enum.Parse(typeof(ProviderRating), (string)reader["providers.apprenticeRating"])
+                            ApprenticeRating = (ProviderRating)Enum.Parse(typeof(ProviderRating), (string)reader["providers.apprenticeRating"]),
+                            ShortlistId = reader["providers.ShortlistId"] != DBNull.Value ? (Guid)reader["providers.shortlistId"] : null
                         });
                 }
             }

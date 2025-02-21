@@ -13,36 +13,14 @@
 	@Distance int = null, -- Distance should always set when Longitude & Longitude set
 	@QARrange varchar(100) = null, -- any combo of 'excellent', 'good', 'poor', 'verypoor' and 'none' , or NULL
 	@employerProviderRatings varchar(100) = null, -- any combo of 'excellent', 'good', 'poor', 'verypoor' and 'notyetreviewed' , or NULL
-	@apprenticeProviderRatings varchar(100) = null -- any combo of 'excellent', 'good', 'poor', 'verypoor' and 'notyetreviewed' , or NULL
+	@apprenticeProviderRatings varchar(100) = null, -- any combo of 'excellent', 'good', 'poor', 'verypoor' and 'notyetreviewed' , or NULL
+	@Location varchar(200) = null,
+	@userid uniqueidentifier = null
 as
 
 SET NOCOUNT ON
 -- this calculates the distance from Training Provider training locations / regions with filters
---DECLARE 
---@page int = 1,
---@pageSize int = 10,
----- Location can be Null or based on postcode lookup e.g. PRESTION PR1 2ED (52.57339, -0.24848)
---@Latitude float,-- = 52.57339,  
---@Longitude float,-- = -0.24848, 
--- Distance should always set when Longitude & Longitude set
---@Distance int,-- = 30,     -- Distance optional
--- Filters
---@workplace int = 1,    -- 0 or 1 include training at apprentice's workplace
---@provider int = 1,     -- 0 or 1 include training at providers+
---@blockrelease int = 1, -- 0 or 1 include block release
---@dayrelease int = 1,   -- 0 or 1 include day release
--- Standard by LarsCode - must be set
---@larscode int = 1,
--- any combo of 'excellent', 'good', 'poor', 'verypoor' and 'none' , or NULL
---@QARrange varchar(100),
--- any combo of 'excellent', 'good', 'poor', 'verypoor' and 'notyetreviewed' , or NULL
---@employerProviderRatings varchar(100),
--- any combo of 'excellent', 'good', 'poor', 'verypoor' and 'notyetreviewed' , or NULL
---@apprenticeProviderRatings varchar(100),
--- order by "Distance", "AchievementRate" or "EmployerProviderRating" , "ApprenticeProviderRating"
---@SortOrder varchar(30) = 'Distance';  
 
--- local working
 DECLARE @skip int = (@page - 1) * @pageSize;
 
 -- the latest QAR data time period and Feedback reviews
@@ -178,6 +156,7 @@ AS
         ,ISNULL(CONVERT(varchar,pas.ReviewCount),'None') "providers.apprenticeReviews"
         ,ISNULL(CONVERT(varchar,pas.Stars),'-') "providers.apprenticeStars"
         ,ISNULL(pas.Rating,'NotYetReviewed') "providers.apprenticeRating"
+        ,sht.[Id] "providers.shortlistId"   
     FROM 
         (
         SELECT Ukprn, LegalName
@@ -246,8 +225,7 @@ AS
               AND [LarsCode] = @larscode
 
               ) ab1 
-        WHERE 1=1
-        AND LocationOrdering != 3 -- exclude outside Regions
+        WHERE LocationOrdering != 3 -- exclude outside Regions
         -- Distance filter check if requested
         AND (@Distance IS NULL OR Distance <= @Distance)
         -- Logic to match to Checkboxes for training locations 
@@ -286,6 +264,8 @@ AS
     LEFT JOIN ProviderQARs qp1 on qp1.[Ukprn] = ab2.[Ukprn] AND qp1.[IfateReferenceNumber] = stq.[IfateReferenceNumber]
     LEFT JOIN EmployerStars pes on pes.[Ukprn] = ab2.[Ukprn] 
     LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = ab2.[Ukprn] 
+    LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[UserId] = @userId
+    AND ISNULL(sht.[LocationDescription],'') = ISNULL(@Location,'')
     WHERE 1=1
     -- this gets only one row for each UKPRN (by larscode) taking nearest location/region or National
     AND (LocationType = 0 OR TP_Std_Dist_Seq = 1)
@@ -299,6 +279,7 @@ AS
     , qp1.[Leavers], qp1.[AchievementRate]
     , pes.ReviewCount, pes.Stars, pes.Rating
     , pas.ReviewCount, pas.Stars, pas.Rating
+    , sht.[Id]    
     ORDER BY "providers.ordering"
     OFFSET @skip ROWS
     FETCH NEXT @pageSize ROWS ONLY
@@ -330,6 +311,7 @@ SELECT
     ,"providers.apprenticeReviews"
     ,"providers.apprenticeStars"
     ,"providers.apprenticeRating"
+    ,"providers.shortlistId"
 FROM Standards
 LEFT JOIN Results on Results.Larscode = Standards.Larscode
 ;
