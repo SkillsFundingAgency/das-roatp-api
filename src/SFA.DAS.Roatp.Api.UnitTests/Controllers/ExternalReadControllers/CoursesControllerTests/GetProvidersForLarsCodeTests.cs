@@ -37,6 +37,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
                             && q.Distance == request.Distance
                             && q.Page == request.Page
                             && q.PageSize == request.PageSize
+                            && q.Location == request.Location
+                            && q.UserId == request.UserId
                 ), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(queryResult));
 
             var result = await sut.GetProvidersForLarsCode(larsCode, request);
@@ -64,6 +66,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
                     && q.Distance == request.Distance
                     && q.Page == request.Page
                     && q.PageSize == request.PageSize
+                    && q.Location == request.Location
+                    && q.UserId == request.UserId
             ), It.IsAny<CancellationToken>()));
         }
     }

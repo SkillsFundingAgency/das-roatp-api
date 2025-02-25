@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Domain.Models;
 
@@ -7,6 +8,7 @@ public class ProviderData
     public long Ordering { get; set; }
     public int Ukprn { get; set; }
     public string ProviderName { get; set; }
+    public Guid? ShortlistId { get; set; }
     public List<ProviderLocationModel> Locations { get; set; }
     public string Leavers { get; set; }
     public string AchievementRate { get; set; }
