@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Roatp.Domain.Models;
+﻿using System;
+
+namespace SFA.DAS.Roatp.Domain.Models;
 public class GetProvidersFromLarsCodeOptionalParameters
 {
     public int? Page { get; set; }
@@ -9,8 +11,10 @@ public class GetProvidersFromLarsCodeOptionalParameters
     public bool? IsDayRelease { get; set; }
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
+    public string Location { get; set; }
     public decimal? Distance { get; set; }
     public string QarRange { get; set; }
     public string EmployerProviderRatings { get; set; }
     public string ApprenticeProviderRatings { get; set; }
+    public Guid? UserId { get; set; }
 }
