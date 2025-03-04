@@ -10,6 +10,13 @@ trigger:
     include:
       - "main"
 
+pr:
+  autoCancel: true
+  branches:
+    include:
+      - "main"
+      - "FAT25-Development"
+
 variables:
 - name: SolutionBaseName
   value: SFA.DAS.Roatp
