@@ -97,6 +97,7 @@
     <Build Include="StoredProcedures\GetTrainingProvidersCount.sql" />
     <None Include="Scripts\CSP-1832-Insert_ProviderEmployerStars.sql" />
     <Build Include="StoredProcedures\GetProvidersByLarsCode.sql" />
+    <Build Include="StoredProcedures\GetShortlistsForUser.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
