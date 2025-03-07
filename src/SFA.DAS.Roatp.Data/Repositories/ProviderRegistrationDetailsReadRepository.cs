@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
@@ -11,7 +12,6 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
-    [ExcludeFromCodeCoverage]
     public class ProviderRegistrationDetailsReadRepository : IProviderRegistrationDetailsReadRepository
     {
         private readonly RoatpDataContext _roatpDataContext;
@@ -23,7 +23,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _logger = logger;
         }
 
-        public async Task<List<ProviderRegistrationDetail>> GetActiveProviderRegistrations()
+        [ExcludeFromCodeCoverage]
+        public async Task<List<ProviderRegistrationDetail>> GetActiveProviderRegistrations(CancellationToken cancellationToken)
         {
             var activeProviders = await _roatpDataContext.ProviderRegistrationDetails
                 .Where(x =>
@@ -32,13 +33,27 @@ namespace SFA.DAS.Roatp.Data.Repositories
                         x.StatusId == OrganisationStatus.Onboarding)
                 .Include(r => r.Provider)
                 .AsNoTracking()
-                .ToListAsync();
+                .ToListAsync(cancellationToken);
 
             _logger.LogInformation("Retrieved {Count} active provider registration details from ProviderRegistrationDetail", activeProviders.Count);
 
             return activeProviders;
         }
 
+        public async Task<List<ProviderRegistrationDetail>> GetActiveAndMainProviderRegistrations(CancellationToken cancellationToken)
+        {
+            return await _roatpDataContext.ProviderRegistrationDetails
+                .Where(x =>
+                    x.StatusId == OrganisationStatus.Active &&
+                    x.ProviderTypeId == ProviderType.Main &&
+                    (x.Provider.Locations != null && x.Provider.Locations.Count > 0 && x.Provider.Locations.Any(t => t.ProviderCourseLocations != null && t.ProviderCourseLocations.Count > 0)) &&
+                    x.Provider.Courses != null && x.Provider.Courses.Count > 0
+                )
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+        }
+
+        [ExcludeFromCodeCoverage]
         public async Task<ProviderRegistrationDetail> GetProviderRegistrationDetail(int ukprn)
             => await _roatpDataContext
                     .ProviderRegistrationDetails
@@ -50,6 +65,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                     .AsNoTracking()
                     .SingleOrDefaultAsync(p => p.Ukprn == ukprn);
 
+        [ExcludeFromCodeCoverage]
         public async Task<bool> IsMainActiveProvider(int ukprn, int larsCode)
         {
             var count = (await _roatpDataContext.Database.SqlQueryRaw<int>(@"
