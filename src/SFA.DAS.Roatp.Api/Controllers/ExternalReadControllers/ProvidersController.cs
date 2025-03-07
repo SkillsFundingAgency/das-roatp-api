@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         {
             var response = await _mediator.Send(new GetProviderSummaryQuery(ukprn));
             if (response.IsValidResponse)
-                _logger.LogInformation("Provider summary data found for {ukprn}:", ukprn);
+                _logger.LogInformation("Provider summary data found for {Ukprn}:", ukprn);
             return GetResponse(response);
         }
 
@@ -68,7 +68,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         {
             var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn));
             if (response.IsValidResponse)
-                _logger.LogInformation("{count} Provider courses found for {ukprn}:", response.Result.Count, ukprn);
+                _logger.LogInformation("{Count} Provider courses found for {Ukprn}:", response.Result.Count, ukprn);
             return GetResponse(response);
         }
 
@@ -82,7 +82,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         {
             var response = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
             if (response.IsValidResponse)
-                _logger.LogInformation("Course data found for {ukprn} and {larsCode}", ukprn, larsCode);
+                _logger.LogInformation("Course data found for {Ukprn} and {LarsCode}", ukprn, larsCode);
             return GetResponse(response);
         }
     }
