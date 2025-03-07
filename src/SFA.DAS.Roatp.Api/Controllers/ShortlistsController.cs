@@ -26,10 +26,8 @@ public class ShortlistsController(IMediator _mediator) : ActionResponseControlle
     public async Task<IActionResult> CreateShortlist([FromBody] CreateShortlistCommand command, CancellationToken cancellationToken)
     {
         ValidatedResponse<CreateShortlistCommandResult> validatedResponse = await _mediator.Send(command, cancellationToken);
-        var uri = validatedResponse.IsValidResponse ? Url.ActionLink(action: nameof(GetShortlistsForUser), values: new { command.UserId }) : string.Empty;
-
         if (validatedResponse.IsValidResponse && !validatedResponse.Result.IsCreated) return NoContent();
-        return GetPostResponse(validatedResponse, uri);
+        return GetPostResponse(validatedResponse, $"/users/{command.UserId}");
     }
 
     [HttpGet]
