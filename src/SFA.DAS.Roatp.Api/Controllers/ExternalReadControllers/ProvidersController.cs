@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
@@ -29,9 +30,13 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Route("")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(GetProvidersQueryResult), 200)]
-        public async Task<IActionResult> GetProviders([FromQuery] bool? Live)
+        public async Task<IActionResult> GetProviders([FromQuery] bool? Live, CancellationToken cancellationToken)
         {
-            var providerResult = await _mediator.Send(new GetProvidersQuery() { Live = Live ?? false });
+            var providerResult = await _mediator.Send(
+                new GetProvidersQuery() { Live = Live ?? false }, 
+                cancellationToken
+            );
+
             _logger.LogInformation("Providers summary data found");
             return new OkObjectResult(providerResult);
         }
