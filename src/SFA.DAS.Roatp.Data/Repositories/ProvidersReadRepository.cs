@@ -1,15 +1,15 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Domain.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
@@ -122,7 +122,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
                         });
                 }
             }
-
             return pagedProviderDetails;
         }
     }

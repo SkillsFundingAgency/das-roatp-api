@@ -58,5 +58,7 @@ public class ShortlistsControllerCreateTests
         var response = await sut.CreateShortlist(command, cancellationToken);
 
         response.As<CreatedResult>().Should().NotBeNull();
+
+        response.As<CreatedResult>().Location.Should().Be($"/users/{command.UserId}");
     }
 }

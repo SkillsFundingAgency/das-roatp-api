@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Data;
+using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -29,4 +32,27 @@ public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortli
 
     public Task Delete(Guid shortlistId, CancellationToken cancellationToken)
         => _roatpDataContext.Shortlists.Where(s => s.Id == shortlistId).ExecuteDeleteAsync(cancellationToken);
+
+    public async Task<string> GetShortlistsForUser(Guid userId, CancellationToken cancellationToken)
+    {
+        var connection = _roatpDataContext.Database.GetDbConnection();
+        await using DbCommand command = connection.CreateCommand();
+
+        command.CommandText = "dbo.GetShortlistsForUser";
+        command.CommandType = System.Data.CommandType.StoredProcedure;
+
+        command.Parameters.Add(new SqlParameter("@userId", userId));
+
+        if (command.Connection!.State != ConnectionState.Open)
+        {
+            await command.Connection.OpenAsync(cancellationToken);
+        }
+
+        using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        if (await reader.ReadAsync(cancellationToken))
+        {
+            return reader.GetString(0);
+        }
+        return string.Empty;
+    }
 }
