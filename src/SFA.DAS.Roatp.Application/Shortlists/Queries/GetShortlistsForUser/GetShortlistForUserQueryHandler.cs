@@ -9,11 +9,13 @@ namespace SFA.DAS.Roatp.Application.Shortlists.Queries.GetShortlistsForUser;
 
 public class GetShortlistForUserQueryHandler(IShortlistsRepository _shortlistsRepository) : IRequestHandler<GetShortlistsForUserQuery, ValidatedResponse<GetShortlistsForUserQueryResult>>
 {
+    public static readonly JsonSerializerOptions SerializerOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
     public async Task<ValidatedResponse<GetShortlistsForUserQueryResult>> Handle(GetShortlistsForUserQuery request, CancellationToken cancellationToken)
     {
         string jsonResult = await _shortlistsRepository.GetShortlistsForUser(request.UserId, cancellationToken);
 
-        var result = JsonSerializer.Deserialize<GetShortlistsForUserQueryResult>(jsonResult, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase });
+
+        var result = JsonSerializer.Deserialize<GetShortlistsForUserQueryResult>(jsonResult, SerializerOptions);
 
         return await Task.FromResult(new ValidatedResponse<GetShortlistsForUserQueryResult>(result));
     }

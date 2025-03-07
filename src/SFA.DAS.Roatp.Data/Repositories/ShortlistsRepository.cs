@@ -49,7 +49,7 @@ public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortli
         }
 
         using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
-        if (reader.Read())
+        if (await reader.ReadAsync(cancellationToken))
         {
             return reader.GetString(0);
         }

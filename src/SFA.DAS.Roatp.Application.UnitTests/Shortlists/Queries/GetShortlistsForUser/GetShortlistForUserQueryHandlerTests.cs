@@ -18,7 +18,7 @@ public class GetShortlistForUserQueryHandlerTests
     public async Task Handle_ReturnsResult(GetShortlistsForUserQueryResult expected, Guid userId, CancellationToken cancellationToken)
     {
         Mock<IShortlistsRepository> shortlistsRepoMock = new();
-        shortlistsRepoMock.Setup(x => x.GetShortlistsForUser(userId, cancellationToken)).ReturnsAsync(JsonSerializer.Serialize(expected, new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.CamelCase }));
+        shortlistsRepoMock.Setup(x => x.GetShortlistsForUser(userId, cancellationToken)).ReturnsAsync(JsonSerializer.Serialize(expected, GetShortlistForUserQueryHandler.SerializerOptions));
         GetShortlistForUserQueryHandler sut = new(shortlistsRepoMock.Object);
 
         ValidatedResponse<GetShortlistsForUserQueryResult> validatedResponse = await sut.Handle(new GetShortlistsForUserQuery(userId), cancellationToken);
