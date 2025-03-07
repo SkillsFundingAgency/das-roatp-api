@@ -36,7 +36,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
                 )
             ).ReturnsAsync(handlerResult);
 
-            var result = await sut.GetProviders(false);
+            var result = await sut.GetProviders(false, CancellationToken.None);
             (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
         }
 
@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
                 )
             ).ReturnsAsync(handlerResult);
 
-            var result = await sut.GetProviders(true);
+            var result = await sut.GetProviders(true, CancellationToken.None);
             (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
         }
 
@@ -67,7 +67,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         {
             GetProvidersQueryResult handlerResult = new GetProvidersQueryResult();
             mediatorMock.Setup(m => m.Send(It.IsAny<GetProvidersQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
-            var result = await sut.GetProviders(false);
+            var result = await sut.GetProviders(false, CancellationToken.None);
             (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
         }
 
