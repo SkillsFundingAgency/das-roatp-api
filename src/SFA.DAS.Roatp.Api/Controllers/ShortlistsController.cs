@@ -31,7 +31,7 @@ public class ShortlistsController(IMediator _mediator) : ActionResponseControlle
     }
 
     [HttpGet]
-    [Route("/users/{userId}")]
+    [Route("users/{userId}")]
     [ProducesResponseType(typeof(GetShortlistsForUserQueryResult), StatusCodes.Status201Created)]
     [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetShortlistsForUser([FromRoute] Guid userId, CancellationToken cancellationToken)
