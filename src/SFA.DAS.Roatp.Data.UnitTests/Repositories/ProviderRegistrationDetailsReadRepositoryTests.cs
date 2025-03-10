@@ -142,8 +142,7 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
             
             Assert.That(
                 provider.Ukprn, 
-                Is.EqualTo(expectedProviderUkprn), 
-                "All returned providers should match the filtering criteria."
+                Is.EqualTo(expectedProviderUkprn)
             );
         });
     }
