@@ -42,15 +42,18 @@ namespace SFA.DAS.Roatp.Data.Repositories
 
         public async Task<List<ProviderRegistrationDetail>> GetActiveAndMainProviderRegistrations(CancellationToken cancellationToken)
         {
+            var distinctUkrpns = await (from pr1 in _roatpDataContext.Providers
+                              join tp in _roatpDataContext.ProviderRegistrationDetails on pr1.Ukprn equals tp.Ukprn
+                              join pc1 in _roatpDataContext.ProviderCourses on pr1.Id equals pc1.ProviderId
+                              join pl1 in _roatpDataContext.ProviderLocations on pr1.Id equals pl1.ProviderId
+                         where tp.StatusId == 1 && tp.ProviderTypeId == 1
+                         select pr1.Ukprn
+             )
+             .Distinct()
+             .ToListAsync(cancellationToken);
+
             return await _roatpDataContext.ProviderRegistrationDetails
-                .Where(x =>
-                    x.StatusId == OrganisationStatus.Active &&
-                    x.ProviderTypeId == ProviderType.Main &&
-                    (x.Provider.Locations != null && x.Provider.Locations.Count > 0 && x.Provider.Locations.Any(t => t.ProviderCourseLocations != null && t.ProviderCourseLocations.Count > 0)) &&
-                    x.Provider.Courses != null && x.Provider.Courses.Count > 0
-                )
-            .AsNoTracking()
-            .ToListAsync(cancellationToken);
+                .Where(a => distinctUkrpns.Contains(a.Ukprn)).ToListAsync(cancellationToken);
         }
 
         [ExcludeFromCodeCoverage]
