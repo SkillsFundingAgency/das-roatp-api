@@ -47,7 +47,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             command.CommandType = CommandType.StoredProcedure;
 
             command.Parameters.Add(new SqlParameter("@larsCode", larsCode));
-            command.Parameters.Add(new SqlParameter("@sortOrder", sortOrder));
+            command.Parameters.Add(new SqlParameter("@sortOrder", sortOrder.ToString()));
 
             command.Parameters.Add(new SqlParameter("@Page", parameters.Page));
             command.Parameters.Add(new SqlParameter("@PageSize", parameters.PageSize));
