@@ -69,16 +69,16 @@ BEGIN
     AS
     (
     SELECT
-         DENSE_RANK() OVER (ORDER BY stq.[Title], stq.[Level] , ab2.[Larscode] ) "ordering"
-        ,ab2.Larscode larscode
+         DENSE_RANK() OVER (ORDER BY stq.[Title], stq.[Level] , ab2.[larsCode] ) "ordering"
+        ,ab2.larsCode larsCode
         ,stq.[Title]+' (level '+CONVERT(varchar,stq.[Level])+')' standardName
         ,stq.[IfateReferenceNumber]
         -- Training locations
-        ,DENSE_RANK() OVER (PARTITION BY stq.[Title], stq.[Level], ab2.[Larscode] 
+        ,DENSE_RANK() OVER (PARTITION BY stq.[Title], stq.[Level], ab2.[larsCode] 
                             ORDER BY ISNULL(ab2.[LocationDescription],' ') ) "l2.ordering"
         ,LocationDescription 
         -- Training providers at eash location
-        ,ROW_NUMBER() OVER (PARTITION BY stq.[Title], stq.[Level], ab2.[Larscode], ISNULL(ab2.[LocationDescription],' ') 
+        ,ROW_NUMBER() OVER (PARTITION BY stq.[Title], stq.[Level], ab2.[larsCode], ISNULL(ab2.[LocationDescription],' ') 
                             ORDER BY ab2.[LegalName] ) "l2.p3.ordering"
         ,ShortlistId
         ,CreatedDate
@@ -104,17 +104,17 @@ BEGIN
             ,ContactUsEmail 
             ,ContactUsPhoneNumber 
             ,ContactUsPageUrl
-            ,Larscode
+            ,larsCode
             ,CASE WHEN AtEmployer = 1 THEN 1 ELSE 0 END AtEmployer
-            ,MAX(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) BlockRelease
-            ,MIN(CASE WHEN BlockRelease = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) BlockReleaseDistance
-            ,SUM(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) BlockReleaseCount
-            ,MAX(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) DayRelease
-            ,MIN(CASE WHEN DayRelease = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) DayReleaseDistance
-            ,SUM(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) DayReleaseCount
+            ,MAX(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) BlockRelease
+            ,MIN(CASE WHEN BlockRelease = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) BlockReleaseDistance
+            ,SUM(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) BlockReleaseCount
+            ,MAX(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) DayRelease
+            ,MIN(CASE WHEN DayRelease = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) DayReleaseDistance
+            ,SUM(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) DayReleaseCount
 
             -- priority for at workplace over at provider (by ukprn and course)
-            ,ROW_NUMBER() OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]
+            ,ROW_NUMBER() OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]
                                 ORDER BY Distance) TP_Std_Dist_Seq
         FROM
             (
@@ -122,7 +122,7 @@ BEGIN
             SELECT st1.[Id] ShortlistId
                   ,st1.CreatedDate
                   ,st1.[userId]
-                  ,st1.[Larscode]
+                  ,st1.[larsCode]
                   ,st1.[Ukprn]
                   ,st1.LocationDescription 
                   ,pr1.LegalName
@@ -159,7 +159,7 @@ BEGIN
                    ELSE 0 END AS Distance
               FROM [dbo].[Shortlist] st1
                 LEFT JOIN ShortlistedRegions slr on slr.[ShortlistId] = st1.[Id]
-                JOIN [dbo].[ProviderCourse] pc1 on st1.[Larscode] = pc1.[LarsCode] 
+                JOIN [dbo].[ProviderCourse] pc1 on st1.[larsCode] = pc1.[larsCode] 
                 JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId AND pr1.Ukprn = st1.[UkPrn]
                 JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
                 JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
@@ -173,7 +173,7 @@ BEGIN
 
         ) ab2
     -- Standards 
-    JOIN [dbo].[Standard] stq on stq.LarsCode = ab2.LarsCode
+    JOIN [dbo].[Standard] stq on stq.larsCode = ab2.larsCode
     WHERE 1=1
     AND TP_Std_Dist_Seq = 1 -- just one row of result per shortlistId
     )
@@ -181,7 +181,9 @@ BEGIN
     SELECT @JSON = (
         SELECT 
             toplevel.* 
-            ,courses."ordering", courses.larscode, courses.standardName
+            ,courses."ordering"
+            ,courses.standardName
+            ,courses.larsCode
             ,locations.ordering
             ,locations.locationDescription
             ,providers.ordering
@@ -209,15 +211,15 @@ BEGIN
         FROM (SELECT @userid "userId", @QARPeriod "qarPeriod", @ReviewPeriod "reviewPeriod", MAX(CreatedDate) maxCreatedDate
               FROM MainQuery) toplevel
         JOIN (
-            SELECT DISTINCT @userid "userId", "ordering", larscode,standardName 
+            SELECT DISTINCT @userid "userId", "ordering", larsCode,standardName 
             FROM MainQuery ) AS courses 
         ON courses."userId" = toplevel."userId"
         JOIN (
-            SELECT DISTINCT larscode, "l2.ordering" ordering, locationDescription 
+            SELECT DISTINCT larsCode, "l2.ordering" ordering, locationDescription 
             FROM MainQuery ) AS locations 
-        ON courses.larscode = locations.larscode
+        ON courses.larsCode = locations.larsCode
         JOIN (
-            SELECT larscode, "l2.ordering" 
+            SELECT larsCode, "l2.ordering" 
             ,"l2.p3.ordering" ordering
             ,shortlistId shortlistId
             ,MainQuery.ukprn ukprn
@@ -252,7 +254,7 @@ BEGIN
             LEFT JOIN EmployerStars pes on pes.[Ukprn] = MainQuery.ukprn 
             LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = MainQuery.ukprn
         ) AS providers
-        ON locations.larscode = providers.larscode AND locations.ordering = providers."l2.ordering"
+        ON locations.larsCode = providers.larsCode AND locations.ordering = providers."l2.ordering"
         FOR JSON AUTO, INCLUDE_NULL_VALUES, WITHOUT_ARRAY_WRAPPER
     )
 
