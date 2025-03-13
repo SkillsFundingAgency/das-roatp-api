@@ -11,6 +11,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.Shortlists.Commands.CreateShortlist;
 using SFA.DAS.Roatp.Application.Shortlists.Commands.DeleteShortlist;
 using SFA.DAS.Roatp.Application.Shortlists.Queries.GetShortlistCountForUser;
+using SFA.DAS.Roatp.Application.Shortlists.Queries.GetShortlistsForUser;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
 
@@ -25,17 +26,18 @@ public class ShortlistsController(IMediator _mediator) : ActionResponseControlle
     public async Task<IActionResult> CreateShortlist([FromBody] CreateShortlistCommand command, CancellationToken cancellationToken)
     {
         ValidatedResponse<CreateShortlistCommandResult> validatedResponse = await _mediator.Send(command, cancellationToken);
-        var uri = validatedResponse.IsValidResponse ? $"api/shortlists/{validatedResponse.Result.ShortlistId}" : string.Empty;
-
         if (validatedResponse.IsValidResponse && !validatedResponse.Result.IsCreated) return NoContent();
-        return GetPostResponse(validatedResponse, uri);
+        return GetPostResponse(validatedResponse, $"/users/{command.UserId}");
     }
 
     [HttpGet]
-    [Route("{id}")]
-    public IActionResult GetShortlist([FromRoute] string id, CancellationToken cancellationToken)
+    [Route("users/{userId}")]
+    [ProducesResponseType(typeof(GetShortlistsForUserQueryResult), StatusCodes.Status201Created)]
+    [ProducesResponseType(typeof(IEnumerable<ValidationFailure>), StatusCodes.Status400BadRequest)]
+    public async Task<IActionResult> GetShortlistsForUser([FromRoute] Guid userId, CancellationToken cancellationToken)
     {
-        return Ok("not implemented");
+        var result = await _mediator.Send(new GetShortlistsForUserQuery(userId), cancellationToken);
+        return GetResponse(result);
     }
 
     [HttpGet]
