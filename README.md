@@ -51,7 +51,8 @@ You will need following on your local:
     "LogLevel": {
       "Default": "Information",
       "Microsoft": "Warning",
-      "Microsoft.Hosting.Lifetime": "Information"
+      "Microsoft.Hosting.Lifetime": "Information",
+      "Microsoft.EntityFrameworkCore.Database.Command": "Information"
     }
   },
   "AllowedHosts": "*",
