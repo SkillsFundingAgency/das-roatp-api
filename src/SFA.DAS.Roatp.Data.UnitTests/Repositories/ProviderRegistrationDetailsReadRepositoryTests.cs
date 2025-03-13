@@ -42,7 +42,22 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
                             ProviderCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation() }
                         }
                     },
-                    Courses = new List<ProviderCourse> { new ProviderCourse() }
+                    Courses = new List<ProviderCourse> { new ProviderCourse() },
+                    ProviderAddress = new ProviderAddress()
+                    {
+                        Id = 1,
+                        ProviderId = 1,
+                        AddressLine1 = "AddressLine1",
+                        AddressLine2 = "AddressLine2",
+                        AddressLine3 = "AddressLine3",
+                        AddressLine4 = "AddressLine4",
+                        Town = "Town",
+                        Postcode = "Postcode",
+                        Latitude = 1,
+                        Longitude = -1,
+                        AddressUpdateDate = DateTime.UtcNow,
+                        CoordinatesUpdateDate = DateTime.UtcNow
+                    }
                 }
             },
             new ProviderRegistrationDetail
@@ -138,12 +153,11 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
         {
             Assert.That(result, Has.Count.EqualTo(1), "Only a single valid provider should be returned.");
 
-            var provider = result[0];
+            var providerRegistration = result[0];
             
-            Assert.That(
-                provider.Ukprn, 
-                Is.EqualTo(expectedProviderUkprn)
-            );
+            Assert.That(providerRegistration.Ukprn, Is.EqualTo(expectedProviderUkprn));
+            Assert.That(providerRegistration.Provider, Is.Not.Null);
+            Assert.That(providerRegistration.Provider.ProviderAddress, Is.Not.Null);
         });
     }
 

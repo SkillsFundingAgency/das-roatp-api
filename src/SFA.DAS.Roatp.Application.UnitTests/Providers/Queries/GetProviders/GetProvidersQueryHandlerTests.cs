@@ -61,6 +61,16 @@ public class GetProvidersQueryHandlerTests
                 Assert.That(actualResult[i].Phone, Is.EqualTo(expectedResult[i].Phone));
                 Assert.That(actualResult[i].ContactUrl, Is.EqualTo(expectedResult[i].ContactUrl));
                 Assert.That(actualResult[i].StatusId, Is.EqualTo(expectedResult[i].StatusId));
+
+                Assert.That(actualResult[i].Address, Is.Not.Null);
+                Assert.That(actualResult[i].Address.AddressLine1, Is.EqualTo(expectedResult[i].Address.AddressLine1));
+                Assert.That(actualResult[i].Address.AddressLine2, Is.EqualTo(expectedResult[i].Address.AddressLine2));
+                Assert.That(actualResult[i].Address.AddressLine3, Is.EqualTo(expectedResult[i].Address.AddressLine3));
+                Assert.That(actualResult[i].Address.AddressLine4, Is.EqualTo(expectedResult[i].Address.AddressLine4));
+                Assert.That(actualResult[i].Address.Town, Is.EqualTo(expectedResult[i].Address.Town));
+                Assert.That(actualResult[i].Address.Postcode, Is.EqualTo(expectedResult[i].Address.Postcode));
+                Assert.That(actualResult[i].Address.Latitude, Is.EqualTo(expectedResult[i].Address.Latitude));
+                Assert.That(actualResult[i].Address.Longitude, Is.EqualTo(expectedResult[i].Address.Longitude));
             }
         });
     }
@@ -111,6 +121,16 @@ public class GetProvidersQueryHandlerTests
                 Assert.That(actualResult[i].Phone, Is.EqualTo(expectedResult[i].Phone));
                 Assert.That(actualResult[i].ContactUrl, Is.EqualTo(expectedResult[i].ContactUrl));
                 Assert.That(actualResult[i].StatusId, Is.EqualTo(expectedResult[i].StatusId));
+
+                Assert.That(actualResult[i].Address, Is.Not.Null);
+                Assert.That(actualResult[i].Address.AddressLine1, Is.EqualTo(expectedResult[i].Address.AddressLine1));
+                Assert.That(actualResult[i].Address.AddressLine2, Is.EqualTo(expectedResult[i].Address.AddressLine2));
+                Assert.That(actualResult[i].Address.AddressLine3, Is.EqualTo(expectedResult[i].Address.AddressLine3));
+                Assert.That(actualResult[i].Address.AddressLine4, Is.EqualTo(expectedResult[i].Address.AddressLine4));
+                Assert.That(actualResult[i].Address.Town, Is.EqualTo(expectedResult[i].Address.Town));
+                Assert.That(actualResult[i].Address.Postcode, Is.EqualTo(expectedResult[i].Address.Postcode));
+                Assert.That(actualResult[i].Address.Latitude, Is.EqualTo(expectedResult[i].Address.Latitude));
+                Assert.That(actualResult[i].Address.Longitude, Is.EqualTo(expectedResult[i].Address.Longitude));
             }
         });
     }

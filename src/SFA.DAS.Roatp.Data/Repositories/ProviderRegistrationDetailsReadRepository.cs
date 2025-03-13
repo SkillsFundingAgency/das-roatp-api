@@ -32,6 +32,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                         x.StatusId == OrganisationStatus.ActiveNotTakingOnApprentices ||
                         x.StatusId == OrganisationStatus.Onboarding)
                 .Include(r => r.Provider)
+                    .ThenInclude(a => a.ProviderAddress)
                 .AsNoTracking()
                 .ToListAsync(cancellationToken);
 
@@ -53,6 +54,9 @@ namespace SFA.DAS.Roatp.Data.Repositories
              .ToListAsync(cancellationToken);
 
             return await _roatpDataContext.ProviderRegistrationDetails
+                .Include(a => a.Provider)
+                    .ThenInclude(a => a.ProviderAddress)
+                .AsNoTracking()
                 .Where(a => distinctUkrpns.Contains(a.Ukprn)).ToListAsync(cancellationToken);
         }
 
