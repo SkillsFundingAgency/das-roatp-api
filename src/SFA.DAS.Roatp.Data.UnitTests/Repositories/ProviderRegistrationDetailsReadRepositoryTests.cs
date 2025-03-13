@@ -172,6 +172,6 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
     [TearDown]
     public void TearDown()
     {
-        _inMemoryContext?.DisposeAsync();
+        _inMemoryContext?.Dispose();
     }
 }
