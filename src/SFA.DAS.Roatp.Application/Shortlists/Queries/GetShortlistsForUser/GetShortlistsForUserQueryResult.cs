@@ -9,6 +9,7 @@ public class GetShortlistsForUserQueryResult
 {
     public Guid UserId { get; set; }
     public DateTime MaxCreatedDate { get; set; }
+    public DateTime ShortlistsExpiryDate => MaxCreatedDate.Date.AddDays(Constants.ShortlistExpiryDays);
     public string QarPeriod { get; set; }
     public string ReviewPeriod { get; set; }
     public List<ShortlistCourseModel> Courses { get; set; } = [];
