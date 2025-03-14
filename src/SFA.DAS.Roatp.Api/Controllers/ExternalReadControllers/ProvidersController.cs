@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
@@ -29,9 +30,13 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Route("")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(GetProvidersQueryResult), 200)]
-        public async Task<IActionResult> GetProviders()
+        public async Task<IActionResult> GetProviders([FromQuery] bool? Live, CancellationToken cancellationToken)
         {
-            var providerResult = await _mediator.Send(new GetProvidersQuery());
+            var providerResult = await _mediator.Send(
+                new GetProvidersQuery() { Live = Live ?? false }, 
+                cancellationToken
+            );
+
             _logger.LogInformation("Providers summary data found");
             return new OkObjectResult(providerResult);
         }
@@ -44,7 +49,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         {
             var response = await _mediator.Send(new GetProviderSummaryQuery(ukprn));
             if (response.IsValidResponse)
-                _logger.LogInformation("Provider summary data found for {ukprn}:", ukprn);
+                _logger.LogInformation("Provider summary data found for {Ukprn}:", ukprn);
             return GetResponse(response);
         }
 
@@ -63,7 +68,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         {
             var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn));
             if (response.IsValidResponse)
-                _logger.LogInformation("{count} Provider courses found for {ukprn}:", response.Result.Count, ukprn);
+                _logger.LogInformation("{Count} Provider courses found for {Ukprn}:", response.Result.Count, ukprn);
             return GetResponse(response);
         }
 
@@ -77,7 +82,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         {
             var response = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
             if (response.IsValidResponse)
-                _logger.LogInformation("Course data found for {ukprn} and {larsCode}", ukprn, larsCode);
+                _logger.LogInformation("Course data found for {Ukprn} and {LarsCode}", ukprn, larsCode);
             return GetResponse(response);
         }
     }

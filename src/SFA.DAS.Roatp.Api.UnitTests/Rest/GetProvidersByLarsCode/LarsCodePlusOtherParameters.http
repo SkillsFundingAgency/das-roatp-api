@@ -1,0 +1,237 @@
+@SFA.DAS.Roatp.Api_HostAddress = https://localhost:5111
+@LarsCode = 119
+@LarsCodeNoResults = 136
+@LarsCodeInvalid = 99999
+@OrderByDistance = Distance
+@OrderByInvalidValue = Name
+@OrderByAchievementRate = AchievementRate
+@OrderByEmployerProviderRating = EmployerProviderRating
+@OrderByApprenticeProviderRating = ApprenticeProviderRating
+@DeliveryModesValidValue = Workplace
+@DeliveryModesInvalidValue=Nothing
+@ProviderRatingsValidValue = Excellent
+@ProviderRatingsInvalidValue = Swordfish
+@QarValidValue = Excellent
+@QarInvalidValue = NotGood
+@Distance100 = 100
+@DistanceZero =  0
+@LatitudeValid = 89
+@LongitudeValid = 179
+@Latitude91 = 91
+@Longitude181 = 181
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}
+
+ # expect to work returning page 1, 10 (or less results), ordered by distance
+
+### 
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers
+
+# expect validation error as OrderBy is mandatory
+#  [
+#   {
+#     "propertyName": "OrderBy",
+#     "errorMessage": "The OrderBy value is required"
+#   }
+# ]
+### 
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCodeInvalid}}/providers?OrderBy={{OrderByDistance}}
+
+# expect validation error as LarsCode is invalid
+# [
+#   {
+#     "propertyName": "LarsCode",
+#     "errorMessage": "Larscode not found"
+#   }
+# ]
+###
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByInvalidValue}}
+
+# expect validation error as OrderBy value is not acceptable
+# {
+#   "errors": {
+#     "OrderBy": [
+#       "The value 'xxx' is not valid for OrderBy."
+#     ]
+#   },
+#   "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+#   "title": "One or more validation errors occurred.",
+#   "status": 400,
+#   "traceId": ...
+# }
+###
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCodeNoResults}}/providers?OrderBy={{OrderByDistance}}
+
+ # expect to work returning no providers, page 1, pagesize 1, totalPages 0, totalCount 0, the standard name,
+ # and the qarPeriod and reviewPeriod
+
+ ###
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByAchievementRate}}
+
+ # expect to work returning page 1, 10 (or less results), ordered by achievement rate
+
+  ###
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByEmployerProviderRating}}
+
+ # expect to work returning page 1, 10 (or less results), ordered by employer provider rating
+
+  ###
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByApprenticeProviderRating}}
+
+ # expect to work returning page 1, 10 (or less results), ordered by apprentice provider rating
+
+
+ ###
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCodeNoResults}}/providers?OrderBy={{OrderByDistance}}
+
+ # expect to work returning no providers, page 1, pagesize 1, totalPages 0, totalCount 0, the standard name,
+ # and the qarPeriod and reviewPeriod
+
+### 
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&DeliveryModes={{DeliveryModesValidValue}}
+
+ # expect to work returning page 1, 10 (or less results), ordered by distance, for given delivery mode
+
+### 
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&DeliveryModes={{DeliveryModesInvalidValue}}
+
+# expect validation error as DeliveryModes value  is not acceptable
+#  {
+#   "errors": {
+#     "DeliveryModes": [
+#       "The value 'xxx' is not valid."
+#     ]
+#   },
+#   "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+#   "title": "One or more validation errors occurred.",
+#   "status": 400,
+#   "traceId": ...
+# }
+###
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&EmployerProviderRatings={{ProviderRatingsValidValue}}
+
+ # expect to work returning page 1, 10 (or less results), ordered by distance, for given employer provider ratings
+
+### 
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&EmployerProviderRatings={{ProviderRatingsInvalidValue}}
+
+# expect validation error as EmployerProviderRatings value  is not acceptable
+#  {
+#   "errors": {
+#     "EmployerProviderRatings": [
+#       "The value 'xxx' is not valid."
+#     ]
+#   },
+#   "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+#   "title": "One or more validation errors occurred.",
+#   "status": 400,
+#   "traceId": ...
+# }
+###
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&ApprenticeProviderRatings={{ProviderRatingsValidValue}}
+
+ # expect to work returning page 1, 10 (or less results), ordered by distance, for given apprentice provider ratings
+
+### 
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&ApprenticeProviderRatings={{ProviderRatingsInvalidValue}}
+
+# expect validation error as ApprentieProviderRatings value  is not acceptable
+#  {
+#   "errors": {
+#     "ApprenticeProviderRatings": [
+#       "The value 'xxx' is not valid."
+#     ]
+#   },
+#   "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+#   "title": "One or more validation errors occurred.",
+#   "status": 400,
+#   "traceId": ...
+# }
+###
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Qar={{QarValidValue}}
+
+ # expect to work returning page 1, 10 (or less results), ordered by distance, for given QAR
+
+### 
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Qar={{QarInvalidValue}}
+
+# expect validation error as Qar value  is not acceptable
+#  {
+#   "errors": {
+#     "ApprenticeProviderRatings": [
+#       "The value 'xxx' is not valid."
+#     ]
+#   },
+#   "type": "https://tools.ietf.org/html/rfc9110#section-15.5.1",
+#   "title": "One or more validation errors occurred.",
+#   "status": 400,
+#   "traceId": ...
+# }
+###
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Distance={{Distance100}}
+
+ # expect to work returning page 1, 10 (or less results), ordered by distance
+
+### 
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Distance={{DistanceZero}}
+
+# expect validation error as Distance is 0
+# [
+#   {
+#     "propertyName": "Distance",
+#     "errorMessage": "Distance must be greater than 0"
+#   }
+# ]
+
+### 
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Distance=-{{Distance100}}
+
+# expect validation error as Distance is -negative
+# [
+#   {
+#     "propertyName": "Distance",
+#     "errorMessage": "Distance must be greater than 0"
+#   }
+# ]
+### 
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Distance={{Distance100}}&Latitude={{LatitudeValid}}&Longitude={{LongitudeValid}}
+
+ # expect to work returning page 1, 10 (or less results), ordered by distance,mith distance <= 100 miles included in response
+ 
+ ### 
+
+GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Latitude={{Latitude91}}&Longitude={{Longitude181}}
+
+ # expect error as latitude and longitude are both out of range
+#  [
+#   {
+#     "propertyName": "Latitude.HasValue",
+#     "errorMessage": "The latitude entered is outside acceptable range (-90 to 90)"
+#   },
+#   {
+#     "propertyName": "Longitude.HasValue",
+#     "errorMessage": "The longitude entered is outside acceptable rangen (-180 to 180)"
+#   }
+# ]
+
+
+

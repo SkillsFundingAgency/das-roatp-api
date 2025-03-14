@@ -1,0 +1,37 @@
+﻿@hostname = localhost
+@port = 5111
+### Get training providers count - Valid request with multiple LARS codes
+GET https://{{hostname}}:{{port}}/api/courses/providers/count?LarsCodes=274&LarsCodes=170
+Accept: application/json
+
+### Get training providers count - Valid request with LARS codes and location filters
+GET https://{{hostname}}:{{port}}/api/courses/providers/count?LarsCodes=272&Distance=50&Latitude=52.57339&Longitude=-0.24848
+Accept: application/json
+
+### Get training providers count - Missing LARS codes (Invalid)
+GET https://{{hostname}}:{{port}}/api/courses/providers/count
+Accept: application/json
+
+### Get training providers count - Longitude without Latitude (Invalid)
+GET https://{{hostname}}:{{port}}/api/courses/providers/count?LarsCodes=274&Longitude=-0.24848
+Accept: application/json
+
+### Get training providers count - Latitude without Longitude (Invalid)
+GET https://{{hostname}}:{{port}}/api/courses/providers/count?LarsCodes=35&Latitude=52.57339
+Accept: application/json
+
+### Get training providers count - Distance missing when Latitude and Longitude are present (Invalid)
+GET https://{{hostname}}:{{port}}/api/courses/providers/count?LarsCodes=136&Latitude=52.57339&Longitude=-0.24848
+Accept: application/json
+
+### Get training providers count - Invalid Latitude (Out of range)
+GET https://{{hostname}}:{{port}}/api/courses/providers/count?LarsCodes=200&Latitude=95.123&Longitude=-0.24848&Distance=50
+Accept: application/json
+
+### Get training providers count - Invalid Longitude (Out of range)
+GET https://{{hostname}}:{{port}}/api/courses/providers/count?LarsCodes=409&Latitude=52.4862&Longitude=-190.5678&Distance=50
+Accept: application/json
+
+### Get training providers count - Multiple LARS codes with valid distance filter
+GET https://{{hostname}}:{{port}}/api/courses/providers/count?LarsCodes=22&LarsCodes=5678&Distance=30&Latitude=52.57339&Longitude=-0.24848
+Accept: application/json
