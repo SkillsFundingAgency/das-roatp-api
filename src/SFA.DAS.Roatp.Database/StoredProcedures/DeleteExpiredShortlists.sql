@@ -18,7 +18,7 @@ BEGIN
         JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
         JOIN [dbo].[Standard] sd1 on sd1.LarsCode = st1.[Larscode]
         GROUP BY st1.[UserId]
-        HAVING MAX(st1.CreatedDate) > DATEADD(day,0-@expiryInDays,GETUTCDATE())
+        HAVING MAX(st1.CreatedDate) > CAST(DATEADD(day,0-@expiryInDays,GETUTCDATE()) AS DATE)
     )
     OR [Id] IN (
         SELECT [Id] FROM (
