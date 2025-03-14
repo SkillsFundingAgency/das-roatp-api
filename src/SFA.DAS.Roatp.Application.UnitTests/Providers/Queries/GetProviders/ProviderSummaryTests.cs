@@ -25,6 +25,27 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
             model.Phone.Should().Be(source.Provider.Phone);
             model.ContactUrl.Should().Be(source.Provider.Website);
         }
+
+        [Test, RecursiveMoqAutoData]
+        public void Operator_Populates_Address_Model_From_Entity(ProviderRegistrationDetail source)
+        {
+            var sut = (ProviderSummary)source;
+            Assert.Multiple(() =>
+            {
+                Assert.That(sut.Address, Is.Not.Null);
+                Assert.That(sut.Address.AddressLine1, Is.EqualTo(source.Provider.ProviderAddress.AddressLine1));
+                Assert.That(sut.Address.AddressLine2, Is.EqualTo(source.Provider.ProviderAddress.AddressLine2));
+                Assert.That(sut.Address.AddressLine3, Is.EqualTo(source.Provider.ProviderAddress.AddressLine3));
+                Assert.That(sut.Address.AddressLine4, Is.EqualTo(source.Provider.ProviderAddress.AddressLine4));
+                Assert.That(sut.Address.Town, Is.EqualTo(source.Provider.ProviderAddress.Town));
+                Assert.That(sut.Address.Postcode, Is.EqualTo(source.Provider.ProviderAddress.Postcode));
+                Assert.That(sut.Address.Latitude, Is.EqualTo(source.Provider.ProviderAddress.Latitude));
+                Assert.That(sut.Address.Longitude, Is.EqualTo(source.Provider.ProviderAddress.Longitude));
+            });
+        }
+
+        
+
         [Test, RecursiveMoqAutoData]
         public void MainProvider_PopulatesModelFromEntity_Property_ReturnsTrue(ProviderRegistrationDetail source)
         {
