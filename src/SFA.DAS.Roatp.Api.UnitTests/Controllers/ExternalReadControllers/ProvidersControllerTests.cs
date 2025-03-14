@@ -21,6 +21,60 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
 {
     public class ProvidersControllerTests
     {
+        [Test]
+        [MoqAutoData]
+        public async Task GetProviders_CallsMediator_WithLiveEqualsFalse(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Greedy] ProvidersController sut
+        )
+        {
+            GetProvidersQueryResult handlerResult = new GetProvidersQueryResult();
+            mediatorMock.Setup(m => 
+                m.Send(
+                    It.Is<GetProvidersQuery>(a => a.Live.Equals(false)),
+                    It.IsAny<CancellationToken>()
+                )
+            ).ReturnsAsync(handlerResult);
+
+            var result = await sut.GetProviders(false, CancellationToken.None);
+
+            mediatorMock.Verify(m =>
+                m.Send(
+                    It.Is<GetProvidersQuery>(a => a.Live.Equals(false)),
+                    It.IsAny<CancellationToken>()
+                )
+            , Times.Once);
+
+            (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
+        }
+
+        [Test]
+        [MoqAutoData]
+        public async Task GetProviders_CallsMediator_WithLiveEqualsTrue(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Greedy] ProvidersController sut
+        )
+        {
+            GetProvidersQueryResult handlerResult = new GetProvidersQueryResult();
+            mediatorMock.Setup(m => 
+                m.Send(
+                    It.Is<GetProvidersQuery>(a => a.Live.Equals(true)), 
+                    It.IsAny<CancellationToken>()
+                )
+            ).ReturnsAsync(handlerResult);
+
+            var result = await sut.GetProviders(true, CancellationToken.None);
+
+            mediatorMock.Verify(m =>
+                m.Send(
+                    It.Is<GetProvidersQuery>(a => a.Live.Equals(true)),
+                    It.IsAny<CancellationToken>()
+                )
+            , Times.Once);
+
+            (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
+        }
+
         [Test, MoqAutoData]
         public async Task GetProviders_CallsMediator(
             [Frozen] Mock<IMediator> mediatorMock,
@@ -29,7 +83,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         {
             GetProvidersQueryResult handlerResult = new GetProvidersQueryResult();
             mediatorMock.Setup(m => m.Send(It.IsAny<GetProvidersQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(handlerResult);
-            var result = await sut.GetProviders();
+            var result = await sut.GetProviders(false, CancellationToken.None);
             (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
         }
 
