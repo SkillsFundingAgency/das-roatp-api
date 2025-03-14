@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.Shortlists.Commands.CreateShortlist;
+using SFA.DAS.Roatp.Application.Shortlists.Commands.DeleteExpiredShortlists;
 using SFA.DAS.Roatp.Application.Shortlists.Commands.DeleteShortlist;
 using SFA.DAS.Roatp.Application.Shortlists.Queries.GetShortlistCountForUser;
 using SFA.DAS.Roatp.Application.Shortlists.Queries.GetShortlistsForUser;
@@ -56,6 +57,15 @@ public class ShortlistsController(IMediator _mediator) : ActionResponseControlle
     public async Task<IActionResult> DeleteShortlist([FromRoute] Guid id, CancellationToken cancellationToken)
     {
         await _mediator.Send(new DeleteShortlistCommand(id), cancellationToken);
+        return Accepted();
+    }
+
+    [HttpDelete]
+    [Route("expired")]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    public async Task<IActionResult> DeleteExpiredShortlists(CancellationToken cancellationToken)
+    {
+        await _mediator.Send(new DeleteExpiredShortlistsCommand(), cancellationToken);
         return Accepted();
     }
 }
