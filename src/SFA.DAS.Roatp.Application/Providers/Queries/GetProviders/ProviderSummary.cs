@@ -19,6 +19,7 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
         /// </summary>
         public bool CanAccessApprenticeshipService => (ProviderType)ProviderTypeId is ProviderType.Main or ProviderType.Employer
                                                       && (ProviderStatusType)StatusId is ProviderStatusType.Active or ProviderStatusType.Onboarding or ProviderStatusType.ActiveButNotTakingOnApprentices;
+        
         public static implicit operator ProviderSummary(ProviderRegistrationDetail source) =>
             source == null ? null : new ProviderSummary
             {
@@ -30,7 +31,7 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
                 Phone = source.Provider?.Phone,
                 ContactUrl = source.Provider?.Website,
                 StatusId = source.StatusId,
-                Address = source
+                Address = source.Provider?.ProviderAddress
             };
     }
 }
