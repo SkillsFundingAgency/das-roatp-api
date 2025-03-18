@@ -1,10 +1,12 @@
-﻿using System.Net.Http.Json;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Net.Http.Json;
 using System.Text;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 namespace SFA.DAS.Roatp.Jobs.ApiClients;
 
+[ExcludeFromCodeCoverage]
 public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
 {
     protected readonly HttpClient _httpClient;
@@ -66,6 +68,15 @@ public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
             _logger.LogError(ex, "Error when processing request: Post - {Uri}", uri);
             throw;
         }
+    }
+
+    public async Task Delete(string uri, CancellationToken cancellationToken)
+    {
+        var requestMessage = new HttpRequestMessage(HttpMethod.Delete, uri);
+
+        var response = await _httpClient.SendAsync(requestMessage, cancellationToken);
+
+        response.EnsureSuccessStatusCode();
     }
 
     private async Task LogErrorIfUnsuccessfulResponse(HttpResponseMessage response)
