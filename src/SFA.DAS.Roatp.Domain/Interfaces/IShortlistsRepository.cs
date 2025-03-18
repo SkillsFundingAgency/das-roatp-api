@@ -16,4 +16,6 @@ public interface IShortlistsRepository
     Task Delete(Guid shortlistId, CancellationToken cancellationToken);
 
     Task<string> GetShortlistsForUser(Guid userId, CancellationToken cancellationToken);
+
+    Task DeleteExpiredShortlistItems(int expiryDays, CancellationToken cancellationToken);
 }

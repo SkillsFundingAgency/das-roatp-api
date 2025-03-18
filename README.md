@@ -87,14 +87,14 @@ You will need following on your local:
     "ReloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
     "UpdateUkrlpDataSchedule": "0 0 23 * * 1-5",
     "UpdateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
+    "DeleteExpiredShortlistsSchedule": "0 0 2 * * *",
+    "AzureWebJobs.DeleteExpiredShortlistsFunction.Disabled": true,
+    "AzureWebJobs.ImportAchievementRatesFunction.Disabled": true,
     "AzureWebJobs.LoadAllProviderAddressesFunction.Disabled": true,
-    "AzureWebJobs.LoadCourseDirectoryDataFunction.Disabled": true,
     "AzureWebJobs.LoadProvidersAddressFunction.Disabled": true,
-    "AzureWebJobs.ReloadNationalAcheivementRatesFunction.Disabled": true,
     "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": true,
-    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": false,
-    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true,
-    "AzureWebJobs.ImportAchievementRatesFunction.Disabled": false
+    "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": true,
+    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true
   }
 }
 ```
