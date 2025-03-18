@@ -39,7 +39,7 @@ public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortli
         await using DbCommand command = connection.CreateCommand();
 
         command.CommandText = "dbo.GetShortlistsForUser";
-        command.CommandType = System.Data.CommandType.StoredProcedure;
+        command.CommandType = CommandType.StoredProcedure;
 
         command.Parameters.Add(new SqlParameter("@userId", userId));
 
@@ -54,5 +54,27 @@ public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortli
             return reader.GetString(0);
         }
         return string.Empty;
+    }
+
+    public async Task DeleteExpiredShortlistItems(int expiryDays, CancellationToken cancellationToken)
+    {
+        using DbCommand command = await GetCommand("dbo.DeleteExpiredShortlists", cancellationToken);
+
+        command.Parameters.Add(new SqlParameter("@expiryInDays", expiryDays));
+
+        using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+    }
+
+    private async Task<DbCommand> GetCommand(string storedProcedureName, CancellationToken cancellationToken)
+    {
+        var connection = _roatpDataContext.Database.GetDbConnection();
+        var command = connection.CreateCommand();
+        command.CommandType = CommandType.StoredProcedure;
+        command.CommandText = storedProcedureName;
+        if (command.Connection!.State != ConnectionState.Open)
+        {
+            await command.Connection.OpenAsync(cancellationToken);
+        }
+        return command;
     }
 }

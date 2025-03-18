@@ -128,7 +128,8 @@
     "reloadStandardsCacheSchedule": "0 0 20 * * 1-5",
     "reloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
     "updateUkrlpDataSchedule": "0 0 23 * * 1-5",
-    "updateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5"
+    "updateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
+    "deleteExpiredShortlistsSchedule":  "0 0 2 * * *"
   },
   "resources": [
     {
@@ -537,6 +538,10 @@
                 {
                   "name": "UpdateProviderAddressCoordinatesSchedule",
                   "value": "[variables('updateProviderAddressCoordinatesSchedule')]"
+                },
+                {
+                  "name": "DeleteExpiredShortlistsSchedule",
+                  "value": "[variables('deleteExpiredShortlistsSchedule')]"
                 }
               ]
             }
