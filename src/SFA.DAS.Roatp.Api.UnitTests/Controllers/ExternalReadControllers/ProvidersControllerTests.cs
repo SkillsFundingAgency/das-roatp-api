@@ -88,47 +88,90 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         }
 
         [Test, MoqAutoData]
-        public async Task GetProvider_CallsMediator(
-           [Frozen] Mock<IMediator> mediatorMock,
-           [Greedy] ProvidersController sut,
+        public async Task GetProviderSummary_CallsMediator_WithRequestedUkprn(
            int ukprn,
-           GetProviderSummaryQueryResult handlerResult)
+           GetProviderSummaryQueryResult handlerResult,
+           [Frozen] Mock<IMediator> mediatorMock,
+           [Greedy] ProvidersController sut
+        )
         {
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderSummaryQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderSummaryQueryResult>(handlerResult));
-            var result = await sut.GetProvider(ukprn);
-            (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
+            mediatorMock.Setup(m => 
+                m.Send(It.IsAny<GetProviderSummaryQuery>(), It.IsAny<CancellationToken>()))
+                 .ReturnsAsync(new ValidatedResponse<GetProviderSummaryQueryResult>(handlerResult));
+
+            var result = await sut.GetProviderSummary(ukprn);
+
+            Assert.That(result, Is.Not.Null);
+
+            var convertedResult = (result as OkObjectResult).Value as GetProviderSummaryQueryResult;
+
+            Assert.That(convertedResult, Is.EqualTo(handlerResult));
+
+            mediatorMock.Verify(a =>
+                a.Send(It.Is<GetProviderSummaryQuery>(t => t.Ukprn == ukprn), It.IsAny<CancellationToken>()),
+                Times.Once
+            );
         }
 
         [Test, MoqAutoData]
-        public async Task GetProvider_ProviderDoesNotExist_ReturnsNotFound(
+        public async Task GetProviderSummary_ProviderDoesNotExist_ReturnsNotFound(
+            int ukprn,
             [Frozen] Mock<IMediator> mediatorMock,
-            [Greedy] ProvidersController sut,
-            int ukprn)
+            [Greedy] ProvidersController sut
+        )
         {
-            var handlerResult = (GetProviderSummaryQueryResult)null;
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderSummaryQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProviderSummaryQueryResult>(handlerResult));
-            var result = await sut.GetProvider(ukprn);
+            mediatorMock.Setup(m => 
+                m.Send(
+                    It.IsAny<GetProviderSummaryQuery>(), 
+                    It.IsAny<CancellationToken>()
+                )
+            ).ReturnsAsync(
+                new ValidatedResponse<GetProviderSummaryQueryResult>((GetProviderSummaryQueryResult)null)
+            );
+
+            var result = await sut.GetProviderSummary(ukprn);
+
             result.As<NotFoundResult>().Should().NotBeNull();
+
+            mediatorMock.Verify(a =>
+                a.Send(It.Is<GetProviderSummaryQuery>(t => t.Ukprn == ukprn), It.IsAny<CancellationToken>()),
+                Times.Once
+            );
         }
 
         [Test, MoqAutoData]
-        public async Task GetProvider_InvalidUkprn_ReturnsBadRequest(
+        public async Task GetProviderSummary_InvalidUkprn_ReturnsBadRequest(
+            int ukprn,
             [Frozen] Mock<IMediator> mediatorMock,
-            [Greedy] ProvidersController sut,
-            int ukprn)
+            [Greedy] ProvidersController sut
+        )
         {
-            var response = new ValidatedResponse<GetProviderSummaryQueryResult>(new List<ValidationFailure>
-            {
-                new()
+            var response = new ValidatedResponse<GetProviderSummaryQueryResult>(
+                new List<ValidationFailure>
                 {
-                    ErrorMessage = "error message",
-                    PropertyName = "property name"
+                    new()
+                    {
+                        ErrorMessage = "error message",
+                        PropertyName = "property name"
+                    }
                 }
-            });
+            );
 
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderSummaryQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(response);
-            var result = await sut.GetProvider(ukprn);
+            mediatorMock.Setup(m => 
+                m.Send(
+                    It.IsAny<GetProviderSummaryQuery>(), 
+                    It.IsAny<CancellationToken>()
+                )
+            ).ReturnsAsync(response);
+
+            var result = await sut.GetProviderSummary(ukprn);
+
             result.As<BadRequestObjectResult>().Should().NotBeNull();
+
+            mediatorMock.Verify(a =>
+                a.Send(It.Is<GetProviderSummaryQuery>(t => t.Ukprn == ukprn), It.IsAny<CancellationToken>()),
+                Times.Once
+            );
         }
 
         [Test, MoqAutoData]
