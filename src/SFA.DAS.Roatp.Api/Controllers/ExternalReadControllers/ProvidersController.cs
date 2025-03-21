@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -29,7 +30,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [HttpGet]
         [Route("")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(GetProvidersQueryResult), 200)]
+        [ProducesResponseType(typeof(GetProvidersQueryResult), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetProviders([FromQuery] bool? Live, CancellationToken cancellationToken)
         {
             var providerResult = await _mediator.Send(
@@ -42,15 +43,14 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         }
 
         [HttpGet]
-        [Route("{ukprn}")]
+        [Route("{ukprn:int}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(GetProviderSummaryQueryResult), 200)]
-        public async Task<IActionResult> GetProvider(int ukprn)
+        [ProducesResponseType(typeof(GetProviderSummaryQueryResult), (int)HttpStatusCode.OK)]
+        public async Task<IActionResult> GetProviderSummary([FromRoute] int ukprn)
         {
-            var response = await _mediator.Send(new GetProviderSummaryQuery(ukprn));
-            if (response.IsValidResponse)
-                _logger.LogInformation("Provider summary data found for {Ukprn}:", ukprn);
-            return GetResponse(response);
+            return GetResponse(
+                await _mediator.Send(new GetProviderSummaryQuery(ukprn))
+            );
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
+        [ProducesResponseType(typeof(List<ProviderCourseModel>), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetAllProviderCourses(int ukprn)
         {
             var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn));
@@ -77,7 +77,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ProviderCourseModel), 200)]
+        [ProducesResponseType(typeof(ProviderCourseModel), (int)HttpStatusCode.OK)]
         public async Task<IActionResult> GetProviderCourse(int ukprn, int larsCode)
         {
             var response = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
