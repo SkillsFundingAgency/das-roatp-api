@@ -8,7 +8,6 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using System.Collections.Generic;
-using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -30,7 +29,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [HttpGet]
         [Route("")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(GetProvidersQueryResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(GetProvidersQueryResult), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProviders([FromQuery] bool? Live, CancellationToken cancellationToken)
         {
             var providerResult = await _mediator.Send(
@@ -45,7 +44,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [HttpGet]
         [Route("{ukprn:int}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(GetProviderSummaryQueryResult), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(GetProviderSummaryQueryResult), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProviderSummary([FromRoute] int ukprn)
         {
             return GetResponse(
@@ -63,7 +62,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(List<ProviderCourseModel>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(List<ProviderCourseModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllProviderCourses(int ukprn)
         {
             var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn));
@@ -77,7 +76,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ProviderCourseModel), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(ProviderCourseModel), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProviderCourse(int ukprn, int larsCode)
         {
             var response = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));

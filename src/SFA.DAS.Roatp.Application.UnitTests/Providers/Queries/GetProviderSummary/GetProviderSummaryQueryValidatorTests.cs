@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviderSumma
 public class GetProviderSummaryQueryValidatorTests
 {
     [Test]
-    public async Task ValidateProviderSummaryQuery_UkrnOutsideRange_ErrorMessageReturned()
+    public async Task ValidateProviderSummaryQuery_UkprnOutsideRange_ErrorMessageReturned()
     {
         var providersReadRepository = new Mock<IProvidersReadRepository>();
         providersReadRepository.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());

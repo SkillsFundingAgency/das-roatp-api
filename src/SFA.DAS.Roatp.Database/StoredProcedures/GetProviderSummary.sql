@@ -6,18 +6,17 @@ BEGIN
 
 	DECLARE @PROVIDER_TYPE_MAIN INT = 1, 
 	        @PROVIDER_TYPE_EMPLOYER INT = 2,
-
-			@STATUS_ACTIVE INT = 1,
-			@STATUS_ACTIVE_BUT_NOT_TAKING_ON_APPRENTICES INT = 2,
-			@STATUS_ONBOARDING INT = 3
+		@STATUS_ACTIVE INT = 1,
+		@STATUS_ACTIVE_BUT_NOT_TAKING_ON_APPRENTICES INT = 2,
+		@STATUS_ONBOARDING INT = 3
 
     -- This store procedure gets summary details for a individual training provider.
 
 	-- Filters the latest QAR data time period and Feedback reviews
 	DECLARE @QARPeriod varchar(4), 
 	        @ReviewPeriod varchar(6), 
-			@feedbackperiod varchar(10), 
-			@Achievementrate varchar(6);
+		@feedbackperiod varchar(10), 
+		@Achievementrate varchar(6);
 
 	SELECT @QARPeriod = MAX([TimePeriod]) FROM [dbo].[NationalQAR]
 
