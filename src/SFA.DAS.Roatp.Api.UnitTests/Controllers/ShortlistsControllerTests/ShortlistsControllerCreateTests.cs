@@ -4,6 +4,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
+using FluentAssertions.Execution;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -31,7 +32,7 @@ public class ShortlistsControllerCreateTests
     }
 
     [Test, AutoData]
-    public async Task CreateShortlist_ShortlistExists_ReturnsNoContent(CreateShortlistCommand command, CancellationToken cancellationToken)
+    public async Task CreateShortlist_ShortlistExists_ReturnsOk(CreateShortlistCommand command, CancellationToken cancellationToken)
     {
         CreateShortlistCommandResult result = new() { ShortlistId = Guid.NewGuid(), IsCreated = false };
         Mock<IMediator> mediatorMock = new();
@@ -42,11 +43,15 @@ public class ShortlistsControllerCreateTests
 
         var response = await sut.CreateShortlist(command, cancellationToken);
 
-        response.As<NoContentResult>().Should().NotBeNull();
+        using (new AssertionScope())
+        {
+            response.As<OkObjectResult>().Should().NotBeNull();
+            response.As<OkObjectResult>().Value.As<CreateShortlistCommandResult>().Should().Be(result);
+        }
     }
 
     [Test, AutoData]
-    public async Task CreateShortlist_ShortlistDoesNotExists_ReturnsCreated(CreateShortlistCommand command, CancellationToken cancellationToken)
+    public async Task CreateShortlist_ShortlistDoesNotExists_ReturnsOk(CreateShortlistCommand command, CancellationToken cancellationToken)
     {
         CreateShortlistCommandResult result = new() { ShortlistId = Guid.NewGuid(), IsCreated = true };
         Mock<IMediator> mediatorMock = new();
@@ -57,8 +62,10 @@ public class ShortlistsControllerCreateTests
 
         var response = await sut.CreateShortlist(command, cancellationToken);
 
-        response.As<CreatedResult>().Should().NotBeNull();
-
-        response.As<CreatedResult>().Location.Should().Be($"/users/{command.UserId}");
+        using (new AssertionScope())
+        {
+            response.As<OkObjectResult>().Should().NotBeNull();
+            response.As<OkObjectResult>().Value.Should().Be(result);
+        }
     }
 }
