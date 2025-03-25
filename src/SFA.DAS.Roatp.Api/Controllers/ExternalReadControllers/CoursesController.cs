@@ -1,13 +1,13 @@
-﻿using System.Threading;
-using System.Threading.Tasks;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProviderDetailsForCourse;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 
@@ -34,17 +34,6 @@ public class CoursesController : ActionResponseControllerBase
     }
 
     [HttpGet]
-    [Route("{larsCode}/providers/{ukprn}")]
-    [ProducesResponseType(StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(GetProviderDetailsForCourseQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProviderDetailsForCourse(int larsCode, int ukprn, decimal? lat = null, decimal? lon = null)
-    {
-        _logger.LogInformation("Received request to get provider details for Ukprn: {Ukprn}, LarsCode: {LarsCode},  Latitude: {Latitude}, Long: {Longitude}", ukprn, larsCode, lat, lon);
-        var response = await _mediator.Send(new GetProviderDetailsForCourseQuery(larsCode, ukprn, lat, lon));
-        return GetResponse(response);
-    }
-
-    [HttpGet]
     [Route("{larsCode}/providers")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetProvidersForLarsCodeQueryResult), StatusCodes.Status200OK)]
@@ -53,5 +42,18 @@ public class CoursesController : ActionResponseControllerBase
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
         var response = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode, request));
         return GetResponse(response);
+    }
+
+    [HttpGet]
+    [Route("courses/{larsCode:int}/providers/{ukprn:int}")]
+    [ProducesResponseType(typeof(GetCourseProviderDetailsQueryResult), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCourseProviderDetails([FromRoute] int larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsQuery query)
+    {
+        query.Ukprn = ukprn;
+        query.LarsCode = larsCode;
+
+        return GetResponse(
+            await _mediator.Send(query)
+        );
     }
 }
