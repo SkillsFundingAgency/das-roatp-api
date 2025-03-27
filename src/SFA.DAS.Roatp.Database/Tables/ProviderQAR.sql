@@ -8,6 +8,7 @@
   [AchievementRank] AS (CONVERT(VARCHAR(20)
                        ,CASE WHEN ISNULL([AchievementRate],'x') = 'x' 
                              THEN 'None'
+                             WHEN [AchievementRate]='100' then 'Excellent' 
                              WHEN [AchievementRate] < '50' THEN 'VeryPoor'
                              WHEN [AchievementRate] < '60' THEN 'Poor'
                              WHEN [AchievementRate] < '70' THEN 'Good'
