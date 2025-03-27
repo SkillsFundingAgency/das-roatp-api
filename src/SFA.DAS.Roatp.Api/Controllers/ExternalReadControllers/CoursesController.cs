@@ -45,15 +45,23 @@ public class CoursesController : ActionResponseControllerBase
     }
 
     [HttpGet]
-    [Route("courses/{larsCode:int}/providers/{ukprn:int}")]
+    [Route("courses/{larsCode:int}/providers/{ukprn:int}/details")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetCourseProviderDetailsQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCourseProviderDetails([FromRoute] int larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsQuery query)
+    public async Task<IActionResult> GetCourseProviderDetails([FromRoute] int larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsRequest request)
     {
-        query.Ukprn = ukprn;
-        query.LarsCode = larsCode;
-
         return GetResponse(
-            await _mediator.Send(query)
+            await _mediator.Send(
+                new GetCourseProviderDetailsQuery(
+                    ukprn,
+                    larsCode,
+                    request.ShortlistUserId, 
+                    request.Location, 
+                    request.Longitude,
+                    request.Latitude
+                )
+            )
         );
     }
 }

@@ -9,5 +9,5 @@ public sealed class GetCourseProviderDetailsParameters
     public decimal? Lon { get; set; }
     public decimal? Lat { get; set; }
     public string Location { get; set; }
-    public Guid UserId { get; set; }
+    public Guid ShortlistUserId { get; set; }
 }

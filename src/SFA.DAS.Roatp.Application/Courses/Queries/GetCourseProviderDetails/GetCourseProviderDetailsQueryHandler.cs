@@ -17,10 +17,10 @@ public sealed class GetCourseProviderDetailsQueryHandler(ICourseProviderDetailsR
             {
                 LarsCode = query.LarsCode,
                 Ukprn = query.Ukprn,
-                Lat = query.Lat,
-                Lon = query.Lon,
+                Lat = query.Latitude,
+                Lon = query.Longitude,
                 Location = query.Location,
-                UserId = query.UserId
+                ShortlistUserId = query.ShortlistUserId
             },
             cancellationToken
         );
@@ -30,67 +30,9 @@ public sealed class GetCourseProviderDetailsQueryHandler(ICourseProviderDetailsR
             return new ValidatedResponse<GetCourseProviderDetailsQueryResult>((GetCourseProviderDetailsQueryResult)null);
         }
 
-        var provider = providerDetails[0];
+        var result = (GetCourseProviderDetailsQueryResult)providerDetails[0];
 
-        var result = new GetCourseProviderDetailsQueryResult()
-        {
-            Ukprn = provider.Ukprn,
-            ProviderName = provider.ProviderName,
-            Address = new ShortProviderAddressModel()
-            {
-                AddressLine1 = provider.MainAddressLine1,
-                AddressLine2 = provider.MainAddressLine2,
-                AddressLine3 = provider.MainAddressLine3,
-                AddressLine4 = provider.MainAddressLine4,
-                Town = provider.MainTown,
-                Postcode = provider.MainPostcode
-            },
-            Contact = new ContactModel()
-            {
-                MarketingInfo = provider.MarketingInfo,
-                Website = provider.Website,
-                Email = provider.Email,
-                PhoneNumber = provider.PhoneNumber
-            },
-            CourseName = provider.CourseName,
-            Level = provider.Level,
-            LarsCode = provider.LarsCode,
-            IFateReferenceNumber = provider.IFateReferenceNumber,
-            QAR = new QarModel()
-            {
-                Period = provider.Period,
-                Leavers = provider.Leavers,
-                AchievementRate = provider.AchievementRate,
-                NationalLeavers = provider.NationalLeavers,
-                NationalAchievementRate = provider.NationalAchievementRate
-            },
-            Reviews = new ReviewModel()
-            {
-                ReviewPeriod = provider.ReviewPeriod,
-                EmployerReviews = provider.EmployerReviews,
-                EmployerStars = provider.EmployerStars,
-                EmployerRating = provider.EmployerRating,
-                ApprenticeReviews = provider.ApprenticeReviews,
-                ApprenticeStars = provider.ApprenticeStars,
-                ApprenticeRating = provider.ApprenticeRating,
-            },
-            ShortlistId = provider.ShortlistId,
-            Locations = providerDetails.Select(model => new LocationModel
-            {
-                Ordering = model.Ordering,
-                AtEmployer = model.AtEmployer,
-                BlockRelease = model.BlockRelease,
-                DayRelease = model.DayRelease,
-                LocationType = model.LocationType,
-                CourseLocation = model.CourseLocation,
-                AddressLine1 = model.AddressLine1,
-                AddressLine2 = model.AddressLine2,
-                Town = model.Town,
-                County = model.County,
-                Postcode = model.Postcode,
-                CourseDistance = model.CourseDistance
-            })
-        };
+        result.Locations = providerDetails.Select(model => (LocationModel)model);
 
         return new ValidatedResponse<GetCourseProviderDetailsQueryResult>(result);
     }
