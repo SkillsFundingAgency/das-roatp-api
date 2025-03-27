@@ -1,10 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Models;
-using SFA.DAS.Roatp.Domain.Models;
-using SFA.DAS.Roatp.Domain.Models;
-using SFA.DAS.Roatp.Domain.Models;
+using System.Diagnostics.CodeAnalysis;
 using ProviderCourse = SFA.DAS.Roatp.Domain.Entities.ProviderCourse;
 
 namespace SFA.DAS.Roatp.Data
