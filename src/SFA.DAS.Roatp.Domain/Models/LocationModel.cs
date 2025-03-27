@@ -14,4 +14,23 @@ public sealed class LocationModel
     public string County { get; set; }
     public string Postcode { get; set; }
     public double CourseDistance { get; set; }
+
+    public static implicit operator LocationModel(CourseProviderDetailsModel source)
+    {
+        return new LocationModel
+        {
+            Ordering = source.Ordering,
+            AtEmployer = source.AtEmployer,
+            BlockRelease = source.BlockRelease,
+            DayRelease = source.DayRelease,
+            LocationType = source.LocationType,
+            CourseLocation = source.CourseLocation,
+            AddressLine1 = source.AddressLine1,
+            AddressLine2 = source.AddressLine2,
+            Town = source.Town,
+            County = source.County,
+            Postcode = source.Postcode,
+            CourseDistance = source.CourseDistance
+        };
+    }
 }
