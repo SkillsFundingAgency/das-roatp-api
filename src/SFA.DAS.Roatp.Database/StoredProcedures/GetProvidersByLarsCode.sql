@@ -1,26 +1,32 @@
 ﻿CREATE procedure [dbo].[GetProvidersByLarsCode]
-	@larscode int,   -- Standard by LarsCode - must be set
-	@SortOrder varchar(30) = 'Distance', -- order by "Distance", "AchievementRate" or "EmployerProviderRating" , "ApprenticeProviderRating"
-	@page int = 1,
-	@pageSize int = 10,
-		-- FILTERS
-	@workplace bit = null, -- 0 or 1 include training at apprentice's workplace
-	@provider bit = null,     -- 0 or 1 include training at providers+
-	@blockrelease bit = null, -- 0 or 1 include block release
-	@dayrelease bit = null,   -- 0 or 1 include day release
-	@Latitude float = null,
-	@Longitude float = null,
-	@Distance int = null, -- Distance should always set when Longitude & Longitude set
-	@QARrange varchar(100) = null, -- any combo of 'excellent', 'good', 'poor', 'verypoor' and 'none' , or NULL
-	@employerProviderRatings varchar(100) = null, -- any combo of 'excellent', 'good', 'poor', 'verypoor' and 'notyetreviewed' , or NULL
-	@apprenticeProviderRatings varchar(100) = null, -- any combo of 'excellent', 'good', 'poor', 'verypoor' and 'notyetreviewed' , or NULL
-	@Location varchar(200) = null,
-	@userid uniqueidentifier = null
+    @larscode int,   -- Standard by LarsCode - must be set
+    @SortOrder varchar(30) = 'Distance', -- order by "Distance", "AchievementRate" or "EmployerProviderRating" , "ApprenticeProviderRating"
+    @page int = 1,
+    @pageSize int = 10,
+        -- FILTERS
+    @workplace bit = null, -- 0 or 1 include training at apprentice's workplace
+    @provider bit = null,     -- 0 or 1 include training at providers+
+    @blockrelease bit = null, -- 0 or 1 include block release
+    @dayrelease bit = null,   -- 0 or 1 include day release
+    @Latitude float = null,
+    @Longitude float = null,
+    @Distance int = null, -- Distance should always set when Longitude & Longitude set
+    @QARrange varchar(100) = null, -- any combo of 'Excellent', 'Good', 'Poor', 'Verypoor' and 'None' , or NULL
+    @employerProviderRatings varchar(100) = null, -- any combo of 'Excellent', 'Good', 'Poor', 'VeryPoor' and 'NotYetReviewed' , or NULL
+    @apprenticeProviderRatings varchar(100) = null, -- any combo of 'Excellent', 'Good', 'Poor', 'VeryPoor' and 'NotYetReviewed' , or NULL
+    @Location varchar(200) = null,
+    @userid uniqueidentifier = null
 as
 
 SET NOCOUNT ON
 -- this calculates the distance from Training Provider training locations / regions with filters
 
+IF @workplace IS NULL  SET @workplace = 0;
+IF @provider  IS NULL  SET @provider  = 0;
+IF @blockrelease IS NULL  SET @blockrelease = 0;
+IF @dayrelease IS NULL  SET @dayrelease = 0;
+
+-- local working
 DECLARE @skip int = (@page - 1) * @pageSize;
 
 -- the latest QAR data time period and Feedback reviews
@@ -72,14 +78,9 @@ AS
 ProviderQARs
 AS
 (
-    SELECT [Ukprn], qar.[IfateReferenceNumber], [Leavers], [AchievementRate]
-    ,CASE WHEN ISNULL([AchievementRate],'x') = 'x' 
-          THEN 'None'
-          WHEN [AchievementRate] < '50' THEN 'VeryPoor'
-          WHEN [AchievementRate] < '60' THEN 'Poor'
-          WHEN [AchievementRate] < '70' THEN 'Good'
-          ELSE 'Excellent' END AchievementRank
+    SELECT [Ukprn], qar.[IfateReferenceNumber], [Leavers], [AchievementRate], [AchievementRank]
     FROM [dbo].[StandardProviderQAR] qar
+    JOIN Standards on Standards.[IfateReferenceNumber] = qar.[IfateReferenceNumber]
     WHERE [TimePeriod] = @QARPeriod
 )
 ,
@@ -96,9 +97,10 @@ ApprenticeStars
 AS
 (
     SELECT *
-	FROM [dbo].[ProviderApprenticeStars] 
+    FROM [dbo].[ProviderApprenticeStars] 
     WHERE TimePeriod = @feedbackperiod
 ),
+
 -- Results query
 Results
 AS
@@ -127,8 +129,7 @@ AS
                             ,MIN(LocationOrdering)
                             ,MIN(Course_Distance)
                             -- and then always by Achevement Rate
-                            ,CASE WHEN qp1.AchievementRate IS NULL THEN -1 
-                                  WHEN qp1.AchievementRate = 'x' THEN 0 
+                            ,CASE WHEN ISNULL(qp1.AchievementRate,'x') = 'x' THEN 0 
                                   ELSE CONVERT(float,qp1.AchievementRate) END DESC
                             -- and then always by Employer and Apprentice Provider Ratings
                             ,ISNULL(pes.Stars,-1) DESC         -- Employer Star Rating
@@ -156,7 +157,7 @@ AS
         ,ISNULL(CONVERT(varchar,pas.ReviewCount),'None') "providers.apprenticeReviews"
         ,ISNULL(CONVERT(varchar,pas.Stars),'-') "providers.apprenticeStars"
         ,ISNULL(pas.Rating,'NotYetReviewed') "providers.apprenticeRating"
-        ,sht.[Id] "providers.shortlistId"   
+        ,sht.[Id] "providers.shortlistId"                                     
     FROM 
         (
         SELECT Ukprn, LegalName
@@ -225,7 +226,8 @@ AS
               AND [LarsCode] = @larscode
 
               ) ab1 
-        WHERE LocationOrdering != 3 -- exclude outside Regions
+        WHERE 1=1
+        AND LocationOrdering != 3 -- exclude outside Regions
         -- Distance filter check if requested
         AND (@Distance IS NULL OR Distance <= @Distance)
         -- Logic to match to Checkboxes for training locations 
@@ -260,26 +262,31 @@ AS
              END) = 1
         ) ab2
     -- Standards and QAR data
-    JOIN Standards stq on stq.LarsCode = ab2.LarsCode
-    LEFT JOIN ProviderQARs qp1 on qp1.[Ukprn] = ab2.[Ukprn] AND qp1.[IfateReferenceNumber] = stq.[IfateReferenceNumber]
+
+    LEFT JOIN ProviderQARs qp1 on qp1.[Ukprn] = ab2.[Ukprn]
+                                                  
     LEFT JOIN EmployerStars pes on pes.[Ukprn] = ab2.[Ukprn] 
+                                                                                                                                  
     LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = ab2.[Ukprn] 
+                              
     LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[UserId] = @userId
     AND ISNULL(sht.[LocationDescription],'') = ISNULL(@Location,'')
+    
     WHERE 1=1
     -- this gets only one row for each UKPRN (by larscode) taking nearest location/region or National
     AND (LocationType = 0 OR TP_Std_Dist_Seq = 1)
     -- filter QAR
-    AND (@QARrange IS NULL OR ','+@QARrange+',' LIKE '%,'+ISNULL(qp1.AchievementRank,'none')+',%' )
+    AND (@QARrange IS NULL OR ','+@QARrange+',' LIKE '%,'+ISNULL(qp1.AchievementRank,'none')+',%' )                  
     -- filter Employer Reviews
-    AND (@employerProviderRatings IS NULL OR ','+@employerProviderRatings+',' LIKE '%,'+ISNULL(pes.Rating,'NotYetReviewed')+',%' )
+    AND (@employerProviderRatings IS NULL OR ','+@employerProviderRatings+',' LIKE '%,'+ISNULL(pes.Rating,'NotYetReviewed')+',%' )                              
     --Filter Apprentice reviews
     AND (@apprenticeProviderRatings IS NULL OR ','+@apprenticeProviderRatings+',' LIKE '%,'+ISNULL(pas.Rating,'NotYetReviewed')+',%' )
-    GROUP BY ab2.Ukprn ,ab2.LarsCode, ab2.LegalName, stq.Title, stq.[Level]
+
+    GROUP BY ab2.Ukprn ,ab2.LarsCode, ab2.LegalName
     , qp1.[Leavers], qp1.[AchievementRate]
     , pes.ReviewCount, pes.Stars, pes.Rating
     , pas.ReviewCount, pas.Stars, pas.Rating
-    , sht.[Id]    
+    , sht.[Id]      
     ORDER BY "providers.ordering"
     OFFSET @skip ROWS
     FETCH NEXT @pageSize ROWS ONLY
