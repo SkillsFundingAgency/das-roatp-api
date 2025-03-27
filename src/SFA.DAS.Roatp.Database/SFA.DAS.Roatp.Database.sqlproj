@@ -100,6 +100,7 @@
     <Build Include="StoredProcedures\GetShortlistsForUser.sql" />
     <Build Include="StoredProcedures\DeleteExpiredShortlists.sql" />
     <Build Include="StoredProcedures\GetCourseProviderDetails.sql" />
+    <Build Include="StoredProcedures\GetProviderSummary.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
