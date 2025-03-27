@@ -3,6 +3,11 @@
     <TargetFramework>net8.0</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Courses\Services\**" />
+    <EmbeddedResource Remove="Courses\Services\**" />
+    <None Remove="Courses\Services\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="coverlet.msbuild" Version="6.0.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>

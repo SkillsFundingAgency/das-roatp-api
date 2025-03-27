@@ -58,11 +58,11 @@ public static class AddRoatpDataContextExtension
         services.AddTransient<IReloadProviderAddressesRepository, ReloadProviderAddressesRepository>();
         services.AddTransient<IProviderAddressReadRepository, ProviderAddressReadRepository>();
         services.AddTransient<IProviderAddressWriteRepository, ProviderAddressWriteRepository>();
-        services.AddTransient<IProviderDetailsReadRepository, ProviderDetailsReadRepository>();
         services.AddTransient<INationalAchievementRatesReadRepository, NationalAchievementRatesReadRepository>();
         services.AddTransient<IProvidersCountReadRepository, ProvidersCountReadRepository>();
         services.AddTransient<IShortlistsRepository, ShortlistsRepository>();
         services.AddTransient<INationalQarReadRepository, NationalQarReadRepository>();
         services.AddTransient<IProviderEmployerStarsReadRepository, ProviderEmployerStarsReadRepository>();
+        services.AddTransient<ICourseProviderDetailsReadRepository, CourseProviderDetailsReadRepository>();
     }
 }
