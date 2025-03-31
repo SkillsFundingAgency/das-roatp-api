@@ -27,6 +27,7 @@ public sealed class CourseProviderDetailsReadRepository : ICourseProviderDetails
     public async Task<List<CourseProviderDetailsModel>> GetCourseProviderDetails(GetCourseProviderDetailsParameters parameters, CancellationToken cancellationToken)
     {
         var connection = _roatpDataContext.Database.GetDbConnection();
+
         await using DbCommand command = connection.CreateCommand();
 
         command.CommandText = GetCourseProviderDetailsStoreProcedureName;
@@ -46,59 +47,69 @@ public sealed class CourseProviderDetailsReadRepository : ICourseProviderDetails
 
         var providerDetails = new List<CourseProviderDetailsModel>();
 
-        await using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
-
-        while (await reader.ReadAsync(cancellationToken))
+        try
         {
-            var model = new CourseProviderDetailsModel
+            await using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+
+            while (await reader.ReadAsync(cancellationToken))
             {
-                Ukprn = reader.GetInt32(nameof(CourseProviderDetailsModel.Ukprn)),
-                ProviderName = reader.GetString(nameof(CourseProviderDetailsModel.ProviderName)),
-                MainAddressLine1 = GetReaderStringValue(nameof(CourseProviderDetailsModel.MainAddressLine1), reader),
-                MainAddressLine2 = GetReaderStringValue(nameof(CourseProviderDetailsModel.MainAddressLine2), reader),
-                MainAddressLine3 = GetReaderStringValue(nameof(CourseProviderDetailsModel.MainAddressLine3), reader),
-                MainAddressLine4 = GetReaderStringValue(nameof(CourseProviderDetailsModel.MainAddressLine4), reader),
-                MainTown = GetReaderStringValue(nameof(CourseProviderDetailsModel.MainTown), reader),
-                MainPostcode = GetReaderStringValue(nameof(CourseProviderDetailsModel.MainPostcode), reader),
-                MarketingInfo = GetReaderStringValue(nameof(CourseProviderDetailsModel.MarketingInfo), reader),
-                Email = GetReaderStringValue(nameof(CourseProviderDetailsModel.Email), reader),
-                PhoneNumber = GetReaderStringValue(nameof(CourseProviderDetailsModel.PhoneNumber), reader),
-                Website = GetReaderStringValue(nameof(CourseProviderDetailsModel.Website), reader),
-                CourseName = GetReaderStringValue(nameof(CourseProviderDetailsModel.CourseName), reader),
-                Level = reader.GetInt32(nameof(CourseProviderDetailsModel.Level)),
-                LarsCode = reader.GetInt32(nameof(CourseProviderDetailsModel.LarsCode)),
-                IFateReferenceNumber = GetReaderStringValue(nameof(CourseProviderDetailsModel.IFateReferenceNumber), reader),
-                Period = GetReaderStringValue(nameof(CourseProviderDetailsModel.Period), reader),
-                Leavers = GetReaderStringValue(nameof(CourseProviderDetailsModel.Leavers), reader),
-                AchievementRate = GetReaderStringValue(nameof(CourseProviderDetailsModel.AchievementRate), reader),
-                NationalLeavers = GetReaderStringValue(nameof(CourseProviderDetailsModel.NationalLeavers), reader),
-                NationalAchievementRate = GetReaderStringValue(nameof(CourseProviderDetailsModel.NationalAchievementRate), reader),
+                var model = new CourseProviderDetailsModel
+                {
+                    Ukprn = reader.GetInt32(nameof(CourseProviderDetailsModel.Ukprn)),
+                    ProviderName = reader.GetString(nameof(CourseProviderDetailsModel.ProviderName)),
+                    MainAddressLine1 = GetReaderStringValue(nameof(CourseProviderDetailsModel.MainAddressLine1), reader),
+                    MainAddressLine2 = GetReaderStringValue(nameof(CourseProviderDetailsModel.MainAddressLine2), reader),
+                    MainAddressLine3 = GetReaderStringValue(nameof(CourseProviderDetailsModel.MainAddressLine3), reader),
+                    MainAddressLine4 = GetReaderStringValue(nameof(CourseProviderDetailsModel.MainAddressLine4), reader),
+                    MainTown = GetReaderStringValue(nameof(CourseProviderDetailsModel.MainTown), reader),
+                    MainPostcode = GetReaderStringValue(nameof(CourseProviderDetailsModel.MainPostcode), reader),
+                    MarketingInfo = GetReaderStringValue(nameof(CourseProviderDetailsModel.MarketingInfo), reader),
+                    Email = GetReaderStringValue(nameof(CourseProviderDetailsModel.Email), reader),
+                    PhoneNumber = GetReaderStringValue(nameof(CourseProviderDetailsModel.PhoneNumber), reader),
+                    Website = GetReaderStringValue(nameof(CourseProviderDetailsModel.Website), reader),
+                    CourseName = GetReaderStringValue(nameof(CourseProviderDetailsModel.CourseName), reader),
+                    Level = reader.GetInt32(nameof(CourseProviderDetailsModel.Level)),
+                    LarsCode = reader.GetInt32(nameof(CourseProviderDetailsModel.LarsCode)),
+                    IFateReferenceNumber = GetReaderStringValue(nameof(CourseProviderDetailsModel.IFateReferenceNumber), reader),
+                    Period = GetReaderStringValue(nameof(CourseProviderDetailsModel.Period), reader),
+                    Leavers = GetReaderStringValue(nameof(CourseProviderDetailsModel.Leavers), reader),
+                    AchievementRate = GetReaderStringValue(nameof(CourseProviderDetailsModel.AchievementRate), reader),
+                    NationalLeavers = GetReaderStringValue(nameof(CourseProviderDetailsModel.NationalLeavers), reader),
+                    NationalAchievementRate = GetReaderStringValue(nameof(CourseProviderDetailsModel.NationalAchievementRate), reader),
 
-                ReviewPeriod = GetReaderStringValue(nameof(CourseProviderDetailsModel.ReviewPeriod), reader),
-                EmployerReviews = GetReaderStringValue(nameof(CourseProviderDetailsModel.EmployerReviews), reader),
-                EmployerStars =  GetReaderStringValue(nameof(CourseProviderDetailsModel.EmployerStars), reader),
-                EmployerRating = GetReaderStringValue(nameof(CourseProviderDetailsModel.EmployerRating), reader),
-                ApprenticeReviews = GetReaderStringValue(nameof(CourseProviderDetailsModel.ApprenticeReviews), reader),
-                ApprenticeStars = GetReaderStringValue(nameof(CourseProviderDetailsModel.ApprenticeStars), reader),
-                ApprenticeRating = GetReaderStringValue(nameof(CourseProviderDetailsModel.ApprenticeRating), reader),
+                    ReviewPeriod = GetReaderStringValue(nameof(CourseProviderDetailsModel.ReviewPeriod), reader),
+                    EmployerReviews = GetReaderStringValue(nameof(CourseProviderDetailsModel.EmployerReviews), reader),
+                    EmployerStars = GetReaderStringValue(nameof(CourseProviderDetailsModel.EmployerStars), reader),
+                    EmployerRating = GetReaderStringValue(nameof(CourseProviderDetailsModel.EmployerRating), reader),
+                    ApprenticeReviews = GetReaderStringValue(nameof(CourseProviderDetailsModel.ApprenticeReviews), reader),
+                    ApprenticeStars = GetReaderStringValue(nameof(CourseProviderDetailsModel.ApprenticeStars), reader),
+                    ApprenticeRating = GetReaderStringValue(nameof(CourseProviderDetailsModel.ApprenticeRating), reader),
 
-                AtEmployer = reader.GetBoolean(nameof(CourseProviderDetailsModel.AtEmployer)),
-                BlockRelease = reader.GetBoolean(nameof(CourseProviderDetailsModel.BlockRelease)),
-                DayRelease = reader.GetBoolean(nameof(CourseProviderDetailsModel.DayRelease)),
+                    AtEmployer = reader.GetBoolean(nameof(CourseProviderDetailsModel.AtEmployer)),
+                    BlockRelease = reader.GetBoolean(nameof(CourseProviderDetailsModel.BlockRelease)),
+                    DayRelease = reader.GetBoolean(nameof(CourseProviderDetailsModel.DayRelease)),
 
-                Ordering = reader.GetInt64(nameof(CourseProviderDetailsModel.Ordering)),
-                LocationType = reader.GetInt32(nameof(CourseProviderDetailsModel.LocationType)),
-                CourseLocation = GetReaderStringValue(nameof(CourseProviderDetailsModel.CourseLocation), reader),
-                AddressLine1 = GetReaderStringValue(nameof(CourseProviderDetailsModel.AddressLine1), reader),
-                AddressLine2 = GetReaderStringValue(nameof(CourseProviderDetailsModel.AddressLine2), reader),
-                Town = GetReaderStringValue(nameof(CourseProviderDetailsModel.Town), reader),
-                County = GetReaderStringValue(nameof(CourseProviderDetailsModel.County), reader),
-                Postcode = GetReaderStringValue(nameof(CourseProviderDetailsModel.Postcode), reader),
-                CourseDistance = reader.GetDouble(nameof(CourseProviderDetailsModel.CourseDistance)),
-                ShortlistId = reader[nameof(CourseProviderDetailsModel.ShortlistId)] == DBNull.Value ? null : reader.GetGuid(nameof(CourseProviderDetailsModel.ShortlistId))
-            };
+                    Ordering = reader.GetInt64(nameof(CourseProviderDetailsModel.Ordering)),
+                    LocationType = reader.GetInt32(nameof(CourseProviderDetailsModel.LocationType)),
+                    CourseLocation = GetReaderStringValue(nameof(CourseProviderDetailsModel.CourseLocation), reader),
+                    AddressLine1 = GetReaderStringValue(nameof(CourseProviderDetailsModel.AddressLine1), reader),
+                    AddressLine2 = GetReaderStringValue(nameof(CourseProviderDetailsModel.AddressLine2), reader),
+                    Town = GetReaderStringValue(nameof(CourseProviderDetailsModel.Town), reader),
+                    County = GetReaderStringValue(nameof(CourseProviderDetailsModel.County), reader),
+                    Postcode = GetReaderStringValue(nameof(CourseProviderDetailsModel.Postcode), reader),
+                    CourseDistance = reader.GetDouble(nameof(CourseProviderDetailsModel.CourseDistance)),
+                    ShortlistId = reader[nameof(CourseProviderDetailsModel.ShortlistId)] == DBNull.Value ? null : reader.GetGuid(nameof(CourseProviderDetailsModel.ShortlistId))
+                };
 
-            providerDetails.Add(model);
+                providerDetails.Add(model);
+            }
+        }
+        finally
+        {
+            if(command.Connection.State == ConnectionState.Open)
+            {
+                await command.Connection.CloseAsync();
+            }
         }
 
         return providerDetails;
