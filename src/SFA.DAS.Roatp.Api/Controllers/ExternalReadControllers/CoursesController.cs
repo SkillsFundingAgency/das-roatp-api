@@ -45,7 +45,7 @@ public class CoursesController : ActionResponseControllerBase
     }
 
     [HttpGet]
-    [Route("courses/{larsCode:int}/providers/{ukprn:int}/details")]
+    [Route("{larsCode:int}/providers/{ukprn:int}/details")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetCourseProviderDetailsQueryResult), StatusCodes.Status200OK)]
