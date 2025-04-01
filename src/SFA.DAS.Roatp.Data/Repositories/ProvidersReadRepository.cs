@@ -70,56 +70,66 @@ namespace SFA.DAS.Roatp.Data.Repositories
             }
 
             var pagedProviderDetails = new List<ProviderSearchModel>();
-            await using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
-            while (await reader.ReadAsync(cancellationToken))
+            try
             {
-                if (reader["Providers.Ordering"] == DBNull.Value)
+                await using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+                while (await reader.ReadAsync(cancellationToken))
                 {
-                    pagedProviderDetails.Add(
-                        new ProviderSearchModel
-                        {
-                            Page = (int)reader["Page"],
-                            PageSize = (int)reader["PageSize"],
-                            TotalPages = (int)reader["TotalPages"],
-                            TotalCount = (int)reader["TotalCount"],
-                            LarsCode = (int)reader["LarsCode"],
-                            StandardName = (string)reader["StandardName"],
-                            QarPeriod = (string)reader["QarPeriod"],
-                            ReviewPeriod = (string)reader["reviewPeriod"],
-                        });
+                    if (reader["Providers.Ordering"] == DBNull.Value)
+                    {
+                        pagedProviderDetails.Add(
+                            new ProviderSearchModel
+                            {
+                                Page = (int)reader["Page"],
+                                PageSize = (int)reader["PageSize"],
+                                TotalPages = (int)reader["TotalPages"],
+                                TotalCount = (int)reader["TotalCount"],
+                                LarsCode = (int)reader["LarsCode"],
+                                StandardName = (string)reader["StandardName"],
+                                QarPeriod = (string)reader["QarPeriod"],
+                                ReviewPeriod = (string)reader["reviewPeriod"],
+                            });
+                    }
+                    else
+                    {
+                        pagedProviderDetails.Add(
+                            new ProviderSearchModel
+                            {
+                                Page = (int)reader["Page"],
+                                PageSize = (int)reader["PageSize"],
+                                TotalPages = (int)reader["TotalPages"],
+                                TotalCount = (int)reader["TotalCount"],
+                                LarsCode = (int)reader["LarsCode"],
+                                StandardName = (string)reader["StandardName"],
+                                QarPeriod = (string)reader["QarPeriod"],
+                                ReviewPeriod = (string)reader["reviewPeriod"],
+                                Ordering = (long)reader["Providers.Ordering"],
+                                Ukprn = (int)reader["providers.ukprn"],
+                                LocationsCount = (int)reader["providers.locationsCount"],
+                                ProviderName = (string)reader["providers.ProviderName"],
+                                LocationTypes = (string)reader["providers.locations.locationType"],
+                                CourseDistances = (string)reader["providers.locations.courseDistances"],
+                                AtEmployers = (string)reader["providers.locations.atEmployer"],
+                                DayReleases = (string)reader["providers.locations.dayRelease"],
+                                BlockReleases = (string)reader["providers.locations.blockRelease"],
+                                Leavers = (string)reader["providers.leavers"],
+                                AchievementRate = (string)reader["providers.achievementRate"],
+                                EmployerReviews = (string)reader["providers.employerReviews"],
+                                EmployerStars = (string)reader["providers.employerStars"],
+                                EmployerRating = (ProviderRating)Enum.Parse(typeof(ProviderRating), (string)reader["providers.employerRating"]),
+                                ApprenticeReviews = (string)reader["providers.apprenticeReviews"],
+                                ApprenticeStars = (string)reader["providers.apprenticeStars"],
+                                ApprenticeRating = (ProviderRating)Enum.Parse(typeof(ProviderRating), (string)reader["providers.apprenticeRating"]),
+                                ShortlistId = reader["providers.ShortlistId"] != DBNull.Value ? (Guid)reader["providers.shortlistId"] : null
+                            });
+                    }
                 }
-                else
+            }
+            finally
+            {
+                if (command.Connection.State == ConnectionState.Open)
                 {
-                    pagedProviderDetails.Add(
-                        new ProviderSearchModel
-                        {
-                            Page = (int)reader["Page"],
-                            PageSize = (int)reader["PageSize"],
-                            TotalPages = (int)reader["TotalPages"],
-                            TotalCount = (int)reader["TotalCount"],
-                            LarsCode = (int)reader["LarsCode"],
-                            StandardName = (string)reader["StandardName"],
-                            QarPeriod = (string)reader["QarPeriod"],
-                            ReviewPeriod = (string)reader["reviewPeriod"],
-                            Ordering = (long)reader["Providers.Ordering"],
-                            Ukprn = (int)reader["providers.ukprn"],
-                            LocationsCount = (int)reader["providers.locationsCount"],
-                            ProviderName = (string)reader["providers.ProviderName"],
-                            LocationTypes = (string)reader["providers.locations.locationType"],
-                            CourseDistances = (string)reader["providers.locations.courseDistances"],
-                            AtEmployers = (string)reader["providers.locations.atEmployer"],
-                            DayReleases = (string)reader["providers.locations.dayRelease"],
-                            BlockReleases = (string)reader["providers.locations.blockRelease"],
-                            Leavers = (string)reader["providers.leavers"],
-                            AchievementRate = (string)reader["providers.achievementRate"],
-                            EmployerReviews = (string)reader["providers.employerReviews"],
-                            EmployerStars = (string)reader["providers.employerStars"],
-                            EmployerRating = (ProviderRating)Enum.Parse(typeof(ProviderRating), (string)reader["providers.employerRating"]),
-                            ApprenticeReviews = (string)reader["providers.apprenticeReviews"],
-                            ApprenticeStars = (string)reader["providers.apprenticeStars"],
-                            ApprenticeRating = (ProviderRating)Enum.Parse(typeof(ProviderRating), (string)reader["providers.apprenticeRating"]),
-                            ShortlistId = reader["providers.ShortlistId"] != DBNull.Value ? (Guid)reader["providers.shortlistId"] : null
-                        });
+                    await command.Connection.CloseAsync();
                 }
             }
             return pagedProviderDetails;

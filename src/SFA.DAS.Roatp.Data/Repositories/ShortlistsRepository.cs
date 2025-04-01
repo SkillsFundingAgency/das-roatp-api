@@ -47,11 +47,20 @@ public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortli
         {
             await command.Connection.OpenAsync(cancellationToken);
         }
-
-        using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
-        if (await reader.ReadAsync(cancellationToken))
+        try
         {
-            return reader.GetString(0);
+            using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+            if (await reader.ReadAsync(cancellationToken))
+            {
+                return reader.GetString(0);
+            }
+        }
+        finally
+        {
+            if (command.Connection.State == ConnectionState.Open)
+            {
+                await command.Connection.CloseAsync();
+            }
         }
         return string.Empty;
     }
