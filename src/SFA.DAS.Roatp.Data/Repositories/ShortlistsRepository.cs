@@ -71,7 +71,17 @@ public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortli
 
         command.Parameters.Add(new SqlParameter("@expiryInDays", expiryDays));
 
-        using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        try
+        {
+            using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        }
+        finally
+        {
+            if (command.Connection.State == ConnectionState.Open)
+            {
+                await command.Connection.CloseAsync();
+            }
+        }
     }
 
     private async Task<DbCommand> GetCommand(string storedProcedureName, CancellationToken cancellationToken)
