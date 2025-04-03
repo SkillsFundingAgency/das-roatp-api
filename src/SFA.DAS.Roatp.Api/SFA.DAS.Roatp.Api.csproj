@@ -3,9 +3,6 @@
     <TargetFramework>net8.0</TargetFramework>
     <EnableNETAnalyzers>false</EnableNETAnalyzers>
   </PropertyGroup>
-  <ItemGroup>
-    <Content Remove="appsettings.json" />
-  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.22.0" />
@@ -20,7 +17,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Roatp.Application\SFA.DAS.Roatp.Application.csproj" />
-    <ProjectReference Include="..\SFA.DAS.Roatp.Data\SFA.DAS.Roatp.Data.csproj" />
+	<ProjectReference Include="..\SFA.DAS.Roatp.Data\SFA.DAS.Roatp.Data.csproj" />
     <ProjectReference Include="..\SFA.DAS.Roatp.Domain\SFA.DAS.Roatp.Domain.csproj" />
   </ItemGroup>
 </Project>

@@ -1,11 +1,11 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using Microsoft.Data.SqlClient;
+﻿using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Roatp.Data.Repositories;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Data.Extensions;
 
@@ -58,7 +58,11 @@ public static class AddRoatpDataContextExtension
         services.AddTransient<IReloadProviderAddressesRepository, ReloadProviderAddressesRepository>();
         services.AddTransient<IProviderAddressReadRepository, ProviderAddressReadRepository>();
         services.AddTransient<IProviderAddressWriteRepository, ProviderAddressWriteRepository>();
-        services.AddTransient<IProviderDetailsReadRepository, ProviderDetailsReadRepository>();
         services.AddTransient<INationalAchievementRatesReadRepository, NationalAchievementRatesReadRepository>();
+        services.AddTransient<IProvidersCountReadRepository, ProvidersCountReadRepository>();
+        services.AddTransient<IShortlistsRepository, ShortlistsRepository>();
+        services.AddTransient<INationalQarReadRepository, NationalQarReadRepository>();
+        services.AddTransient<IProviderEmployerStarsReadRepository, ProviderEmployerStarsReadRepository>();
+        services.AddTransient<ICourseProviderDetailsReadRepository, CourseProviderDetailsReadRepository>();
     }
 }
