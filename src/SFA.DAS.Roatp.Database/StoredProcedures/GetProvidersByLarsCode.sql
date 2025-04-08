@@ -116,8 +116,7 @@ AS
                             ,CASE WHEN @SortOrder = 'Distance' THEN MIN(Course_Distance) ELSE 1 END
                             -- Achievement Rate
                             ,CASE WHEN @SortOrder = 'AchievementRate' THEN
-                                 (CASE WHEN qp1.AchievementRate IS NULL THEN -1 
-                                       WHEN qp1.AchievementRate = 'x' THEN 0 
+                                 (CASE WHEN ISNULL(qp1.AchievementRate,'x') LIKE N'%[^0-9.]%' THEN 0
                                        ELSE CONVERT(float,qp1.AchievementRate)
                                        END) 
                                   ELSE 1 END DESC
@@ -128,8 +127,8 @@ AS
                             -- and then always by Distance
                             ,MIN(LocationOrdering)
                             ,MIN(Course_Distance)
-                            -- and then always by Achevement Rate
-                            ,CASE WHEN ISNULL(qp1.AchievementRate,'x') = 'x' THEN 0 
+                            -- and then always by Achievement Rate
+                            ,CASE WHEN ISNULL(qp1.AchievementRate,'x') LIKE N'%[^0-9.]%' THEN 0
                                   ELSE CONVERT(float,qp1.AchievementRate) END DESC
                             -- and then always by Employer and Apprentice Provider Ratings
                             ,ISNULL(pes.Stars,-1) DESC         -- Employer Star Rating
