@@ -47,11 +47,20 @@ public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortli
         {
             await command.Connection.OpenAsync(cancellationToken);
         }
-
-        using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
-        if (await reader.ReadAsync(cancellationToken))
+        try
         {
-            return reader.GetString(0);
+            using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+            if (await reader.ReadAsync(cancellationToken))
+            {
+                return reader.GetString(0);
+            }
+        }
+        finally
+        {
+            if (command.Connection.State == ConnectionState.Open)
+            {
+                await command.Connection.CloseAsync();
+            }
         }
         return string.Empty;
     }
@@ -62,7 +71,17 @@ public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortli
 
         command.Parameters.Add(new SqlParameter("@expiryInDays", expiryDays));
 
-        using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        try
+        {
+            using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
+        }
+        finally
+        {
+            if (command.Connection.State == ConnectionState.Open)
+            {
+                await command.Connection.CloseAsync();
+            }
+        }
     }
 
     private async Task<DbCommand> GetCommand(string storedProcedureName, CancellationToken cancellationToken)

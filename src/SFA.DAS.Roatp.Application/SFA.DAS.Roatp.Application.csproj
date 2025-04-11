@@ -15,4 +15,7 @@
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Roatp.Domain\SFA.DAS.Roatp.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Courses\Services\" />
+  </ItemGroup>
 </Project>
