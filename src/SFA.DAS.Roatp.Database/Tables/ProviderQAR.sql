@@ -17,3 +17,6 @@
 );
 GO
 
+CREATE INDEX IX_ProviderQAR_TimePeriod ON [dbo].[ProviderQAR]
+( [TimePeriod], [Ukprn] ) INCLUDE ( [Leavers], [AchievementRate], [AchievementRank] );
+GO
