@@ -125,11 +125,6 @@ BEGIN
                    WHEN st1.Latitude IS NOT NULL AND [LocationType] = 0  -- Provider
                    THEN ROUND(geography::Point(pl1.Latitude, pl1.Longitude, 4326)
                              .STDistance(geography::Point(convert(float,st1.Latitude), convert(float,st1.Longitude), 4326)) * 0.0006213712,1) 
-                   WHEN [LocationType] = 1  -- National
-                   THEN 0
-                   WHEN st1.Latitude IS NOT NULL AND [LocationType] = 2  -- Regional
-                   THEN ROUND(geography::Point(rg1.Latitude, rg1.Longitude, 4326)
-                             .STDistance(geography::Point(convert(float,st1.Latitude), convert(float,st1.Longitude), 4326)) * 0.0006213712,1) 
                    ELSE 0 END AS Distance
               FROM [dbo].[Shortlist] st1
                 LEFT JOIN ShortlistedRegions slr on slr.[ShortlistId] = st1.[Id]
@@ -138,7 +133,6 @@ BEGIN
                 JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
                 JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
                 JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
-                LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
                 WHERE 1=1
                 AND [userId] = @userId
               ) ab1 
@@ -257,6 +251,7 @@ BEGIN
             LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = MainQuery.ukprn
         ) AS providers
         ON locations.larsCode = providers.larsCode AND locations.ordering = providers."l2.ordering"
+        ORDER BY courses.ordering, locations.ordering, providers.ordering
         FOR JSON AUTO, INCLUDE_NULL_VALUES, WITHOUT_ARRAY_WRAPPER
     );
     
