@@ -100,8 +100,10 @@
     <Build Include="StoredProcedures\GetShortlistsForUser.sql" />
     <Build Include="StoredProcedures\DeleteExpiredShortlists.sql" />
     <Build Include="StoredProcedures\GetProviderSummary.sql" />
+    <None Include="Scripts\CSP-1970_Insert_2324_QAR.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
+    <None Include="Scripts\README" />
   </ItemGroup>
 </Project>
