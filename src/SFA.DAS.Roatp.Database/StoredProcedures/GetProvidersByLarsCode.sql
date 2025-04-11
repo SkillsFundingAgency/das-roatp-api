@@ -125,7 +125,6 @@ AS
                             -- Apprentice Star Rating 
                             ,CASE WHEN @SortOrder = 'ApprenticeProviderRating' THEN ISNULL(pas.Stars,-1) ELSE 1 END DESC
                             -- and then always by Distance
-                            ,MIN(LocationOrdering)
                             ,MIN(Course_Distance)
                             -- and then always by Achievement Rate
                             ,CASE WHEN ISNULL(qp1.AchievementRate,'x') LIKE N'%[^0-9.]%' THEN 0
