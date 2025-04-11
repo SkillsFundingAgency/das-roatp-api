@@ -6,7 +6,7 @@
   [AchievementRate] VARCHAR(10) NOT NULL,
   [CreatedDate] DATETIME2  NOT NULL DEFAULT GETUTCDATE(),
   [AchievementRank] AS (CONVERT(VARCHAR(20)
-                       ,CASE WHEN ISNULL([AchievementRate],'x') = 'x' 
+                       ,CASE WHEN ISNULL([AchievementRate],'x') LIKE N'%[^0-9.]%'
                              THEN 'None'
                              WHEN [AchievementRate]='100' then 'Excellent' 
                              WHEN [AchievementRate] < '50' THEN 'VeryPoor'
