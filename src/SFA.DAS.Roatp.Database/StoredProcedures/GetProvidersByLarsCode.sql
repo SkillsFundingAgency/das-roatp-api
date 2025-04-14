@@ -112,8 +112,7 @@ AS
         ,ROW_NUMBER() OVER (PARTITION BY ab2.Larscode 
                             ORDER BY 
                             -- Distance
-                             CASE WHEN @SortOrder = 'Distance' THEN MIN(LocationOrdering) ELSE 1 END
-                            ,CASE WHEN @SortOrder = 'Distance' THEN MIN(Course_Distance) ELSE 1 END
+                             CASE WHEN @SortOrder = 'Distance' THEN MIN(Course_Distance) ELSE 1 END
                             -- Achievement Rate
                             ,CASE WHEN @SortOrder = 'AchievementRate' THEN
                                  (CASE WHEN ISNULL(qp1.AchievementRate,'x') LIKE N'%[^0-9.]%' THEN 0
