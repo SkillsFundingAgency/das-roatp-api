@@ -11,3 +11,7 @@
     CONSTRAINT PK_ProviderEmployerStars PRIMARY KEY ([TimePeriod], [Ukprn])
 );
 GO
+
+CREATE INDEX IX_ProviderEmployerStars_TimePeriod ON [dbo].[ProviderEmployerStars]
+( [TimePeriod], [Ukprn] ) INCLUDE ( [ReviewCount], [Stars], [Rating]);
+GO

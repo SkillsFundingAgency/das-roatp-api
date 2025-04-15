@@ -17,3 +17,8 @@
   CONSTRAINT PK_StandardProviderQAR PRIMARY KEY ([TimePeriod], [Ukprn], [IfateReferenceNumber])
 );
 GO
+
+CREATE INDEX IX_StandardProviderQAR_TimePeriod ON [dbo].[StandardProviderQAR]
+( [TimePeriod], [Ukprn], [IfateReferenceNumber] ) INCLUDE ( [Leavers], [AchievementRate], [AchievementRank] );
+GO
+
