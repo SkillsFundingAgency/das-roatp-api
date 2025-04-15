@@ -8,3 +8,7 @@
   CONSTRAINT PK_StandardQAR PRIMARY KEY ([TimePeriod], [IfateReferenceNumber])
 );
 GO
+
+CREATE INDEX IX_StandardQAR_TimePeriod ON [dbo].[StandardQAR]
+( [TimePeriod], [IfateReferenceNumber] ) INCLUDE ( [Leavers], [AchievementRate] );
+GO
