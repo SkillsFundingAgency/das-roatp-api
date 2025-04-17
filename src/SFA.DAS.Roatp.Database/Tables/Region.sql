@@ -11,3 +11,8 @@ GO
 
 CREATE UNIQUE INDEX IDX_SubregionName
    ON Region (SubregionName);   
+GO
+   
+CREATE INDEX IX_Regions ON [dbo].[Region]
+( [Id], [Latitude], [Longitude] ) INCLUDE ( [RegionName] , [SubregionName]);
+GO
