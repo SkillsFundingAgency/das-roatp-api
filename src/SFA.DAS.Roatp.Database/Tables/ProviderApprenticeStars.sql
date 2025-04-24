@@ -8,8 +8,7 @@
                ,CASE [Stars] WHEN 4 THEN 'Excellent' 
                              WHEN 2 THEN 'Poor' 
                              WHEN 3 THEN 'Good' 
-                             WHEN 1 THEN 'VeryPoor' END),
-   --CONSTRAINT PK_ProviderApprenticeStars PRIMARY KEY ([TimePeriod], [Ukprn])
+                             WHEN 1 THEN 'VeryPoor' END)
 );
 GO
 

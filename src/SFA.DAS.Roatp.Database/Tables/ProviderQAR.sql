@@ -12,8 +12,7 @@
                              WHEN [AchievementRate] < '50' THEN 'VeryPoor'
                              WHEN [AchievementRate] < '60' THEN 'Poor'
                              WHEN [AchievementRate] < '70' THEN 'Good'
-                             ELSE 'Excellent' END)),   
-  --CONSTRAINT PK_ProviderQAR PRIMARY KEY ([TimePeriod], [Ukprn])
+                             ELSE 'Excellent' END))
 );
 GO
 
