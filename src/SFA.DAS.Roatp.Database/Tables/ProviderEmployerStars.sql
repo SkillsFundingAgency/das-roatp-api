@@ -8,10 +8,10 @@
                              WHEN 2 THEN 'Poor' 
                              WHEN 3 THEN 'Good' 
                              WHEN 1 THEN 'VeryPoor' END),
-    CONSTRAINT PK_ProviderEmployerStars PRIMARY KEY ([TimePeriod], [Ukprn])
+    --CONSTRAINT PK_ProviderEmployerStars PRIMARY KEY ([TimePeriod], [Ukprn])
 );
 GO
 
-CREATE INDEX IX_ProviderEmployerStars_TimePeriod ON [dbo].[ProviderEmployerStars]
+CREATE UNIQUE INDEX IXU_ProviderEmployerStars_TimePeriod ON [dbo].[ProviderEmployerStars]
 ( [TimePeriod], [Ukprn] ) INCLUDE ( [ReviewCount], [Stars], [Rating]);
 GO

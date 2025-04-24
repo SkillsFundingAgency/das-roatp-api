@@ -88,7 +88,7 @@ AS
 EmployerStars
 AS
 (
-    SELECT *
+    SELECT [Ukprn], [ReviewCount], [Stars], [Rating]
     FROM [dbo].[ProviderEmployerStars] 
     WHERE TimePeriod = @feedbackperiod
 ),
@@ -96,7 +96,7 @@ AS
 ApprenticeStars
 AS
 (
-    SELECT *
+    SELECT [Ukprn], [ReviewCount], [Stars], [Rating]
     FROM [dbo].[ProviderApprenticeStars] 
     WHERE TimePeriod = @feedbackperiod
 ),
@@ -220,7 +220,7 @@ AS
               LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
               WHERE 1=1 
               -- specific Training Course 
-              AND [LarsCode] = @larscode
+              AND pc1.[LarsCode] = @larscode
 
               ) ab1 
         WHERE 1=1

@@ -13,10 +13,10 @@
                              WHEN [AchievementRate] < '60' THEN 'Poor'
                              WHEN [AchievementRate] < '70' THEN 'Good'
                              ELSE 'Excellent' END)),   
-  CONSTRAINT PK_ProviderQAR PRIMARY KEY ([TimePeriod], [Ukprn])
+  --CONSTRAINT PK_ProviderQAR PRIMARY KEY ([TimePeriod], [Ukprn])
 );
 GO
 
-CREATE INDEX IX_ProviderQAR_TimePeriod ON [dbo].[ProviderQAR]
+CREATE UNIQUE INDEX IXU_ProviderQAR_TimePeriod ON [dbo].[ProviderQAR]
 ( [TimePeriod], [Ukprn] ) INCLUDE ( [Leavers], [AchievementRate], [AchievementRank] );
 GO
