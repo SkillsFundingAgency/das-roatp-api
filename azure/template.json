@@ -142,7 +142,7 @@
         "reloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
         "updateUkrlpDataSchedule": "0 0 23 * * 1-5",
         "updateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
-        "deleteExpiredShortlistsSchedule":  "0 0 2 * * *"
+        "deleteExpiredShortlistsSchedule":  "0 0 2 * * *",
         "routeTableId": {
             "id": "[resourceId(subscription().subscriptionId, parameters('sharedEnvResourceGroup'), 'Microsoft.Network/routeTables', parameters('SharedRouteTableName'))]"
         },
