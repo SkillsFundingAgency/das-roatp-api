@@ -12,4 +12,10 @@
     CONSTRAINT UK_ProviderCourseLocation_Course_Location UNIQUE (ProviderCourseId, [ProviderLocationId]),
     CONSTRAINT FK_ProviderCourseLocation_ProviderCourse FOREIGN KEY (ProviderCourseId) REFERENCES ProviderCourse (Id),
     CONSTRAINT FK_ProviderCourseLocation_ProviderLocation FOREIGN KEY ([ProviderLocationId]) REFERENCES ProviderLocation (Id)
-)
+);
+GO
+
+CREATE UNIQUE INDEX IXU_ProviderCourseLocation_TimePeriod ON [dbo].[ProviderCourseLocation]
+( [ProviderCourseId] , [ProviderLocationId] ) INCLUDE ( [HasDayReleaseDeliveryOption], [HasBlockReleaseDeliveryOption]);
+GO
+

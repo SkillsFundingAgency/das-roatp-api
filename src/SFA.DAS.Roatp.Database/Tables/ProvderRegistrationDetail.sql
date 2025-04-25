@@ -14,4 +14,11 @@
     [Postcode] VARCHAR(25) NULL,
     [Latitude] FLOAT NULL,
     [Longitude] FLOAT NULL
-)
+);
+GO
+
+CREATE NONCLUSTERED INDEX IX_ProviderRegistrationDetail_StatusId_ProviderTypeId
+ON [dbo].[ProviderRegistrationDetail] ([Ukprn],[StatusId],[ProviderTypeId])
+INCLUDE ([LegalName]);
+GO
+
