@@ -263,8 +263,7 @@ BEGIN
 	LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[userId] = @userId
 		AND ((sht.[LocationDescription] IS NULL AND @Location IS NULL) OR (sht.[LocationDescription] = @Location))
 	WHERE
-		NOT (@Latitude IS NULL AND LocationType = 2 AND TP_Std_Dist_Seq > 1)
-	AND NOT (Min_LocationOrdering = 3 AND TP_Std_Dist_Seq > 1)                                                             
+		NOT (@Latitude IS NULL AND LocationType = 2 AND Min_LocationOrdering = 3 AND TP_Std_Dist_Seq > 1)                                                    
 	ORDER BY ukprn, Larscode, Ordering
 	
 END
