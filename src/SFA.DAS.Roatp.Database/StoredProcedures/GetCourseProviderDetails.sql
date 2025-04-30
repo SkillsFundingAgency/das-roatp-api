@@ -172,12 +172,13 @@ BEGIN
 			,ContactUsPageUrl
 			-- LocationType: Provider = 0, National = 1, Regional = 2
 			,CASE WHEN LocationType = 0 THEN Distance
-				  WHEN LocationOrdering = 3 THEN 99999
+				  WHEN LocationOrdering = 3 THEN 0
 				  ELSE 0 END Course_Distance
 			-- priority for at workplace over at provider (by ukprn and course)
 			,ROW_NUMBER() OVER (PARTITION BY [Ukprn], [LarsCode], 
 								CASE WHEN LocationType = 0 THEN 1 ELSE 0 END 
 								ORDER BY Distance) TP_Std_Dist_Seq
+			,MIN(LocationOrdering) OVER (PARTITION BY [Ukprn], [LarsCode]) Min_LocationOrdering																		
 		FROM
 			(
 			-- Managing Standards Course Location data
@@ -186,7 +187,13 @@ BEGIN
 				  ,[LocationType]
 				  -- Is at Employer ?
 				  ,CASE [LocationType] 
-				   WHEN 0 THEN 0 ELSE 1 END AtEmployer
+				   WHEN 0 THEN 0 -- At provider
+				   WHEN 2 THEN -- Regional
+					(CASE WHEN pl1.[RegionId] IS NOT NULL AND pl1.[RegionId] = @NearestRegionId THEN 1 -- same Region
+						  WHEN pl1.[RegionId] IS NOT NULL AND @AlternativeRegionid IS NOT NULL AND pl1.[RegionId] = @AlternativeRegionid THEN 1 -- alternative Region
+						  ELSE 0 -- other Regions are outside
+						  END)
+				   ELSE 1 END AtEmployer
 				  ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
 				  ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
 				  ,CASE [LocationType] 
@@ -247,7 +254,6 @@ BEGIN
 				  -- specific Training Provider 
 				  AND pr1.[Ukprn] = @ukprn
 			  ) ab1 
-		WHERE LocationOrdering != 3 -- exclude outside Regions
 		) ab2
 	-- Standards and QAR data
 	JOIN StandardsAndQAR stq on stq.LarsCode = ab2.LarsCode
@@ -258,6 +264,7 @@ BEGIN
 		AND ((sht.[LocationDescription] IS NULL AND @Location IS NULL) OR (sht.[LocationDescription] = @Location))
 	WHERE
 		NOT (@Latitude IS NULL AND LocationType = 2 AND TP_Std_Dist_Seq > 1)
+	AND NOT (Min_LocationOrdering = 3 AND TP_Std_Dist_Seq > 1)                                                             
 	ORDER BY ukprn, Larscode, Ordering
 	
 END
