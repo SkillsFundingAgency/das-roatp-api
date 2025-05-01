@@ -9,28 +9,27 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProvider
+namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProvider;
+
+[TestFixture]
+public class GetProviderQueryHandlerTests
 {
-    [TestFixture]
-    public class GetProviderQueryHandlerTests
+    [Test, RecursiveMoqAutoData()]
+    public async Task Handle_ReturnsResult(
+        Provider provider,
+        ProviderRegistrationDetail providerRegistrationDetail,
+        [Frozen] Mock<IProvidersReadRepository> repoMockProvidersReadRepository,
+        [Frozen] Mock<IProviderRegistrationDetailsReadRepository> repoMockProviderRegistrationDetailsReadRepository,
+        GetProviderQuery query,
+        GetProviderQueryHandler sut,
+        CancellationToken cancellationToken)
     {
-        [Test, RecursiveMoqAutoData()]
-        public async Task Handle_ReturnsResult(
-            Provider provider,
-            ProviderRegistrationDetail providerRegistrationDetail,
-            [Frozen] Mock<IProvidersReadRepository> repoMockProvidersReadRepository,
-            [Frozen] Mock<IProviderRegistrationDetailsReadRepository> repoMockProviderRegistrationDetailsReadRepository,
-            GetProviderQuery query,
-            GetProviderQueryHandler sut,
-            CancellationToken cancellationToken)
-        {
-            repoMockProvidersReadRepository.Setup(r => r.GetByUkprn(query.Ukprn)).ReturnsAsync(provider);
+        repoMockProvidersReadRepository.Setup(r => r.GetByUkprn(query.Ukprn)).ReturnsAsync(provider);
 
-            repoMockProviderRegistrationDetailsReadRepository.Setup(r => r.GetProviderRegistrationDetail(query.Ukprn)).ReturnsAsync(providerRegistrationDetail);
+        repoMockProviderRegistrationDetailsReadRepository.Setup(r => r.GetProviderRegistrationDetail(query.Ukprn, cancellationToken)).ReturnsAsync(providerRegistrationDetail);
 
-            var result = await sut.Handle(query, cancellationToken);
+        var result = await sut.Handle(query, cancellationToken);
 
-            result.Should().NotBeNull();
-        }
+        result.Should().NotBeNull();
     }
 }

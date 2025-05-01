@@ -1,4 +1,7 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,9 +10,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Providers.Queries.GetRegisteredProvider;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
@@ -33,7 +34,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         public async Task<IActionResult> GetProviders([FromQuery] bool? Live, CancellationToken cancellationToken)
         {
             var providerResult = await _mediator.Send(
-                new GetProvidersQuery() { Live = Live ?? false }, 
+                new GetProvidersQuery() { Live = Live ?? false },
                 cancellationToken
             );
 
@@ -42,7 +43,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         }
 
         [HttpGet]
-        [Route("{ukprn:int}")]
+        [Route("{ukprn:int}/summary")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(GetProviderSummaryQueryResult), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProviderSummary([FromRoute] int ukprn)
@@ -50,6 +51,15 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
             return GetResponse(
                 await _mediator.Send(new GetProviderSummaryQuery(ukprn))
             );
+        }
+
+        [HttpGet]
+        [Route("{ukprn:int}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(GetProviderSummaryQueryResult), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetRegisteredProvider([FromRoute] int ukprn, CancellationToken cancellationToken)
+        {
+            return GetResponse(await _mediator.Send(new GetRegisteredProviderQuery(ukprn), cancellationToken));
         }
 
         /// <summary>

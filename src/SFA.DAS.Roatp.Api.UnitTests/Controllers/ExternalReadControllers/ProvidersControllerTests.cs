@@ -15,6 +15,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
+using SFA.DAS.Roatp.Application.Providers.Queries.GetRegisteredProvider;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
@@ -29,7 +30,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         )
         {
             GetProvidersQueryResult handlerResult = new GetProvidersQueryResult();
-            mediatorMock.Setup(m => 
+            mediatorMock.Setup(m =>
                 m.Send(
                     It.Is<GetProvidersQuery>(a => a.Live.Equals(false)),
                     It.IsAny<CancellationToken>()
@@ -56,9 +57,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         )
         {
             GetProvidersQueryResult handlerResult = new GetProvidersQueryResult();
-            mediatorMock.Setup(m => 
+            mediatorMock.Setup(m =>
                 m.Send(
-                    It.Is<GetProvidersQuery>(a => a.Live.Equals(true)), 
+                    It.Is<GetProvidersQuery>(a => a.Live.Equals(true)),
                     It.IsAny<CancellationToken>()
                 )
             ).ReturnsAsync(handlerResult);
@@ -95,7 +96,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
            [Greedy] ProvidersController sut
         )
         {
-            mediatorMock.Setup(m => 
+            mediatorMock.Setup(m =>
                 m.Send(It.IsAny<GetProviderSummaryQuery>(), It.IsAny<CancellationToken>()))
                  .ReturnsAsync(new ValidatedResponse<GetProviderSummaryQueryResult>(handlerResult));
 
@@ -114,15 +115,39 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         }
 
         [Test, MoqAutoData]
+        public async Task GetRegisteredProvider_CallsMediator_WithRequestedUkprn(
+           int ukprn,
+           GetRegisteredProviderQueryResult expectedResult,
+           [Frozen] Mock<IMediator> mediatorMock,
+           [Greedy] ProvidersController sut,
+           CancellationToken cancellationToken
+        )
+        {
+            mediatorMock.Setup(m =>
+                m.Send(It.IsAny<GetRegisteredProviderQuery>(), It.IsAny<CancellationToken>()))
+                 .ReturnsAsync(new ValidatedResponse<GetRegisteredProviderQueryResult>(expectedResult));
+
+            var actualResult = await sut.GetRegisteredProvider(ukprn, cancellationToken);
+
+            actualResult.As<OkObjectResult>().Should().NotBeNull();
+            actualResult.As<OkObjectResult>().Value.As<GetRegisteredProviderQueryResult>().Should().Be(expectedResult);
+
+            mediatorMock.Verify(a =>
+                a.Send(It.Is<GetRegisteredProviderQuery>(t => t.Ukprn == ukprn), cancellationToken),
+                Times.Once
+            );
+        }
+
+        [Test, MoqAutoData]
         public async Task GetProviderSummary_ProviderDoesNotExist_ReturnsNotFound(
             int ukprn,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProvidersController sut
         )
         {
-            mediatorMock.Setup(m => 
+            mediatorMock.Setup(m =>
                 m.Send(
-                    It.IsAny<GetProviderSummaryQuery>(), 
+                    It.IsAny<GetProviderSummaryQuery>(),
                     It.IsAny<CancellationToken>()
                 )
             ).ReturnsAsync(
@@ -157,9 +182,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
                 }
             );
 
-            mediatorMock.Setup(m => 
+            mediatorMock.Setup(m =>
                 m.Send(
-                    It.IsAny<GetProviderSummaryQuery>(), 
+                    It.IsAny<GetProviderSummaryQuery>(),
                     It.IsAny<CancellationToken>()
                 )
             ).ReturnsAsync(response);
