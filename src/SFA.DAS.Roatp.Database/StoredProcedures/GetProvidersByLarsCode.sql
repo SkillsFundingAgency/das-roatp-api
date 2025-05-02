@@ -111,10 +111,12 @@ AS
          -- Ordering calculation
         ,ROW_NUMBER() OVER (PARTITION BY ab2.Larscode 
                             ORDER BY 
+                            -- Filtered last (where = 0 these will be removed)
+                            MAX(LocationTypeFilter) DESC                                                         
                             -- Distance
-                             CASE WHEN @SortOrder = 'Distance' THEN MIN(Course_Distance) ELSE 1 END
+                            ,CASE WHEN @SortOrder = 'Distance' THEN MIN(Course_Distance) ELSE 1 END
                             -- Distance to nearest training provider locations
-							,CASE WHEN @SortOrder = 'Distance' THEN MIN(CASE WHEN Course_Distance = 0 THEN 99999 ELSE Course_Distance END) ELSE 1 END
+                            ,CASE WHEN @SortOrder = 'Distance' THEN MIN(CASE WHEN Course_Distance = 0 THEN 99999 ELSE Course_Distance END) ELSE 1 END
                             -- Achievement Rate
                             ,CASE WHEN @SortOrder = 'AchievementRate' THEN
                                  (CASE WHEN ISNULL(qp1.AchievementRate,'x') LIKE N'%[^0-9.]%' THEN 0
@@ -127,9 +129,9 @@ AS
                             ,CASE WHEN @SortOrder = 'ApprenticeProviderRating' THEN ISNULL(pas.Stars,-1) ELSE 1 END DESC
                             -- and then always by Distance
                             ,MIN(Course_Distance)
-							-- to nearest training provider location
-							,MIN(CASE WHEN Course_Distance = 0 THEN 99999 ELSE Course_Distance END)
-                            -- and then always by Achievement Rate
+                            -- to nearest training provider location
+                            ,MIN(CASE WHEN Course_Distance = 0 THEN 99999 ELSE Course_Distance END)
+                           -- and then always by Achievement Rate
                             ,CASE WHEN ISNULL(qp1.AchievementRate,'x') LIKE N'%[^0-9.]%' THEN 0
                                   ELSE CONVERT(float,qp1.AchievementRate) END DESC
                             -- and then always by Employer and Apprentice Provider Ratings
@@ -174,6 +176,36 @@ AS
             ,CASE WHEN LocationType = 0 THEN Distance
                   WHEN LocationOrdering = 3 THEN 99999
                   ELSE 0 END Course_Distance
+            -- Logic to match to Checkboxes for training locations 
+            -- At apprentice's workplace and/or training at providers
+            -- And at training provider for Day release and/or Block Release options
+            -- Provider = 0, National = 1, Regional = 2            
+            ,CASE WHEN @workplace = 0 AND @provider = 0 
+                  THEN 1 -- no filters
+                  WHEN @workplace = 1 AND LocationType != 0 -- ('National','Regional') 
+                  -- only allowed at workplace for national and regional
+                  THEN 1
+                  WHEN @workplace = 0 AND LocationType != 0 -- ('National','Regional') 
+                  -- only allowed at workplace for national and regional
+                  THEN 0
+                  WHEN @provider = 0 AND LocationType = 0
+                  THEN 0 
+                  -- @provider = 1 and @workplace = 0 or 1
+                  WHEN @provider = 1 
+                  THEN (CASE 
+                        WHEN @blockRelease = 0 AND @dayRelease = 0
+                        THEN 1
+                        WHEN @blockRelease = 1 AND @dayRelease = 1
+                        -- include where either block or day release
+                        THEN (CASE WHEN BlockRelease = 1 OR DayRelease = 1 THEN 1 ELSE 0 END)
+                        WHEN @blockRelease = 1 
+                        THEN (CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END)
+                        WHEN @dayRelease = 1
+                        THEN (CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END)
+                        ELSE 1 -- no filter on block/day release
+                        END)
+                  ELSE 1
+             END LocationTypeFilter                                 
             -- priority for at workplace over at provider (by ukprn and course)
             ,ROW_NUMBER() OVER (PARTITION BY [Ukprn], [LarsCode], 
                                 CASE WHEN LocationType = 0 THEN 1 ELSE 0 END 
@@ -231,36 +263,6 @@ AS
         AND LocationOrdering != 3 -- exclude outside Regions
         -- Distance filter check if requested
         AND (@Distance IS NULL OR Distance <= @Distance)
-        -- Logic to match to Checkboxes for training locations 
-        -- At apprentice's workplace and/or training at providers
-        -- And at training provider for Day release and/or Block Release options
-        -- Provider = 0, National = 1, Regional = 2
-        AND (CASE WHEN @workplace = 0 AND @provider = 0 
-                  THEN 1 -- no filters
-                  WHEN @workplace = 1 AND LocationType != 0 -- ('National','Regional') 
-                  -- only allowed at workplace for national and regional
-                  THEN 1
-                  WHEN @workplace = 0 AND LocationType != 0 -- ('National','Regional') 
-                  -- only allowed at workplace for national and regional
-                  THEN 0
-                  WHEN @provider = 0 AND LocationType = 0
-                  THEN 0 
-                  -- @provider = 1 and @workplace = 0 or 1
-                  WHEN @provider = 1 
-                  THEN (CASE 
-                        WHEN @blockRelease = 0 AND @dayRelease = 0
-                        THEN 1
-                        WHEN @blockRelease = 1 AND @dayRelease = 1
-                        -- include where either block or day release
-                        THEN (CASE WHEN BlockRelease = 1 OR DayRelease = 1 THEN 1 ELSE 0 END)
-                        WHEN @blockRelease = 1 
-                        THEN (CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END)
-                        WHEN @dayRelease = 1
-                        THEN (CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END)
-                        ELSE 1 -- no filter on block/day release
-                        END)
-                  ELSE 1
-             END) = 1
         ) ab2
     -- Standards and QAR data
 
@@ -287,7 +289,9 @@ AS
     , qp1.[Leavers], qp1.[AchievementRate]
     , pes.ReviewCount, pes.Stars, pes.Rating
     , pas.ReviewCount, pas.Stars, pas.Rating
-    , sht.[Id]      
+    , sht.[Id]
+    --apply the LocationType filters    
+    HAVING MAX(LocationTypeFilter) = 1
     ORDER BY "providers.ordering"
     OFFSET @skip ROWS
     FETCH NEXT @pageSize ROWS ONLY
