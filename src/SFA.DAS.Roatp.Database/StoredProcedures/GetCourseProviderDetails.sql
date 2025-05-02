@@ -1,5 +1,5 @@
 CREATE PROCEDURE [dbo].[GetCourseProviderDetails]
-    @Ukprn BIGINT,
+	@Ukprn BIGINT,
 	@Larscode BIGINT,
 	@Latitude FLOAT NULL,
 	@Longitude FLOAT NULL,
@@ -7,7 +7,7 @@ CREATE PROCEDURE [dbo].[GetCourseProviderDetails]
 	@UserId UNIQUEIDENTIFIER
 AS
 BEGIN
-    SET NOCOUNT ON;
+	SET NOCOUNT ON;
 
 	-- This get details for Training Provider training locations / regions, with calculates the distance is location provided 
 
@@ -144,8 +144,8 @@ BEGIN
 	FROM 
 	(
 		SELECT 
-		     Ukprn, 
-		     LegalName
+			 Ukprn, 
+			 LegalName
 			,Larscode
 			,LocationType
 			,AtEmployer
@@ -172,12 +172,13 @@ BEGIN
 			,ContactUsPageUrl
 			-- LocationType: Provider = 0, National = 1, Regional = 2
 			,CASE WHEN LocationType = 0 THEN Distance
-				  WHEN LocationOrdering = 3 THEN 99999
+				  WHEN LocationOrdering = 3 THEN 0
 				  ELSE 0 END Course_Distance
 			-- priority for at workplace over at provider (by ukprn and course)
 			,ROW_NUMBER() OVER (PARTITION BY [Ukprn], [LarsCode], 
 								CASE WHEN LocationType = 0 THEN 1 ELSE 0 END 
 								ORDER BY Distance) TP_Std_Dist_Seq
+			,MIN(LocationOrdering) OVER (PARTITION BY [Ukprn], [LarsCode]) Min_LocationOrdering																		
 		FROM
 			(
 			-- Managing Standards Course Location data
@@ -186,15 +187,22 @@ BEGIN
 				  ,[LocationType]
 				  -- Is at Employer ?
 				  ,CASE [LocationType] 
-				   WHEN 0 THEN 0 ELSE 1 END AtEmployer
+				   WHEN 0 THEN 0 -- At provider
+				   WHEN 2 THEN -- Regional
+					(CASE WHEN @Latitude IS NULL
+						  THEN 1
+						  WHEN pl1.[RegionId] IS NOT NULL AND pl1.[RegionId] = @NearestRegionId 
+						  THEN 1 -- same Region
+						  WHEN pl1.[RegionId] IS NOT NULL AND @AlternativeRegionid IS NOT NULL AND pl1.[RegionId] = @AlternativeRegionid THEN 1 -- alternative Region
+						  ELSE 0 -- other Regions are outside
+						  END)
+				   ELSE 1 END AtEmployer
 				  ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
 				  ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
 				  ,CASE [LocationType] 
 				   WHEN 0 THEN pl1.Postcode
 				   WHEN 1 THEN 'National'
-				   WHEN 2 THEN 
-						 (CASE WHEN @Latitude IS NULL THEN 'Regional'
-							   ELSE SubregionName + ' ('+RegionName+')' END)
+				   WHEN 2 THEN SubregionName + ' ('+RegionName+')'
 				   END Course_Location
 				  ,CASE
 				   WHEN @Latitude IS NULL THEN 0  -- no distance check
@@ -247,7 +255,6 @@ BEGIN
 				  -- specific Training Provider 
 				  AND pr1.[Ukprn] = @ukprn
 			  ) ab1 
-		WHERE LocationOrdering != 3 -- exclude outside Regions
 		) ab2
 	-- Standards and QAR data
 	JOIN StandardsAndQAR stq on stq.LarsCode = ab2.LarsCode
@@ -256,8 +263,6 @@ BEGIN
 	LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = ab2.[Ukprn] 
 	LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[userId] = @userId
 		AND ((sht.[LocationDescription] IS NULL AND @Location IS NULL) OR (sht.[LocationDescription] = @Location))
-	WHERE
-		NOT (@Latitude IS NULL AND LocationType = 2 AND TP_Std_Dist_Seq > 1)
 	ORDER BY ukprn, Larscode, Ordering
 	
 END
