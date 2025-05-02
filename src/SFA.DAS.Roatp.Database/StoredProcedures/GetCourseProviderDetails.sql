@@ -1,5 +1,5 @@
 CREATE PROCEDURE [dbo].[GetCourseProviderDetails]
-    @Ukprn BIGINT,
+	@Ukprn BIGINT,
 	@Larscode BIGINT,
 	@Latitude FLOAT NULL,
 	@Longitude FLOAT NULL,
@@ -7,7 +7,7 @@ CREATE PROCEDURE [dbo].[GetCourseProviderDetails]
 	@UserId UNIQUEIDENTIFIER
 AS
 BEGIN
-    SET NOCOUNT ON;
+	SET NOCOUNT ON;
 
 	-- This get details for Training Provider training locations / regions, with calculates the distance is location provided 
 
@@ -144,8 +144,8 @@ BEGIN
 	FROM 
 	(
 		SELECT 
-		     Ukprn, 
-		     LegalName
+			 Ukprn, 
+			 LegalName
 			,Larscode
 			,LocationType
 			,AtEmployer
@@ -189,7 +189,10 @@ BEGIN
 				  ,CASE [LocationType] 
 				   WHEN 0 THEN 0 -- At provider
 				   WHEN 2 THEN -- Regional
-					(CASE WHEN pl1.[RegionId] IS NOT NULL AND pl1.[RegionId] = @NearestRegionId THEN 1 -- same Region
+					(CASE WHEN @Latitude IS NULL
+						  THEN 1
+						  WHEN pl1.[RegionId] IS NOT NULL AND pl1.[RegionId] = @NearestRegionId 
+						  THEN 1 -- same Region
 						  WHEN pl1.[RegionId] IS NOT NULL AND @AlternativeRegionid IS NOT NULL AND pl1.[RegionId] = @AlternativeRegionid THEN 1 -- alternative Region
 						  ELSE 0 -- other Regions are outside
 						  END)
@@ -199,9 +202,7 @@ BEGIN
 				  ,CASE [LocationType] 
 				   WHEN 0 THEN pl1.Postcode
 				   WHEN 1 THEN 'National'
-				   WHEN 2 THEN 
-						 (CASE WHEN @Latitude IS NULL THEN 'Regional'
-							   ELSE SubregionName + ' ('+RegionName+')' END)
+				   WHEN 2 THEN SubregionName + ' ('+RegionName+')'
 				   END Course_Location
 				  ,CASE
 				   WHEN @Latitude IS NULL THEN 0  -- no distance check
@@ -262,9 +263,6 @@ BEGIN
 	LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = ab2.[Ukprn] 
 	LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[userId] = @userId
 		AND ((sht.[LocationDescription] IS NULL AND @Location IS NULL) OR (sht.[LocationDescription] = @Location))
-	WHERE
-		NOT (@Latitude IS NULL AND LocationType = 2 AND TP_Std_Dist_Seq > 1) 
-	AND NOT (Min_LocationOrdering = 3  AND TP_Std_Dist_Seq > 1)        
 	ORDER BY ukprn, Larscode, Ordering
 	
 END
