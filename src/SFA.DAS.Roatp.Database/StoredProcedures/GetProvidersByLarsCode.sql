@@ -25,7 +25,16 @@ IF @workplace IS NULL  SET @workplace = 0;
 IF @provider  IS NULL  SET @provider  = 0;
 IF @blockrelease IS NULL  SET @blockrelease = 0;
 IF @dayrelease IS NULL  SET @dayrelease = 0;
+-- Any At providers?
 IF @blockrelease = 1 OR @dayrelease = 1 SET @provider = 1;
+-- All filters? means no filters
+IF @workplace = 0 AND @provider  = 0 AND @blockrelease = 0 AND @dayrelease = 0 
+BEGIN
+    SET @workplace = 1;
+    SET @provider  = 1;
+    SET @blockrelease = 1;
+    SET @dayrelease = 1;    
+END   
 -- local working
 DECLARE @skip int = (@page - 1) * @pageSize;
 
@@ -119,6 +128,7 @@ AS
                                                 -- do not prioiritise at workplace if filtered
                                                 THEN 99999   
                                                 ELSE Course_Distance END) ELSE 1 END
+                            ,CASE WHEN @SortOrder = 'Distance' THEN MIN(CASE WHEN Course_Distance = 0 THEN 99999 ELSE Course_Distance END) ELSE 1 END
                             -- Distance to nearest training provider locations
                             ,CASE WHEN @SortOrder = 'Distance' 
                                   THEN MIN(CASE WHEN @provider = 1 AND LocationType = 0 
@@ -144,13 +154,15 @@ AS
                                       THEN 99999   
                                       ELSE Course_Distance END)
                             -- to nearest training provider location Provider = 0, National = 1, Regional = 2 
-                            ,MIN(CASE WHEN @provider = 1 AND LocationType = 0
+                            ,MIN(CASE WHEN @workplace = 1 AND LocationType != 0
+                                      THEN 99999
+                                      WHEN @provider = 1 AND LocationType = 0
                                       -- for at provider prioritise based on filters
                                       THEN (CASE WHEN (@blockrelease = 1 AND BlockRelease = 1) OR
                                                       (@dayrelease = 1 AND Dayrelease = 1) 
                                                  THEN Course_Distance 
                                                  ELSE 99999 END)
-                                      ELSE 99999 END)                          
+                                      ELSE Course_Distance END)                          
                             -- and then always by Achievement Rate
                             ,CASE WHEN ISNULL(qp1.AchievementRate,'x') LIKE N'%[^0-9.]%' THEN 0
                                   ELSE CONVERT(float,qp1.AchievementRate) END DESC
