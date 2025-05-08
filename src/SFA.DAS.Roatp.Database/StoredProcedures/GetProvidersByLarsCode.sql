@@ -123,14 +123,13 @@ AS
                             -- Filtered last (where = 0 these will be removed)
                             MAX(LocationTypeFilter) DESC
                             -- Distance, where LocationType:Provider = 0, National = 1, Regional = 2
-                            ,CASE WHEN @SortOrder = 'Distance' 
+                            ,CASE WHEN @Distance IS NOT NULL AND @SortOrder = 'Distance' 
                                   THEN MIN(CASE WHEN @workplace = 0 AND LocationType != 0 
                                                 -- do not prioiritise at workplace if filtered
                                                 THEN 99999   
                                                 ELSE Course_Distance END) ELSE 1 END
-                            ,CASE WHEN @SortOrder = 'Distance' THEN MIN(CASE WHEN Course_Distance = 0 THEN 99999 ELSE Course_Distance END) ELSE 1 END
                             -- Distance to nearest training provider locations
-                            ,CASE WHEN @SortOrder = 'Distance' 
+                            ,CASE WHEN @Distance IS NOT NULL AND @SortOrder = 'Distance' 
                                   THEN MIN(CASE WHEN @provider = 1 AND LocationType = 0 
                                                 -- for at provider prioritise based on filters
                                                 THEN (CASE WHEN (@blockrelease = 1 AND BlockRelease = 1) OR
@@ -149,20 +148,20 @@ AS
                             -- Apprentice Star Rating 
                             ,CASE WHEN @SortOrder = 'ApprenticeProviderRating' THEN ISNULL(pas.Stars,-1) ELSE 1 END DESC
                             -- and then always by Distance, where LocationType:Provider = 0, National = 1, Regional = 2
-                            ,MIN(CASE WHEN @workplace = 0 AND LocationType != 0 
+                            ,MIN(CASE WHEN @Distance IS NULL OR (@workplace = 0 AND LocationType != 0) 
                                       -- do not prioiritise at workplace if filtered
                                       THEN 99999   
                                       ELSE Course_Distance END)
                             -- to nearest training provider location Provider = 0, National = 1, Regional = 2 
-                            ,MIN(CASE WHEN @workplace = 1 AND LocationType != 0
-                                      THEN 99999
+                            ,MIN(CASE WHEN @Distance IS NULL OR (@workplace = 1 AND LocationType != 0) OR @provider = 0
+                                      THEN 99999  -- ignore provider locations
                                       WHEN @provider = 1 AND LocationType = 0
                                       -- for at provider prioritise based on filters
                                       THEN (CASE WHEN (@blockrelease = 1 AND BlockRelease = 1) OR
                                                       (@dayrelease = 1 AND Dayrelease = 1) 
                                                  THEN Course_Distance 
                                                  ELSE 99999 END)
-                                      ELSE Course_Distance END)                          
+                                      ELSE 99999 END)                          
                             -- and then always by Achievement Rate
                             ,CASE WHEN ISNULL(qp1.AchievementRate,'x') LIKE N'%[^0-9.]%' THEN 0
                                   ELSE CONVERT(float,qp1.AchievementRate) END DESC
