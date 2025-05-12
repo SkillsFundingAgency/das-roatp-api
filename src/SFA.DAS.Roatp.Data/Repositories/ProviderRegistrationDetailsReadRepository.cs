@@ -64,7 +64,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
         }
 
         [ExcludeFromCodeCoverage]
-        public async Task<ProviderRegistrationDetail> GetProviderRegistrationDetail(int ukprn)
+        public async Task<ProviderRegistrationDetail> GetProviderRegistrationDetail(int ukprn, CancellationToken cancellationToken)
             => await _roatpDataContext
                     .ProviderRegistrationDetails
                     .Where(x =>
@@ -73,7 +73,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                         x.StatusId == OrganisationStatus.Onboarding)
                     .Include(r => r.Provider)
                     .AsNoTracking()
-                    .SingleOrDefaultAsync(p => p.Ukprn == ukprn);
+                    .SingleOrDefaultAsync(p => p.Ukprn == ukprn, cancellationToken);
 
         [ExcludeFromCodeCoverage]
         public async Task<bool> IsMainActiveProvider(int ukprn, int larsCode)
