@@ -30,7 +30,7 @@ public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortli
     public Task<int> GetShortlistCount(Guid userId, CancellationToken cancellationToken)
         => _roatpDataContext.Shortlists.CountAsync(s => s.UserId == userId, cancellationToken);
 
-    public Task Delete(Guid shortlistId, CancellationToken cancellationToken)
+    public Task<int> Delete(Guid shortlistId, CancellationToken cancellationToken)
         => _roatpDataContext.Shortlists.Where(s => s.Id == shortlistId).ExecuteDeleteAsync(cancellationToken);
 
     public async Task<string> GetShortlistsForUser(Guid userId, CancellationToken cancellationToken)
