@@ -13,7 +13,7 @@ public interface IShortlistsRepository
 
     Task<int> GetShortlistCount(Guid userId, CancellationToken cancellationToken);
 
-    Task Delete(Guid shortlistId, CancellationToken cancellationToken);
+    Task<int> Delete(Guid shortlistId, CancellationToken cancellationToken);
 
     Task<string> GetShortlistsForUser(Guid userId, CancellationToken cancellationToken);
 
