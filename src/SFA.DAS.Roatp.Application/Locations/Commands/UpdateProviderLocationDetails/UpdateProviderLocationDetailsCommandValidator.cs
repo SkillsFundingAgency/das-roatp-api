@@ -4,7 +4,6 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using System;
 using System.Linq;
-using static SFA.DAS.Roatp.Application.Constants;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDetails
 {
@@ -40,21 +39,6 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
                     return !result;
                 })
                 .WithMessage(LocationNameAlreadyUsedMessage);
-
-            RuleFor(p => p.Email)
-                .NotEmpty()
-                .MaximumLength(256)
-                .Matches(RegularExpressions.EmailRegex);
-
-            RuleFor(p => p.Phone)
-                .NotEmpty()
-                .MinimumLength(10)
-                .MaximumLength(50);
-
-            RuleFor(p => p.Website)
-                .NotEmpty()
-                .MaximumLength(500)
-                .Matches(RegularExpressions.UrlRegex);
         }
     }
 }
