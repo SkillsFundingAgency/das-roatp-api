@@ -21,7 +21,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
                 .Cascade(CascadeMode.Stop)
                 .NotEmpty()
                 .MaximumLength(50)
-                .MustAsync(async (command, locationName, _) => 
+                .MustAsync(async (command, locationName, _) =>
                 {
                     var locations = await providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
                     var result = locations.Any(l => l.LocationType == LocationType.Provider && l.LocationName.Equals(locationName, StringComparison.OrdinalIgnoreCase));
@@ -48,17 +48,6 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
             RuleFor(c => c.Longitude)
                 .NotEmpty()
                 .InclusiveBetween(-180, 180);
-            RuleFor(c => c.Email)
-                .NotEmpty()
-                .MaximumLength(256)
-                .Matches(RegularExpressions.EmailRegex);
-            RuleFor(c => c.Website)
-                .NotEmpty()
-                .MaximumLength(500)
-                .Matches(RegularExpressions.UrlRegex);
-            RuleFor(c => c.Phone)
-                .NotEmpty()
-                .MaximumLength(50);
         }
     }
 }

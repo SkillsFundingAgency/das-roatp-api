@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SFA.DAS.Roatp.Application.Common;
-using System;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
+using System;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDetails
 {
@@ -12,8 +12,5 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.UpdateProviderLocationDet
         public string UserId { get; set; }
         public string UserDisplayName { get; set; }
         public string LocationName { get; set; }
-        public string Website { get; set; }
-        public string Email { get; set; }
-        public string Phone { get; set; }
     }
 }

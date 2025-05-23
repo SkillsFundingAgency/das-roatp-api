@@ -42,7 +42,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.UpdateProviderL
 
             await sut.Handle(command, cancellationToken);
 
-            editRepoMock.Verify(e => e.UpdateProviderlocation(It.Is<Domain.Entities.ProviderLocation>(c => c.LocationName == command.LocationName && c.Email == command.Email && c.Website == command.Website && c.Phone == command.Phone), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), AuditEventTypes.UpdateProviderLocation));
+            editRepoMock.Verify(e => e.UpdateProviderlocation(It.Is<Domain.Entities.ProviderLocation>(c => c.LocationName == command.LocationName), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), AuditEventTypes.UpdateProviderLocation));
         }
     }
 }

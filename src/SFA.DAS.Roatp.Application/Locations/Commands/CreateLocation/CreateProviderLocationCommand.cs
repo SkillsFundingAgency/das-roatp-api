@@ -1,9 +1,9 @@
 ﻿using MediatR;
 using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Models;
 using System;
-using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
 {
@@ -20,11 +20,8 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
         public string County { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
-        public string Email { get; set; }
-        public string Website { get; set; }
-        public string Phone { get; set; }
 
-        public static implicit operator ProviderLocation(CreateProviderLocationCommand command) 
+        public static implicit operator ProviderLocation(CreateProviderLocationCommand command)
             => new ProviderLocation
             {
                 NavigationId = Guid.NewGuid(),
@@ -37,10 +34,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation
                 Postcode = command.Postcode.Trim(),
                 County = command.County.Trim(),
                 Latitude = command.Latitude,
-                Longitude = command.Longitude,
-                Email = command.Email.Trim(),
-                Website = command.Website.Trim(),
-                Phone = command.Phone.Trim()
+                Longitude = command.Longitude
             };
     }
 }
