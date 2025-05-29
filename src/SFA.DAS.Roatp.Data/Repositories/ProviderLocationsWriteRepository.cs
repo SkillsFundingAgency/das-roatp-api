@@ -1,10 +1,10 @@
-﻿using System;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Data.Repositories;
 
@@ -66,11 +66,7 @@ internal class ProviderLocationsWriteRepository : IProviderLocationsWriteReposit
                 _roatpDataContext.Audits.Add(audit);
 
 
-                providerLocation.LocationName = updatedProviderLocationEntity.LocationName;
-                providerLocation.Website = updatedProviderLocationEntity.Website;
-                providerLocation.Email = updatedProviderLocationEntity.Email;
-                providerLocation.Phone = updatedProviderLocationEntity.Phone;
-
+                providerLocation!.LocationName = updatedProviderLocationEntity.LocationName;
 
                 await _roatpDataContext.SaveChangesAsync();
                 await transaction.CommitAsync();

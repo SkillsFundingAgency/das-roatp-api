@@ -1,6 +1,6 @@
-﻿using System;
-using SFA.DAS.Roatp.Domain.Entities;
+﻿using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Models;
+using System;
 
 namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations
 {
@@ -17,16 +17,14 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations
         public string County { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
-        public string Email { get; set; }
-        public string Website { get; set; }
-        public string Phone { get; set; }
+
         public bool IsImported { get; set; }
         public LocationType LocationType { get; set; }
 
         public static implicit operator ProviderLocationModel(ProviderLocation source) =>
             new ProviderLocationModel
             {
-                ProviderLocationId =  source.Id,
+                ProviderLocationId = source.Id,
                 NavigationId = source.NavigationId,
                 RegionId = source.RegionId,
                 LocationName = source.LocationName,
@@ -37,9 +35,6 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations
                 County = source.County,
                 Latitude = source.Latitude,
                 Longitude = source.Longitude,
-                Email = source.Email,
-                Website = source.Website,
-                Phone = source.Phone,
                 IsImported = source.IsImported,
                 LocationType = source.LocationType
             };

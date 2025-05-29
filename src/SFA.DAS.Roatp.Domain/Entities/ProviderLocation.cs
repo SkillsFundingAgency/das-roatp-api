@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using SFA.DAS.Roatp.Domain.Constants;
+﻿using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Models;
+using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Domain.Entities
 {
@@ -20,9 +20,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string County { get; set; }
         public decimal? Latitude { get; set; }
         public decimal? Longitude { get; set; }
-        public string Email { get; set; }
-        public string Website { get; set; }
-        public string Phone { get; set; }
         public bool IsImported { get; set; } = false;
         public LocationType LocationType { get; set; }
         public virtual Provider Provider { get; set; }

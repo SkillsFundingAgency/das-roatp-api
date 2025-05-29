@@ -22,9 +22,6 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.Property(p => p.County).HasMaxLength(250);
             builder.Property(p => p.Latitude).HasColumnType("float").IsRequired();
             builder.Property(p => p.Longitude).HasColumnType("float").IsRequired();
-            builder.Property(p => p.Email).HasMaxLength(300);
-            builder.Property(p => p.Website).HasMaxLength(500);
-            builder.Property(p => p.Phone).HasMaxLength(50);
             builder.Property(p => p.IsImported).IsRequired();
             builder.Property(p => p.LocationType).IsRequired().HasConversion<int>();
 
