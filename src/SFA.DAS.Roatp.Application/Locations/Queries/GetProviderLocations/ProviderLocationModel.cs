@@ -1,6 +1,7 @@
 ﻿using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Models;
 using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations
 {
@@ -20,6 +21,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations
 
         public bool IsImported { get; set; }
         public LocationType LocationType { get; set; }
+        public List<LocationStandardModel> Standards { get; set; }
 
         public static implicit operator ProviderLocationModel(ProviderLocation source) =>
             new ProviderLocationModel
@@ -36,7 +38,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations
                 Latitude = source.Latitude,
                 Longitude = source.Longitude,
                 IsImported = source.IsImported,
-                LocationType = source.LocationType
+                LocationType = source.LocationType,
             };
     }
 }

@@ -1,11 +1,11 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
@@ -32,8 +32,13 @@ namespace SFA.DAS.Roatp.Data.Repositories
         {
             return await _roatpDataContext
                 .ProviderLocations
+                .Include(p => p.Provider)
+                .ThenInclude(c => c.Courses)
+                .ThenInclude(l => l.Locations)
+                .Include(p => p.ProviderCourseLocations)
+                .ThenInclude(p => p.ProviderCourse)
                 .Where(p => p.Provider.Ukprn == ukprn && p.NavigationId == id)
-                .AsNoTracking()
+                    .AsNoTracking()
                 .SingleOrDefaultAsync();
         }
     }
