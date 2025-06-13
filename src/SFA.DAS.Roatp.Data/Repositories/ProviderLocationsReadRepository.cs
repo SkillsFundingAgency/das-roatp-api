@@ -37,6 +37,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .ThenInclude(l => l.Locations)
                 .Include(p => p.ProviderCourseLocations)
                 .ThenInclude(p => p.ProviderCourse)
+                .ThenInclude(s => s.Standard)
                 .Where(p => p.Provider.Ukprn == ukprn && p.NavigationId == id)
                     .AsNoTracking()
                 .SingleOrDefaultAsync();

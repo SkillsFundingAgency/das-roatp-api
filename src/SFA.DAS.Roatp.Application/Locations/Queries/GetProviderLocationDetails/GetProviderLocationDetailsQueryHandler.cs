@@ -14,32 +14,29 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails
     public class GetProviderLocationDetailsQueryHandler : IRequestHandler<GetProviderLocationDetailsQuery, ValidatedResponse<ProviderLocationModel>>
     {
         private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
-        private readonly IStandardsReadRepository _standardsReadRepository;
 
-        public GetProviderLocationDetailsQueryHandler(IProviderLocationsReadRepository providerLocationsReadRepository, IStandardsReadRepository standardsReadRepository)
+        public GetProviderLocationDetailsQueryHandler(IProviderLocationsReadRepository providerLocationsReadRepository)
         {
             _providerLocationsReadRepository = providerLocationsReadRepository;
-            _standardsReadRepository = standardsReadRepository;
         }
 
         public async Task<ValidatedResponse<ProviderLocationModel>> Handle(GetProviderLocationDetailsQuery request, CancellationToken cancellationToken)
         {
             var location = await _providerLocationsReadRepository.GetProviderLocation(request.Ukprn, request.Id);
-            var standardsLookup = await _standardsReadRepository.GetAllStandards();
 
             var result = (ProviderLocationModel)location;
 
-            result.Standards = ProcessStandards(location, standardsLookup);
+            result.Standards = ProcessStandards(location);
             return new ValidatedResponse<ProviderLocationModel>(result);
         }
 
-        private static List<LocationStandardModel> ProcessStandards(ProviderLocation location, IReadOnlyCollection<Standard> standardsLookup)
+        private static List<LocationStandardModel> ProcessStandards(ProviderLocation location)
         {
             var standards = new List<LocationStandardModel>();
             foreach (var providerCourseLocation in location.ProviderCourseLocations)
             {
                 var standardModel = new LocationStandardModel();
-                var matchedStandard = standardsLookup.FirstOrDefault(x => x.LarsCode == providerCourseLocation.ProviderCourse.LarsCode);
+                var matchedStandard = providerCourseLocation.ProviderCourse.Standard;
                 if (matchedStandard == null) continue;
                 standardModel.Title = matchedStandard.Title;
                 standardModel.LarsCode = matchedStandard.LarsCode;
