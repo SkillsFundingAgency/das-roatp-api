@@ -1,7 +1,4 @@
-﻿using System;
-using System.Threading;
-using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit3;
 using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
@@ -9,6 +6,9 @@ using SFA.DAS.Roatp.Application.Shortlists.Commands.CreateShortlist;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Shortlists.Commands.CreateShortlist;
 
@@ -83,9 +83,9 @@ public class CreateShortlistCommandValidatorTests
     public async Task Validate_LarsCodeFound_Valid(
         [Frozen] Mock<IStandardsReadRepository> repoMock,
         CreateShortlistCommandValidator sut,
-        CreateShortlistCommand command,
-        Standard standard)
+        CreateShortlistCommand command)
     {
+        var standard = new Standard { LarsCode = 1, Title = "standard 1" };
         command.LarsCode = 1;
         repoMock.Setup(r => r.GetStandard(command.LarsCode)).ReturnsAsync(standard);
 

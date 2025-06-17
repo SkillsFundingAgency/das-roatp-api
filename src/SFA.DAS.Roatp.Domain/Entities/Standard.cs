@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Roatp.Domain.Entities
+﻿using System.Collections.Generic;
+
+namespace SFA.DAS.Roatp.Domain.Entities
 {
     public class Standard
     {
@@ -10,5 +12,6 @@
         public string Version { get; set; }
         public string ApprovalBody { get; set; }
         public int SectorSubjectAreaTier1 { get; set; }
+        public virtual List<ProviderCourse> ProviderCourses { get; set; }
     }
 }

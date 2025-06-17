@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Azure;
-using MediatR;
+﻿using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails;
 using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -45,6 +45,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [Route("/providers/{ukprn}/locations/{id}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProviderLocationModel), 200)]
         public async Task<IActionResult> GetLocation([FromRoute] int ukprn, [FromRoute] Guid id)
         {
@@ -52,7 +53,9 @@ namespace SFA.DAS.Roatp.Api.Controllers
 
             var response = await _mediator.Send(new GetProviderLocationDetailsQuery(ukprn, id));
 
-            return GetResponse(response);
+            return response.Errors.Any(x => x.ErrorMessage == GetProviderLocationDetailsQueryValidator.ProviderLocationNotFoundErrorMessage) ?
+                NotFound() :
+                GetResponse(response);
         }
     }
 }

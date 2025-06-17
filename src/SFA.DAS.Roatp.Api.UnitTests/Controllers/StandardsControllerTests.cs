@@ -1,5 +1,4 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
+﻿using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -17,9 +16,15 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
     [TestFixture]
     public class StandardsControllerTests
     {
-        [Test, AutoData]
-        public async Task GetAllStandards_ReturnsListOfStandards(List<Standard> standards)
+        [Test]
+        public async Task GetAllStandards_ReturnsListOfStandards()
         {
+            var standards = new List<Standard>
+            {
+                new() { LarsCode = 1, Title = "standard 1" },
+                new() { LarsCode = 2, Title = "standard 2" }
+            };
+
             var mediatorMock = new Mock<IMediator>();
             mediatorMock.Setup(r => r.Send(It.IsAny<GetAllStandardsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetAllStandardsQueryResult(standards));
             var sut = new StandardsController(Mock.Of<ILogger<StandardsController>>(), mediatorMock.Object);

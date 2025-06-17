@@ -32,6 +32,11 @@ namespace SFA.DAS.Roatp.Data.Configuration
                 .HasPrincipalKey(c => c.Id)
                 .HasForeignKey(l => l.ProviderCourseId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            builder.HasOne(c => c.Standard)
+                .WithMany(c => c.ProviderCourses)
+                .HasPrincipalKey(s => s.LarsCode)
+                .HasForeignKey(pc => pc.LarsCode);
         }
     }
 }

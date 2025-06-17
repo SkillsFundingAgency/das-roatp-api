@@ -15,6 +15,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public bool IsImported { get; set; } = false;
         public bool HasPortableFlexiJobOption { get; set; }
         public virtual Provider Provider { get; set; }
+        public virtual Standard Standard { get; set; }
         public virtual List<ProviderCourseLocation> Locations { get; set; } = new List<ProviderCourseLocation>();
         public virtual List<ProviderCourseVersion> Versions { get; set; } = new List<ProviderCourseVersion>();
     }
