@@ -9,5 +9,6 @@
     [ApprovalBody] VARCHAR(1000) NULL, 
     [SectorSubjectArea] VARCHAR(1000) NULL, 
     [SectorSubjectAreaTier1] INT NULL, 
+    [IsRegulatedForProvider] BIT NOT NULL DEFAULT 0,
     CONSTRAINT PK_Standard PRIMARY KEY (StandardUId)
 )
