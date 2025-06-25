@@ -35,8 +35,8 @@ BEGIN
     StandardsList
     AS
     (
-        SELECT CONVERT(int,[key]) +1 Ordering, std.LarsCode 
-        FROM OPENJSON('[' + @larscodes + ']','$') js1 
+        SELECT CONVERT(int,[key]) +1 Ordering, std.LarsCode , std.IsRegulatedForProvider
+        FROM OPENJSON('[' + @larscodes + ']','$') js1         
         JOIN [dbo].[Standard] std on std.LarsCode = [value]
     )
 
@@ -91,6 +91,8 @@ BEGIN
                 JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
                 JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
                 LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
+                --regulated check
+				WHERE lc1.IsRegulatedForProvider = 0 OR (lc1.IsRegulatedForProvider = 1 AND IsNull(IsApprovedByRegulator, 0) = 1)
             ) ab1 
         GROUP BY Larscode
         ) ab2

@@ -60,43 +60,18 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
         public async Task Handle_UnapprovedRegulatedStandard_RemovedFromResult(
             bool isRegulatedForProvider,
             bool isApprovedByRegulator,
-            int expectedCoursesCount
-            //Domain.Entities.ProviderCourse course,
-            //[Frozen] Mock<IProviderCoursesReadRepository> providersReadRepositoryMock,
-            //[Frozen] Mock<IStandardsReadRepository> standardsReadRepositoryMock,
-            //GetAllProviderCoursesQuery query,
-            //GetAllProviderCoursesQueryHandler sut,
-            //CancellationToken cancellationToken
-            )
+            int expectedCoursesCount)
         {
-            //Domain.Entities.ProviderCourse course = new Domain.Entities.ProviderCourse();
-            //course.Standard.IsRegulatedForProvider = isRegulatedForProvider;
-            //course.IsApprovedByRegulator = isApprovedByRegulator;
-            //List<Domain.Entities.ProviderCourse> courses = new List<Domain.Entities.ProviderCourse> { course };
-
-            //providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(courses);
-            //var standards = courses.Select(course => new Standard { LarsCode = course.LarsCode }).ToList();
-            //standardsReadRepositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
-            //var response = await sut.Handle(query, cancellationToken);
-
-            //response.Should().NotBe(null);
-            //response.Result.Count.Should().Be(expectedCoursesCount);
-
-            // Create and configure AutoFixture with Moq
             var fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
-
-            // Freeze mocks so that the same instance is injected wherever needed
             var providersReadRepositoryMock = fixture.Freeze<Mock<IProviderCoursesReadRepository>>();
             var standardsReadRepositoryMock = fixture.Freeze<Mock<IStandardsReadRepository>>();
 
-            // Generate other objects
             var query = fixture.Create<GetAllProviderCoursesQuery>();
             var cancellationToken = CancellationToken.None;
 
-            // Create a course with the test-case-specific values
             var course = new Domain.Entities.ProviderCourse
             {
-                Standard = new Domain.Entities.Standard
+                Standard = new Standard
                 {
                     IsRegulatedForProvider = isRegulatedForProvider
                 },
@@ -105,7 +80,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
 
             var courses = new List<Domain.Entities.ProviderCourse> { course };
 
-            // Mock the repository responses
             providersReadRepositoryMock
                 .Setup(r => r.GetAllProviderCourses(query.Ukprn))
                 .ReturnsAsync(courses);
@@ -114,13 +88,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
                 .Setup(r => r.GetAllStandards())
                 .ReturnsAsync(courses.Select(c => new Standard { LarsCode = c.LarsCode }).ToList());
 
-            // Create the SUT (query handler) — AutoFixture will inject frozen mocks
             var sut = fixture.Create<GetAllProviderCoursesQueryHandler>();
 
-            // Act
             var response = await sut.Handle(query, cancellationToken);
 
-            // Assert
             response.Should().NotBeNull();
             response.Result.Count.Should().Be(expectedCoursesCount);
         }
