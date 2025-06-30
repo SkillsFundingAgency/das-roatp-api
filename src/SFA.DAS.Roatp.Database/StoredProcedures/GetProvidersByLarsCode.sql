@@ -122,7 +122,7 @@ AS
                             -- Distance
                              CASE WHEN @SortOrder = 'Distance' THEN MIN(Course_Distance) ELSE 1 END
                             -- Distance to nearest training provider locations
-							,CASE WHEN @SortOrder = 'Distance' THEN MIN(CASE WHEN Course_Distance = 0 THEN 99999 ELSE Course_Distance END) ELSE 1 END
+							,CASE WHEN @SortOrder = 'Distance' THEN MIN(CASE WHEN Course_Distance = 0 AND LocationType != 0 THEN 99999 ELSE Course_Distance END) ELSE 1 END
                             -- Achievement Rate
                             ,CASE WHEN @SortOrder = 'AchievementRate' THEN
                                  (CASE WHEN ISNULL(qp1.AchievementRate,'x') LIKE N'%[^0-9.]%' THEN 0
