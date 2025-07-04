@@ -11,6 +11,7 @@
         public const string BulkDeleteProviderCourseLocation = "BulkDeleteProviderCourseLocation";
         public const string CreateProviderLocation = "CreateProviderLocation";
         public const string UpdateProviderLocation = "UpdateProviderLocation";
+        public const string DeleteProviderLocation = "DeleteProviderLocation";
         public const string DeleteProviderCourseLocation = "DeleteProviderCourseLocation";
         public const string CreateProviderCourseLocation = "CreateProviderCourseLocation";
         public const string UpdateProviderDescription = "UpdateProviderDescription";
