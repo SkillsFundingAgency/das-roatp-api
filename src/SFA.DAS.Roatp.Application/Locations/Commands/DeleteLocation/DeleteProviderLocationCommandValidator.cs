@@ -16,9 +16,8 @@ public class DeleteProviderLocationCommandValidator : AbstractValidator<DeletePr
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage(InvalidIdErrorMessage)
             .MustAsync(async (model, id, cancellation)
-                => !await providerLocationsReadRepository.DeletingWillOrphanCourses(model.Ukprn, id))
+                => (await providerLocationsReadRepository.GetProviderCoursesByLocation(model.Ukprn, id)).Count > 1)
             .WithMessage(ProviderLocationOrphanedStandardErrorMessage);
-
         Include(new UserInfoValidator());
     }
 }

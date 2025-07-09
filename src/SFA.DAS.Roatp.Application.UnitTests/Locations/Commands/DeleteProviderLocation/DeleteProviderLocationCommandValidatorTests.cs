@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
@@ -85,7 +86,7 @@ public class DeleteProviderLocationCommandValidatorTests
         var command = new DeleteProviderLocationCommand(_ukprn, _navigationId, _userId, _userDisplayName);
         providerLocationsReadRepository.Setup(x => x.GetProviderLocation(_ukprn, _navigationId))
             .ReturnsAsync(providerLocation);
-        providerLocationsReadRepository.Setup(x => x.DeletingWillOrphanCourses(_ukprn, _navigationId)).ReturnsAsync(true);
+        providerLocationsReadRepository.Setup(x => x.GetProviderCoursesByLocation(_ukprn, _navigationId)).ReturnsAsync(new List<Domain.Entities.ProviderCourse> { new() });
 
 
         var result = await sut.TestValidateAsync(command);
@@ -103,7 +104,7 @@ public class DeleteProviderLocationCommandValidatorTests
         var command = new DeleteProviderLocationCommand(_ukprn, _navigationId, _userId, _userDisplayName);
         providerLocationsReadRepository.Setup(x => x.GetProviderLocation(_ukprn, _navigationId))
             .ReturnsAsync(providerLocation);
-        providerLocationsReadRepository.Setup(x => x.DeletingWillOrphanCourses(_ukprn, _navigationId)).ReturnsAsync(true);
+        providerLocationsReadRepository.Setup(x => x.GetProviderCoursesByLocation(_ukprn, _navigationId)).ReturnsAsync(new List<Domain.Entities.ProviderCourse> { new() });
 
         var result = await sut.TestValidateAsync(command);
 
@@ -113,6 +114,15 @@ public class DeleteProviderLocationCommandValidatorTests
             .Be(DeleteProviderLocationCommandValidator.ProviderLocationOrphanedStandardErrorMessage);
     }
 
-    private static DeleteProviderLocationCommandValidator GetDefaultValidator() => new DeleteProviderLocationCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
+    private static DeleteProviderLocationCommandValidator GetDefaultValidator()
+    {
+        var providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
+
+        providerLocationsReadRepositoryMock
+            .Setup(x => x.GetProviderCoursesByLocation(It.IsAny<int>(), It.IsAny<Guid>()))
+            .ReturnsAsync(new List<Domain.Entities.ProviderCourse> { new() });
+        return new DeleteProviderLocationCommandValidator(Mock.Of<IProvidersReadRepository>(),
+            providerLocationsReadRepositoryMock.Object);
+    }
 }
 

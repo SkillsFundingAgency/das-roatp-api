@@ -43,34 +43,23 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<bool> DeletingWillOrphanCourses(int ukprn, Guid id)
+        public async Task<List<ProviderCourse>> GetProviderCoursesByLocation(int ukprn, Guid id)
         {
             var providerLocation = await _roatpDataContext
-                .ProviderLocations
-                .Include(p => p.ProviderCourseLocations)
-                .Where(p => p.Provider.Ukprn == ukprn && p.NavigationId == id)
+                    .ProviderLocations
+                    .Include(p => p.ProviderCourseLocations)
+                    .ThenInclude(p => p.ProviderCourse)
+                    .Where(p => p.Provider.Ukprn == ukprn && p.NavigationId == id)
                 .AsNoTracking()
                 .SingleOrDefaultAsync();
 
+
             if (providerLocation == null)
             {
-                return false;
+                return new List<ProviderCourse>();
             }
 
-            foreach (var providerCourseId in providerLocation.ProviderCourseLocations.Select(location => location.ProviderCourseId))
-            {
-                var providerCourseToCheck = await _roatpDataContext.ProviderCourses.
-                    Include(p => p.Locations)
-                    .ThenInclude(l => l.Location)
-                    .Where(x => x.Id == providerCourseId).AsNoTracking().SingleAsync();
-
-                if (providerCourseToCheck.Locations.All(l => l.Location.Id == providerLocation.Id))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return providerLocation.ProviderCourseLocations.Select(providerCourseLocation => providerCourseLocation.ProviderCourse).ToList();
         }
     }
 }

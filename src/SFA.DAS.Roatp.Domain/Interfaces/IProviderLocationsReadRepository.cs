@@ -10,6 +10,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
         Task<List<ProviderLocation>> GetAllProviderLocations(int ukprn);
         Task<ProviderLocation> GetProviderLocation(int ukprn, Guid id);
 
-        Task<bool> DeletingWillOrphanCourses(int ukprn, Guid id);
+        Task<List<ProviderCourse>> GetProviderCoursesByLocation(int ukprn, Guid id);
     }
 }
