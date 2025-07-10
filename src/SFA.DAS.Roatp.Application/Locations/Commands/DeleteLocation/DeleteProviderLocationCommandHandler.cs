@@ -12,8 +12,8 @@ public class DeleteProviderLocationCommandHandler(IProviderLocationsWriteReposit
     public async Task<ValidatedResponse<bool>> Handle(DeleteProviderLocationCommand request, CancellationToken cancellationToken)
     {
 
-        var response = await providerLocationsReadRepository.GetProviderLocation(request.Ukprn, request.Id);
-        if (response == null)
+        var getProviderLocationResponse = await providerLocationsReadRepository.GetProviderLocation(request.Ukprn, request.Id);
+        if (getProviderLocationResponse == null)
         {
             logger.LogInformation("Deleting provider location for ukprn: {ukprn}  Id: {id} by user: {userid} has no matching location", request.Ukprn, request.Id, request.UserId);
             return new ValidatedResponse<bool>(false);
