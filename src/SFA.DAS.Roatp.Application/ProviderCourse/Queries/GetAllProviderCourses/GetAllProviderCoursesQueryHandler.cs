@@ -14,13 +14,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
     {
         private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
         private readonly IStandardsReadRepository _standardsReadRepository;
-        private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
+        private readonly IProviderCourseLocationsReadRepository _providerCourseLocationsReadRepository;
         private readonly ILogger<GetAllProviderCoursesQueryHandler> _logger;
-        public GetAllProviderCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetAllProviderCoursesQueryHandler> logger, IProviderLocationsReadRepository providerLocationsReadRepository)
+        public GetAllProviderCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetAllProviderCoursesQueryHandler> logger, IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository)
         {
             _providerCoursesReadRepository = providerCoursesReadRepository;
             _standardsReadRepository = standardsReadRepository;
-            _providerLocationsReadRepository = providerLocationsReadRepository;
+            _providerCourseLocationsReadRepository = providerCourseLocationsReadRepository;
             _logger = logger;
         }
 
@@ -37,8 +37,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
             var standardsLookup = await _standardsReadRepository.GetAllStandards();
             var filteredProviderCourses = FilterExpiredStandards(providerCourses, standardsLookup);
 
-            var locationsLookup = await _providerLocationsReadRepository.GetAllProviderLocations(request.Ukprn);
-            filteredProviderCourses = FilterStandardsWithoutLocations(filteredProviderCourses, locationsLookup);
+            filteredProviderCourses = await FilterStandardsWithoutLocations(request.Ukprn, filteredProviderCourses);
 
             filteredProviderCourses = RemoveUnapprovedRegulatedStandards(filteredProviderCourses);
 
@@ -61,12 +60,23 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
                 .ToList();
         }
 
-        private static List<Domain.Entities.ProviderCourse> FilterStandardsWithoutLocations(
-            List<Domain.Entities.ProviderCourse> providerCourses, List<ProviderLocation> providerLocations)
+        private async Task<List<Domain.Entities.ProviderCourse>> FilterStandardsWithoutLocations(int ukprn,
+            List<Domain.Entities.ProviderCourse> providerCourses)
         {
-            return providerCourses
-                .Where(p => providerLocations.Select(x => x.ProviderId).Contains(p.ProviderId))
-                .ToList();
+            List<Domain.Entities.ProviderCourse> filteredCourses = new();
+            foreach (var providerCourse in providerCourses)
+            {
+                var courseLocationsLookup =
+                    await _providerCourseLocationsReadRepository.GetAllProviderCourseLocations(ukprn,
+                        providerCourse.LarsCode);
+
+                if (courseLocationsLookup != null)
+                {
+                    filteredCourses.Add(providerCourse);
+                }
+            };
+
+            return filteredCourses;
         }
 
         private static List<Domain.Entities.ProviderCourse> RemoveUnapprovedRegulatedStandards(
