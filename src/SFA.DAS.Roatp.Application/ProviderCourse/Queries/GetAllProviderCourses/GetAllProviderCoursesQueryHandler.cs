@@ -74,7 +74,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
                 {
                     filteredCourses.Add(providerCourse);
                 }
-            };
+            }
 
             return filteredCourses;
         }
