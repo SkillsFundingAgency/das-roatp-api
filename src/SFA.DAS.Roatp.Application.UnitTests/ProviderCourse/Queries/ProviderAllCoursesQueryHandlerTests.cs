@@ -139,7 +139,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
                 .ReturnsAsync(providerLocations);
             providerCourseLocationsReadRepositoryMock
                 .Setup(r => r.GetAllProviderCourseLocations(query.Ukprn, larsCodeTwo))
-                .ReturnsAsync((List<ProviderCourseLocation>)null);
+                .ReturnsAsync(new List<ProviderCourseLocation>());
 
             var response = await sut.Handle(query, cancellationToken);
 

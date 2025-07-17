@@ -70,7 +70,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
                     await _providerCourseLocationsReadRepository.GetAllProviderCourseLocations(ukprn,
                         providerCourse.LarsCode);
 
-                if (courseLocationsLookup != null)
+                if (courseLocationsLookup != null && courseLocationsLookup.Count != 0)
                 {
                     filteredCourses.Add(providerCourse);
                 }
