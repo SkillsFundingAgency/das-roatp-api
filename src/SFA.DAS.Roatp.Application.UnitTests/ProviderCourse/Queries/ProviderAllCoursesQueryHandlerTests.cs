@@ -1,10 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.Marshalling;
 using System.Threading;
 using System.Threading.Tasks;
-using AutoFixture.AutoMoq;
 using AutoFixture;
+using AutoFixture.AutoMoq;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using Moq;
@@ -24,19 +23,30 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             List<Domain.Entities.ProviderCourse> courses,
             [Frozen] Mock<IProviderCoursesReadRepository> providersReadRepositoryMock,
             [Frozen] Mock<IStandardsReadRepository> standardsReadRepositoryMock,
+            [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
             GetAllProviderCoursesQuery query,
             GetAllProviderCoursesQueryHandler sut,
             CancellationToken cancellationToken)
         {
+            foreach (var course in courses)
+            {
+                course.ProviderId = 1;
+            }
             providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(courses);
             var standards = courses.Select(course => new Standard { LarsCode = course.LarsCode }).ToList();
             standardsReadRepositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
+
+            List<ProviderLocation> providerLocations =
+                [new() { ProviderId = courses.First().ProviderId }];
+            providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(query.Ukprn))
+                .ReturnsAsync(providerLocations);
+
             var response = await sut.Handle(query, cancellationToken);
 
             response.Should().NotBeNull();
             response.Result.Count.Should().Be(courses.Count);
         }
-        
+
         [Test, MoqAutoData]
         public async Task Handle_NoData_ReturnsEmptyResult(
             [Frozen] Mock<IProviderCoursesReadRepository> repoMock,
@@ -52,7 +62,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             response.Result.Should().BeEmpty();
         }
 
-        
+
         [TestCase(false, false, 1)]
         [TestCase(false, true, 1)]
         [TestCase(true, true, 1)]
@@ -65,6 +75,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             var fixture = new Fixture().Customize(new AutoMoqCustomization { ConfigureMembers = true });
             var providersReadRepositoryMock = fixture.Freeze<Mock<IProviderCoursesReadRepository>>();
             var standardsReadRepositoryMock = fixture.Freeze<Mock<IStandardsReadRepository>>();
+            var providerLocationsReadRepositoryMock = fixture.Freeze<Mock<IProviderLocationsReadRepository>>();
 
             var query = fixture.Create<GetAllProviderCoursesQuery>();
             var cancellationToken = CancellationToken.None;
@@ -75,7 +86,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
                 {
                     IsRegulatedForProvider = isRegulatedForProvider
                 },
-                IsApprovedByRegulator = isApprovedByRegulator
+                IsApprovedByRegulator = isApprovedByRegulator,
+                ProviderId = 1
             };
 
             var courses = new List<Domain.Entities.ProviderCourse> { course };
@@ -88,12 +100,46 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
                 .Setup(r => r.GetAllStandards())
                 .ReturnsAsync(courses.Select(c => new Standard { LarsCode = c.LarsCode }).ToList());
 
+            var providerLocations = new List<ProviderLocation> { new ProviderLocation { ProviderId = 1 } };
+
+            providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(query.Ukprn))
+                .ReturnsAsync(providerLocations);
+
             var sut = fixture.Create<GetAllProviderCoursesQueryHandler>();
 
             var response = await sut.Handle(query, cancellationToken);
 
             response.Should().NotBeNull();
             response.Result.Count.Should().Be(expectedCoursesCount);
+        }
+
+        [Test, MoqAutoData]
+        public async Task Handle_StandardsWithoutLocation_RemovedFromResult(
+            [Frozen] Mock<IProviderCoursesReadRepository> providersReadRepositoryMock,
+            [Frozen] Mock<IStandardsReadRepository> standardsReadRepositoryMock,
+            [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock,
+            GetAllProviderCoursesQuery query,
+            GetAllProviderCoursesQueryHandler sut,
+            CancellationToken cancellationToken)
+        {
+            List<Domain.Entities.ProviderCourse> courses =
+            [
+                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard{IsRegulatedForProvider = false}, LarsCode = 1},
+                new() { ProviderId = 2, IsApprovedByRegulator = true, Standard = new Standard{IsRegulatedForProvider = false}, LarsCode = 2}
+            ];
+            providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(courses);
+            var standards = courses.Select(course => new Standard { LarsCode = course.LarsCode }).ToList();
+            standardsReadRepositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
+
+            List<ProviderLocation> providerLocations =
+                [new() { ProviderId = courses.First().ProviderId }];
+            providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(query.Ukprn))
+                .ReturnsAsync(providerLocations);
+
+            var response = await sut.Handle(query, cancellationToken);
+
+            response.Should().NotBeNull();
+            response.Result.Count.Should().Be(1);
         }
     }
 }

@@ -14,11 +14,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
     {
         private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
         private readonly IStandardsReadRepository _standardsReadRepository;
+        private readonly IProviderLocationsReadRepository _providerLocationsReadRepository;
         private readonly ILogger<GetAllProviderCoursesQueryHandler> _logger;
-        public GetAllProviderCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetAllProviderCoursesQueryHandler> logger)
+        public GetAllProviderCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetAllProviderCoursesQueryHandler> logger, IProviderLocationsReadRepository providerLocationsReadRepository)
         {
             _providerCoursesReadRepository = providerCoursesReadRepository;
             _standardsReadRepository = standardsReadRepository;
+            _providerLocationsReadRepository = providerLocationsReadRepository;
             _logger = logger;
         }
 
@@ -34,6 +36,10 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
 
             var standardsLookup = await _standardsReadRepository.GetAllStandards();
             var filteredProviderCourses = FilterExpiredStandards(providerCourses, standardsLookup);
+
+            var locationsLookup = await _providerLocationsReadRepository.GetAllProviderLocations(request.Ukprn);
+            filteredProviderCourses = FilterStandardsWithoutLocations(filteredProviderCourses, locationsLookup);
+
             filteredProviderCourses = RemoveUnapprovedRegulatedStandards(filteredProviderCourses);
 
             var providerCoursesModel = filteredProviderCourses.Select(p => (ProviderCourseModel)p).ToList();
@@ -51,7 +57,15 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
         private static List<Domain.Entities.ProviderCourse> FilterExpiredStandards(List<Domain.Entities.ProviderCourse> providerCourses, List<Standard> standardsLookup)
         {
             return providerCourses
-                .Where(p => standardsLookup.Select(x=>x.LarsCode).Contains(p.LarsCode))
+                .Where(p => standardsLookup.Select(x => x.LarsCode).Contains(p.LarsCode))
+                .ToList();
+        }
+
+        private static List<Domain.Entities.ProviderCourse> FilterStandardsWithoutLocations(
+            List<Domain.Entities.ProviderCourse> providerCourses, List<ProviderLocation> providerLocations)
+        {
+            return providerCourses
+                .Where(p => providerLocations.Select(x => x.ProviderId).Contains(p.ProviderId))
                 .ToList();
         }
 
