@@ -270,4 +270,4 @@ BEGIN
 	WHERE stq.IsRegulatedForProvider = 0 OR (stq.IsRegulatedForProvider = 1 AND IsApprovedByRegulator = 1)
 	ORDER BY ukprn, Larscode, Ordering
 	
---END
+END
