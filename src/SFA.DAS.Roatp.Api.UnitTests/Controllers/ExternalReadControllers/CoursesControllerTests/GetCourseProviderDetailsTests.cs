@@ -31,19 +31,19 @@ public sealed class GetCourseProviderDetailsTests
         int ukprn = 2;
 
         mediatorMock.Setup(m => m.Send(
-            It.Is<GetCourseProviderDetailsQuery>(q => 
+            It.Is<GetCourseProviderDetailsQuery>(q =>
                 q.LarsCode == larsCode &&
-                q.Ukprn == ukprn && 
+                q.Ukprn == ukprn &&
                 q.Location == request.Location &&
                 q.Longitude == request.Longitude &&
                 q.ShortlistUserId == request.ShortlistUserId
-            ), 
+            ),
             It.IsAny<CancellationToken>())
         ).ReturnsAsync(new ValidatedResponse<GetCourseProviderDetailsQueryResult>(queryResult));
 
         await sut.GetCourseProviderDetails(larsCode, ukprn, request);
 
-        mediatorMock.Verify(m => 
+        mediatorMock.Verify(m =>
             m.Send(It.Is<GetCourseProviderDetailsQuery>(
                 q =>
                     q.Ukprn == ukprn &&
@@ -52,6 +52,25 @@ public sealed class GetCourseProviderDetailsTests
                     && q.Longitude == request.Longitude
                     && q.Location == request.Location
                     && q.ShortlistUserId == request.ShortlistUserId
-        ), It.IsAny<CancellationToken>()), Times.Once);
+            ), It.IsAny<CancellationToken>()), Times.Once);
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task GetCourseProviderDetails_NoCourseDetailsFound_ReturnsNotFound(
+        GetCourseProviderDetailsRequest request,
+        GetCourseProviderDetailsQueryResult queryResult,
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] CoursesController sut)
+    {
+        mediatorMock.Setup(x => x.Send(It.IsAny<GetCourseProviderDetailsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((ValidatedResponse<GetCourseProviderDetailsQueryResult>)null);
+
+        var result = await sut.GetCourseProviderDetails(1, 1, request);
+
+        result.Should().BeOfType<NotFoundResult>();
+        var notFoundResult = result as NotFoundResult;
+        notFoundResult.Should().NotBeNull();
+        notFoundResult!.StatusCode.Should().Be(404);
     }
 }
