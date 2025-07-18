@@ -75,7 +75,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [ProducesResponseType(typeof(List<ProviderCourseModel>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllProviderCourses(int ukprn)
         {
-            var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn));
+            var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, true));
             if (response.IsValidResponse)
                 _logger.LogInformation("{Count} Provider courses found for {Ukprn}:", response.Result.Count, ukprn);
             return GetResponse(response);

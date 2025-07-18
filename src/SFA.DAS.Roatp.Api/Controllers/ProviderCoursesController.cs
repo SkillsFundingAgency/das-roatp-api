@@ -25,6 +25,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         /// Gets all the courses for the given provider
         /// </summary>
         /// <param name="ukprn"></param>
+        /// <param name="excludeCoursesWithoutLocation"></param>
         /// <returns></returns>
         [HttpGet]
         [Route("/providers/{ukprn}/courses")]
@@ -32,9 +33,9 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
-        public async Task<IActionResult> GetAllCourses(int ukprn)
+        public async Task<IActionResult> GetAllCourses(int ukprn, [FromQuery] bool excludeCoursesWithoutLocation = true)
         {
-            var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn));
+            var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, excludeCoursesWithoutLocation));
             return GetResponse(response);
         }
 
