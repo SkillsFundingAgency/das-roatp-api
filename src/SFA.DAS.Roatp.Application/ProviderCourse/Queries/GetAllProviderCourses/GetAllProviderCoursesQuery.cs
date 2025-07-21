@@ -8,12 +8,12 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
     public class GetAllProviderCoursesQuery : IRequest<ValidatedResponse<List<ProviderCourseModel>>>, IUkprn
     {
         public int Ukprn { get; }
-        public bool ExcludeCoursesWithoutLocation { get; }
+        public bool ExcludeInvalidCourses { get; }
 
-        public GetAllProviderCoursesQuery(int ukprn, bool excludeCoursesWithoutLocation)
+        public GetAllProviderCoursesQuery(int ukprn, bool excludeInvalidCourses)
         {
             Ukprn = ukprn;
-            ExcludeCoursesWithoutLocation = excludeCoursesWithoutLocation;
+            ExcludeInvalidCourses = excludeInvalidCourses;
         }
     }
 }

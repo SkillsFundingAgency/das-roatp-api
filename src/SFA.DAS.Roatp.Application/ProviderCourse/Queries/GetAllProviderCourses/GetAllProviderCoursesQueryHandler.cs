@@ -37,13 +37,12 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
             var standardsLookup = await _standardsReadRepository.GetAllStandards();
             var filteredProviderCourses = FilterExpiredStandards(providerCourses, standardsLookup);
 
-            if (request.ExcludeCoursesWithoutLocation)
+            if (request.ExcludeInvalidCourses)
             {
                 filteredProviderCourses = await FilterStandardsWithoutLocations(request.Ukprn, filteredProviderCourses);
+
+                filteredProviderCourses = RemoveUnapprovedRegulatedStandards(filteredProviderCourses);
             }
-
-            filteredProviderCourses = RemoveUnapprovedRegulatedStandards(filteredProviderCourses);
-
 
             var providerCoursesModel = filteredProviderCourses.Select(p => (ProviderCourseModel)p).ToList();
 
