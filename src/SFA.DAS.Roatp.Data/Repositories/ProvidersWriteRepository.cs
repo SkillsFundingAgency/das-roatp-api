@@ -3,7 +3,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
@@ -63,19 +62,7 @@ internal class ProvidersWriteRepository : IProvidersWriteRepository
             {
                 _roatpDataContext.Providers.Add(provider);
 
-
-                var organisationTypeUnassigned = 0;
-                var providerRegistrationDetail = new ProviderRegistrationDetail
-                {
-                    Ukprn = provider.Ukprn,
-                    LegalName = provider.LegalName,
-                    StatusId = OrganisationStatus.Onboarding,
-                    StatusDate = DateTime.UtcNow,
-                    OrganisationTypeId = organisationTypeUnassigned,
-                    ProviderTypeId = ProviderType.Main
-                };
-                _roatpDataContext.ProviderRegistrationDetails.Add(providerRegistrationDetail);
-
+                //_roatpDataContext.ProviderRegistrationDetails.Add(providerRegistrationDetail);
 
                 Audit audit = new(nameof(Provider), provider.Ukprn.ToString(), userId, userDisplayName, userAction, provider, null);
 

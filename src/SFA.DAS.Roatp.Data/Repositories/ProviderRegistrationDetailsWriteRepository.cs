@@ -35,5 +35,11 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext.ImportAudits.Add(new ImportAudit(timeStarted, providerCount, importType));
             await _roatpDataContext.SaveChangesAsync();
         }
+
+        public async Task<ProviderRegistrationDetail> GetProviderRegistrationDetail(int ukprn)
+        {
+            return await _roatpDataContext.ProviderRegistrationDetails
+                .FirstOrDefaultAsync(x => x.Ukprn == ukprn);
+        }
     }
 }

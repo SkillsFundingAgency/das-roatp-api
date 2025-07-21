@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using Moq;
@@ -9,7 +8,6 @@ using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
-using ProviderType = SFA.DAS.Roatp.Domain.Constants.ProviderType;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.CreateProvider
 {
@@ -17,18 +15,37 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.CreateProvider
     public class CreateProviderCommandHandlerTests
     {
         [Test, RecursiveMoqAutoData]
-        public async Task Handle_CreatesProvider(
+        public async Task Handle_CreatesProvider_WithExistingRegistrationDetails(
             [Frozen] Mock<IProvidersWriteRepository> providersWriteRepositoryMock,
             [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> providerRegistrationDetailsWriteRepositoryMock,
+            ProviderRegistrationDetail providerRegistrationDetail,
             CreateProviderCommandHandler sut,
             CreateProviderCommand command
         )
         {
             var provider = (Provider)command;
-            providersWriteRepositoryMock.Setup(p => p.Create(command,command.UserId, command.UserDisplayName, AuditEventTypes.CreateProvider)).ReturnsAsync(provider); 
+            providersWriteRepositoryMock.Setup(p => p.Create(command, command.UserId, command.UserDisplayName, AuditEventTypes.CreateProvider)).ReturnsAsync(provider);
+            providerRegistrationDetailsWriteRepositoryMock.Setup(p => p.GetProviderRegistrationDetail(provider.Ukprn))
+                .ReturnsAsync(providerRegistrationDetail);
             await sut.Handle(command, new CancellationToken());
-            providersWriteRepositoryMock.Verify(p => p.Create(It.Is<Provider>(c => c.Ukprn == provider.Ukprn && c.IsImported==false && c.LegalName == provider.LegalName && c.TradingName==c.TradingName && c.Email == null && c.Phone==null && c.Website==null), command.UserId, command.UserDisplayName, AuditEventTypes.CreateProvider));
+            providersWriteRepositoryMock.Verify(p => p.Create(It.Is<Provider>(c => c.Ukprn == provider.Ukprn && !c.IsImported && c.LegalName == provider.LegalName && c.TradingName == provider.TradingName && c.Email == provider.Email && c.Phone == provider.Phone && c.Website == provider.Website && c.ProviderRegistrationDetail != null), command.UserId, command.UserDisplayName, AuditEventTypes.CreateProvider));
+        }
 
+        [Test, RecursiveMoqAutoData]
+        public async Task Handle_CreatesProvider_WithNewRegistrationDetails(
+            [Frozen] Mock<IProvidersWriteRepository> providersWriteRepositoryMock,
+            [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> providerRegistrationDetailsWriteRepositoryMock,
+            ProviderRegistrationDetail providerRegistrationDetail,
+            CreateProviderCommandHandler sut,
+            CreateProviderCommand command
+        )
+        {
+            var provider = (Provider)command;
+            providersWriteRepositoryMock.Setup(p => p.Create(command, command.UserId, command.UserDisplayName, AuditEventTypes.CreateProvider)).ReturnsAsync(provider);
+            providerRegistrationDetailsWriteRepositoryMock.Setup(p => p.GetProviderRegistrationDetail(provider.Ukprn))
+                .ReturnsAsync(() => null);
+            await sut.Handle(command, new CancellationToken());
+            providersWriteRepositoryMock.Verify(p => p.Create(It.Is<Provider>(c => c.ProviderRegistrationDetail != null && c.ProviderRegistrationDetail.Ukprn == command.Ukprn && c.ProviderRegistrationDetail.LegalName == command.LegalName && c.ProviderRegistrationDetail.StatusId == OrganisationStatus.Onboarding && c.ProviderRegistrationDetail.ProviderTypeId == ProviderType.Main && c.ProviderRegistrationDetail.OrganisationTypeId == 0), command.UserId, command.UserDisplayName, AuditEventTypes.CreateProvider));
         }
     }
 }
