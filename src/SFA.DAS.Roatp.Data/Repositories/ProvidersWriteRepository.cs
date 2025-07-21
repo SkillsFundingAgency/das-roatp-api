@@ -62,8 +62,6 @@ internal class ProvidersWriteRepository : IProvidersWriteRepository
             {
                 _roatpDataContext.Providers.Add(provider);
 
-                //_roatpDataContext.ProviderRegistrationDetails.Add(providerRegistrationDetail);
-
                 Audit audit = new(nameof(Provider), provider.Ukprn.ToString(), userId, userDisplayName, userAction, provider, null);
 
                 _roatpDataContext.Audits.Add(audit);
