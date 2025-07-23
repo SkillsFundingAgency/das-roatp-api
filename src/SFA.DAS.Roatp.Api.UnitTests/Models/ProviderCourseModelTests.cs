@@ -31,10 +31,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
                 Title = "course title",
                 Level = 1,
                 Version = "1.1",
-                ApprovalBody = "ABC"
+                ApprovalBody = "ABC",
+                IsRegulatedForProvider = true
             };
 
-            model.AttachCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title, standardLookup.Version, standardLookup.ApprovalBody);
+            model.AttachCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title, standardLookup.Version, standardLookup.ApprovalBody, standardLookup.IsRegulatedForProvider);
 
             Assert.That(model, Is.Not.Null);
             standardLookup.Title.Should().Be(model.CourseName);

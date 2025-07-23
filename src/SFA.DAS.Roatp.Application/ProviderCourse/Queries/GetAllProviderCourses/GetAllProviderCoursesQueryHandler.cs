@@ -50,7 +50,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
             {
                 var course = standardsLookup.Single(c => c.LarsCode == p.LarsCode);
                 p.AttachCourseDetails(course.IfateReferenceNumber, course.Level, course.Title, course.Version,
-                        course.ApprovalBody);
+                        course.ApprovalBody, course.IsRegulatedForProvider);
             }
 
             return new ValidatedResponse<List<ProviderCourseModel>>(providerCoursesModel);

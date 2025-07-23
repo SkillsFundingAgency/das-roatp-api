@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse
         private readonly IStandardsReadRepository _standardsReadRepository;
         private readonly ILogger<GetProviderCourseQueryHandler> _logger;
 
-        public GetProviderCourseQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository,  IStandardsReadRepository standardsReadRepository, ILogger<GetProviderCourseQueryHandler> logger)
+        public GetProviderCourseQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetProviderCourseQueryHandler> logger)
         {
             _providerCoursesReadRepository = providerCoursesReadRepository;
             _standardsReadRepository = standardsReadRepository;
@@ -23,10 +23,10 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse
 
         public async Task<ValidatedResponse<ProviderCourseModel>> Handle(GetProviderCourseQuery request, CancellationToken cancellationToken)
         {
-            _logger.LogInformation("Getting course for {ukprn} larscode {larscode}",request.Ukprn, request.LarsCode);
+            _logger.LogInformation("Getting course for {ukprn} larscode {larscode}", request.Ukprn, request.LarsCode);
             ProviderCourseModel providerCourse = await _providerCoursesReadRepository.GetProviderCourseByUkprn(request.Ukprn, request.LarsCode);
             var standardLookup = await _standardsReadRepository.GetStandard(request.LarsCode);
-            providerCourse.AttachCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title, standardLookup.Version, standardLookup.ApprovalBody);
+            providerCourse.AttachCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title, standardLookup.Version, standardLookup.ApprovalBody, standardLookup.IsRegulatedForProvider);
             return new ValidatedResponse<ProviderCourseModel>(providerCourse);
         }
     }

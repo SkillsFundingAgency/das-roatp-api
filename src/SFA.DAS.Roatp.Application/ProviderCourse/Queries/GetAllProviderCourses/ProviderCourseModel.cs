@@ -18,6 +18,7 @@
         public bool HasPortableFlexiJobOption { get; set; }
         public string Version { get; set; }
         public string ApprovalBody { get; set; }
+        public bool IsRegulatedForProvider { get; set; }
 
         public static implicit operator ProviderCourseModel(Domain.Entities.ProviderCourse providerCourse)
         {
@@ -34,19 +35,19 @@
                 IsApprovedByRegulator = providerCourse.IsApprovedByRegulator,
                 IsImported = providerCourse.IsImported,
                 HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption
-
             };
 
 
             return model;
         }
-        public void AttachCourseDetails(string ifateRefNum, int level, string title, string version, string approvalBody)
+        public void AttachCourseDetails(string ifateRefNum, int level, string title, string version, string approvalBody, bool isRegulatedForProvider)
         {
             IfateReferenceNumber = ifateRefNum;
             Level = level;
             CourseName = title;
             Version = version;
             ApprovalBody = approvalBody;
+            IsRegulatedForProvider = isRegulatedForProvider;
         }
     }
 }
