@@ -10,6 +10,7 @@ public class StandardModel
     public string Title { get; set; }
     public string ApprovalBody { get; set; }
     public int SectorSubjectAreaTier1 { get; set; }
+    public bool IsRegulatedForProvider { get; set; }
 
     public static implicit operator Domain.Entities.Standard(StandardModel standard) =>
         new Domain.Entities.Standard
@@ -21,6 +22,7 @@ public class StandardModel
             Version = standard.Version,
             Level = standard.Level,
             ApprovalBody = string.IsNullOrWhiteSpace(standard.ApprovalBody) ? null : standard.ApprovalBody,
-            SectorSubjectAreaTier1 = standard.SectorSubjectAreaTier1
+            SectorSubjectAreaTier1 = standard.SectorSubjectAreaTier1,
+            IsRegulatedForProvider = standard.IsRegulatedForProvider
         };
 }

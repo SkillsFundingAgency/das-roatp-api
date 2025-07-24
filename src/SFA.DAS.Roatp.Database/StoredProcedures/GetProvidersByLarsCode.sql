@@ -19,6 +19,14 @@
 as
 
 SET NOCOUNT ON
+
+-- used to decide whether to exclude results based on regulator approval
+DECLARE  @IsRegulatedForProvider int = 0;
+
+SELECT @IsRegulatedForProvider=[IsRegulatedForProvider]  
+FROM [dbo].[Standard] 
+WHERE [LarsCode] = @larscode;
+
 -- this calculates the distance from Training Provider training locations / regions with filters
 
 IF @workplace IS NULL  SET @workplace = 0;
@@ -114,7 +122,7 @@ AS
                             -- Distance
                              CASE WHEN @SortOrder = 'Distance' THEN MIN(Course_Distance) ELSE 1 END
                             -- Distance to nearest training provider locations
-							,CASE WHEN @SortOrder = 'Distance' THEN MIN(CASE WHEN Course_Distance = 0 THEN 99999 ELSE Course_Distance END) ELSE 1 END
+							,CASE WHEN @SortOrder = 'Distance' THEN MIN(CASE WHEN Course_Distance = 0 AND LocationType != 0 THEN 99999 ELSE Course_Distance END) ELSE 1 END
                             -- Achievement Rate
                             ,CASE WHEN @SortOrder = 'AchievementRate' THEN
                                  (CASE WHEN ISNULL(qp1.AchievementRate,'x') LIKE N'%[^0-9.]%' THEN 0
@@ -223,6 +231,8 @@ AS
               JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
               LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
               WHERE 1=1 
+              -- regulated check
+			  AND (@IsRegulatedForProvider = 0 OR (@IsRegulatedForProvider = 1 AND IsNull(pc1.[IsApprovedByRegulator],0) = 1))
               -- specific Training Course 
               AND pc1.[LarsCode] = @larscode
 

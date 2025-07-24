@@ -7,6 +7,7 @@ CREATE PROCEDURE [dbo].[GetCourseProviderDetails]
 	@UserId UNIQUEIDENTIFIER
 AS
 BEGIN
+
 	SET NOCOUNT ON;
 
 	-- This get details for Training Provider training locations / regions, with calculates the distance is location provided 
@@ -48,9 +49,9 @@ BEGIN
 	-- the Standards and national QAR by Standard
 	WITH StandardsAndQAR AS
 	(
-		SELECT Larscode, Title, [Level], st1.[IfateReferenceNumber], ISNULL(qar1.[Leavers],'-') [Leavers], ISNULL(qar1.[AchievementRate],'-') [AchievementRate]
+		SELECT Larscode, Title, [Level], [IsRegulatedForProvider], st1.[IfateReferenceNumber], ISNULL(qar1.[Leavers],'-') [Leavers], ISNULL(qar1.[AchievementRate],'-') [AchievementRate]
 		FROM (
-			SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level] 
+			SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [IsRegulatedForProvider]
 			FROM [dbo].[Standard] 
 			WHERE [LarsCode] = @larscode
 		) st1
@@ -178,7 +179,8 @@ BEGIN
 			,ROW_NUMBER() OVER (PARTITION BY [Ukprn], [LarsCode], 
 								CASE WHEN LocationType = 0 THEN 1 ELSE 0 END 
 								ORDER BY Distance) TP_Std_Dist_Seq
-			,MIN(LocationOrdering) OVER (PARTITION BY [Ukprn], [LarsCode]) Min_LocationOrdering																		
+			,MIN(LocationOrdering) OVER (PARTITION BY [Ukprn], [LarsCode]) Min_LocationOrdering		
+			,IsApprovedByRegulator
 		FROM
 			(
 			-- Managing Standards Course Location data
@@ -242,6 +244,7 @@ BEGIN
 				   ,ISNULL(pc1.ContactUsEmail,pr1.Email) ContactUsEmail
 				   ,ISNULL(pc1.ContactUsPhoneNumber, pr1.Phone) ContactUsPhoneNumber
 				   ,ISNULL(pc1.ContactUsPageUrl, pr1.Website) ContactUsPageUrl
+				   ,pc1.[IsApprovedByRegulator]
 			  FROM [dbo].[ProviderCourse] pc1 
 			  JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
 			  JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
@@ -263,6 +266,8 @@ BEGIN
 	LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = ab2.[Ukprn] 
 	LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[userId] = @userId
 		AND ((sht.[LocationDescription] IS NULL AND @Location IS NULL) OR (sht.[LocationDescription] = @Location))
+	-- regulated check
+	WHERE stq.IsRegulatedForProvider = 0 OR (stq.IsRegulatedForProvider = 1 AND IsApprovedByRegulator = 1)
 	ORDER BY ukprn, Larscode, Ordering
 	
 END

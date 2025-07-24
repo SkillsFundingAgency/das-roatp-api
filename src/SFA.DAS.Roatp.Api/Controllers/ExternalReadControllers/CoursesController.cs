@@ -51,7 +51,7 @@ public class CoursesController : ActionResponseControllerBase
     [ProducesResponseType(typeof(GetCourseProviderDetailsQueryResult), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCourseProviderDetails([FromRoute] int larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsRequest request)
     {
-        return GetResponse(
+        var courseProviderDetails = 
             await _mediator.Send(
                 new GetCourseProviderDetailsQuery(
                     ukprn,
@@ -60,8 +60,11 @@ public class CoursesController : ActionResponseControllerBase
                     request.Location, 
                     request.Longitude,
                     request.Latitude
-                )
-            )
-        );
+                    )
+                );
+        if (courseProviderDetails == null)
+            return NotFound();
+
+        return GetResponse(courseProviderDetails);
     }
 }
