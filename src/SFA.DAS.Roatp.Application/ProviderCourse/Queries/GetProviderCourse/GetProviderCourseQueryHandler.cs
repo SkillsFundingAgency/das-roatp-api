@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse
             _logger.LogInformation("Getting course for {ukprn} larscode {larscode}", request.Ukprn, request.LarsCode);
             ProviderCourseModel providerCourse = await _providerCoursesReadRepository.GetProviderCourseByUkprn(request.Ukprn, request.LarsCode);
             var standardLookup = await _standardsReadRepository.GetStandard(request.LarsCode);
-            providerCourse.AttachCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title, standardLookup.Version, standardLookup.ApprovalBody, standardLookup.IsRegulatedForProvider);
+            providerCourse.AttachCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title, standardLookup.Version, standardLookup.ApprovalBody);
             return new ValidatedResponse<ProviderCourseModel>(providerCourse);
         }
     }

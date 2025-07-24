@@ -19,6 +19,7 @@
         public string Version { get; set; }
         public string ApprovalBody { get; set; }
         public bool IsRegulatedForProvider { get; set; }
+        public bool HasLocations { get; set; }
 
         public static implicit operator ProviderCourseModel(Domain.Entities.ProviderCourse providerCourse)
         {
@@ -34,20 +35,21 @@
                 ContactUsPageUrl = providerCourse.ContactUsPageUrl,
                 IsApprovedByRegulator = providerCourse.IsApprovedByRegulator,
                 IsImported = providerCourse.IsImported,
-                HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption
+                HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption,
+                HasLocations = providerCourse.Locations.Count > 0,
+                IsRegulatedForProvider = providerCourse.Standard.IsRegulatedForProvider
             };
 
 
             return model;
         }
-        public void AttachCourseDetails(string ifateRefNum, int level, string title, string version, string approvalBody, bool isRegulatedForProvider)
+        public void AttachCourseDetails(string ifateRefNum, int level, string title, string version, string approvalBody)
         {
             IfateReferenceNumber = ifateRefNum;
             Level = level;
             CourseName = title;
             Version = version;
             ApprovalBody = approvalBody;
-            IsRegulatedForProvider = isRegulatedForProvider;
         }
     }
 }

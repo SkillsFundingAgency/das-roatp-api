@@ -14,13 +14,11 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
     {
         private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
         private readonly IStandardsReadRepository _standardsReadRepository;
-        private readonly IProviderCourseLocationsReadRepository _providerCourseLocationsReadRepository;
         private readonly ILogger<GetAllProviderCoursesQueryHandler> _logger;
-        public GetAllProviderCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetAllProviderCoursesQueryHandler> logger, IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository)
+        public GetAllProviderCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetAllProviderCoursesQueryHandler> logger)
         {
             _providerCoursesReadRepository = providerCoursesReadRepository;
             _standardsReadRepository = standardsReadRepository;
-            _providerCourseLocationsReadRepository = providerCourseLocationsReadRepository;
             _logger = logger;
         }
 
@@ -37,20 +35,20 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
             var standardsLookup = await _standardsReadRepository.GetAllStandards();
             var filteredProviderCourses = FilterExpiredStandards(providerCourses, standardsLookup);
 
+            var providerCoursesModel = filteredProviderCourses.Select(p => (ProviderCourseModel)p).ToList();
+
             if (request.ExcludeInvalidCourses)
             {
-                filteredProviderCourses = await FilterStandardsWithoutLocations(request.Ukprn, filteredProviderCourses);
+                providerCoursesModel = FilterStandardsWithoutLocations(providerCoursesModel);
 
-                filteredProviderCourses = RemoveUnapprovedRegulatedStandards(filteredProviderCourses);
+                providerCoursesModel = RemoveUnapprovedRegulatedStandards(providerCoursesModel);
             }
-
-            var providerCoursesModel = filteredProviderCourses.Select(p => (ProviderCourseModel)p).ToList();
 
             foreach (var p in providerCoursesModel)
             {
                 var course = standardsLookup.Single(c => c.LarsCode == p.LarsCode);
                 p.AttachCourseDetails(course.IfateReferenceNumber, course.Level, course.Title, course.Version,
-                        course.ApprovalBody, course.IsRegulatedForProvider);
+                        course.ApprovalBody);
             }
 
             return new ValidatedResponse<List<ProviderCourseModel>>(providerCoursesModel);
@@ -63,32 +61,18 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
                 .ToList();
         }
 
-        private async Task<List<Domain.Entities.ProviderCourse>> FilterStandardsWithoutLocations(int ukprn,
-            List<Domain.Entities.ProviderCourse> providerCourses)
+        private List<ProviderCourseModel> FilterStandardsWithoutLocations(
+            List<ProviderCourseModel> providerCourses)
         {
-            List<Domain.Entities.ProviderCourse> filteredCourses = new();
-            foreach (var providerCourse in providerCourses)
-            {
-                var courseLocationsLookup =
-                    await _providerCourseLocationsReadRepository.GetAllProviderCourseLocations(ukprn,
-                        providerCourse.LarsCode);
-
-                if (courseLocationsLookup != null && courseLocationsLookup.Count != 0)
-                {
-                    filteredCourses.Add(providerCourse);
-                }
-            }
-
-            return filteredCourses;
+            return providerCourses.Where(p => p.HasLocations).ToList();
         }
 
-        private static List<Domain.Entities.ProviderCourse> RemoveUnapprovedRegulatedStandards(
-            List<Domain.Entities.ProviderCourse> providerCourses)
+        private static List<ProviderCourseModel> RemoveUnapprovedRegulatedStandards(
+            List<ProviderCourseModel> providerCourses)
         {
-            providerCourses.RemoveAll(c =>
-                c.Standard.IsRegulatedForProvider && !c.IsApprovedByRegulator.GetValueOrDefault());
-
-            return providerCourses;
+            return providerCourses
+                .Where(c => !c.IsRegulatedForProvider || c.IsApprovedByRegulator.GetValueOrDefault())
+                .ToList();
         }
     }
 }
