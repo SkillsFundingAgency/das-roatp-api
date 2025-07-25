@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -12,7 +13,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
         [TestCase(false)]
         public void ProviderCourseOperator_ReturnsProviderCourseModel(bool hasPortableFlexiJobOption)
         {
-            var course = new ProviderCourse() { LarsCode = 1, HasPortableFlexiJobOption = hasPortableFlexiJobOption };
+            var course = new ProviderCourse() { LarsCode = 1, HasPortableFlexiJobOption = hasPortableFlexiJobOption, Standard = new Standard() };
             var model = (ProviderCourseModel)course;
 
             Assert.That(model, Is.Not.Null);
@@ -23,7 +24,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
         [Test]
         public void ProviderCourseOperator_UpdateCourseInjectsExpectedValues()
         {
-            var course = new ProviderCourse() { LarsCode = 1 };
+            var course = new ProviderCourse() { LarsCode = 1, Standard = new Standard() };
             var model = (ProviderCourseModel)course;
 
             var standardLookup = new Standard
@@ -31,7 +32,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
                 Title = "course title",
                 Level = 1,
                 Version = "1.1",
-                ApprovalBody = "ABC"
+                ApprovalBody = "ABC",
+                IsRegulatedForProvider = true
             };
 
             model.AttachCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title, standardLookup.Version, standardLookup.ApprovalBody);
@@ -41,6 +43,24 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
             standardLookup.Level.Should().Be(model.Level);
             standardLookup.Version.Should().Be(model.Version);
             standardLookup.ApprovalBody.Should().Be(model.ApprovalBody);
+        }
+
+        [TestCase(1, true)]
+        [TestCase(0, false)]
+
+        public void ProviderCourseOperator_SetsHasLocation(int numberOfLocations, bool expected)
+        {
+            var locations = new List<ProviderCourseLocation>();
+            for (int i = 0; i < numberOfLocations; i++)
+            {
+                locations.Add(new ProviderCourseLocation());
+            }
+
+            var course = new ProviderCourse { Locations = locations, Standard = new Standard() };
+            var model = (ProviderCourseModel)course;
+
+            Assert.That(model, Is.Not.Null);
+            Assert.AreEqual(expected, model.HasLocations);
         }
     }
 }
