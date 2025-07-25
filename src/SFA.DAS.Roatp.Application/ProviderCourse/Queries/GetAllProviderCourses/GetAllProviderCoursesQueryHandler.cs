@@ -14,11 +14,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
     {
         private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
         private readonly IStandardsReadRepository _standardsReadRepository;
+        private readonly IProviderCourseLocationsReadRepository _providerCourseLocationsReadRepository;
         private readonly ILogger<GetAllProviderCoursesQueryHandler> _logger;
-        public GetAllProviderCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetAllProviderCoursesQueryHandler> logger)
+        public GetAllProviderCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetAllProviderCoursesQueryHandler> logger, IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository)
         {
             _providerCoursesReadRepository = providerCoursesReadRepository;
             _standardsReadRepository = standardsReadRepository;
+            _providerCourseLocationsReadRepository = providerCourseLocationsReadRepository;
             _logger = logger;
         }
 
@@ -65,6 +67,15 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
             List<ProviderCourseModel> providerCourses)
         {
             return providerCourses.Where(p => p.HasLocations).ToList();
+            {
+                var courseLocationsLookup =
+                    await _providerCourseLocationsReadRepository.GetAllProviderCourseLocations(ukprn,
+                        providerCourse.LarsCode);
+
+                if (courseLocationsLookup != null && courseLocationsLookup.Count != 0)
+                {
+                    filteredCourses.Add(providerCourse);
+                }
         }
 
         private static List<ProviderCourseModel> RemoveUnapprovedRegulatedStandards(
@@ -73,6 +84,10 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
             return providerCourses
                 .Where(c => !c.IsRegulatedForProvider || c.IsApprovedByRegulator.GetValueOrDefault())
                 .ToList();
+            providerCourses.RemoveAll(c =>
+                c.Standard.IsRegulatedForProvider && !c.IsApprovedByRegulator.GetValueOrDefault());
+
+            return providerCourses;
         }
     }
 }
