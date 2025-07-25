@@ -14,13 +14,11 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
     {
         private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
         private readonly IStandardsReadRepository _standardsReadRepository;
-        private readonly IProviderCourseLocationsReadRepository _providerCourseLocationsReadRepository;
         private readonly ILogger<GetAllProviderCoursesQueryHandler> _logger;
-        public GetAllProviderCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetAllProviderCoursesQueryHandler> logger, IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository)
+        public GetAllProviderCoursesQueryHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IStandardsReadRepository standardsReadRepository, ILogger<GetAllProviderCoursesQueryHandler> logger)
         {
             _providerCoursesReadRepository = providerCoursesReadRepository;
             _standardsReadRepository = standardsReadRepository;
-            _providerCourseLocationsReadRepository = providerCourseLocationsReadRepository;
             _logger = logger;
         }
 
@@ -63,7 +61,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
                 .ToList();
         }
 
-        private List<ProviderCourseModel> FilterStandardsWithoutLocations(
+        private static List<ProviderCourseModel> FilterStandardsWithoutLocations(
             List<ProviderCourseModel> providerCourses)
         {
             return providerCourses.Where(p => p.HasLocations).ToList();
