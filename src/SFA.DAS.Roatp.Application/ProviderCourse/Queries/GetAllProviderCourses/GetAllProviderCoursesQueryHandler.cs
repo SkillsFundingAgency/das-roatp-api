@@ -67,15 +67,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
             List<ProviderCourseModel> providerCourses)
         {
             return providerCourses.Where(p => p.HasLocations).ToList();
-            {
-                var courseLocationsLookup =
-                    await _providerCourseLocationsReadRepository.GetAllProviderCourseLocations(ukprn,
-                        providerCourse.LarsCode);
-
-                if (courseLocationsLookup != null && courseLocationsLookup.Count != 0)
-                {
-                    filteredCourses.Add(providerCourse);
-                }
         }
 
         private static List<ProviderCourseModel> RemoveUnapprovedRegulatedStandards(
@@ -84,10 +75,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
             return providerCourses
                 .Where(c => !c.IsRegulatedForProvider || c.IsApprovedByRegulator.GetValueOrDefault())
                 .ToList();
-            providerCourses.RemoveAll(c =>
-                c.Standard.IsRegulatedForProvider && !c.IsApprovedByRegulator.GetValueOrDefault());
-
-            return providerCourses;
         }
     }
 }
