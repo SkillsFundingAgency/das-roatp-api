@@ -37,7 +37,7 @@
                 IsImported = providerCourse.IsImported,
                 HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption,
                 HasLocations = providerCourse.Locations.Count > 0,
-                IsRegulatedForProvider = providerCourse.Standard.IsRegulatedForProvider
+                IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false
             };
 
 
