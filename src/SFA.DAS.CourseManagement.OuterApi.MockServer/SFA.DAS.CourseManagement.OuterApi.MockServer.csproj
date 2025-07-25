@@ -16,8 +16,8 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="WireMock.Net" Version="1.6.11" />
-    <PackageReference Include="WireMock.Net.StandAlone" Version="1.6.11" />
+    <PackageReference Include="WireMock.Net" Version="1.8.16" />
+    <PackageReference Include="WireMock.Net.StandAlone" Version="1.8.16" />
   </ItemGroup>
 
   <!--TRANSITIVE PACKAGES -->
