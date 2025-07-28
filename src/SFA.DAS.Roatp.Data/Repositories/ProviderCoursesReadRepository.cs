@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
@@ -41,6 +41,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             return await _roatpDataContext
                 .ProviderCourses
                 .Include(c => c.Standard)
+                .Include(c => c.Locations)
                 .AsNoTracking()
                 .Where(c => c.Provider.Ukprn == ukprn)
                 .ToListAsync();
