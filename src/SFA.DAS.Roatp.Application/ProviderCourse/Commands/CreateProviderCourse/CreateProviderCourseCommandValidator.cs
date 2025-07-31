@@ -1,8 +1,8 @@
 ﻿using System.Linq;
+using System.Threading.Tasks;
 using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 {
@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         {
             Include(new UserInfoValidator());
 
-            Include(new UkprnValidator(providersReadRepository)); 
+            Include(new UkprnValidator(providersReadRepository));
             RuleFor(x => x.LarsCode)
                 .Cascade(CascadeMode.Stop)
                 .GreaterThan(0)
@@ -46,14 +46,14 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                         .Equal(true)
                         .WithMessage(RegulatedStandardMustBeApprovedMessage);
                 })
-                .Otherwise(() => 
+                .Otherwise(() =>
                 {
                     RuleFor(c => c.IsApprovedByRegulator)
                         .Null()
                         .WithMessage(RegulatorsApprovalNotRequired);
                 });
 
-            When((command) => command.HasNationalDeliveryOption, () => 
+            When((command) => command.HasNationalDeliveryOption, () =>
             {
                 RuleFor((c) => c.SubregionIds)
                     .Empty()
@@ -67,14 +67,14 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                         .NotEmpty()
                         .WithMessage(AtleastOneLocationIsRequiredMessage)
                         .MustAsync(
-                            async (command, providerLocations,cancellation) =>
+                            async (command, providerLocations, cancellation) =>
                             {
                                 var locations = await providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
                                 return !providerLocations.Any(providerLocation => locations.All(l => l.NavigationId != providerLocation.ProviderLocationId));
                             })
                         .WithMessage(LocationIdNotFoundMessage);
                 })
-                .Otherwise(() => 
+                .Otherwise(() =>
                 {
                     RuleFor((c) => c.SubregionIds)
                         .MustAsync(async (subregionIds, cancellation) =>
@@ -111,7 +111,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         private async Task<bool> IsStandardRegulated(int larsCode, IStandardsReadRepository standardsReadRepository)
         {
             var standard = await standardsReadRepository.GetStandard(larsCode);
-            var result = !string.IsNullOrEmpty(standard?.ApprovalBody);
+            var result = standard.IsRegulatedForProvider;
             return result;
         }
     }

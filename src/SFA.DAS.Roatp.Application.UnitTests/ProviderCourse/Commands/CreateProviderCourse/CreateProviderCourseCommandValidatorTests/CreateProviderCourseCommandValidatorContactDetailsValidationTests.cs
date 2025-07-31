@@ -1,8 +1,8 @@
-﻿using FluentValidation.TestHelper;
+﻿using System.Threading.Tasks;
+using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests
 {

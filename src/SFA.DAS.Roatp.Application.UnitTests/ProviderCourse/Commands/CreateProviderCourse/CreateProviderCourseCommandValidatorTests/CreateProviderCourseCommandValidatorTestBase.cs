@@ -1,9 +1,9 @@
-﻿using Moq;
+﻿using System;
+using System.Collections.Generic;
+using Moq;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System;
-using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests
 {
@@ -28,21 +28,24 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
             standardsReadRepositoryMock = new Mock<IStandardsReadRepository>();
             standardsReadRepositoryMock
+                .Setup(r => r.GetStandard(It.IsAny<int>()))
+                .ReturnsAsync(new Standard { IsRegulatedForProvider = false });
+            standardsReadRepositoryMock
                 .Setup(r => r.GetStandard(It.Is<int>(i => i == ValidComboLarsCode || i == NonRegulatedLarsCode)))
-                .ReturnsAsync(new Standard());
+                .ReturnsAsync(new Standard { IsRegulatedForProvider = false });
             standardsReadRepositoryMock
                 .Setup(r => r.GetStandard(It.Is<int>(i => i == RegulatedLarsCode)))
-                .ReturnsAsync(new Standard { ApprovalBody = Guid.NewGuid().ToString() });
+                .ReturnsAsync(new Standard { IsRegulatedForProvider = true });
 
             providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
             providerCoursesReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(ValidUkprn, ValidComboLarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
             providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
-            providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(ValidUkprn)).ReturnsAsync(new List<ProviderLocation> {new ProviderLocation {NavigationId = NavigationId}});
+            providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(ValidUkprn)).ReturnsAsync(new List<ProviderLocation> { new ProviderLocation { NavigationId = NavigationId } });
             regionsReadRepositoryMock = new Mock<IRegionsReadRepository>();
             regionsReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(new List<Region> { new Region { Id = ValidRegionId } });
 
-            return new CreateProviderCourseCommandValidator(providersReadRepositoryMock.Object, standardsReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object,providerLocationsReadRepositoryMock.Object, regionsReadRepositoryMock.Object);
+            return new CreateProviderCourseCommandValidator(providersReadRepositoryMock.Object, standardsReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, regionsReadRepositoryMock.Object);
         }
     }
 }
