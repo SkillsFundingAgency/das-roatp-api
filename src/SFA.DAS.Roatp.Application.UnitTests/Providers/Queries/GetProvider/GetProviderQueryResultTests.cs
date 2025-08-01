@@ -22,6 +22,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProvider
                 .Excluding(s => s.LearnerSatisfaction)
                 .Excluding(s => s.ProviderAddress)
                 .Excluding(s => s.ProviderRegistrationDetail)
+                .Excluding(s => s.ContactDetails)
             );
         }
     }

@@ -35,6 +35,11 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.HasOne(p => p.ProviderAddress)
                .WithOne(c => c.Provider)
                .HasForeignKey<ProviderAddress>(a => a.ProviderId);
+
+            builder.HasMany(p => p.ContactDetails)
+                .WithOne(c => c.Provider)
+                .HasPrincipalKey(p => p.Id)
+                .HasForeignKey(p => p.ProviderId);
         }
     }
 }
