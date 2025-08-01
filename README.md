@@ -88,13 +88,15 @@ You will need following on your local:
     "UpdateUkrlpDataSchedule": "0 0 23 * * 1-5",
     "UpdateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
     "DeleteExpiredShortlistsSchedule": "0 0 2 * * *",
+    "ImportAnnualFeedbackSummariesFunctionSchedule": "0 0 4 1-10 8 *",
     "AzureWebJobs.DeleteExpiredShortlistsFunction.Disabled": true,
     "AzureWebJobs.ImportAchievementRatesFunction.Disabled": true,
     "AzureWebJobs.LoadAllProviderAddressesFunction.Disabled": true,
     "AzureWebJobs.LoadProvidersAddressFunction.Disabled": true,
     "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": true,
     "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": true,
-    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true
+    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true,
+    "AzureWebJobs.ImportAnnualFeedbackSummariesFunction.Disabled": true
   }
 }
 ```

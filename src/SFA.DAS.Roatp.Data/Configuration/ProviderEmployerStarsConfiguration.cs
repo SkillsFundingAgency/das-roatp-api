@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.Roatp.Domain.Entities;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Data.Configuration;
 
@@ -16,8 +16,6 @@ public class ProviderEmployerStarsConfiguration : IEntityTypeConfiguration<Provi
             table.TimePeriod,
             table.Ukprn
         });
-        builder.Property(p => p.ReviewCount).IsRequired();
-        builder.Property(p => p.Stars).IsRequired();
-        builder.Property(p => p.Rating).IsRequired();
+        builder.Property(c => c.Rating).HasComputedColumnSql();
     }
 }
