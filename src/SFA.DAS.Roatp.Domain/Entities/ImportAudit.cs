@@ -28,6 +28,8 @@ namespace SFA.DAS.Roatp.Domain.Entities
         NationalAchievementRates,
         NationalAchievementRatesOverall,
         ProviderAddresses,
-        ProviderAddressesLatLong
+        ProviderAddressesLatLong,
+        ProviderApprenticeStars,
+        ProviderEmployerStars
     }
 }
