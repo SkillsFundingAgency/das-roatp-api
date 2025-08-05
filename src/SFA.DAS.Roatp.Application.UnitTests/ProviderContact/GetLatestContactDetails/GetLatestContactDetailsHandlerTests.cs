@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.Application.ProviderContact.Queries.GetProviderContact;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ContactDetails.GetLatestProviderContact;
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderContact.GetLatestContactDetails;
 
 [TestFixture]
 public sealed class GetLatestProviderContactHandlerTests
@@ -16,7 +16,7 @@ public sealed class GetLatestProviderContactHandlerTests
     [Test, RecursiveMoqAutoData]
     public async Task Handle_ReturnsExpectedResult(
         Domain.Entities.ProviderContact providerContact,
-        [Frozen] Mock<IContactDetailsReadRepository> contactDetailsReadRepository,
+        [Frozen] Mock<IProviderContactsReadRepository> contactDetailsReadRepository,
         GetLatestProviderContactQuery query,
         GetLatestProviderContactQueryHandler sut,
         CancellationToken cancellationToken)
@@ -38,7 +38,7 @@ public sealed class GetLatestProviderContactHandlerTests
 
     [Test, RecursiveMoqAutoData]
     public async Task Handle_NullResult_ReturnNullResult(
-        [Frozen] Mock<IContactDetailsReadRepository> contactDetailsReadRepository,
+        [Frozen] Mock<IProviderContactsReadRepository> contactDetailsReadRepository,
         GetLatestProviderContactQuery query,
         GetLatestProviderContactQueryHandler sut,
         CancellationToken cancellationToken)

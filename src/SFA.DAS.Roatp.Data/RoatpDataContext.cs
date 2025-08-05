@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.Data
         public DbSet<Shortlist> Shortlists { get; set; }
         public DbSet<ProviderEmployerStars> ProviderEmployerStars { get; set; }
 
-        public DbSet<ProviderContact> ContactDetails { get; set; }
+        public DbSet<ProviderContact> ProviderContacts { get; set; }
 
         public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) { }
 

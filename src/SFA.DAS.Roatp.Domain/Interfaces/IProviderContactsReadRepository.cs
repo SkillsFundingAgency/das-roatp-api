@@ -3,7 +3,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces;
 
-public interface IContactDetailsReadRepository
+public interface IProviderContactsReadRepository
 {
     Task<ProviderContact> GetLatestProviderContact(int ukprn);
 }

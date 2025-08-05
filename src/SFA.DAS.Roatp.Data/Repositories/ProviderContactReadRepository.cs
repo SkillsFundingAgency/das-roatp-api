@@ -8,11 +8,11 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Data.Repositories;
 
 [ExcludeFromCodeCoverage]
-public class ProviderContactReadRepository(RoatpDataContext _roatpDataContext) : IContactDetailsReadRepository
+public class ProviderContactReadRepository(RoatpDataContext _roatpDataContext) : IProviderContactsReadRepository
 {
     public async Task<ProviderContact> GetLatestProviderContact(int ukprn)
     {
-        return await _roatpDataContext.ContactDetails
+        return await _roatpDataContext.ProviderContacts
             .Include(c => c.Provider)
             .Where(p => p.Provider.Ukprn == ukprn)
             .OrderByDescending(c => c.CreatedDate)
