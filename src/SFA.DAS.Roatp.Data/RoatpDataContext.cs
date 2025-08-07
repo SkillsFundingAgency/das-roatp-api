@@ -1,6 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
-using System.Diagnostics.CodeAnalysis;
 using ProviderCourse = SFA.DAS.Roatp.Domain.Entities.ProviderCourse;
 
 namespace SFA.DAS.Roatp.Data
@@ -26,6 +26,8 @@ namespace SFA.DAS.Roatp.Data
         public DbSet<NationalQar> NationalQars { get; set; }
         public DbSet<Shortlist> Shortlists { get; set; }
         public DbSet<ProviderEmployerStars> ProviderEmployerStars { get; set; }
+
+        public DbSet<ProviderContact> ProviderContacts { get; set; }
 
         public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) { }
 
