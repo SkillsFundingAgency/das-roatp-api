@@ -57,7 +57,7 @@ public class ProviderContactsWriteRepository : IProviderContactsWriteRepository
                     }
 
                     Audit auditProviderCourse = new(nameof(ProviderCourse), ukprn.ToString(), userId, userDisplayName,
-                        AuditEventTypes.UpdateProviderCourse, providerCourseOriginal, providerCourse);
+                        AuditEventTypes.UpdateProviderCourseContact, providerCourseOriginal, providerCourse);
                     _roatpDataContext.Audits.Add(auditProviderCourse);
                 }
 
