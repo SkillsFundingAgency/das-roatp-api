@@ -23,7 +23,6 @@ public class CreateProviderContactCommandHandler(IProvidersReadRepository _provi
         await _providerContactsWriteRepository.CreateProviderContact(providerContact, command.Ukprn,
             command.UserId, command.UserDisplayName, command.ProviderCourseIds);
 
-
         _logger.LogInformation("Added contact for provider: {Ukprn} provider contact id {Id}", command.Ukprn, providerContact.Id);
         return new ValidatedResponse<long>(providerContact.Id);
     }

@@ -7,7 +7,7 @@ public class ProviderContactAddModel
 {
     public string EmailAddress { get; set; }
     public string PhoneNumber { get; set; }
-    public string UserId { get; set; } // maybe a guid?
+    public string UserId { get; set; }
     public string UserDisplayName { get; set; }
     public List<int> ProviderCourseIds { get; set; }
 
