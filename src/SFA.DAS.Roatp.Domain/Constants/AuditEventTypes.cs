@@ -4,6 +4,7 @@
     {
         public const string CreateProviderCourse = "CreateProviderCourse";
         public const string DeleteProviderCourse = "DeleteProviderCourse";
+        public const string UpdateProviderCourseContact = "UpdateProviderCourseContact";
         public const string UpdateProviderCourseDetails = "UpdateProviderCourseDetails";
         public const string BulkInsertProviderLocation = "BulkInsertProviderLocation";
         public const string BulkDeleteProviderLocation = "BulkDeleteProviderLocation";
@@ -16,5 +17,6 @@
         public const string CreateProviderCourseLocation = "CreateProviderCourseLocation";
         public const string UpdateProviderDescription = "UpdateProviderDescription";
         public const string CreateProvider = "CreateProvider";
+        public const string CreateProviderContact = "CreateProviderContact";
     }
 }

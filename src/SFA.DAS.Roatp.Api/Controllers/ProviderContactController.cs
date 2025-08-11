@@ -3,6 +3,8 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Api.Models;
+using SFA.DAS.Roatp.Application.ProviderContact.Commands.CreateProviderContact;
 using SFA.DAS.Roatp.Application.ProviderContact.Queries.GetProviderContact;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
@@ -27,5 +29,17 @@ public class ProviderContactController(IMediator _mediator) : ActionResponseCont
         var response = await _mediator.Send(new GetLatestProviderContactQuery(ukprn));
 
         return GetResponse(response);
+    }
+
+    [HttpPost]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(long), 200)]
+    public async Task<IActionResult> PostProviderContact(int ukprn, ProviderContactAddModel addModel)
+    {
+        CreateProviderContactCommand command = addModel;
+        command.Ukprn = ukprn;
+        var response = await _mediator.Send(command);
+        return GetPostResponse(response, $"providers/{ukprn}/contact");
     }
 }
