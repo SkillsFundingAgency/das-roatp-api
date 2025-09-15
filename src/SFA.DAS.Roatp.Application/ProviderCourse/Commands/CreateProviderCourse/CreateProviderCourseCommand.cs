@@ -1,6 +1,6 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using MediatR;
 using SFA.DAS.Roatp.Application.Common;
-using System.Collections.Generic;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
@@ -15,7 +15,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         public string StandardInfoUrl { get; set; }
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
-        public string ContactUsPageUrl { get; set; }
         public bool HasNationalDeliveryOption { get; set; }
         public List<ProviderCourseLocationCommandModel> ProviderLocations { get; set; } = new List<ProviderCourseLocationCommandModel>();
         public List<int> SubregionIds { get; set; } = new List<int>();
@@ -28,7 +27,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                 StandardInfoUrl = source.StandardInfoUrl,
                 ContactUsPhoneNumber = source.ContactUsPhoneNumber,
                 ContactUsEmail = source.ContactUsEmail,
-                ContactUsPageUrl = source.ContactUsPageUrl,
                 HasPortableFlexiJobOption = false,
                 IsImported = false
             };

@@ -36,7 +36,6 @@ internal class ProviderCoursesWriteRepository : IProviderCoursesWriteRepository
                 _roatpDataContext.Audits.Add(audit);
 
                 providerCourse.ContactUsEmail = patchedProviderCourseEntity.ContactUsEmail;
-                providerCourse.ContactUsPageUrl = patchedProviderCourseEntity.ContactUsPageUrl;
                 providerCourse.ContactUsPhoneNumber = patchedProviderCourseEntity.ContactUsPhoneNumber;
                 providerCourse.StandardInfoUrl = patchedProviderCourseEntity.StandardInfoUrl;
                 providerCourse.IsApprovedByRegulator = patchedProviderCourseEntity.IsApprovedByRegulator;

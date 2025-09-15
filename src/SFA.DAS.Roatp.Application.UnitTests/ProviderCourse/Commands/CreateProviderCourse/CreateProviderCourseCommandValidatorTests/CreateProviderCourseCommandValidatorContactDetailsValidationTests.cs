@@ -71,36 +71,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
         [TestCase("www.goo.com", true)]
         [TestCase("", false)]
-        public async Task PageUrl_Required_Validation(string pageUrl, bool isValid)
-        {
-            var command = new CreateProviderCourseCommand { ContactUsPageUrl = pageUrl };
-            var sut = GetSut();
-
-            var result = await sut.TestValidateAsync(command);
-
-            if (isValid)
-                result.ShouldNotHaveValidationErrorFor(c => c.ContactUsPageUrl);
-            else
-                result.ShouldHaveValidationErrorFor(c => c.ContactUsPageUrl).WithErrorMessage(ValidationMessages.IsRequired(nameof(CreateProviderCourseCommand.ContactUsPageUrl)));
-        }
-
-        [TestCase("www.goo.com", true)]
-        [TestCase("invalidPageUrl", false)]
-        public async Task PageUrl_Format_Validation(string pageUrl, bool isValid)
-        {
-            var command = new CreateProviderCourseCommand { ContactUsPageUrl = pageUrl };
-            var sut = GetSut();
-
-            var result = await sut.TestValidateAsync(command);
-
-            if (isValid)
-                result.ShouldNotHaveValidationErrorFor(c => c.ContactUsPageUrl);
-            else
-                result.ShouldHaveValidationErrorFor(c => c.ContactUsPageUrl).WithErrorMessage(ValidationMessages.UrlValidationMessages.UrlWrongFormat("Contact page"));
-        }
-
-        [TestCase("www.goo.com", true)]
-        [TestCase("", false)]
         public async Task StandardInfoUrl_Required_Validation(string standardInfoUrl, bool isValid)
         {
             var command = new CreateProviderCourseCommand { StandardInfoUrl = standardInfoUrl };

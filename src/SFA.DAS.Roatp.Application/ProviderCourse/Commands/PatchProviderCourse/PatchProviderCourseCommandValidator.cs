@@ -22,8 +22,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
                 {
                     "ContactUsEmail",
                     "ContactUsPhoneNumber",
-                    "ContactUsPageUrl",
-                     "StandardInfoUrl",
+                    "StandardInfoUrl",
                     "IsApprovedByRegulator"
                 });
 
@@ -56,10 +55,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
             RuleFor(c => c.ContactUsPhoneNumber)
                 .MustBeValidPhoneNumber()
                 .When(c => c.IsPresentContactUsPhoneNumber);
-
-            RuleFor(c => c.ContactUsPageUrl)
-                .MustBeValidUrl("Contact page")
-                .When(c => c.IsPresentContactUsPageUrl);
 
             RuleFor(c => c.StandardInfoUrl)
                 .MustBeValidUrl("Website")

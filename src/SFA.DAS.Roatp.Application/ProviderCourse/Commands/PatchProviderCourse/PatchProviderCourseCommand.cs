@@ -14,7 +14,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
         public const string StandardInfoUrlIdentifier = "StandardInfoUrl";
         public const string ContactUsPhoneNumberIdentifier = "ContactUsPhoneNumber";
         private const string ContactUsEmailIdentifier = "ContactUsEmail";
-        public const string ContactUsPageUrlIdentifier = "ContactUsPageUrl";
 
         public int Ukprn { get; set; }
         public int LarsCode { get; set; }
@@ -33,10 +32,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
         public string ContactUsEmail =>
             Patch.Operations.FirstOrDefault(operation =>
                 operation.path == ContactUsEmailIdentifier && operation.op.Equals(Replace, StringComparison.CurrentCultureIgnoreCase))?.value.ToString();
-
-        public string ContactUsPageUrl =>
-            Patch.Operations.FirstOrDefault(operation =>
-                operation.path == ContactUsPageUrlIdentifier && operation.op.Equals(Replace, StringComparison.CurrentCultureIgnoreCase))?.value.ToString();
 
         public bool? IsApprovedByRegulator
         {
@@ -67,9 +62,5 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
         public bool IsPresentContactUsEmail =>
             Patch.Operations.Any(operation =>
                 operation.path == ContactUsEmailIdentifier && operation.op.Equals(Replace, StringComparison.CurrentCultureIgnoreCase));
-
-        public bool IsPresentContactUsPageUrl =>
-            Patch.Operations.Any(operation =>
-                operation.path == ContactUsPageUrlIdentifier && operation.op.Equals(Replace, StringComparison.CurrentCultureIgnoreCase));
     }
 }

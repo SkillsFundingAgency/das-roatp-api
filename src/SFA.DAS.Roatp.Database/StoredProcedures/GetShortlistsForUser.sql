@@ -66,7 +66,6 @@ BEGIN
         ,DayReleaseCount
         ,ContactUsEmail email
         ,ContactUsPhoneNumber phone
-        ,ContactUsPageUrl website
     INTO #MainQuery        
     FROM
     (
@@ -77,7 +76,6 @@ BEGIN
             ,LegalName
             ,ContactUsEmail 
             ,ContactUsPhoneNumber 
-            ,ContactUsPageUrl
             ,larsCode
             ,CASE WHEN AtEmployer = 1 THEN 1 ELSE 0 END AtEmployer
             ,MAX(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) BlockRelease
@@ -102,7 +100,6 @@ BEGIN
                   ,pr1.LegalName
                   ,ISNULL(pc1.ContactUsEmail,pr1.Email) ContactUsEmail
                   ,ISNULL(pc1.ContactUsPhoneNumber, pr1.Phone) ContactUsPhoneNumber
-                  ,ISNULL(pc1.ContactUsPageUrl, pr1.Website) ContactUsPageUrl
                   ,[LocationType]
                   -- LocationType: Provider = 0, National = 1, Regional = 2
                   ,CASE [LocationType] 

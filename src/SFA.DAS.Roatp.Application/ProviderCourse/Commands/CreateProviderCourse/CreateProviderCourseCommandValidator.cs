@@ -96,11 +96,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                 .WithMessage(c => ValidationMessages.IsRequired(nameof(c.ContactUsPhoneNumber)))
                 .MustBeValidPhoneNumber();
 
-            RuleFor(c => c.ContactUsPageUrl)
-                .NotEmpty()
-                .WithMessage(c => ValidationMessages.IsRequired(nameof(c.ContactUsPageUrl)))
-                .MustBeValidUrl("Contact page");
-
             RuleFor(c => c.StandardInfoUrl)
                 .NotEmpty()
                 .WithMessage(c => ValidationMessages.IsRequired(nameof(c.StandardInfoUrl)))

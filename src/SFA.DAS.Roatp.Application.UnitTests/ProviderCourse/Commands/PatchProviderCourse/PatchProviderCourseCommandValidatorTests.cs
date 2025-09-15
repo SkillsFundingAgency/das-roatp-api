@@ -22,7 +22,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         private const string IsApprovedByRegulator = "IsApprovedByRegulator";
         private const string ContactUsEmail = "ContactUsEmail";
         private const string ContactUsPhoneNumber = "ContactUsPhoneNumber";
-        private const string ContactUsPageUrl = "ContactUsPageUrl";
         private const string StandardInfoUrl = "StandardInfoUrl";
 
         private const string Replace = "replace";
@@ -163,8 +162,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                     new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = "test@test.com" },
                     new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" },
-                    new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = IsApprovedByRegulator, value = "True" }
                 }
             };
@@ -199,8 +196,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
                     new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = "test@test.com" },
-                    new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" },
                     new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = IsApprovedByRegulator, value = "True" },
                     new Operation<Domain.Models.PatchProviderCourse>
@@ -239,8 +234,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
                     new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = "test@test.com" },
-                    new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" },
                     new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = IsApprovedByRegulator, value = "True" }
                 }
@@ -299,9 +292,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                     new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
                     new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsEmail, value = "invalidEmail" },
-                    new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" }
+                        { op = Replace, path = ContactUsEmail, value = "invalidEmail" }
                 }
             };
 
@@ -335,9 +326,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                     new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
                     new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsEmail, value = new string('x',255) + "@test.com" },
-                    new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" }
+                        { op = Replace, path = ContactUsEmail, value = new string('x',255) + "@test.com" }
                 }
             };
 
@@ -372,8 +361,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
                     new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsEmail, value = new string('x',260)},
-                    new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" }
                 }
             };
 
@@ -423,9 +410,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                     new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = new string('1',phoneNumberLength) },
                     new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsEmail, value = "test@test.com" },
-                    new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsPageUrl, value = "http://www.test.com/contact-us" }
+                        { op = Replace, path = ContactUsEmail, value = "test@test.com" }
                 }
             };
 
@@ -466,57 +451,15 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                     new Operation<Domain.Models.PatchProviderCourse>
                         { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
                     new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsEmail, value = "test@test.com" },
-                    new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsPageUrl, value = "wrongformat" }
+                        { op = Replace, path = ContactUsEmail, value = "test@test.com" }
                 }
             };
 
             var result = await validator.TestValidateAsync(command);
 
             result.IsValid.Should().BeFalse();
-            result.Errors.Should().HaveCount(2);
+            result.Errors.Should().HaveCount(1);
             result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage(UrlValidationMessages.UrlWrongFormat("Website"));
-            result.ShouldHaveValidationErrorFor(c => c.ContactUsPageUrl).WithErrorMessage(UrlValidationMessages.UrlWrongFormat("Contact page"));
-        }
-
-        [Test]
-        public async Task Validate_Patch_ContactDetails_ContactUrlTooLong_ExpectedErrorMessage()
-        {
-            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
-            var ukprn = 10000001;
-            var larsCode = 1;
-            var longUrl = new string('x', 497) + ".com";
-
-            var command = new PatchProviderCourseCommand
-            {
-                Ukprn = ukprn,
-                LarsCode = larsCode,
-                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
-            };
-
-            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
-            {
-                Operations =
-                {
-                    new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = StandardInfoUrl, value = longUrl },
-                    new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsPhoneNumber, value = "1234567890" },
-                    new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsEmail, value="test@test.com"},
-                    new Operation<Domain.Models.PatchProviderCourse>
-                        { op = Replace, path = ContactUsPageUrl,  value =  longUrl}
-                }
-            };
-
-            var result = await validator.TestValidateAsync(command);
-
-            result.IsValid.Should().BeFalse();
-            result.Errors.Should().HaveCount(2);
-            result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage(UrlValidationMessages.UrlTooLong("Website"));
-            result.ShouldHaveValidationErrorFor(c => c.ContactUsPageUrl).WithErrorMessage(UrlValidationMessages.UrlTooLong("Contact page"));
         }
     }
 }
-

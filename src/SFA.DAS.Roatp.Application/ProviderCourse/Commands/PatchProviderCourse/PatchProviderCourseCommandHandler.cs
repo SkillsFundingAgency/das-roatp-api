@@ -39,11 +39,10 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
 
             providerCourse.IsApprovedByRegulator = patchedProviderCourse.IsApprovedByRegulator;
             providerCourse.ContactUsEmail = patchedProviderCourse.ContactUsEmail;
-            providerCourse.ContactUsPageUrl = patchedProviderCourse.ContactUsPageUrl;
             providerCourse.ContactUsPhoneNumber = patchedProviderCourse.ContactUsPhoneNumber;
             providerCourse.StandardInfoUrl = patchedProviderCourse.StandardInfoUrl;
 
-            var response= await _providerCoursesWriteRepository.PatchProviderCourse(providerCourse, command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseDetails);
+            var response = await _providerCoursesWriteRepository.PatchProviderCourse(providerCourse, command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseDetails);
 
             return new ValidatedResponse<bool>(response != null);
         }

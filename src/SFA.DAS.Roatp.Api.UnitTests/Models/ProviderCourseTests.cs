@@ -13,14 +13,12 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
         public void ImplicitOperator_ReturnsCommand(bool? isApprovedByRegulator)
         {
             var contactUsEmail = "test@test.com";
-            var contactUsPageUrl = "http://www.test.com/contact-us";
             var contactUsPhoneNumber = "1234567890";
             var standardInfoUrl = "http://www.test.com";
 
             var entity = new ProviderCourse
             {
                 ContactUsEmail = contactUsEmail,
-                ContactUsPageUrl = contactUsPageUrl,
                 ContactUsPhoneNumber = contactUsPhoneNumber,
                 StandardInfoUrl = standardInfoUrl,
                 IsApprovedByRegulator = isApprovedByRegulator
@@ -29,7 +27,6 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
             var patchProviderCourse = new ProviderCourse
             {
                 ContactUsEmail = contactUsEmail,
-                ContactUsPageUrl = contactUsPageUrl,
                 ContactUsPhoneNumber = contactUsPhoneNumber,
                 StandardInfoUrl = standardInfoUrl,
                 IsApprovedByRegulator = isApprovedByRegulator

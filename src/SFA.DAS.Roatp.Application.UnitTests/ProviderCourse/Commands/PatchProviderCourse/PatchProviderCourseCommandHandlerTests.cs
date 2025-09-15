@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.AspNetCore.JsonPatch;
 using Moq;
@@ -7,9 +10,6 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProviderCourse
 {
@@ -37,10 +37,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
             [Frozen] Mock<IProviderCoursesWriteRepository> editRepoMock,
             PatchProviderCourseCommandHandler sut,
             Domain.Models.PatchProviderCourse patch,
-            Domain.Entities.ProviderCourse providerCourse, 
-            string userId, 
-            string userDisplayName, 
-            CancellationToken cancellationToken )
+            Domain.Entities.ProviderCourse providerCourse,
+            string userId,
+            string userDisplayName,
+            CancellationToken cancellationToken)
         {
             var ukprn = 10000001;
             var larsCode = 1;
@@ -48,7 +48,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
 
             var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
             patchCommand.Replace(path => path.ContactUsEmail, patch.ContactUsEmail);
-            patchCommand.Replace(path => path.ContactUsPageUrl, patch.ContactUsPageUrl);
             patchCommand.Replace(path => path.ContactUsPhoneNumber, patch.ContactUsPhoneNumber);
             patchCommand.Replace(path => path.StandardInfoUrl, patch.StandardInfoUrl);
             patchCommand.Replace(path => path.IsApprovedByRegulator, patch.IsApprovedByRegulator);
@@ -66,7 +65,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
 
             editRepoMock.Verify(e => e.PatchProviderCourse(It.Is<Domain.Entities.ProviderCourse>(
                 c => c.ContactUsEmail == patch.ContactUsEmail &&
-                     c.ContactUsPageUrl == patch.ContactUsPageUrl &&
                      c.ContactUsPhoneNumber == patch.ContactUsPhoneNumber &&
                      c.StandardInfoUrl == patch.StandardInfoUrl &&
                      c.IsApprovedByRegulator == patch.IsApprovedByRegulator), command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseDetails));

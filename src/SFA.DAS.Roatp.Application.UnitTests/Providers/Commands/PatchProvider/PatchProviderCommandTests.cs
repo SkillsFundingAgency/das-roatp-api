@@ -13,7 +13,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
         private const string Replace = "replace";
         private const string ContactUsEmail = "ContactUsEmail";
         private const string ContactUsPhoneNumber = "ContactUsPhoneNumber";
-        private const string ContactUsPageUrl = "ContactUsPageUrl";
         private const string StandardInfoUrl = "StandardInfoUrl";
         private const string IsApprovedByRegulator = "IsApprovedByRegulator";
 
@@ -77,25 +76,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
             command.IsPresentContactUsPhoneNumber.Should().BeTrue();
         }
 
-        [Test]
-        public void Command_PatchContainsContactUsPageUrl_ContactUsPageUrlIsSet()
-        {
-            var ukprn = 10000001;
-            var larsCode = 1;
-            var testValue = "value";
-            var patchCommand = new JsonPatchDocument<PatchProviderCourse>();
-            patchCommand.Operations.Add(new Operation<PatchProviderCourse> { op = Replace, path = ContactUsPageUrl, value = testValue });
-
-            var command = new PatchProviderCourseCommand
-            {
-                Ukprn = ukprn,
-                LarsCode = larsCode,
-                Patch = patchCommand
-            };
-
-            testValue.Should().Be(command.ContactUsPageUrl);
-            command.IsPresentContactUsPageUrl.Should().BeTrue();
-        }
 
         [Test]
         public void Command_PatchContainsIsApprovedByRegulator_IsApprovedByRegulatorIsSet()
@@ -135,8 +115,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
             command.IsPresentIsApprovedByRegulator.Should().BeFalse();
             command.ContactUsEmail.Should().BeNull();
             command.IsPresentContactUsEmail.Should().BeFalse();
-            command.ContactUsPageUrl.Should().BeNull();
-            command.IsPresentContactUsPageUrl.Should().BeFalse();
             command.ContactUsPhoneNumber.Should().BeNull();
             command.IsPresentContactUsPhoneNumber.Should().BeFalse();
             command.StandardInfoUrl.Should().BeNull();

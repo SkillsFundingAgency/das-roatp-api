@@ -9,8 +9,6 @@
         public string StandardInfoUrl { get; set; }
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
-        public string ContactUsPageUrl { get; set; }
-
         public bool IsImported { get; set; } = false;
         public bool HasPortableFlexiJobOption { get; set; }
 
@@ -27,7 +25,6 @@
                 LarsCode = source.LarsCode,
                 StandardInfoUrl = source.StandardInfoUrl,
                 ContactUsEmail = source.ContactUsEmail,
-                ContactUsPageUrl = source.ContactUsPageUrl,
                 ContactUsPhoneNumber = source.ContactUsPhoneNumber,
                 IsImported = source.IsImported,
                 HasPortableFlexiJobOption = source.HasPortableFlexiJobOption
