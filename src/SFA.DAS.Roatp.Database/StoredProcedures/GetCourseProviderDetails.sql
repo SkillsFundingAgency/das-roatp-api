@@ -102,6 +102,7 @@ BEGIN
 		,MarketingInfo AS 'MarketingInfo'
 		,ContactUsEmail AS 'Email'
 		,ContactUsPhoneNumber AS 'PhoneNumber'
+		,ContactUsPageUrl AS 'WebSite'
 		,stq.[Title] AS 'CourseName'
 		,stq.[Level] AS 'Level'
 		,ab2.Larscode AS 'LarsCode'
@@ -169,6 +170,7 @@ BEGIN
 			,MarketingInfo
 			,ContactUsEmail
 			,ContactUsPhoneNumber
+			,ContactUsPageUrl
 			-- LocationType: Provider = 0, National = 1, Regional = 2
 			,CASE WHEN LocationType = 0 THEN Distance
 				  WHEN LocationOrdering = 3 THEN 0
@@ -241,6 +243,7 @@ BEGIN
 				   ,pr1.MarketingInfo
 				   ,ISNULL(pc1.ContactUsEmail,pr1.Email) ContactUsEmail
 				   ,ISNULL(pc1.ContactUsPhoneNumber, pr1.Phone) ContactUsPhoneNumber
+				   ,ISNULL(pc1.StandardInfoUrl, pr1.Website) ContactUsPageUrl
 				   ,pc1.[IsApprovedByRegulator]
 			  FROM [dbo].[ProviderCourse] pc1 
 			  JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
