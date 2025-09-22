@@ -243,7 +243,7 @@ BEGIN
 				   ,pr1.MarketingInfo
 				   ,ISNULL(pc1.ContactUsEmail,pr1.Email) ContactUsEmail
 				   ,ISNULL(pc1.ContactUsPhoneNumber, pr1.Phone) ContactUsPhoneNumber
-				   ,ISNULL(pc1.ContactUsPageUrl, pr1.Website) ContactUsPageUrl
+				   ,ISNULL(pc1.StandardInfoUrl, pr1.Website) ContactUsPageUrl
 				   ,pc1.[IsApprovedByRegulator]
 			  FROM [dbo].[ProviderCourse] pc1 
 			  JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId

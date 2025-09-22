@@ -10,7 +10,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string StandardInfoUrl { get; set; }
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
-        public string ContactUsPageUrl { get; set; }
+
         public bool? IsApprovedByRegulator { get; set; }
         public bool IsImported { get; set; } = false;
         public bool HasPortableFlexiJobOption { get; set; }

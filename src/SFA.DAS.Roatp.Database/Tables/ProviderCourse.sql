@@ -4,7 +4,6 @@
     [ProviderId] INT NOT NULL,
     [LarsCode] INT NOT NULL,
     [StandardInfoUrl] VARCHAR(500) NULL,
-    [ContactUsPageUrl] VARCHAR(500) NULL,
     [ContactUsEmail] VARCHAR(300) NULL,
     [ContactUsPhoneNumber] VARCHAR(50) NULL,
     [IsApprovedByRegulator] BIT NULL,

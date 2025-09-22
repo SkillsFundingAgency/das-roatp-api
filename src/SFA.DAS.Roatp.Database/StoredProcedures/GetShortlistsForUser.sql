@@ -102,7 +102,7 @@ BEGIN
                   ,pr1.LegalName
                   ,ISNULL(pc1.ContactUsEmail,pr1.Email) ContactUsEmail
                   ,ISNULL(pc1.ContactUsPhoneNumber, pr1.Phone) ContactUsPhoneNumber
-                  ,ISNULL(pc1.ContactUsPageUrl, pr1.Website) ContactUsPageUrl
+                  ,ISNULL(pc1.StandardInfoUrl, pr1.Website) ContactUsPageUrl
                   ,[LocationType]
                   -- LocationType: Provider = 0, National = 1, Regional = 2
                   ,CASE [LocationType] 
