@@ -50,4 +50,31 @@ public sealed class GetCoursesQueryHandlerTests
             Assert.That(resultCourse.TotalProvidersCount, Is.EqualTo(course.TotalProvidersCount));
         });
     }
+
+    [Test]
+    [RecursiveMoqAutoData()]
+    public async Task Handle_NoResults_ReturnsNull(
+        [Frozen] Mock<IProvidersCountReadRepository> trainingCoursesReadRepository,
+        GetCourseTrainingProvidersCountQuery query,
+        GetCourseTrainingProvidersCountQueryHandler sut,
+        CancellationToken cancellationToken
+    )
+    {
+        var repositoryResponse = new List<CourseInformation>();
+        trainingCoursesReadRepository.Setup(r =>
+            r.GetProviderTrainingCourses(
+                query.LarsCodes,
+                query.Longitude,
+                query.Latitude,
+                query.Distance,
+                cancellationToken
+            )
+        ).ReturnsAsync(repositoryResponse);
+
+        var response = await sut.Handle(query, cancellationToken);
+
+        var result = response.Result;
+
+        Assert.That(result, Is.Null);
+    }
 }
