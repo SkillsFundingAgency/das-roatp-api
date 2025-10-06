@@ -16,14 +16,20 @@ public sealed class GetCourseTrainingProvidersCountQueryHandler : IRequestHandle
         _trainingCoursesReadRepository = trainingCoursesReadRepository;
     }
 
-    public async Task<ValidatedResponse<GetCourseTrainingProvidersCountQueryResult>> Handle(GetCourseTrainingProvidersCountQuery query, CancellationToken cancellationToken)
+    public async Task<ValidatedResponse<GetCourseTrainingProvidersCountQueryResult>> Handle(
+        GetCourseTrainingProvidersCountQuery query, CancellationToken cancellationToken)
     {
-        var results = await _trainingCoursesReadRepository.GetProviderTrainingCourses(query.LarsCodes, query.Longitude, query.Latitude, query.Distance, cancellationToken);
+        var results = await _trainingCoursesReadRepository.GetProviderTrainingCourses(query.LarsCodes, query.Longitude,
+            query.Latitude, query.Distance, cancellationToken);
 
-        return new ValidatedResponse<GetCourseTrainingProvidersCountQueryResult>(
-            new GetCourseTrainingProvidersCountQueryResult(
-                results.Select(a => (CourseTrainingProviderCountModel)a).ToList()
-            )
-        );
+        if (results.Any())
+        {
+            return new ValidatedResponse<GetCourseTrainingProvidersCountQueryResult>(
+                new GetCourseTrainingProvidersCountQueryResult(
+                    results.Select(a => (CourseTrainingProviderCountModel)a).ToList()
+                )
+            );
+        }
+        return new ValidatedResponse<GetCourseTrainingProvidersCountQueryResult>((GetCourseTrainingProvidersCountQueryResult)null);
     }
 }
