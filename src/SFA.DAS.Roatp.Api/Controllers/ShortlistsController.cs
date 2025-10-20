@@ -16,7 +16,7 @@ using SFA.DAS.Roatp.Application.Shortlists.Queries.GetShortlistsForUser;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
 
-[Route("api/[controller]")]
+[Route("[controller]")]
 [ApiController]
 public class ShortlistsController(IMediator _mediator) : ActionResponseControllerBase
 {
