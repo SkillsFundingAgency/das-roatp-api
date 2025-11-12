@@ -80,7 +80,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
         public void Status_Onboarding_PopulatesModelFromEntity_Property_ReturnsFalse(ProviderRegistrationDetail source)
         {
             source.ProviderTypeId = (int)ProviderType.Supporting;
-            source.StatusId = (int)ProviderStatusType.Onboarding;
+            source.StatusId = (int)ProviderStatusType.OnBoarding;
             var model = (ProviderSummary)source;
 
             model.CanAccessApprenticeshipService.Should().BeFalse();
@@ -90,7 +90,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
         public void Status_ActiveButNotTakingOnApprentices_PopulatesModelFromEntity_Property_ReturnsTrue(ProviderRegistrationDetail source)
         {
             source.ProviderTypeId = (int)ProviderType.Main;
-            source.StatusId = (int)ProviderStatusType.ActiveButNotTakingOnApprentices;
+            source.StatusId = (int)ProviderStatusType.ActiveNoStarts;
             var model = (ProviderSummary)source;
 
             model.CanAccessApprenticeshipService.Should().BeTrue();

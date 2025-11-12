@@ -17,8 +17,9 @@ public class GetRegisteredProviderQueryResult
     /// <summary>
     /// Read only property to get the value of Provider can access Apprenticeship Service.
     /// </summary>
-    public bool CanAccessApprenticeshipService => (ProviderType)ProviderTypeId is ProviderType.Main or ProviderType.Employer
-                                                  && (ProviderStatusType)StatusId is ProviderStatusType.Active or ProviderStatusType.Onboarding or ProviderStatusType.ActiveButNotTakingOnApprentices;
+    public bool CanAccessApprenticeshipService =>
+        (ProviderType)ProviderTypeId is ProviderType.Main or ProviderType.Employer
+        && (ProviderStatusType)StatusId is ProviderStatusType.Active or ProviderStatusType.OnBoarding or ProviderStatusType.ActiveNoStarts;
     public ProviderAddressModel Address { get; set; } = new ProviderAddressModel();
 
     public static implicit operator GetRegisteredProviderQueryResult(ProviderRegistrationDetail source) =>
