@@ -1,5 +1,4 @@
-﻿using AutoFixture.NUnit3;
-using FluentAssertions;
+﻿using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -44,56 +43,35 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
             });
         }
 
-        
-
-        [Test, RecursiveMoqAutoData]
-        public void MainProvider_PopulatesModelFromEntity_Property_ReturnsTrue(ProviderRegistrationDetail source)
+        [TestCase(ProviderType.Supporting, ProviderStatusType.Active, false)]
+        [TestCase(ProviderType.Main, ProviderStatusType.Active, true)]
+        [TestCase(ProviderType.Main, ProviderStatusType.OnBoarding, true)]
+        [TestCase(ProviderType.Main, ProviderStatusType.ActiveNoStarts, true)]
+        [TestCase(ProviderType.Main, ProviderStatusType.Removed, false)]
+        [TestCase(ProviderType.Employer, ProviderStatusType.Active, true)]
+        [TestCase(ProviderType.Employer, ProviderStatusType.OnBoarding, true)]
+        [TestCase(ProviderType.Employer, ProviderStatusType.ActiveNoStarts, true)]
+        [TestCase(ProviderType.Employer, ProviderStatusType.Removed, false)]
+        public void CanAccessApprenticeshipService_ReturnsExpectedValue(ProviderType providerType, ProviderStatusType providerStatusType, bool expected)
         {
-            source.ProviderTypeId = (int) ProviderType.Main;
-            source.StatusId = (int) ProviderStatusType.Active;
-            var model = (ProviderSummary)source;
+            ProviderRegistrationDetail source = new()
+            {
+                Ukprn = 12345678,
+                LegalName = "Test Provider",
+                ProviderTypeId = (int)providerType,
+                StatusId = (int)providerStatusType,
+                Provider = new Provider
+                {
+                    TradingName = "Test Trading Name",
+                    Email = "prov@test.com",
+                    Phone = "0123456789",
+                    Website = "http://www.testprovider.com",
+                },
+            };
 
-            model.CanAccessApprenticeshipService.Should().BeTrue();
-        }
+            ProviderSummary sut = source;
 
-        [Test, RecursiveMoqAutoData]
-        public void EmployerProvider_PopulatesModelFromEntity_Property_ReturnsTrue(ProviderRegistrationDetail source)
-        {
-            source.ProviderTypeId = (int)ProviderType.Employer;
-            source.StatusId = (int)ProviderStatusType.Active;
-            var model = (ProviderSummary)source;
-
-            model.CanAccessApprenticeshipService.Should().BeTrue();
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public void SupportingProvider_PopulatesModelFromEntity_Property_ReturnsFalse(ProviderRegistrationDetail source)
-        {
-            source.ProviderTypeId = (int)ProviderType.Supporting;
-            source.StatusId = (int)ProviderStatusType.Active;
-            var model = (ProviderSummary)source;
-
-            model.CanAccessApprenticeshipService.Should().BeFalse();
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public void Status_Onboarding_PopulatesModelFromEntity_Property_ReturnsFalse(ProviderRegistrationDetail source)
-        {
-            source.ProviderTypeId = (int)ProviderType.Supporting;
-            source.StatusId = (int)ProviderStatusType.OnBoarding;
-            var model = (ProviderSummary)source;
-
-            model.CanAccessApprenticeshipService.Should().BeFalse();
-        }
-
-        [Test, RecursiveMoqAutoData]
-        public void Status_ActiveButNotTakingOnApprentices_PopulatesModelFromEntity_Property_ReturnsTrue(ProviderRegistrationDetail source)
-        {
-            source.ProviderTypeId = (int)ProviderType.Main;
-            source.StatusId = (int)ProviderStatusType.ActiveNoStarts;
-            var model = (ProviderSummary)source;
-
-            model.CanAccessApprenticeshipService.Should().BeTrue();
+            sut.CanAccessApprenticeshipService.Should().Be(expected);
         }
     }
 }

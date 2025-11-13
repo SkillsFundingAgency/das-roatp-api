@@ -14,13 +14,11 @@ public class GetRegisteredProviderQueryResult
     public string ContactUrl { get; set; }
     public int ProviderTypeId { get; set; }
     public int StatusId { get; set; }
-    /// <summary>
-    /// Read only property to get the value of Provider can access Apprenticeship Service.
-    /// </summary>
+    public ProviderAddressModel Address { get; set; } = new ProviderAddressModel();
+
     public bool CanAccessApprenticeshipService =>
         (ProviderType)ProviderTypeId is ProviderType.Main or ProviderType.Employer
         && (ProviderStatusType)StatusId is ProviderStatusType.Active or ProviderStatusType.OnBoarding or ProviderStatusType.ActiveNoStarts;
-    public ProviderAddressModel Address { get; set; } = new ProviderAddressModel();
 
     public static implicit operator GetRegisteredProviderQueryResult(ProviderRegistrationDetail source) =>
         source == null ? null : new GetRegisteredProviderQueryResult
