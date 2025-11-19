@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Net.Http.Json;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
@@ -13,6 +15,15 @@ public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
     protected readonly ILogger<CourseManagementOuterApiClient> _logger;
 
     protected const string _contentType = "application/json";
+
+    public static JsonSerializerOptions JsonSerializerOptions => new()
+    {
+        PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+        Converters =
+        {
+            new JsonStringEnumConverter()
+        }
+    };
 
     public CourseManagementOuterApiClient(HttpClient httpClient, ILogger<CourseManagementOuterApiClient> logger)
     {
@@ -29,7 +40,7 @@ public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
                 var content = default(T);
                 if (response.IsSuccessStatusCode)
                 {
-                    content = await response.Content.ReadFromJsonAsync<T>();
+                    content = await response.Content.ReadFromJsonAsync<T>(JsonSerializerOptions);
                     return (true, content);
                 }
                 await LogErrorIfUnsuccessfulResponse(response);

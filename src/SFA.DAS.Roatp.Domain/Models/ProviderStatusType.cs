@@ -1,9 +1,9 @@
-﻿namespace SFA.DAS.Roatp.Domain.Models
+﻿namespace SFA.DAS.Roatp.Domain.Models;
+
+public enum ProviderStatusType
 {
-    public enum ProviderStatusType
-    {
-        Active = 1,
-        ActiveButNotTakingOnApprentices = 2,
-        Onboarding = 3
-    }
+    Removed = 0,
+    Active = 1,
+    ActiveNoStarts = 2,
+    OnBoarding = 3
 }

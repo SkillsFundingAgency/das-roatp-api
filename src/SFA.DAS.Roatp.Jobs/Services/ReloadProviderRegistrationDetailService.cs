@@ -3,6 +3,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Roatp.Jobs.ApiClients;
+using SFA.DAS.Roatp.Jobs.ApiModels;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 using SFA.DAS.Roatp.Jobs.Requests;
 
@@ -30,15 +31,20 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
     public async Task ReloadProviderRegistrationDetails()
     {
         var timeStarted = DateTime.UtcNow;
-        var (success, providerRegistrationDetails) = await _courseManagementOuterApiClient.Get<List<ProviderRegistrationDetail>>("lookup/registered-providers");
+
+        var (success, providerRegistrationDetails) = await _courseManagementOuterApiClient.Get<List<RegisteredProviderModel>>("lookup/registered-providers");
+
         if (!success)
         {
             const string errorMessage = "Unexpected response when trying to get provider registration details from the outer api.";
             _logger.LogError(errorMessage);
             throw new InvalidOperationException(errorMessage);
         }
+
         _logger.LogInformation("Reloading {Count} provider registration details", providerRegistrationDetails.Count);
-        await _reloadProviderRegistrationDetailsRepository.ReloadRegisteredProviders(providerRegistrationDetails, timeStarted);
+        List<ProviderRegistrationDetail> registeredProviders = providerRegistrationDetails.Select(prd => (ProviderRegistrationDetail)prd).ToList();
+
+        await _reloadProviderRegistrationDetailsRepository.ReloadRegisteredProviders(registeredProviders, timeStarted);
     }
 
     public async Task ReloadAllAddresses()

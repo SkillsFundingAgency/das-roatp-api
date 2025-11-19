@@ -1,18 +1,16 @@
-﻿using FluentAssertions;
-using Microsoft.Extensions.Logging;
-using Moq;
-using Moq.Protected;
-using NUnit.Framework;
-using SFA.DAS.Roatp.Jobs.ApiClients;
-using SFA.DAS.Roatp.Jobs.Requests;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.Net;
 using System.Net.Http;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
+using FluentAssertions;
+using Microsoft.Extensions.Logging;
+using Moq;
+using Moq.Protected;
+using NUnit.Framework;
+using SFA.DAS.Roatp.Jobs.ApiClients;
 
 namespace SFA.DAS.Roatp.Jobs.UnitTests.ApiClients
 {
@@ -47,7 +45,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.ApiClients
         {
             var sut = new CourseManagementOuterApiClient(PostHttpClient(HttpStatusCode.OK), Mock.Of<ILogger<CourseManagementOuterApiClient>>());
             var request = new TestRequest();
-            var (success, response) = await sut.Post<TestRequest, Person>("test",request);
+            var (success, response) = await sut.Post<TestRequest, Person>("test", request);
 
             success.Should().BeTrue();
             response.Should().BeEquivalentTo(_model);
@@ -73,7 +71,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.ApiClients
                 .ReturnsAsync(new HttpResponseMessage
                 {
                     StatusCode = httpStatus,
-                    Content = new StringContent(JsonSerializer.Serialize(_model), Encoding.UTF8, "application/json"),
+                    Content = new StringContent(JsonSerializer.Serialize(_model, CourseManagementOuterApiClient.JsonSerializerOptions), Encoding.UTF8, "application/json"),
                     RequestMessage = new HttpRequestMessage()
                 });
             HttpClient httpClient = new HttpClient(mockMessageHandler.Object);
