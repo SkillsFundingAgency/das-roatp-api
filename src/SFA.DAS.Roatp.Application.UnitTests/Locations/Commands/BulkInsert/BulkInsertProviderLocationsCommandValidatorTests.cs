@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             var command = new BulkInsertProviderLocationsCommand
             {
                 Ukprn = 10012002,
-                LarsCode = 123,
+                LarsCode = "123",
                 UserId = _userId
             };
 
@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             var command = new BulkInsertProviderLocationsCommand
             {
                 Ukprn = 10012002,
-                LarsCode = 123,
+                LarsCode = "123",
                 UserId = _userId
             };
             var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
@@ -57,7 +57,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             var command = new BulkInsertProviderLocationsCommand
             {
                 Ukprn = 10012002,
-                LarsCode = 123,
+                LarsCode = "123",
                 UserId = userId
             };
             var sut = new BulkInsertProviderLocationsCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>(), Mock.Of<IProviderLocationsReadRepository>());
@@ -73,7 +73,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             var command = new BulkInsertProviderLocationsCommand
             {
                 Ukprn = 10012002,
-                LarsCode = 123,
+                LarsCode = "123",
                 UserId = _userId
             };
 
@@ -103,7 +103,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Commands.BulkInsert
             var command = new BulkInsertProviderLocationsCommand
             {
                 Ukprn = 10012002,
-                LarsCode = 123,
+                LarsCode = "123",
                 UserId = _userId,
                 SelectedSubregionIds = new List<int> { 1 }
             };

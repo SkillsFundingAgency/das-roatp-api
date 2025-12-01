@@ -1,8 +1,8 @@
-﻿using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces
 {
@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
         Task<Provider> GetByUkprn(int ukprn);
         Task<List<Provider>> GetAllProviders();
 
-        Task<List<ProviderSearchModel>> GetProvidersByLarsCode(int larsCode, ProviderOrderBy sortOrder, GetProvidersFromLarsCodeOptionalParameters parameters, CancellationToken cancellationToken);
+        Task<List<ProviderSearchModel>> GetProvidersByLarsCode(string larsCode, ProviderOrderBy sortOrder, GetProvidersFromLarsCodeOptionalParameters parameters, CancellationToken cancellationToken);
 
     }
 }

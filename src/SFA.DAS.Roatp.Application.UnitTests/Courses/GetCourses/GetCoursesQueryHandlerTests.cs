@@ -1,13 +1,13 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetCourses;
 
@@ -23,11 +23,13 @@ public sealed class GetCoursesQueryHandlerTests
         CancellationToken cancellationToken
     )
     {
+        string larsCode = "2";
+        course.LarsCode = larsCode;
         var repositoryResponse = new List<CourseInformation>() { course };
 
-        trainingCoursesReadRepository.Setup(r => 
+        trainingCoursesReadRepository.Setup(r =>
             r.GetProviderTrainingCourses(
-                query.LarsCodes,
+                It.IsAny<string[]>(),
                 query.Longitude,
                 query.Latitude,
                 query.Distance,
@@ -45,7 +47,7 @@ public sealed class GetCoursesQueryHandlerTests
             Assert.That(result.Courses.Count, Is.EqualTo(1));
 
             var resultCourse = result.Courses[0];
-            Assert.That(resultCourse.LarsCode, Is.EqualTo(course.LarsCode));
+            Assert.That(resultCourse.LarsCode.ToString(), Is.EqualTo(course.LarsCode));
             Assert.That(resultCourse.ProvidersCount, Is.EqualTo(course.ProvidersCount));
             Assert.That(resultCourse.TotalProvidersCount, Is.EqualTo(course.TotalProvidersCount));
         });
@@ -63,7 +65,7 @@ public sealed class GetCoursesQueryHandlerTests
         var repositoryResponse = new List<CourseInformation>();
         trainingCoursesReadRepository.Setup(r =>
             r.GetProviderTrainingCourses(
-                query.LarsCodes,
+                It.IsAny<string[]>(),
                 query.Longitude,
                 query.Latitude,
                 query.Distance,

@@ -1,12 +1,12 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 
@@ -81,7 +81,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             PageSize = first.PageSize,
             TotalCount = first.TotalCount,
             TotalPages = first.TotalPages,
-            LarsCode = first.LarsCode,
+            LarsCode = int.TryParse(first.LarsCode, out var l) ? l : 0,
             StandardName = first.StandardName,
             QarPeriod = first.QarPeriod,
             ReviewPeriod = first.ReviewPeriod,

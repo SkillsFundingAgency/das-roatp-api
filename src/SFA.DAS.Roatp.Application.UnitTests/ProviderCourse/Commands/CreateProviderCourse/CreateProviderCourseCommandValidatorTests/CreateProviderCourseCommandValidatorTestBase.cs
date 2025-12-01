@@ -15,9 +15,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
         protected Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock;
         protected Mock<IRegionsReadRepository> regionsReadRepositoryMock;
         public const int ValidUkprn = 10012002;
-        protected const int ValidComboLarsCode = 321;
-        protected const int RegulatedLarsCode = 123;
-        protected const int NonRegulatedLarsCode = 111;
+        protected const string ValidComboLarsCode = "321";
+        protected const string RegulatedLarsCode = "123";
+        protected const string NonRegulatedLarsCode = "111";
         public static Guid NavigationId = new Guid("f26bac30-23a8-11ed-861d-0242ac120002");
         protected const int ValidRegionId = 9;
 
@@ -28,13 +28,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
 
             standardsReadRepositoryMock = new Mock<IStandardsReadRepository>();
             standardsReadRepositoryMock
-                .Setup(r => r.GetStandard(It.IsAny<int>()))
+                .Setup(r => r.GetStandard(It.IsAny<string>()))
                 .ReturnsAsync(new Standard { IsRegulatedForProvider = false });
             standardsReadRepositoryMock
-                .Setup(r => r.GetStandard(It.Is<int>(i => i == ValidComboLarsCode || i == NonRegulatedLarsCode)))
+                .Setup(r => r.GetStandard(It.Is<string>(i => i == ValidComboLarsCode || i == NonRegulatedLarsCode)))
                 .ReturnsAsync(new Standard { IsRegulatedForProvider = false });
             standardsReadRepositoryMock
-                .Setup(r => r.GetStandard(It.Is<int>(i => i == RegulatedLarsCode)))
+                .Setup(r => r.GetStandard(It.Is<string>(i => i == RegulatedLarsCode)))
                 .ReturnsAsync(new Standard { IsRegulatedForProvider = true });
 
             providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();

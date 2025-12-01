@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
         private const string ContactUsEmailIdentifier = "ContactUsEmail";
 
         public int Ukprn { get; set; }
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public string UserId { get; set; }
         public string UserDisplayName { get; set; }
         public JsonPatchDocument<Domain.Models.PatchProviderCourse> Patch { get; set; }

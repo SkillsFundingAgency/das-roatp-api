@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProviderCourseModel), 200)]
-        public async Task<IActionResult> GetCourse(int ukprn, int larsCode)
+        public async Task<IActionResult> GetCourse(int ukprn, string larsCode)
         {
             var response = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
             return GetResponse(response);

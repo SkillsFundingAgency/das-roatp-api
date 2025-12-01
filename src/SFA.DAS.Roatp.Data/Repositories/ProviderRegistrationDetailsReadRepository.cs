@@ -76,7 +76,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                     .SingleOrDefaultAsync(p => p.Ukprn == ukprn, cancellationToken);
 
         [ExcludeFromCodeCoverage]
-        public async Task<bool> IsMainActiveProvider(int ukprn, int larsCode)
+        public async Task<bool> IsMainActiveProvider(int ukprn, string larsCode)
         {
             var count = (await _roatpDataContext.Database.SqlQueryRaw<int>(@"
                             SELECT COUNT(*) as cnt
