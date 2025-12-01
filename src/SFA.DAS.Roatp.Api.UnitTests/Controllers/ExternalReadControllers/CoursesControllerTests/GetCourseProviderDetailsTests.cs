@@ -1,18 +1,15 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
-using FluentAssertions.Execution;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
-using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests;
 
@@ -32,7 +29,7 @@ public sealed class GetCourseProviderDetailsTests
 
         mediatorMock.Setup(m => m.Send(
             It.Is<GetCourseProviderDetailsQuery>(q =>
-                q.LarsCode == larsCode &&
+                q.LarsCode == larsCode.ToString() &&
                 q.Ukprn == ukprn &&
                 q.Location == request.Location &&
                 q.Longitude == request.Longitude &&
@@ -47,7 +44,7 @@ public sealed class GetCourseProviderDetailsTests
             m.Send(It.Is<GetCourseProviderDetailsQuery>(
                 q =>
                     q.Ukprn == ukprn &&
-                    q.LarsCode == larsCode
+                    q.LarsCode == larsCode.ToString()
                     && q.Latitude == request.Latitude
                     && q.Longitude == request.Longitude
                     && q.Location == request.Location

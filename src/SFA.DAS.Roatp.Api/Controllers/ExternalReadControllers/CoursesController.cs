@@ -1,4 +1,6 @@
-﻿using MediatR;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -6,8 +8,6 @@ using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 
@@ -40,7 +40,7 @@ public class CoursesController : ActionResponseControllerBase
     public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] int larsCode, [FromQuery] GetProvidersFromLarsCodeRequest request)
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
-        var response = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode, request));
+        var response = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode.ToString(), request));
         return GetResponse(response);
     }
 
@@ -51,13 +51,13 @@ public class CoursesController : ActionResponseControllerBase
     [ProducesResponseType(typeof(GetCourseProviderDetailsQueryResult), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCourseProviderDetails([FromRoute] int larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsRequest request)
     {
-        var courseProviderDetails = 
+        var courseProviderDetails =
             await _mediator.Send(
                 new GetCourseProviderDetailsQuery(
                     ukprn,
-                    larsCode,
-                    request.ShortlistUserId, 
-                    request.Location, 
+                    larsCode.ToString(),
+                    request.ShortlistUserId,
+                    request.Location,
                     request.Longitude,
                     request.Latitude
                     )

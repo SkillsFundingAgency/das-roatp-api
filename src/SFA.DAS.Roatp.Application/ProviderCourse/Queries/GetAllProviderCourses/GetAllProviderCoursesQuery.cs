@@ -2,6 +2,7 @@
 using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
 {

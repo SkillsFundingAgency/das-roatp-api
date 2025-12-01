@@ -1,8 +1,8 @@
-﻿using FluentValidation.TestHelper;
+﻿using System;
+using System.Threading.Tasks;
+using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
-using System;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetCourses;
 

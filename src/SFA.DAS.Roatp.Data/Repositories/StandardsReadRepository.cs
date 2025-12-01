@@ -1,10 +1,10 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Data.Repositories
 {
@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .AsNoTracking()
                 .ToListAsync();
         }
-        public async Task<Standard> GetStandard(int larsCode)
+        public async Task<Standard> GetStandard(string larsCode)
         {
             return await _roatpDataContext
                 .Standards

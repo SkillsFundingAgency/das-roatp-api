@@ -1,17 +1,19 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Data.Repositories;
 using SFA.DAS.Roatp.Data.UnitTests.Setup;
 using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
+using ProviderCourse = SFA.DAS.Roatp.Domain.Entities.ProviderCourse;
+using ProviderType = SFA.DAS.Roatp.Domain.Constants.ProviderType;
 
 namespace SFA.DAS.Roatp.Data.UnitTests.Repositories;
 
 public sealed class ProviderRegistrationDetailsReadRepositoryTests
 {
     private RoatpDataContext? _inMemoryContext;
+    private const string LarsCode = "1";
 
     [SetUp]
     public void Setup()
@@ -42,7 +44,7 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
                             ProviderCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation() }
                         }
                     },
-                    Courses = new List<ProviderCourse> { new ProviderCourse() },
+                    Courses = new List<ProviderCourse> { new ProviderCourse {LarsCode = LarsCode} },
                     ProviderAddress = new ProviderAddress()
                     {
                         Id = 1,
@@ -69,7 +71,7 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
                     Ukprn = 2,
                     LegalName = "Provider with no locations",
                     Locations = new List<ProviderLocation>(),
-                    Courses = new List<ProviderCourse> { new ProviderCourse() }
+                    Courses = new List<ProviderCourse> { new ProviderCourse { LarsCode = LarsCode } }
                 }
             },
             new ProviderRegistrationDetail
@@ -86,8 +88,8 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
                         {
                             Latitude = 0,
                             Longitude = 0,
-                            ProviderCourseLocations = new List<ProviderCourseLocation> 
-                            { 
+                            ProviderCourseLocations = new List<ProviderCourseLocation>
+                            {
                                 new ProviderCourseLocation()
                             }
                         }
@@ -112,7 +114,7 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
                             ProviderCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation() }
                         }
                     },
-                    Courses = new List<ProviderCourse> { new ProviderCourse() }
+                    Courses = new List<ProviderCourse> { new ProviderCourse { LarsCode = LarsCode } }
                 }
             },
             new ProviderRegistrationDetail
@@ -132,7 +134,7 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
                             ProviderCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation() }
                         }
                     },
-                    Courses = new List<ProviderCourse> { new ProviderCourse() }
+                    Courses = new List<ProviderCourse> { new ProviderCourse { LarsCode = LarsCode } }
                 }
             }
         };
@@ -154,7 +156,7 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
             Assert.That(result, Has.Count.EqualTo(1), "Only a single valid provider should be returned.");
 
             var providerRegistration = result[0];
-            
+
             Assert.That(providerRegistration.Ukprn, Is.EqualTo(expectedProviderUkprn));
             Assert.That(providerRegistration.Provider, Is.Not.Null);
             Assert.That(providerRegistration.Provider.ProviderAddress, Is.Not.Null);

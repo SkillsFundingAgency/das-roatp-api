@@ -1,4 +1,7 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -7,9 +10,6 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
 using SFA.DAS.Roatp.Application.Standards.Queries;
 using SFA.DAS.Roatp.Domain.Entities;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {
@@ -21,8 +21,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         {
             var standards = new List<Standard>
             {
-                new() { LarsCode = 1, Title = "standard 1" },
-                new() { LarsCode = 2, Title = "standard 2" }
+                new() { LarsCode = "1", Title = "standard 1" },
+                new() { LarsCode = "2", Title = "standard 2" }
             };
 
             var mediatorMock = new Mock<IMediator>();

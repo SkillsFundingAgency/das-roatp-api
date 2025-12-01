@@ -10,7 +10,7 @@ public sealed class CourseTrainingProviderCountModel
 
     public static implicit operator CourseTrainingProviderCountModel(CourseInformation source) => new()
     {
-        LarsCode = source.LarsCode,
+        LarsCode = int.TryParse(source.LarsCode, out var l) ? l : 0,
         ProvidersCount = source.ProvidersCount,
         TotalProvidersCount = source.TotalProvidersCount
     };

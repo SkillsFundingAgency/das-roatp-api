@@ -1,14 +1,14 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetCourseProviderDetails;
 
@@ -21,9 +21,12 @@ public sealed class GetCourseProviderDetailsQueryHandlerTests
        [Greedy] GetCourseProviderDetailsQueryHandler sut,
        GetCourseProviderDetailsQuery query,
        List<CourseProviderDetailsModel> repositoryResult,
+       int larsCode,
        CancellationToken cancellationToken
-   )
+    )
     {
+        repositoryResult[0].LarsCode = larsCode.ToString();
+        query.LarsCode = larsCode.ToString();
         courseProviderDetailsReadRepository.Setup(r =>
             r.GetCourseProviderDetails(
                 It.Is<GetCourseProviderDetailsParameters>(a =>
@@ -61,7 +64,7 @@ public sealed class GetCourseProviderDetailsQueryHandlerTests
             Assert.That(result.Contact.PhoneNumber, Is.EqualTo(source.PhoneNumber));
             Assert.That(result.CourseName, Is.EqualTo(source.CourseName));
             Assert.That(result.Level, Is.EqualTo(source.Level));
-            Assert.That(result.LarsCode, Is.EqualTo(source.LarsCode));
+            Assert.That(result.LarsCode.ToString(), Is.EqualTo(source.LarsCode));
             Assert.That(result.IFateReferenceNumber, Is.EqualTo(source.IFateReferenceNumber));
             Assert.That(result.QAR.Period, Is.EqualTo(source.Period));
             Assert.That(result.QAR.Leavers, Is.EqualTo(source.Leavers));

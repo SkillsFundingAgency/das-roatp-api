@@ -4,7 +4,7 @@ namespace SFA.DAS.Roatp.Domain.Models;
 
 public sealed class GetCourseProviderDetailsParameters
 {
-    public int LarsCode { get; set; }
+    public string LarsCode { get; set; }
     public long Ukprn { get; set; }
     public decimal? Lon { get; set; }
     public decimal? Lat { get; set; }

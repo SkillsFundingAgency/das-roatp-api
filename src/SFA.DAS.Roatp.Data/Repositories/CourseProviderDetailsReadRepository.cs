@@ -1,14 +1,14 @@
-﻿using Microsoft.Data.SqlClient;
-using Microsoft.EntityFrameworkCore;
-using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Domain.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Data.Repositories;
 
@@ -69,7 +69,7 @@ public sealed class CourseProviderDetailsReadRepository : ICourseProviderDetails
                     Website = GetReaderStringValue(nameof(CourseProviderDetailsModel.Website), reader),
                     CourseName = GetReaderStringValue(nameof(CourseProviderDetailsModel.CourseName), reader),
                     Level = reader.GetInt32(nameof(CourseProviderDetailsModel.Level)),
-                    LarsCode = reader.GetInt32(nameof(CourseProviderDetailsModel.LarsCode)),
+                    LarsCode = GetReaderStringValue(nameof(CourseProviderDetailsModel.LarsCode), reader),
                     IFateReferenceNumber = GetReaderStringValue(nameof(CourseProviderDetailsModel.IFateReferenceNumber), reader),
                     Period = GetReaderStringValue(nameof(CourseProviderDetailsModel.Period), reader),
                     Leavers = GetReaderStringValue(nameof(CourseProviderDetailsModel.Leavers), reader),
@@ -106,7 +106,7 @@ public sealed class CourseProviderDetailsReadRepository : ICourseProviderDetails
         }
         finally
         {
-            if(command.Connection.State == ConnectionState.Open)
+            if (command.Connection.State == ConnectionState.Open)
             {
                 await command.Connection.CloseAsync();
             }

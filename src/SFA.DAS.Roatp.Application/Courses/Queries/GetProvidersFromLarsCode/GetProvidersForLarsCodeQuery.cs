@@ -1,17 +1,17 @@
-﻿using MediatR;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 
 public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvidersForLarsCodeQueryResult>>,
     ICoordinates, ILarsCode
 {
-    public int LarsCode { get; }
+    public string LarsCode { get; }
     public ProviderOrderBy? OrderBy { get; }
     public decimal? Distance { get; }
     public decimal? Latitude { get; }
@@ -27,7 +27,7 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
     public int? Page { get; }
     public int? PageSize { get; }
     public Guid? UserId { get; }
-    public GetProvidersForLarsCodeQuery(int larsCode, GetProvidersFromLarsCodeRequest request)
+    public GetProvidersForLarsCodeQuery(string larsCode, GetProvidersFromLarsCodeRequest request)
     {
         LarsCode = larsCode;
         Latitude = request.Latitude;

@@ -21,7 +21,7 @@ public sealed class ProvidersCountReadRepository : IProvidersCountReadRepository
         _roatpDataContext = roatpDataContext;
     }
 
-    public async Task<List<CourseInformation>> GetProviderTrainingCourses(int[] larsCodes, decimal? longitude, decimal? latitude, int? distance, CancellationToken cancellationToken)
+    public async Task<List<CourseInformation>> GetProviderTrainingCourses(string[] larsCodes, decimal? longitude, decimal? latitude, int? distance, CancellationToken cancellationToken)
     {
         var connection = _roatpDataContext.Database.GetDbConnection();
         await using DbCommand command = connection.CreateCommand();
@@ -48,7 +48,7 @@ public sealed class ProvidersCountReadRepository : IProvidersCountReadRepository
             {
                 courseInformation.Add(
                     new CourseInformation(
-                        reader.GetInt32(0),
+                        reader.GetString(0),
                         reader.GetInt32(1),
                         reader.GetInt32(2)
                     )

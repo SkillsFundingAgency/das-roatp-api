@@ -4,6 +4,7 @@ using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
@@ -32,7 +33,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
+        [ProducesResponseType(typeof(List<ProviderCourseModelExternal>), 200)]
         public async Task<IActionResult> GetAllCourses(int ukprn, [FromQuery] bool excludeCoursesWithoutLocation = true)
         {
             var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, excludeCoursesWithoutLocation));
@@ -50,8 +51,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ProviderCourseModel), 200)]
-        public async Task<IActionResult> GetCourse(int ukprn, int larsCode)
+        [ProducesResponseType(typeof(ProviderCourseModelExternal), 200)]
+        public async Task<IActionResult> GetCourse(int ukprn, string larsCode)
         {
             var response = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
             return GetResponse(response);

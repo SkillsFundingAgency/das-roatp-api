@@ -1,12 +1,12 @@
-﻿using MediatR;
+﻿using System;
+using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.Delete;
-using System;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpDelete]
         [Route("/providers/{ukprn}/courses/{larsCode}/locations")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> BulkDeleteProviderCourseLocations([FromRoute] int ukprn, [FromRoute] int larsCode, [FromQuery] DeleteProviderCourseLocationOption options, [FromQuery] string userId, [FromQuery] string userDisplayName)
+        public async Task<IActionResult> BulkDeleteProviderCourseLocations([FromRoute] int ukprn, [FromRoute] string larsCode, [FromQuery] DeleteProviderCourseLocationOption options, [FromQuery] string userId, [FromQuery] string userDisplayName)
         {
             _logger.LogInformation("Inner API: Request received for bulk delete provider course locations for Ukprn:{ukprn} LarsCode:{larscode} DeleteOptions:{deleteOptions}", ukprn, larsCode, options);
 
@@ -41,7 +41,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpDelete]
         [Route("/providers/{ukprn}/courses/{larsCode}/location/{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
-        public async Task<IActionResult> DeleteProviderCourseLocation([FromRoute] int ukprn, [FromRoute] int larsCode, [FromRoute] Guid id, [FromQuery] string userId, [FromQuery] string userDisplayName)
+        public async Task<IActionResult> DeleteProviderCourseLocation([FromRoute] int ukprn, [FromRoute] string larsCode, [FromRoute] Guid id, [FromQuery] string userId, [FromQuery] string userDisplayName)
         {
             _logger.LogInformation("Inner API: Request received for delete provider course location for Ukprn:{ukprn} LarsCode:{larscode} ProviderCourseLocationId:{id}", ukprn, larsCode, id);
 

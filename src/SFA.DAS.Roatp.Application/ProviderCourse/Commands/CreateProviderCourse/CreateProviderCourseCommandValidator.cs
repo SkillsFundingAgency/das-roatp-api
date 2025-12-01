@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
             Include(new UkprnValidator(providersReadRepository));
             RuleFor(x => x.LarsCode)
                 .Cascade(CascadeMode.Stop)
-                .GreaterThan(0)
+                .NotEmpty()
                 .WithMessage(LarsCodeInvalidMessage)
                 .MustAsync(async (model, larsCode, cancellation) =>
                 {
@@ -103,7 +103,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 
         }
 
-        private async Task<bool> IsStandardRegulated(int larsCode, IStandardsReadRepository standardsReadRepository)
+        private async Task<bool> IsStandardRegulated(string larsCode, IStandardsReadRepository standardsReadRepository)
         {
             var standard = await standardsReadRepository.GetStandard(larsCode);
             var result = standard.IsRegulatedForProvider;

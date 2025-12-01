@@ -11,8 +11,8 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetAllProviderCourses;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetRegisteredProvider;
@@ -205,8 +205,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
            [Greedy] ProvidersController sut,
            int ukprn)
         {
-            List<ProviderCourseModel> handlerResult = new List<ProviderCourseModel>();
-            mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<List<ProviderCourseModel>>(handlerResult));
+            List<ProviderCourseModelExternal> handlerResult = new List<ProviderCourseModelExternal>();
+            mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesExternalQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<List<ProviderCourseModelExternal>>(handlerResult));
             var result = await sut.GetAllProviderCourses(ukprn);
             result.As<OkObjectResult>().Value.Should().BeEquivalentTo(handlerResult);
         }
@@ -225,8 +225,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             int ukprn,
             int larsCode)
         {
-            ProviderCourseModel handlerResult = new ProviderCourseModel();
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<ProviderCourseModel>(handlerResult));
+            ProviderCourseModelExternal handlerResult = new ProviderCourseModelExternal();
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseExternalQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<ProviderCourseModelExternal>(handlerResult));
             var result = await sut.GetProviderCourse(ukprn, larsCode);
             (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
         }

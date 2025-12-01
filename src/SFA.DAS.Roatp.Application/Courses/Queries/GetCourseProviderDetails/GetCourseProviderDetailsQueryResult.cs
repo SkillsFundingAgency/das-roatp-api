@@ -1,6 +1,6 @@
-﻿using SFA.DAS.Roatp.Domain.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 
@@ -43,7 +43,7 @@ public sealed class GetCourseProviderDetailsQueryResult
             },
             CourseName = source.CourseName,
             Level = source.Level,
-            LarsCode = source.LarsCode,
+            LarsCode = int.TryParse(source.LarsCode, out var l) ? l : 0,
             IFateReferenceNumber = source.IFateReferenceNumber,
             QAR = new QarModel()
             {

@@ -10,7 +10,8 @@ public sealed class GetCourseProviderDetailsQueryResultTests
     [Test]
     [RecursiveMoqAutoData]
     public void ImplicitOperator_ShouldConvertCourseProviderDetailsModel_ToGetCourseProviderDetailsQueryResult(CourseProviderDetailsModel source)
-    { 
+    {
+        source.LarsCode = "1";
         GetCourseProviderDetailsQueryResult sut = source;
 
         Assert.Multiple(() =>
@@ -30,7 +31,7 @@ public sealed class GetCourseProviderDetailsQueryResultTests
             Assert.That(sut.Contact.PhoneNumber, Is.EqualTo(source.PhoneNumber));
             Assert.That(sut.CourseName, Is.EqualTo(source.CourseName));
             Assert.That(sut.Level, Is.EqualTo(source.Level));
-            Assert.That(sut.LarsCode, Is.EqualTo(source.LarsCode));
+            Assert.That(sut.LarsCode.ToString(), Is.EqualTo(source.LarsCode));
             Assert.That(sut.IFateReferenceNumber, Is.EqualTo(source.IFateReferenceNumber));
             Assert.That(sut.QAR.Period, Is.EqualTo(source.Period));
             Assert.That(sut.QAR.Leavers, Is.EqualTo(source.Leavers));

@@ -1,13 +1,13 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using MediatR;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.JsonPatch;
-using SFA.DAS.Roatp.Domain.Models;
-using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
-using SFA.DAS.Roatp.Api.Models;
-using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Api.Models;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -24,8 +24,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
         }
 
         [Route("/providers/{ukprn}/courses/{larsCode}")]
-        [HttpPatch] 
-        public async Task<IActionResult> PatchProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, [FromBody] JsonPatchDocument<PatchProviderCourse> request, [FromQuery] string userId, [FromQuery] string userDisplayName)
+        [HttpPatch]
+        public async Task<IActionResult> PatchProviderCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] JsonPatchDocument<PatchProviderCourse> request, [FromQuery] string userId, [FromQuery] string userDisplayName)
         {
             _logger.LogInformation("Inner API: Request to patch course contact details for ukprn: {ukprn} larscode: {larscode}", ukprn, larsCode);
 
@@ -43,7 +43,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
 
         [Route("/providers/{ukprn}/courses/{larsCode}")]
         [HttpPost]
-        public async Task<IActionResult> CreateProviderCourse([FromRoute] int ukprn, [FromRoute] int larsCode, ProviderCourseAddModel providerCourseAddModel, [FromQuery] string userId, [FromQuery] string userDisplayName)
+        public async Task<IActionResult> CreateProviderCourse([FromRoute] int ukprn, [FromRoute] string larsCode, ProviderCourseAddModel providerCourseAddModel, [FromQuery] string userId, [FromQuery] string userDisplayName)
         {
             _logger.LogInformation("Inner API: Received command to add course: {larscode} to provider: {ukprn}", larsCode, ukprn);
 

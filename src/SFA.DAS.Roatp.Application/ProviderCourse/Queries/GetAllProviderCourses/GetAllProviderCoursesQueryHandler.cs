@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
@@ -26,9 +27,9 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
         {
             var providerCourses = await _providerCoursesReadRepository.GetAllProviderCourses(request.Ukprn);
 
-            if (!providerCourses.Any())
+            if (providerCourses.Count == 0)
             {
-                _logger.LogInformation("ProviderCourses data not found for {ukprn}", request.Ukprn);
+                _logger.LogInformation("ProviderCourses data not found for {Ukprn}", request.Ukprn);
                 return new ValidatedResponse<List<ProviderCourseModel>>(new List<ProviderCourseModel>());
             }
 
@@ -46,7 +47,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
 
             foreach (var p in providerCoursesModel)
             {
-                var course = standardsLookup.Single(c => c.LarsCode == p.LarsCode);
+                var course = standardsLookup.Single(c => c.LarsCode == p.LarsCode.ToString());
                 p.AttachCourseDetails(course.IfateReferenceNumber, course.Level, course.Title, course.Version,
                         course.ApprovalBody);
             }

@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetAllProviderCourses;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetRegisteredProvider;
@@ -72,10 +72,10 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(List<ProviderCourseModel>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<ProviderCourseModelExternal>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllProviderCourses(int ukprn)
         {
-            var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, true));
+            var response = await _mediator.Send(new GetAllProviderCoursesExternalQuery(ukprn, true));
             if (response.IsValidResponse)
                 _logger.LogInformation("{Count} Provider courses found for {Ukprn}:", response.Result.Count, ukprn);
             return GetResponse(response);
@@ -86,10 +86,10 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ProviderCourseModel), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ProviderCourseModelExternal), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProviderCourse(int ukprn, int larsCode)
         {
-            var response = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
+            var response = await _mediator.Send(new GetProviderCourseExternalQuery(ukprn, larsCode.ToString()));
             if (response.IsValidResponse)
                 _logger.LogInformation("Course data found for {Ukprn} and {LarsCode}", ukprn, larsCode);
             return GetResponse(response);

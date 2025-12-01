@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Models
@@ -13,19 +13,19 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
         [TestCase(false)]
         public void ProviderCourseOperator_ReturnsProviderCourseModel(bool hasPortableFlexiJobOption)
         {
-            var course = new ProviderCourse() { LarsCode = 1, HasPortableFlexiJobOption = hasPortableFlexiJobOption, Standard = new Standard() };
-            var model = (ProviderCourseModel)course;
+            var course = new ProviderCourse() { LarsCode = "1", HasPortableFlexiJobOption = hasPortableFlexiJobOption, Standard = new Standard() };
+            var model = (ProviderCourseModelExternal)course;
 
             Assert.That(model, Is.Not.Null);
-            Assert.That(model.LarsCode, Is.EqualTo(course.LarsCode));
+            Assert.That(model.LarsCode.ToString(), Is.EqualTo(course.LarsCode));
             Assert.That(model.HasPortableFlexiJobOption, Is.EqualTo(hasPortableFlexiJobOption));
         }
 
         [Test]
         public void ProviderCourseOperator_UpdateCourseInjectsExpectedValues()
         {
-            var course = new ProviderCourse() { LarsCode = 1, Standard = new Standard() };
-            var model = (ProviderCourseModel)course;
+            var course = new ProviderCourse() { LarsCode = "1", Standard = new Standard() };
+            var model = (ProviderCourseModelExternal)course;
 
             var standardLookup = new Standard
             {
@@ -57,7 +57,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
             }
 
             var course = new ProviderCourse { Locations = locations, Standard = new Standard() };
-            var model = (ProviderCourseModel)course;
+            var model = (ProviderCourseModelExternal)course;
 
             Assert.That(model, Is.Not.Null);
             Assert.AreEqual(expected, model.HasLocations);

@@ -30,13 +30,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             providersReadRepositoryMock.Setup(p => p.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
 
             providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
-            providerCoursesReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
+            providerCoursesReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
             providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
             providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(new List<ProviderLocation> { new ProviderLocation { Id = 1, RegionId = 1 } });
 
             providerCourseLocationsReadRepositoryMock = new Mock<IProviderCourseLocationsReadRepository>();
-            providerCourseLocationsReadRepositoryMock.Setup(l => l.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new List<ProviderCourseLocation> { new ProviderCourseLocation { Location = new ProviderLocation { LocationType = LocationType.Regional } } });
+            providerCourseLocationsReadRepositoryMock.Setup(l => l.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new List<ProviderCourseLocation> { new ProviderCourseLocation { Location = new ProviderLocation { LocationType = LocationType.Regional } } });
         }
 
         [Test]
@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var command = new BulkInsertProviderCourseLocationsCommand
             {
                 Ukprn = 100,
-                LarsCode = 123,
+                LarsCode = "123",
                 UserId = _userId,
             };
 
@@ -62,7 +62,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var command = new BulkInsertProviderCourseLocationsCommand
             {
                 Ukprn = 10012002,
-                LarsCode = 0,
+                LarsCode = "",
                 UserId = _userId,
             };
             var sut = new BulkInsertProviderCourseLocationsCommandValidator(providersReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationsReadRepositoryMock.Object);
@@ -80,7 +80,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var command = new BulkInsertProviderCourseLocationsCommand
             {
                 Ukprn = 10012002,
-                LarsCode = 123,
+                LarsCode = "123",
                 UserId = userId,
             };
 
@@ -98,7 +98,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var command = new BulkInsertProviderCourseLocationsCommand
             {
                 Ukprn = 10012002,
-                LarsCode = 123,
+                LarsCode = "123",
                 UserId = _userId,
             };
             var sut = new BulkInsertProviderCourseLocationsCommandValidator(providersReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, providerCourseLocationsReadRepositoryMock.Object);
@@ -115,7 +115,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var command = new BulkInsertProviderCourseLocationsCommand
             {
                 Ukprn = 10012002,
-                LarsCode = 123,
+                LarsCode = "123",
                 UserId = _userId,
                 SelectedSubregionIds = new List<int> { 10 }
             };
@@ -133,7 +133,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.B
             var command = new BulkInsertProviderCourseLocationsCommand
             {
                 Ukprn = 10012002,
-                LarsCode = 123,
+                LarsCode = "123",
                 UserId = _userId,
                 SelectedSubregionIds = new List<int> { 1 }
             };

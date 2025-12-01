@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Threading.Tasks;
+using FluentAssertions;
 using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
@@ -7,7 +8,6 @@ using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForLarsCode;
 
@@ -20,13 +20,12 @@ public class GetProvidersForLarsCodeQueryValidatorTests
     public void Before_each_test()
     {
         _standardsReadRepo = new Mock<IStandardsReadRepository>();
-        _standardsReadRepo.Setup(x => x.GetStandard(It.IsAny<int>())).ReturnsAsync(new Standard());
+        _standardsReadRepo.Setup(x => x.GetStandard(It.IsAny<string>())).ReturnsAsync(new Standard());
     }
 
-    [TestCase(0, false)]
-    [TestCase(1, true)]
-    [TestCase(-1, false)]
-    public async Task Validate_LarsCode(int larsCode, bool isValid)
+    [TestCase("", false)]
+    [TestCase("1", true)]
+    public async Task Validate_LarsCode(string larsCode, bool isValid)
     {
         var request = new GetProvidersFromLarsCodeRequest();
         var validator = new GetProvidersForLarsCodeQueryValidator(_standardsReadRepo.Object);
@@ -48,7 +47,7 @@ public class GetProvidersForLarsCodeQueryValidatorTests
     [TestCase(-180, false)]
     public async Task Validate_LatitudeRange(int latitude, bool isValid)
     {
-        var larsCode = 1;
+        var larsCode = "1";
         var request = new GetProvidersFromLarsCodeRequest
         { Latitude = latitude, Longitude = 0, OrderBy = ProviderOrderBy.Distance };
         var validator = new GetProvidersForLarsCodeQueryValidator(_standardsReadRepo.Object);
@@ -78,7 +77,7 @@ public class GetProvidersForLarsCodeQueryValidatorTests
     public async Task Validate_LatitudeLongitude(decimal? latitude, decimal? longitude, bool isValid,
         string errorMessage)
     {
-        var larsCode = 1;
+        var larsCode = "1";
         var request = new GetProvidersFromLarsCodeRequest
         { Latitude = latitude, Longitude = longitude, OrderBy = ProviderOrderBy.Distance };
         var validator = new GetProvidersForLarsCodeQueryValidator(_standardsReadRepo.Object);
@@ -96,7 +95,7 @@ public class GetProvidersForLarsCodeQueryValidatorTests
     [TestCase(ProviderOrderBy.EmployerProviderRating, true)]
     public async Task Validate_OrderBy(ProviderOrderBy? orderBy, bool isValid)
     {
-        var larsCode = 1;
+        var larsCode = "1";
         var request = new GetProvidersFromLarsCodeRequest { Latitude = 80, Longitude = 0, OrderBy = orderBy };
         var validator = new GetProvidersForLarsCodeQueryValidator(_standardsReadRepo.Object);
 
@@ -118,7 +117,7 @@ public class GetProvidersForLarsCodeQueryValidatorTests
     [TestCase(-1, false)]
     public async Task Validate_Distance(int? distance, bool isValid)
     {
-        var larsCode = 1;
+        var larsCode = "1";
         var request = new GetProvidersFromLarsCodeRequest { Latitude = 80, Longitude = 0, OrderBy = ProviderOrderBy.Distance, Distance = distance };
         var validator = new GetProvidersForLarsCodeQueryValidator(_standardsReadRepo.Object);
 
