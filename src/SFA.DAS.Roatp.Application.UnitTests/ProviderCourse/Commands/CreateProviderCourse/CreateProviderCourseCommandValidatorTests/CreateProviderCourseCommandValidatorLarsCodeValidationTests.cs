@@ -1,7 +1,7 @@
-﻿using FluentValidation.TestHelper;
+﻿using System.Threading.Tasks;
+using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests
 {
@@ -10,7 +10,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
     {
         [TestCase(ValidComboLarsCode, false, CreateProviderCourseCommandValidator.LarsCodeUkprnCombinationAlreadyExistsMessage)]
         [TestCase(RegulatedLarsCode, true, "")]
-        public async Task LarsCode_Validation(int larsCode, bool isValid, string expectedErrorMessage)
+        public async Task LarsCode_Validation(string larsCode, bool isValid, string expectedErrorMessage)
         {
             var command = new CreateProviderCourseCommand { LarsCode = larsCode, Ukprn = ValidUkprn };
             var sut = GetSut();

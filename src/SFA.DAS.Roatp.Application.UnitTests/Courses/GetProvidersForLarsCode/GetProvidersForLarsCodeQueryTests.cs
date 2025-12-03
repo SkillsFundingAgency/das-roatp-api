@@ -1,11 +1,11 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForLarsCode;
 
@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForLarsCode;
 public class GetProvidersForLarsCodeQueryTests
 {
     [Test, RecursiveMoqAutoData]
-    public void Operator_PopulatesQueryFromGetProvidersFromLarsCodeRequest(int larsCode, GetProvidersFromLarsCodeRequest request)
+    public void Operator_PopulatesQueryFromGetProvidersFromLarsCodeRequest(string larsCode, GetProvidersFromLarsCodeRequest request)
     {
         var model = new GetProvidersForLarsCodeQuery(larsCode, request);
         var mappedDeliveryModes = new List<DeliveryMode>();

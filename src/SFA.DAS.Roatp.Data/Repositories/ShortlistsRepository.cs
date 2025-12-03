@@ -21,7 +21,7 @@ public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortli
         await _roatpDataContext.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<Shortlist> Get(Guid userId, int ukprn, int larsCode, string locationDescription, CancellationToken cancellationToken)
+    public Task<Shortlist> Get(Guid userId, int ukprn, string larsCode, string locationDescription, CancellationToken cancellationToken)
         => _roatpDataContext
             .Shortlists
             .Where(s => s.UserId == userId && s.Ukprn == ukprn && s.LarsCode == larsCode && s.LocationDescription == locationDescription)

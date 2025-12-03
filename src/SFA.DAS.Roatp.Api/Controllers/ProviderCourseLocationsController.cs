@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -27,7 +26,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(List<ProviderCourseLocationModel>), 200)]
-        public async Task<IActionResult> GetProviderCourseLocations(int ukprn, int larsCode)
+        public async Task<IActionResult> GetProviderCourseLocations(int ukprn, string larsCode)
         {
             _logger.LogInformation("Request received to get all provider Course Locations for ukprn: {ukprn}, larsCode : {larsCode}", ukprn, larsCode);
 

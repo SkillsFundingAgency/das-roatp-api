@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddNationalLocation;
@@ -7,9 +10,6 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.AddNationalLocation
 {
@@ -55,11 +55,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
 
             providersReadRepositoryMock.Setup(m => m.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
             providerLocationsReadRepositoryMock.Setup(m => m.GetAllProviderLocations(It.IsAny<int>())).ReturnsAsync(providerLocations);
-            providerCoursesReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
+            providerCoursesReadRepositoryMock.Setup(m => m.GetProviderCourse(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(providerCourse);
 
             await sut.Handle(command, new CancellationToken());
 
-            providerLocationsWriteRepositoryMock.Verify(p => p.Create(It.IsAny<ProviderLocation>(),command.Ukprn, command.UserId, command.UserDisplayName, AuditEventTypes.CreateProviderLocation.ToString()), Times.Never);
+            providerLocationsWriteRepositoryMock.Verify(p => p.Create(It.IsAny<ProviderLocation>(), command.Ukprn, command.UserId, command.UserDisplayName, AuditEventTypes.CreateProviderLocation.ToString()), Times.Never);
             providerCourseLocationsWriteRepositoryMock.Verify(m => m.Create(It.Is<ProviderCourseLocation>(l => l.ProviderLocationId == providerLocation.Id && !l.IsImported && l.ProviderCourseId == providerCourse.Id), It.IsAny<int>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()));
         }
     }

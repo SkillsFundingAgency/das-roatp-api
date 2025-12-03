@@ -21,20 +21,20 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             List<ProviderCourseLocation> locations,
             [Frozen] Mock<IProvidersReadRepository> repoMockProviders,
             [Frozen] Mock<IProviderCoursesReadRepository> repoMockProviderCourses,
-            [Frozen]Mock<IProviderCourseLocationsReadRepository> repoMockProviderCourseLocations,
+            [Frozen] Mock<IProviderCourseLocationsReadRepository> repoMockProviderCourseLocations,
             GetProviderCourseLocationsQuery query,
             GetProviderCourseLocationsQueryHandler sut,
             CancellationToken cancellationToken)
         {
             repoMockProviders.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
 
-            repoMockProviderCourses.Setup(r => r.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
+            repoMockProviderCourses.Setup(r => r.GetProviderCourse(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(providerCourse);
 
-            repoMockProviderCourseLocations.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(locations);
+            repoMockProviderCourseLocations.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(locations);
 
             var response = await sut.Handle(query, cancellationToken);
 
-            repoMockProviderCourseLocations.Verify(d => d.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
+            repoMockProviderCourseLocations.Verify(d => d.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
 
             Assert.That(response, Is.Not.Null);
             Assert.That(response.Result.Count, Is.EqualTo(locations.Count));
@@ -54,13 +54,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             var locations = new List<ProviderCourseLocation>();
             repoMockProvider.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(provider);
 
-            repoMockProviderCourse.Setup(r => r.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
+            repoMockProviderCourse.Setup(r => r.GetProviderCourse(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(providerCourse);
 
-            repoMockProviderCourseLocation.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(locations);
+            repoMockProviderCourseLocation.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(locations);
 
             var response = await sut.Handle(query, cancellationToken);
 
-            repoMockProviderCourseLocation.Verify(d => d.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()), Times.Once);
+            repoMockProviderCourseLocation.Verify(d => d.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<string>()), Times.Once);
 
             Assert.That(response, Is.Not.Null);
             Assert.That(response.Result, Is.Empty);

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
 using MediatR;
@@ -6,11 +8,9 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderCourseLocations;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading;
-using System.Threading.Tasks;
-using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
 {
@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProviderCourseLocationsController sut,
             int ukprn,
-            int larsCode,
+            string larsCode,
             List<ProviderCourseLocationModel> handlerResult)
         {
             mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseLocationsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<List<ProviderCourseLocationModel>>(handlerResult));

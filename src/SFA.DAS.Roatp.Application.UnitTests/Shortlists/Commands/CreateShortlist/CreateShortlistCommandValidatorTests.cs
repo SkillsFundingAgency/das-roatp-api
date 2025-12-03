@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
@@ -6,9 +9,6 @@ using SFA.DAS.Roatp.Application.Shortlists.Commands.CreateShortlist;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Shortlists.Commands.CreateShortlist;
 
@@ -57,7 +57,7 @@ public class CreateShortlistCommandValidatorTests
         CreateShortlistCommandValidator sut,
         CreateShortlistCommand command)
     {
-        command.LarsCode = 0;
+        command.LarsCode = "";
 
         var result = await sut.TestValidateAsync(command, options => options.IncludeProperties(nameof(CreateShortlistCommand.LarsCode)));
 
@@ -70,7 +70,7 @@ public class CreateShortlistCommandValidatorTests
         CreateShortlistCommandValidator sut,
         CreateShortlistCommand command)
     {
-        command.LarsCode = 1;
+        command.LarsCode = "1";
         repoMock.Setup(r => r.GetStandard(command.LarsCode)).ReturnsAsync(() => null);
 
         var result = await sut.TestValidateAsync(command, options => options.IncludeProperties(nameof(CreateShortlistCommand.LarsCode)));
@@ -85,8 +85,8 @@ public class CreateShortlistCommandValidatorTests
         CreateShortlistCommandValidator sut,
         CreateShortlistCommand command)
     {
-        var standard = new Standard { LarsCode = 1, Title = "standard 1" };
-        command.LarsCode = 1;
+        var standard = new Standard { LarsCode = "1", Title = "standard 1" };
+        command.LarsCode = "1";
         repoMock.Setup(r => r.GetStandard(command.LarsCode)).ReturnsAsync(standard);
 
         var result = await sut.TestValidateAsync(command, options => options.IncludeProperties(nameof(CreateShortlistCommand.LarsCode)));

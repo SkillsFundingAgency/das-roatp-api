@@ -11,6 +11,6 @@ public interface IProviderRegistrationDetailsReadRepository
     Task<List<ProviderRegistrationDetail>> GetActiveProviderRegistrations(CancellationToken cancellationToken);
     Task<List<ProviderRegistrationDetail>> GetActiveAndMainProviderRegistrations(CancellationToken cancellationToken);
     Task<ProviderRegistrationDetail> GetProviderRegistrationDetail(int ukprn, CancellationToken cancellationToken);
-    Task<bool> IsMainActiveProvider(int ukprn, int larsCode);
+    Task<bool> IsMainActiveProvider(int ukprn, string larsCode);
     Task<ProviderSummaryModel> GetProviderSummary(int ukprn, CancellationToken cancellationToken);
 }

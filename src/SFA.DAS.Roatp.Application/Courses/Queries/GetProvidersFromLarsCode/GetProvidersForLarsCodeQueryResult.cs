@@ -1,5 +1,5 @@
-﻿using SFA.DAS.Roatp.Domain.Models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode
 {

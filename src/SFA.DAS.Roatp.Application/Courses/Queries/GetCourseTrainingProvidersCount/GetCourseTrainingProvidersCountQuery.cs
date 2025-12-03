@@ -1,7 +1,7 @@
-﻿using MediatR;
+﻿using System;
+using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
-using System;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 

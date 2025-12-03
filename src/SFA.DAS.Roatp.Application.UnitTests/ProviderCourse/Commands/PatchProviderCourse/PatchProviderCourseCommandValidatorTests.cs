@@ -32,7 +32,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
             _providersReadRepo = new Mock<IProvidersReadRepository>();
             _providerCoursesReadRepo = new Mock<IProviderCoursesReadRepository>();
             _providersReadRepo.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
-            _providerCoursesReadRepo.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
+            _providerCoursesReadRepo.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
         }
 
@@ -51,10 +51,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                 result.ShouldHaveValidationErrorFor(c => c.Ukprn);
         }
 
-        [TestCase(0, false)]
-        [TestCase(1, true)]
-        [TestCase(-1, false)]
-        public async Task Validate_LarsCode(int larsCode, bool isValid)
+        [TestCase("", false)]
+        [TestCase("1", true)]
+        public async Task Validate_LarsCode(string larsCode, bool isValid)
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
 
@@ -71,7 +70,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
 
             var command = new PatchProviderCourseCommand
             {
@@ -105,7 +104,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
 
             var command = new PatchProviderCourseCommand
             {
@@ -142,7 +141,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
 
             var command = new PatchProviderCourseCommand
             {
@@ -177,7 +176,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
 
             var command = new PatchProviderCourseCommand
             {
@@ -215,7 +214,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
 
             var command = new PatchProviderCourseCommand
             {
@@ -252,7 +251,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
 
             var command = new PatchProviderCourseCommand
             {
@@ -274,7 +273,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
 
             var command = new PatchProviderCourseCommand
             {
@@ -308,7 +307,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
 
             var command = new PatchProviderCourseCommand
             {
@@ -342,7 +341,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
 
             var command = new PatchProviderCourseCommand
             {
@@ -392,7 +391,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
 
             var command = new PatchProviderCourseCommand
             {
@@ -433,7 +432,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         {
             var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
 
             var command = new PatchProviderCourseCommand
             {

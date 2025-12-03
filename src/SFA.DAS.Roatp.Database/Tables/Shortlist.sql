@@ -3,7 +3,7 @@
     [Id] UNIQUEIDENTIFIER NOT NULL,
     [UserId] UNIQUEIDENTIFIER NOT NULL,
     [Ukprn] INT NOT NULL,
-    [Larscode] INT NOT NULL,
+    [Larscode] NVARCHAR(10) NOT NULL,
     [LocationDescription] VARCHAR(1000) NULL,
     [Latitude] FLOAT NULL,
     [Longitude] FLOAT NULL,

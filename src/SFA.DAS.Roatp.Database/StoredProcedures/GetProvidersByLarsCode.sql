@@ -1,5 +1,5 @@
 ﻿CREATE procedure [dbo].[GetProvidersByLarsCode]
-    @larscode int,   -- Standard by LarsCode - must be set
+    @larscode nvarchar(10),   -- Standard by LarsCode - must be set
     @SortOrder varchar(30) = 'Distance', -- order by "Distance", "AchievementRate" or "EmployerProviderRating" , "ApprenticeProviderRating"
     @page int = 1,
     @pageSize int = 10,

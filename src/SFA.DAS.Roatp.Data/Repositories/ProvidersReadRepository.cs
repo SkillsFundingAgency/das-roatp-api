@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                         .AsNoTracking().ToListAsync();
         }
 
-        public async Task<List<ProviderSearchModel>> GetProvidersByLarsCode(int larsCode, ProviderOrderBy sortOrder,
+        public async Task<List<ProviderSearchModel>> GetProvidersByLarsCode(string larsCode, ProviderOrderBy sortOrder,
                                     GetProvidersFromLarsCodeOptionalParameters parameters, CancellationToken cancellationToken)
         {
             var connection = _roatpDataContext.Database.GetDbConnection();
@@ -84,7 +84,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                                 PageSize = (int)reader["PageSize"],
                                 TotalPages = (int)reader["TotalPages"],
                                 TotalCount = (int)reader["TotalCount"],
-                                LarsCode = (int)reader["LarsCode"],
+                                LarsCode = (string)reader["LarsCode"],
                                 StandardName = (string)reader["StandardName"],
                                 QarPeriod = (string)reader["QarPeriod"],
                                 ReviewPeriod = (string)reader["reviewPeriod"],
@@ -99,7 +99,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                                 PageSize = (int)reader["PageSize"],
                                 TotalPages = (int)reader["TotalPages"],
                                 TotalCount = (int)reader["TotalCount"],
-                                LarsCode = (int)reader["LarsCode"],
+                                LarsCode = (string)reader["LarsCode"],
                                 StandardName = (string)reader["StandardName"],
                                 QarPeriod = (string)reader["QarPeriod"],
                                 ReviewPeriod = (string)reader["reviewPeriod"],

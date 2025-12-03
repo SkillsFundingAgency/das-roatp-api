@@ -11,7 +11,7 @@ public sealed class CourseModelTests
     {
         var courseInformation = new CourseInformation
         {
-            LarsCode = 2,
+            LarsCode = "2",
             ProvidersCount = 10,
             TotalProvidersCount = 20
         };
@@ -21,7 +21,7 @@ public sealed class CourseModelTests
         Assert.Multiple(() =>
         {
             Assert.That(courseModel, Is.Not.Null);
-            Assert.That(courseModel.LarsCode, Is.EqualTo(courseInformation.LarsCode));
+            Assert.That(courseModel.LarsCode.ToString(), Is.EqualTo(courseInformation.LarsCode));
             Assert.That(courseModel.ProvidersCount, Is.EqualTo(courseInformation.ProvidersCount));
             Assert.That(courseModel.TotalProvidersCount, Is.EqualTo(courseInformation.TotalProvidersCount));
         });

@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.Domain.Interfaces;
 
 public interface IShortlistsRepository
 {
-    Task<Shortlist> Get(Guid userId, int ukprn, int larsCode, string locationDescription, CancellationToken cancellationToken);
+    Task<Shortlist> Get(Guid userId, int ukprn, string larsCode, string locationDescription, CancellationToken cancellationToken);
 
     Task Create(Shortlist shortlist, CancellationToken cancellationToken);
 

@@ -1,4 +1,7 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProviderCourseLocation;
@@ -6,9 +9,6 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
-using System;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.AddProviderCourseLocation
 {
@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         {
             providerLocation.LocationType = LocationType.Provider;
             providerLocationsReadRepositoryMock.Setup(m => m.GetProviderLocation(It.IsAny<int>(), It.IsAny<Guid>())).ReturnsAsync(providerLocation);
-            providerCoursesReadRepositoryMock.Setup(m => m.GetProviderCourseByUkprn(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourse);
+            providerCoursesReadRepositoryMock.Setup(m => m.GetProviderCourseByUkprn(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(providerCourse);
 
 
             await sut.Handle(command, new CancellationToken());

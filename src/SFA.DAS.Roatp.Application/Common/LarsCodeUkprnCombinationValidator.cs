@@ -7,11 +7,13 @@ namespace SFA.DAS.Roatp.Application.Common
     {
         public const string InvalidLarsCodeErrorMessage = "Invalid larsCode";
         public const string ProviderCourseNotFoundErrorMessage = "No provider course found with given ukprn and larsCode";
+
+        // MFCMFC not sure if this change is enough - should I check for larscode bigger than 10 chars?
         public LarsCodeUkprnCombinationValidator(IProvidersReadRepository providersReadRepository, IProviderCoursesReadRepository providerCoursesReadRepository)
         {
             RuleFor(x => x.LarsCode)
                .Cascade(CascadeMode.Stop)
-               .GreaterThan(0).WithMessage(InvalidLarsCodeErrorMessage)
+               .NotEmpty().WithMessage(InvalidLarsCodeErrorMessage)
                .MustAsync(async (model, larsCode, cancellation) =>
                {
                    var provider = await providersReadRepository.GetByUkprn(model.Ukprn);

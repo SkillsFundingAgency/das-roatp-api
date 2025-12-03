@@ -1,13 +1,13 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Standards.Queries;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries
 {
@@ -19,8 +19,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries
         {
             List<Standard> standards = new List<Standard>
             {
-                new() { LarsCode = 1, Title = "standard 1" },
-                new() { LarsCode = 2, Title = "standard 2" }
+                new() { LarsCode = "1", Title = "standard 1" },
+                new() { LarsCode = "2", Title = "standard 2" }
             };
 
             var repositoryMock = new Mock<IStandardsReadRepository>();

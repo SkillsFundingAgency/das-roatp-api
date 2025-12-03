@@ -1,7 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Testing.AutoFixture;
-using System;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetCourseProviderDetails;
 
@@ -11,7 +11,7 @@ public sealed class GetCourseProviderDetailsQueryTests
     [MoqAutoData]
     public void Constructor_SetsAllProperties_WhenValidParametersAreProvided(
         int ukprn,
-        int larsCode,
+        string larsCode,
         decimal? longitude,
         decimal? latitude,
         string location,
@@ -42,7 +42,7 @@ public sealed class GetCourseProviderDetailsQueryTests
     [MoqAutoData]
     public void Constructor_SetsLocationToNull_WhenInputIsEmptyOrWhitespace(
         int ukprn,
-        int larsCode,
+        string larsCode,
         decimal? longitude,
         decimal? latitude,
         string location,
@@ -65,7 +65,7 @@ public sealed class GetCourseProviderDetailsQueryTests
     [MoqAutoData]
     public void Constructor_ShouldTrimLocation_WhenWhitespaceIsPresent(
         int ukprn,
-        int larsCode,
+        string larsCode,
         decimal? longitude,
         decimal? latitude,
         Guid shortlistUserId

@@ -1,9 +1,9 @@
-﻿using MediatR;
-using SFA.DAS.Roatp.Application.Mediatr.Responses;
-using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
+using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 
@@ -19,7 +19,7 @@ public sealed class GetCourseTrainingProvidersCountQueryHandler : IRequestHandle
     public async Task<ValidatedResponse<GetCourseTrainingProvidersCountQueryResult>> Handle(
         GetCourseTrainingProvidersCountQuery query, CancellationToken cancellationToken)
     {
-        var results = await _trainingCoursesReadRepository.GetProviderTrainingCourses(query.LarsCodes, query.Longitude,
+        var results = await _trainingCoursesReadRepository.GetProviderTrainingCourses(query.LarsCodes.Select(l => l.ToString()).ToArray(), query.Longitude,
             query.Latitude, query.Distance, cancellationToken);
 
         if (results.Any())

@@ -1,4 +1,9 @@
-﻿using AutoFixture.NUnit3;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -9,11 +14,6 @@ using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForLarsCode;
 
@@ -27,7 +27,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         GetProvidersForLarsCodeQueryHandler sut,
         List<ProviderSearchModel> pagedProviderDetails,
         GetProvidersFromLarsCodeRequest request,
-        int larsCode,
+        string larsCode,
         CancellationToken cancellationToken)
     {
         request.DeliveryModes = new List<DeliveryMode?>
@@ -156,7 +156,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
     int larsCode,
     CancellationToken cancellationToken)
     {
-        var query = new GetProvidersForLarsCodeQuery(larsCode, request);
+        var query = new GetProvidersForLarsCodeQuery(larsCode.ToString(), request);
 
         List<ProviderSearchModel> pagedProviderDetails = new()
         {
@@ -166,12 +166,12 @@ public class GetProvidersForLarsCodeQueryHandlerTests
                 PageSize = request.PageSize ?? Pagination.DefaultPageSize,
                 TotalPages = 0,
                 TotalCount = 0,
-                LarsCode = larsCode
+                LarsCode = larsCode.ToString()
             }
         };
 
         providersReadRepositoryMock.Setup(x => x.GetProvidersByLarsCode(
-            larsCode,
+            larsCode.ToString(),
             (ProviderOrderBy)query.OrderBy!,
             It.IsAny<GetProvidersFromLarsCodeOptionalParameters>(),
             cancellationToken
@@ -194,7 +194,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
 
         result.Should().NotBeNull();
         result.Should().BeEquivalentTo(expectedValidatedResult.Result);
-        providersReadRepositoryMock.Verify(x => x.GetProvidersByLarsCode(larsCode,
+        providersReadRepositoryMock.Verify(x => x.GetProvidersByLarsCode(larsCode.ToString(),
                 (ProviderOrderBy)query.OrderBy!,
                 It.IsAny<GetProvidersFromLarsCodeOptionalParameters>(),
                 cancellationToken),
@@ -208,7 +208,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         GetProvidersForLarsCodeQueryHandler sut,
         List<ProviderSearchModel> pagedProviderDetails,
         GetProvidersFromLarsCodeRequest request,
-        int larsCode,
+        string larsCode,
         CancellationToken cancellationToken)
     {
         request.DeliveryModes = new List<DeliveryMode?>

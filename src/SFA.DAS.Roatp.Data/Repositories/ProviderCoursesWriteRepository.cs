@@ -20,7 +20,7 @@ internal class ProviderCoursesWriteRepository : IProviderCoursesWriteRepository
         _logger = logger;
     }
 
-    public async Task<ProviderCourse> PatchProviderCourse(ProviderCourse patchedProviderCourseEntity, int ukprn, int larscode, string userId, string userDisplayName, string userAction)
+    public async Task<ProviderCourse> PatchProviderCourse(ProviderCourse patchedProviderCourseEntity, int ukprn, string larscode, string userId, string userDisplayName, string userAction)
     {
         var providerCourse = await _roatpDataContext.ProviderCourses.FindAsync(patchedProviderCourseEntity.Id);
 
@@ -83,7 +83,7 @@ internal class ProviderCoursesWriteRepository : IProviderCoursesWriteRepository
         return providerCourse;
     }
 
-    public async Task Delete(int ukprn, int larscode, string userId, string userDisplayName, string userAction)
+    public async Task Delete(int ukprn, string larscode, string userId, string userDisplayName, string userAction)
     {
         var strategy = _roatpDataContext.Database.CreateExecutionStrategy();
 

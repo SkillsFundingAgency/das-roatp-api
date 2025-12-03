@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             _roatpDataContext = roatpDataContext;
         }
 
-        public async Task<ProviderCourse> GetProviderCourse(int providerId, int larsCode)
+        public async Task<ProviderCourse> GetProviderCourse(int providerId, string larsCode)
         {
             return await _roatpDataContext
                 .ProviderCourses
@@ -27,7 +27,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 .SingleOrDefaultAsync();
         }
 
-        public async Task<ProviderCourse> GetProviderCourseByUkprn(int ukprn, int larsCode)
+        public async Task<ProviderCourse> GetProviderCourseByUkprn(int ukprn, string larsCode)
         {
             return await _roatpDataContext
                 .ProviderCourses

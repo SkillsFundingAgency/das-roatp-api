@@ -18,7 +18,7 @@ public sealed class CourseProviderDetailsModel
     public string Website { get; set; }
     public string CourseName { get; set; }
     public int Level { get; set; }
-    public int LarsCode { get; set; }
+    public string LarsCode { get; set; }
     public string IFateReferenceNumber { get; set; }
     public string Period { get; set; }
     public string Leavers { get; set; }
