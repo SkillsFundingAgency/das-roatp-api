@@ -20,11 +20,11 @@ public sealed class GetCoursesQueryHandlerTests
         GetCourseTrainingProvidersCountQuery query,
         GetCourseTrainingProvidersCountQueryHandler sut,
         CourseInformation course,
-        int larsCode,
         CancellationToken cancellationToken
     )
     {
-        course.LarsCode = larsCode.ToString();
+        string larsCode = "2";
+        course.LarsCode = larsCode;
         var repositoryResponse = new List<CourseInformation>() { course };
 
         trainingCoursesReadRepository.Setup(r =>

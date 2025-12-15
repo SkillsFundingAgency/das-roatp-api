@@ -1,6 +1,6 @@
 ﻿using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
@@ -9,10 +9,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
     public class ProviderCourseModelTests
     {
         [Test, RecursiveMoqAutoData]
-        public void Operator_PopulatesModelFromEntity(Domain.Entities.ProviderCourse course, int larsCode)
+        public void Operator_PopulatesModelFromEntity(Domain.Entities.ProviderCourse course, string larsCode)
         {
-            course.LarsCode = larsCode.ToString();
-            var model = (ProviderCourseModelExternal)course;
+            course.LarsCode = larsCode;
+            var model = (ProviderCourseModel)course;
 
             model.Should().BeEquivalentTo(course, c => c
                 .Excluding(s => s.Id)
@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
                 .Excluding(s => s.LarsCode)
             );
 
-            model.LarsCode.ToString().Should().Be(course.LarsCode);
+            model.LarsCode.Should().Be(course.LarsCode);
         }
     }
 }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
@@ -32,7 +33,7 @@ public sealed class ProvidersCountReadRepository : IProvidersCountReadRepository
         command.Parameters.Add(new SqlParameter("@Latitude", latitude ?? (object)DBNull.Value));
         command.Parameters.Add(new SqlParameter("@Longitude", longitude ?? (object)DBNull.Value));
         command.Parameters.Add(new SqlParameter("@Distance", distance ?? (object)DBNull.Value));
-        command.Parameters.Add(new SqlParameter("@LarsCodes", string.Join(',', larsCodes)));
+        command.Parameters.Add(new SqlParameter("@LarsCodes", string.Join(',', larsCodes.Select(larsCode => $"\"{larsCode}\""))));
 
         if (command.Connection.State != System.Data.ConnectionState.Open)
         {

@@ -21,12 +21,12 @@ public sealed class GetCourseProviderDetailsQueryHandlerTests
        [Greedy] GetCourseProviderDetailsQueryHandler sut,
        GetCourseProviderDetailsQuery query,
        List<CourseProviderDetailsModel> repositoryResult,
-       int larsCode,
        CancellationToken cancellationToken
     )
     {
-        repositoryResult[0].LarsCode = larsCode.ToString();
-        query.LarsCode = larsCode.ToString();
+        string larsCode = "2";
+        repositoryResult[0].LarsCode = larsCode;
+        query.LarsCode = larsCode;
         courseProviderDetailsReadRepository.Setup(r =>
             r.GetCourseProviderDetails(
                 It.Is<GetCourseProviderDetailsParameters>(a =>

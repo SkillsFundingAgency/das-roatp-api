@@ -153,10 +153,11 @@ public class GetProvidersForLarsCodeQueryHandlerTests
     [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
     GetProvidersForLarsCodeQueryHandler sut,
     GetProvidersFromLarsCodeRequest request,
-    int larsCode,
     CancellationToken cancellationToken)
     {
-        var query = new GetProvidersForLarsCodeQuery(larsCode.ToString(), request);
+        string larsCode = "2";
+        int larsCodeValue = 2;
+        var query = new GetProvidersForLarsCodeQuery(larsCode, request);
 
         List<ProviderSearchModel> pagedProviderDetails = new()
         {
@@ -166,7 +167,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
                 PageSize = request.PageSize ?? Pagination.DefaultPageSize,
                 TotalPages = 0,
                 TotalCount = 0,
-                LarsCode = larsCode.ToString()
+                LarsCode = larsCode
             }
         };
 
@@ -183,7 +184,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
             PageSize = request.PageSize ?? Pagination.DefaultPageSize,
             TotalPages = 0,
             TotalCount = 0,
-            LarsCode = larsCode,
+            LarsCode = larsCodeValue,
             Providers = []
         };
 

@@ -19,7 +19,7 @@ public sealed class GetCourseTrainingProvidersCountQueryHandler : IRequestHandle
     public async Task<ValidatedResponse<GetCourseTrainingProvidersCountQueryResult>> Handle(
         GetCourseTrainingProvidersCountQuery query, CancellationToken cancellationToken)
     {
-        var results = await _trainingCoursesReadRepository.GetProviderTrainingCourses(query.LarsCodes.Select(l => l.ToString()).ToArray(), query.Longitude,
+        var results = await _trainingCoursesReadRepository.GetProviderTrainingCourses(query.LarsCodes, query.Longitude,
             query.Latitude, query.Distance, cancellationToken);
 
         if (results.Any())

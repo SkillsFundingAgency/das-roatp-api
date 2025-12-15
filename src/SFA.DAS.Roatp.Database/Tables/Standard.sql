@@ -10,5 +10,10 @@
     [SectorSubjectArea] VARCHAR(1000) NULL, 
     [SectorSubjectAreaTier1] INT NULL, 
     [IsRegulatedForProvider] BIT NOT NULL DEFAULT 0,
+    [Duration] INT NULL,
+    [DurationUnits] VARCHAR(6) NULL,
+    [Route] VARCHAR(500) NULL,
+    [ApprenticeshipType] Varchar(50) NULL,
+    [CourseType] NVarchar(50) NULL,
     CONSTRAINT PK_Standard PRIMARY KEY (StandardUId)
 )

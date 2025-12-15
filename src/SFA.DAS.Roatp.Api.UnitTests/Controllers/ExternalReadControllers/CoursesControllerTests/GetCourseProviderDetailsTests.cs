@@ -24,12 +24,12 @@ public sealed class GetCourseProviderDetailsTests
         [Greedy] CoursesController sut
     )
     {
-        int larsCode = 1;
+        var larsCode = "1";
         int ukprn = 2;
 
         mediatorMock.Setup(m => m.Send(
             It.Is<GetCourseProviderDetailsQuery>(q =>
-                q.LarsCode == larsCode.ToString() &&
+                q.LarsCode == larsCode &&
                 q.Ukprn == ukprn &&
                 q.Location == request.Location &&
                 q.Longitude == request.Longitude &&
@@ -44,7 +44,7 @@ public sealed class GetCourseProviderDetailsTests
             m.Send(It.Is<GetCourseProviderDetailsQuery>(
                 q =>
                     q.Ukprn == ukprn &&
-                    q.LarsCode == larsCode.ToString()
+                    q.LarsCode == larsCode
                     && q.Latitude == request.Latitude
                     && q.Longitude == request.Longitude
                     && q.Location == request.Location
@@ -63,7 +63,7 @@ public sealed class GetCourseProviderDetailsTests
         mediatorMock.Setup(x => x.Send(It.IsAny<GetCourseProviderDetailsQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((ValidatedResponse<GetCourseProviderDetailsQueryResult>)null);
 
-        var result = await sut.GetCourseProviderDetails(1, 1, request);
+        var result = await sut.GetCourseProviderDetails("1", 1, request);
 
         result.Should().BeOfType<NotFoundResult>();
         var notFoundResult = result as NotFoundResult;

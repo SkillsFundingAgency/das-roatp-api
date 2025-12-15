@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -6,8 +7,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetAllProviderCourses;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetRegisteredProvider;
@@ -75,9 +78,22 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [ProducesResponseType(typeof(List<ProviderCourseModelExternal>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllProviderCourses(int ukprn)
         {
-            var response = await _mediator.Send(new GetAllProviderCoursesExternalQuery(ukprn, true));
-            if (response.IsValidResponse)
-                _logger.LogInformation("{Count} Provider courses found for {Ukprn}:", response.Result.Count, ukprn);
+            var providersResponse = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, true));
+            if (!providersResponse.IsValidResponse)
+            {
+                var errorsResponse =
+                    new ValidatedResponse<List<ProviderCourseModelExternal>>(providersResponse.Errors.ToList());
+                return GetResponse(errorsResponse);
+            }
+
+            _logger.LogInformation("{Count} Provider courses found for {Ukprn}:", providersResponse.Result.Count,
+                    ukprn);
+
+            var providerCourseModels = providersResponse.Result.Select(provider => (ProviderCourseModelExternal)provider)
+                .Where(x => x.LarsCode != 0).ToList();
+
+            var response = new ValidatedResponse<List<ProviderCourseModelExternal>>(providerCourseModels);
+
             return GetResponse(response);
         }
 
@@ -89,9 +105,18 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [ProducesResponseType(typeof(ProviderCourseModelExternal), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetProviderCourse(int ukprn, int larsCode)
         {
-            var response = await _mediator.Send(new GetProviderCourseExternalQuery(ukprn, larsCode.ToString()));
-            if (response.IsValidResponse)
-                _logger.LogInformation("Course data found for {Ukprn} and {LarsCode}", ukprn, larsCode);
+            var providerResponse = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode.ToString()));
+            if (!providerResponse.IsValidResponse)
+            {
+                var errorsResponse =
+                    new ValidatedResponse<ProviderCourseModelExternal>(providerResponse.Errors.ToList());
+                return GetResponse(errorsResponse);
+            }
+
+            _logger.LogInformation("Course data found for {Ukprn} and {LarsCode}", ukprn, larsCode);
+
+            var response = new ValidatedResponse<ProviderCourseModelExternal>(providerResponse.Result);
+
             return GetResponse(response);
         }
     }

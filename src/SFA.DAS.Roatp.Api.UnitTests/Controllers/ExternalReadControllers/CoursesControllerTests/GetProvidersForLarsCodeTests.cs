@@ -25,12 +25,13 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] CoursesController sut)
         {
-            var larsCode = 1;
-            queryResult.LarsCode = larsCode;
+            var larsCode = "1";
+            var larsCodeMatch = 1;
+            queryResult.LarsCode = larsCodeMatch;
             mediatorMock.Setup(m => m.Send(
                 It.Is<GetProvidersForLarsCodeQuery>(
                     q =>
-                            q.LarsCode == larsCode.ToString()
+                            q.LarsCode == larsCode
                             && q.Latitude == request.Latitude
                             && q.Longitude == request.Longitude
                             && q.OrderBy == request.OrderBy
@@ -51,7 +52,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
                 actualResult.PageSize.Should().Be(queryResult.PageSize);
                 actualResult.TotalPages.Should().Be(queryResult.TotalPages);
                 actualResult.TotalCount.Should().Be(queryResult.TotalCount);
-                actualResult.LarsCode.Should().Be(larsCode);
+                actualResult.LarsCode.Should().Be(larsCodeMatch);
                 actualResult.StandardName.Should().Be(queryResult.StandardName);
                 actualResult.QarPeriod.Should().Be(queryResult.QarPeriod);
                 actualResult.ReviewPeriod.Should().Be(queryResult.ReviewPeriod);
@@ -59,7 +60,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
 
             mediatorMock.Verify(m => m.Send(It.Is<GetProvidersForLarsCodeQuery>(
                 q =>
-                    q.LarsCode == larsCode.ToString()
+                    q.LarsCode == larsCode
                     && q.Latitude == request.Latitude
                     && q.Longitude == request.Longitude
                     && q.OrderBy == request.OrderBy

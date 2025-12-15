@@ -103,6 +103,8 @@
     <None Include="Scripts\CSP-1832-Insert_ProviderEmployerStars.sql" />
     <None Include="Scripts\CSP-1970_Insert_2324_QAR.sql" />
     <Build Include="Tables\ProviderContact.sql" />
+    <Build Include="Tables\ProviderCourseType.sql" />
+    <None Include="PostDeploymentScripts\CSP-2360_Insert_Short_Course_test_data_for_course_management.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />

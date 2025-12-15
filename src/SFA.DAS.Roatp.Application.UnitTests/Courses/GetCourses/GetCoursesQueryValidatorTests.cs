@@ -15,7 +15,7 @@ public sealed class GetCoursesQueryValidatorTests
         {
             Longitude = 90,
             Latitude = -90,
-            LarsCodes = new int[] { 1 },
+            LarsCodes = new string[] { "1" },
             Distance = null
         };
 
@@ -33,7 +33,7 @@ public sealed class GetCoursesQueryValidatorTests
         {
             Longitude = null,
             Latitude = null,
-            LarsCodes = new int[] { 1 },
+            LarsCodes = new string[] { "1" },
             Distance = null
         };
 
@@ -51,7 +51,7 @@ public sealed class GetCoursesQueryValidatorTests
         {
             Longitude = 90,
             Latitude = -90,
-            LarsCodes = Array.Empty<int>(),
+            LarsCodes = Array.Empty<string>(),
             Distance = null
         };
 
@@ -69,7 +69,7 @@ public sealed class GetCoursesQueryValidatorTests
         {
             Longitude = 90,
             Latitude = -90,
-            LarsCodes = new int[] { 1 },
+            LarsCodes = new string[] { "1" },
             Distance = null
         };
 

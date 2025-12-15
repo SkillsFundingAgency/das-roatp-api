@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCo
 
 public sealed class GetCourseTrainingProvidersCountQuery : IRequest<ValidatedResponse<GetCourseTrainingProvidersCountQueryResult>>, ICoordinates
 {
-    public int[] LarsCodes { get; set; } = Array.Empty<int>();
+    public string[] LarsCodes { get; set; } = Array.Empty<string>();
 
     public int? Distance { get; set; }
 
