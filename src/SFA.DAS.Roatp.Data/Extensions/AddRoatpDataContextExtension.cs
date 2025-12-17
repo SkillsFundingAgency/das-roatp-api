@@ -67,5 +67,6 @@ public static class AddRoatpDataContextExtension
         services.AddTransient<IImportFeedbackSummariesRepository, ImportFeedbackSummariesRepository>();
         services.AddTransient<IProviderContactsReadRepository, ProviderContactReadRepository>();
         services.AddTransient<IProviderContactsWriteRepository, ProviderContactsWriteRepository>();
+        services.AddTransient<IReloadProviderCourseTypesRepository, ReloadProviderCourseTypesRepository>();
     }
 }

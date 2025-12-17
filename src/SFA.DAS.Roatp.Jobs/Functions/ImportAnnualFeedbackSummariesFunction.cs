@@ -11,7 +11,7 @@ public class ImportAnnualFeedbackSummariesFunction(
     IImportFeedbackSummariesRepository _repository)
 {
     [Function(nameof(ImportAnnualFeedbackSummariesFunction))]
-    public async Task Run([TimerTrigger("%ImportAnnualFeedbackSummariesFunctionSchedule%", RunOnStartup = true)] TimerInfo myTimer)
+    public async Task Run([TimerTrigger("%ImportAnnualFeedbackSummariesFunctionSchedule%", RunOnStartup = false)] TimerInfo myTimer)
     {
         var startTime = DateTime.UtcNow;
         _logger.LogInformation("Starting import of annual feedback summaries");

@@ -10,9 +10,10 @@ public class RegisteredProviderModel
     public int OrganisationTypeId { get; set; }
     public ProviderType ProviderType { get; set; }
     public string LegalName { get; set; }
+    public List<AllowedCourseType> AllowedCourseTypes { get; set; }
 
     public static implicit operator ProviderRegistrationDetail(RegisteredProviderModel source)
-        => new ProviderRegistrationDetail
+        => new()
         {
             Ukprn = source.Ukprn,
             StatusId = (int)source.Status,
