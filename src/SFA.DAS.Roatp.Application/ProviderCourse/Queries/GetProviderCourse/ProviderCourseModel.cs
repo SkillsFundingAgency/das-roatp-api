@@ -3,6 +3,7 @@
 public class ProviderCourseModel : ProviderCourseModelBase
 {
     public string LarsCode { get; set; }
+    public string CourseType { get; set; }
 
     public static implicit operator ProviderCourseModel(Domain.Entities.ProviderCourse providerCourse)
     {
@@ -19,7 +20,8 @@ public class ProviderCourseModel : ProviderCourseModelBase
             IsImported = providerCourse.IsImported,
             HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption,
             HasLocations = providerCourse.Locations.Count > 0,
-            IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false
+            IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false,
+            CourseType = providerCourse.Standard?.CourseType
         };
 
         return model;

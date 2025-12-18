@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProvi
                 Level = providerCourseModel.Level,
                 CourseName = providerCourseModel.CourseName,
                 Version = providerCourseModel.Version,
-                ApprovalBody = providerCourseModel.ApprovalBody
+                ApprovalBody = providerCourseModel.ApprovalBody,
             };
 
             return model;

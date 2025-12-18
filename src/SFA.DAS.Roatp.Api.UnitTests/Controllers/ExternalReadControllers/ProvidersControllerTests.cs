@@ -247,7 +247,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
         }
 
         [Test, MoqAutoData]
-        public async Task GetCourse_CallsMediator(
+        public async Task GetProviderCourse_CallsMediator_WithLarsCodeAsString(
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProvidersController sut,
             int ukprn,
@@ -255,14 +255,19 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             ProviderCourseModel handlerResult)
         {
             handlerResult.LarsCode = larsCode.ToString();
-            mediatorMock.Setup(m => m.Send(It.IsAny<GetProviderCourseQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<ProviderCourseModel>(handlerResult));
+            mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseQuery>(q => q.Ukprn == ukprn && q.LarsCode == larsCode.ToString()), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<ProviderCourseModel>(handlerResult));
             var result = await sut.GetProviderCourse(ukprn, larsCode);
             var mappedResult = (ProviderCourseModelExternal)handlerResult;
             (result as OkObjectResult).Value.Should().BeEquivalentTo(mappedResult);
+
+            mediatorMock.Verify(a =>
+                a.Send(It.Is<GetProviderCourseQuery>(t => t.Ukprn == ukprn && t.LarsCode == larsCode.ToString()), It.IsAny<CancellationToken>()),
+                Times.Once
+            );
         }
 
         [Test, MoqAutoData]
-        public async Task GetCourse_InvalidUkprn_ReturnsBadRequest(
+        public async Task GetProviderCourse_InvalidUkprn_ReturnsBadRequest(
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] ProvidersController sut,
             int ukprn,

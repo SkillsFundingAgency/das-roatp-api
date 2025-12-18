@@ -14,6 +14,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetRegisteredProvider;
+using SFA.DAS.Roatp.Domain.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
@@ -89,8 +90,9 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
             _logger.LogInformation("{Count} Provider courses found for {Ukprn}:", providersResponse.Result.Count,
                     ukprn);
 
-            var providerCourseModels = providersResponse.Result.Select(provider => (ProviderCourseModelExternal)provider)
-                .Where(x => x.LarsCode != 0).ToList();
+            var providerCourseModels = providersResponse.Result
+                .Where(x => x.CourseType == nameof(CourseType.Apprenticeship))
+                .Select(provider => (ProviderCourseModelExternal)provider).ToList();
 
             var response = new ValidatedResponse<List<ProviderCourseModelExternal>>(providerCourseModels);
 
