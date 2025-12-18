@@ -31,7 +31,7 @@ internal class ReloadProviderCourseTypesRepository : IReloadProviderCourseTypesR
             await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync();
             try
             {
-                await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"truncate table ProviderCourseType");
+                await _roatpDataContext.Database.ExecuteSqlInterpolatedAsync($"DELETE FROM ProviderCourseType");
                 await _roatpDataContext.BulkInsertAsync(providerCourseTypes);
                 await _roatpDataContext.ImportAudits.AddAsync(new ImportAudit(timeStarted, providerCourseTypes.Count, ImportType.ProviderCourseTypes));
                 await _roatpDataContext.SaveChangesAsync();
