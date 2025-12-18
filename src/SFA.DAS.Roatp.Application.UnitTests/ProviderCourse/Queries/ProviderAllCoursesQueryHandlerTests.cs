@@ -9,6 +9,7 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
@@ -101,7 +102,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
                 .Setup(r => r.GetAllStandards())
                 .ReturnsAsync(courses.Select(c => new Standard { LarsCode = c.LarsCode }).ToList());
 
-            var providerLocations = new List<ProviderCourseLocation> { new() };
             var sut = fixture.Create<GetAllProviderCoursesQueryHandler>();
 
             var response = await sut.Handle(Query, cancellationToken);
@@ -166,6 +166,69 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
 
             response.Should().NotBeNull();
             response.Result.Count.Should().Be(2);
+        }
+
+        [Test, MoqAutoData]
+        public async Task Handle_FiltersByCourseType_ReturnsOnlyMatching(
+            [Frozen] Mock<IProviderCoursesReadRepository> providersReadRepositoryMock,
+            [Frozen] Mock<IStandardsReadRepository> standardsReadRepositoryMock,
+            GetAllProviderCoursesQueryHandler sut,
+            CancellationToken cancellationToken)
+        {
+            var larsCodeOne = "1";
+            var larsCodeTwo = "2";
+
+            var courseTypeApprenticeship = CourseType.Apprenticeship;
+            var courseTypeApprenticeshipUnit = CourseType.ApprenticeshipUnit;
+
+            GetAllProviderCoursesQuery Query = new GetAllProviderCoursesQuery(1, false, courseTypeApprenticeship);
+
+            var courses = new List<Domain.Entities.ProviderCourse>
+            {
+                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = "Apprenticeship" }, LarsCode = larsCodeOne},
+                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = "ApprenticeshipUnit" }, LarsCode = larsCodeTwo}
+            };
+
+            providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(Query.Ukprn)).ReturnsAsync(courses);
+            var standards = courses.Select(course => new Standard { LarsCode = course.LarsCode }).ToList();
+            standardsReadRepositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
+
+            var response = await sut.Handle(Query, cancellationToken);
+
+            response.Should().NotBeNull();
+            response.Result.Count.Should().Be(1);
+            response.Result.All(r => r.CourseType == courseTypeApprenticeship).Should().BeTrue();
+        }
+
+        [Test, MoqAutoData]
+        public async Task Handle_NoCourseTypeFilter_ReturnsBoth(
+            [Frozen] Mock<IProviderCoursesReadRepository> providersReadRepositoryMock,
+            [Frozen] Mock<IStandardsReadRepository> standardsReadRepositoryMock,
+            GetAllProviderCoursesQueryHandler sut,
+            CancellationToken cancellationToken)
+        {
+            // Arrange
+            const int ukprn = 1;
+            var query = new GetAllProviderCoursesQuery(ukprn, false, null);
+
+            var courses = new List<Domain.Entities.ProviderCourse>
+            {
+                new() { ProviderId = ukprn, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = "Apprenticeship" }, LarsCode = "1" },
+                new() { ProviderId = ukprn, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = "ApprenticeshipUnit" }, LarsCode = "2" }
+            };
+
+            providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(ukprn)).ReturnsAsync(courses);
+            var standards = courses.Select(course => new Standard { LarsCode = course.LarsCode }).ToList();
+            standardsReadRepositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
+
+            // Act
+            var response = await sut.Handle(query, cancellationToken);
+
+            // Assert
+            response.Should().NotBeNull();
+            response.Result.Should().HaveCount(2);
+            response.Result.Should().ContainSingle(r => r.CourseType == CourseType.Apprenticeship);
+            response.Result.Should().ContainSingle(r => r.CourseType == CourseType.ApprenticeshipUnit);
         }
     }
 }
