@@ -1,13 +1,11 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 
@@ -24,20 +22,13 @@ public class CoursesController : ActionResponseControllerBase
         _logger = logger;
     }
 
-    [HttpGet("providers/count")]
-    [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(GetCourseTrainingProvidersCountQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetTrainingProvidersCount([FromQuery] GetCourseTrainingProvidersCountQuery query, CancellationToken cancellationToken)
-    {
-        var response = await _mediator.Send(query, cancellationToken);
-        return GetResponse(response);
-    }
+
 
     [HttpGet]
     [Route("{larsCode}/providers")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetProvidersForLarsCodeQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] int larsCode, [FromQuery] GetProvidersFromLarsCodeRequest request)
+    public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] string larsCode, [FromQuery] GetProvidersFromLarsCodeRequest request)
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
         var response = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode, request));
@@ -45,19 +36,19 @@ public class CoursesController : ActionResponseControllerBase
     }
 
     [HttpGet]
-    [Route("{larsCode:int}/providers/{ukprn:int}/details")]
+    [Route("{larsCode}/providers/{ukprn:int}/details")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetCourseProviderDetailsQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetCourseProviderDetails([FromRoute] int larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsRequest request)
+    public async Task<IActionResult> GetCourseProviderDetails([FromRoute] string larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsRequest request)
     {
-        var courseProviderDetails = 
+        var courseProviderDetails =
             await _mediator.Send(
                 new GetCourseProviderDetailsQuery(
                     ukprn,
                     larsCode,
-                    request.ShortlistUserId, 
-                    request.Location, 
+                    request.ShortlistUserId,
+                    request.Location,
                     request.Longitude,
                     request.Latitude
                     )

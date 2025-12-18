@@ -7,7 +7,7 @@ public class ProviderSearchModel
     public int PageSize { get; set; }
     public int TotalPages { get; set; }
     public int TotalCount { get; set; }
-    public int LarsCode { get; set; }
+    public string LarsCode { get; set; }
     public string StandardName { get; set; }
     public string QarPeriod { get; set; }
     public string ReviewPeriod { get; set; }

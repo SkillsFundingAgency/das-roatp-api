@@ -7,10 +7,10 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse
     public class DeleteProviderCourseCommand : IRequest<ValidatedResponse<bool>>, ILarsCodeUkprn, IUkprn, IUserInfo
     {
         public int Ukprn { get; set; }
-        public int LarsCode { get; set; }
+        public string LarsCode { get; set; }
         public string UserId { get; set; }
         public string UserDisplayName { get; set; }
-        public DeleteProviderCourseCommand(int ukprn, int larsCode, string userId, string userDisplayName)
+        public DeleteProviderCourseCommand(int ukprn, string larsCode, string userId, string userDisplayName)
         {
             Ukprn = ukprn;
             LarsCode = larsCode;

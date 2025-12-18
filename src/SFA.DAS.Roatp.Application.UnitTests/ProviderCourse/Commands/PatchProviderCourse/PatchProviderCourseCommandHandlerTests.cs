@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
             PatchProviderCourseCommand command,
             CancellationToken cancellationToken)
         {
-            readRepoMock.Setup(r => r.GetProviderCourseByUkprn(It.Is<int>(i => i == command.Ukprn), It.Is<int>(i => i == command.LarsCode))).ReturnsAsync((Domain.Entities.ProviderCourse)null);
+            readRepoMock.Setup(r => r.GetProviderCourseByUkprn(It.Is<int>(i => i == command.Ukprn), It.Is<string>(i => i == command.LarsCode))).ReturnsAsync((Domain.Entities.ProviderCourse)null);
 
             Func<Task> action = () => sut.Handle(command, cancellationToken);
 
@@ -43,8 +43,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
             CancellationToken cancellationToken)
         {
             var ukprn = 10000001;
-            var larsCode = 1;
-            readRepoMock.Setup(r => r.GetProviderCourseByUkprn(It.Is<int>(i => i == ukprn), It.Is<int>(i => i == larsCode))).ReturnsAsync(providerCourse);
+            var larsCode = "1";
+            readRepoMock.Setup(r => r.GetProviderCourseByUkprn(It.Is<int>(i => i == ukprn), It.Is<string>(i => i == larsCode))).ReturnsAsync(providerCourse);
 
             var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
             patchCommand.Replace(path => path.ContactUsEmail, patch.ContactUsEmail);

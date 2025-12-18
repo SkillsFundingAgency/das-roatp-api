@@ -1,7 +1,7 @@
-﻿using FluentValidation.TestHelper;
+﻿using System.Threading.Tasks;
+using FluentValidation.TestHelper;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests
 {
@@ -13,7 +13,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
         [TestCase(NonRegulatedLarsCode, null, true, "")]
         [TestCase(NonRegulatedLarsCode, false, false, CreateProviderCourseCommandValidator.RegulatorsApprovalNotRequired)]
         [TestCase(NonRegulatedLarsCode, true, false, CreateProviderCourseCommandValidator.RegulatorsApprovalNotRequired)]
-        public async Task IsApprovedByRegulator_Validation(int larsCode, bool? isApproved, bool isValid, string expectedErrorMessage)
+        public async Task IsApprovedByRegulator_Validation(string larsCode, bool? isApproved, bool isValid, string expectedErrorMessage)
         {
             var command = new CreateProviderCourseCommand { LarsCode = larsCode, Ukprn = ValidUkprn, IsApprovedByRegulator = isApproved };
             var sut = GetSut();

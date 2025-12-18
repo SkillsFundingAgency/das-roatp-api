@@ -1,13 +1,13 @@
-﻿using FluentValidation.TestHelper;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProviderCourseLocation;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
-using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.AddProviderCourseLocation
 {
@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         private Mock<IProviderLocationsReadRepository> _providerLocationsReadRepositoryMock;
         private Mock<IProviderCourseLocationsReadRepository> _providerCourseLocationsReadRepositoryMock;
         private int ukprn = 10012002;
-        private int larsCode = 123;
+        private string larsCode = "123";
         private string userId = "user";
         private string userDisplayName = "userDisplayName";
 
@@ -35,7 +35,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
 
             _providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
             _providerCoursesReadRepositoryMock
-                .Setup(x => x.GetProviderCourseByUkprn(It.IsAny<int>(), It.IsAny<int>()))
+                .Setup(x => x.GetProviderCourseByUkprn(It.IsAny<int>(), It.IsAny<string>()))
                 .ReturnsAsync(new Domain.Entities.ProviderCourse());
 
             _providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
@@ -45,7 +45,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
 
             _providerCourseLocationsReadRepositoryMock = new Mock<IProviderCourseLocationsReadRepository>();
             _providerCourseLocationsReadRepositoryMock
-                .Setup(x => x.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()))
+                .Setup(x => x.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<string>()))
                 .ReturnsAsync(new List<ProviderCourseLocation>());
 
             _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, userDisplayName, Guid.NewGuid(), true, true);
@@ -66,7 +66,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         public async Task ValidateLarsCode_InValid_ReturnsError()
         {
             var locationNavigationId = Guid.NewGuid();
-            _command = new AddProviderCourseLocationCommand(ukprn, 0, userId, userDisplayName, locationNavigationId, true, true);
+            _command = new AddProviderCourseLocationCommand(ukprn, "0", userId, userDisplayName, locationNavigationId, true, true);
 
             var provider = new Provider();
             _providersReadRepositoryMock
@@ -76,7 +76,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
             var providercourse = new Domain.Entities.ProviderCourse();
             providercourse.ProviderId = provider.Id;
             _providerCoursesReadRepositoryMock
-            .Setup(x => x.GetProviderCourseByUkprn(It.IsAny<int>(), It.IsAny<int>()))
+            .Setup(x => x.GetProviderCourseByUkprn(It.IsAny<int>(), It.IsAny<string>()))
             .ReturnsAsync(providercourse);
 
             var providerlocation = new ProviderLocation();
@@ -87,7 +87,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
 
             var providerCourseLocations = new List<ProviderCourseLocation>();
             _providerCourseLocationsReadRepositoryMock
-                .Setup(x => x.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>()))
+                .Setup(x => x.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<string>()))
                 .ReturnsAsync(providerCourseLocations);
 
             var sut = new AddProviderCourseLocationCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, _providerLocationsReadRepositoryMock.Object, _providerCourseLocationsReadRepositoryMock.Object);

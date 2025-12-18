@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
@@ -21,7 +22,7 @@ public sealed class ProvidersCountReadRepository : IProvidersCountReadRepository
         _roatpDataContext = roatpDataContext;
     }
 
-    public async Task<List<CourseInformation>> GetProviderTrainingCourses(int[] larsCodes, decimal? longitude, decimal? latitude, int? distance, CancellationToken cancellationToken)
+    public async Task<List<CourseInformation>> GetProviderTrainingCourses(string[] larsCodes, decimal? longitude, decimal? latitude, int? distance, CancellationToken cancellationToken)
     {
         var connection = _roatpDataContext.Database.GetDbConnection();
         await using DbCommand command = connection.CreateCommand();
@@ -32,7 +33,7 @@ public sealed class ProvidersCountReadRepository : IProvidersCountReadRepository
         command.Parameters.Add(new SqlParameter("@Latitude", latitude ?? (object)DBNull.Value));
         command.Parameters.Add(new SqlParameter("@Longitude", longitude ?? (object)DBNull.Value));
         command.Parameters.Add(new SqlParameter("@Distance", distance ?? (object)DBNull.Value));
-        command.Parameters.Add(new SqlParameter("@LarsCodes", string.Join(',', larsCodes)));
+        command.Parameters.Add(new SqlParameter("@LarsCodes", string.Join(',', larsCodes.Select(larsCode => $"\"{larsCode}\""))));
 
         if (command.Connection.State != System.Data.ConnectionState.Open)
         {
@@ -48,7 +49,7 @@ public sealed class ProvidersCountReadRepository : IProvidersCountReadRepository
             {
                 courseInformation.Add(
                     new CourseInformation(
-                        reader.GetInt32(0),
+                        reader.GetString(0),
                         reader.GetInt32(1),
                         reader.GetInt32(2)
                     )

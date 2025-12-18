@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
         public void Command_PatchContainsStandardInfoUrl_StandardInfoUrlIsSet()
         {
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
             var testValue = "value";
             var patchCommand = new JsonPatchDocument<PatchProviderCourse>();
             patchCommand.Operations.Add(new Operation<PatchProviderCourse> { op = Replace, path = StandardInfoUrl, value = testValue });
@@ -40,7 +40,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
         public void Command_PatchContainsContactUsEmail_ContactUsEmailIsSet()
         {
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
             var testValue = "value";
             var patchCommand = new JsonPatchDocument<PatchProviderCourse>();
             patchCommand.Operations.Add(new Operation<PatchProviderCourse> { op = Replace, path = ContactUsEmail, value = testValue });
@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
         public void Command_PatchContainsContactUsPhoneNumber_ContactUsPhoneNumberIsSet()
         {
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
             var testValue = "value";
             var patchCommand = new JsonPatchDocument<PatchProviderCourse>();
             patchCommand.Operations.Add(new Operation<PatchProviderCourse> { op = Replace, path = ContactUsPhoneNumber, value = testValue });
@@ -81,7 +81,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
         public void Command_PatchContainsIsApprovedByRegulator_IsApprovedByRegulatorIsSet()
         {
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
             var testValue = "true";
             var patchCommand = new JsonPatchDocument<PatchProviderCourse>();
             patchCommand.Operations.Add(new Operation<PatchProviderCourse> { op = Replace, path = IsApprovedByRegulator, value = testValue });
@@ -101,7 +101,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
         public void Command_PatchContainsNoDetails_FieldsAreNotSet()
         {
             var ukprn = 10000001;
-            var larsCode = 1;
+            var larsCode = "1";
             var patchCommand = new JsonPatchDocument<PatchProviderCourse>();
 
             var command = new PatchProviderCourseCommand

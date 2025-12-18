@@ -1,9 +1,9 @@
-﻿using FluentValidation.TestHelper;
+﻿using System.Threading.Tasks;
+using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.DeleteProviderCourse
 {
@@ -13,7 +13,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.DeleteProv
         private readonly string _userId = "userid";
         private readonly string _userDisplayName = "userDisplayName";
         private readonly int _ukprn = 10012002;
-        private readonly int _larsCode = 123;
+        private readonly string _larsCode = "123";
+
         [Test]
         public async Task Validates_Ukprn_ReturnsError()
         {

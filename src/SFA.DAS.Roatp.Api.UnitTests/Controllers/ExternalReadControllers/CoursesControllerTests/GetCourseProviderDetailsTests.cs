@@ -1,18 +1,15 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
-using FluentAssertions.Execution;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
-using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests;
 
@@ -27,7 +24,7 @@ public sealed class GetCourseProviderDetailsTests
         [Greedy] CoursesController sut
     )
     {
-        int larsCode = 1;
+        var larsCode = "1";
         int ukprn = 2;
 
         mediatorMock.Setup(m => m.Send(
@@ -66,7 +63,7 @@ public sealed class GetCourseProviderDetailsTests
         mediatorMock.Setup(x => x.Send(It.IsAny<GetCourseProviderDetailsQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((ValidatedResponse<GetCourseProviderDetailsQueryResult>)null);
 
-        var result = await sut.GetCourseProviderDetails(1, 1, request);
+        var result = await sut.GetCourseProviderDetails("1", 1, request);
 
         result.Should().BeOfType<NotFoundResult>();
         var notFoundResult = result as NotFoundResult;

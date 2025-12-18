@@ -7,12 +7,12 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
     public class BulkDeleteProviderCourseLocationsCommand : IRequest<ValidatedResponse<int>>, ILarsCodeUkprn, IUkprn, IUserInfo
     {
         public int Ukprn { get; }
-        public int LarsCode { get; }
+        public string LarsCode { get; }
         public string UserId { get; }
         public string UserDisplayName { get; }
-        public DeleteProviderCourseLocationOption DeleteProviderCourseLocationOptions{ get; }
-        public bool DeleteEmployerLocations { get;  }
-        public BulkDeleteProviderCourseLocationsCommand(int ukprn, int larsCode, DeleteProviderCourseLocationOption deleteOptions, string userId, string userDisplayName)
+        public DeleteProviderCourseLocationOption DeleteProviderCourseLocationOptions { get; }
+        public bool DeleteEmployerLocations { get; }
+        public BulkDeleteProviderCourseLocationsCommand(int ukprn, string larsCode, DeleteProviderCourseLocationOption deleteOptions, string userId, string userDisplayName)
         {
             Ukprn = ukprn;
             LarsCode = larsCode;

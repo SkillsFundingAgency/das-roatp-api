@@ -1,4 +1,6 @@
-﻿using AutoFixture.NUnit3;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit3;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using MediatR;
@@ -9,8 +11,6 @@ using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests
 {
@@ -25,8 +25,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] CoursesController sut)
         {
-            var larsCode = 1;
-            queryResult.LarsCode = larsCode;
+            var larsCode = "1";
+            var larsCodeMatch = 1;
+            queryResult.LarsCode = larsCodeMatch;
             mediatorMock.Setup(m => m.Send(
                 It.Is<GetProvidersForLarsCodeQuery>(
                     q =>
@@ -51,7 +52,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
                 actualResult.PageSize.Should().Be(queryResult.PageSize);
                 actualResult.TotalPages.Should().Be(queryResult.TotalPages);
                 actualResult.TotalCount.Should().Be(queryResult.TotalCount);
-                actualResult.LarsCode.Should().Be(larsCode);
+                actualResult.LarsCode.Should().Be(larsCodeMatch);
                 actualResult.StandardName.Should().Be(queryResult.StandardName);
                 actualResult.QarPeriod.Should().Be(queryResult.QarPeriod);
                 actualResult.ReviewPeriod.Should().Be(queryResult.ReviewPeriod);

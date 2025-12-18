@@ -3,6 +3,6 @@
     public interface ILarsCodeUkprn
     {
         int Ukprn { get; }
-        int LarsCode { get; }
+        string LarsCode { get; }
     }
 }

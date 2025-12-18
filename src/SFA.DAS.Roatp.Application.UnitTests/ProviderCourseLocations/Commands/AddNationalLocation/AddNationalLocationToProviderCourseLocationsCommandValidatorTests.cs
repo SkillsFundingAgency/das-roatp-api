@@ -1,4 +1,7 @@
-﻿using FluentAssertions;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using FluentAssertions;
 using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
@@ -7,9 +10,6 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.AddNationalLocation
 {
@@ -30,10 +30,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
 
             _providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
             _providerCoursesReadRepositoryMock
-                .Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<int>()))
+                .Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<string>()))
                 .ReturnsAsync(new Domain.Entities.ProviderCourse());
 
-            _command = new AddNationalLocationToProviderCourseLocationsCommand(10012002, 123, "user", "userDisplayName");
+            _command = new AddNationalLocationToProviderCourseLocationsCommand(10012002, "123", "user", "userDisplayName");
         }
 
         [Test, RecursiveMoqAutoData]
@@ -41,7 +41,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         {
             providerCourseLocations.First().Location.LocationType = LocationType.National;
             var providerCourseLocationsRepoMock = new Mock<IProviderCourseLocationsReadRepository>();
-            providerCourseLocationsRepoMock.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourseLocations);
+            providerCourseLocationsRepoMock.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(providerCourseLocations);
             var sut = new AddNationalLocationToProviderCourseLocationsCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, providerCourseLocationsRepoMock.Object);
 
             var result = await sut.TestValidateAsync(_command);
@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
         {
             providerCourseLocations.ForEach(l => l.Location.LocationType = LocationType.Provider);
             var providerCourseLocationsRepoMock = new Mock<IProviderCourseLocationsReadRepository>();
-            providerCourseLocationsRepoMock.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<int>())).ReturnsAsync(providerCourseLocations);
+            providerCourseLocationsRepoMock.Setup(r => r.GetAllProviderCourseLocations(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(providerCourseLocations);
             var sut = new AddNationalLocationToProviderCourseLocationsCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, providerCourseLocationsRepoMock.Object);
 
             var result = await sut.ValidateAsync(_command);

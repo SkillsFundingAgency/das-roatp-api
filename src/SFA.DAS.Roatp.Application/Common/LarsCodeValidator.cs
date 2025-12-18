@@ -5,14 +5,14 @@ namespace SFA.DAS.Roatp.Application.Common;
 
 public class LarsCodeValidator : AbstractValidator<ILarsCode>
 {
-    public const string InvalidMessage = "Larscode must be greater than zero";
+    public const string InvalidMessage = "Larscode must be provided";
     public const string NotFoundMessage = "Larscode not found";
-  
+
     public LarsCodeValidator(IStandardsReadRepository standardsReadRepository)
     {
         RuleFor(x => x.LarsCode)
             .Cascade(CascadeMode.Stop)
-            .GreaterThan(0)
+            .NotEmpty()
             .WithMessage(InvalidMessage)
             .MustAsync(async (larsCode, cancellation) =>
             {
