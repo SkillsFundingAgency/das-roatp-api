@@ -45,6 +45,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
                 providerCoursesModel = RemoveUnapprovedRegulatedStandards(providerCoursesModel);
             }
 
+            if (request.CourseType.HasValue)
+            {
+                providerCoursesModel = providerCoursesModel
+                    .Where(c => c.CourseType == request.CourseType.Value)
+                    .ToList();
+            }
+
             foreach (var p in providerCoursesModel)
             {
                 var course = standardsLookup.Single(c => c.LarsCode == p.LarsCode);

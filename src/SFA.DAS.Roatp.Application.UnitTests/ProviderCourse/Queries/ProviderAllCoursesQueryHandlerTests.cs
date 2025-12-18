@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             GetAllProviderCoursesQueryHandler sut,
             CancellationToken cancellationToken)
         {
-            GetAllProviderCoursesQuery Query = new GetAllProviderCoursesQuery(1, true);
+            GetAllProviderCoursesQuery Query = new GetAllProviderCoursesQuery(1, true, null);
             var larsCodeIncrement = 1;
             foreach (var course in courses)
             {
@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             GetAllProviderCoursesQueryHandler sut,
             CancellationToken cancellationToken)
         {
-            GetAllProviderCoursesQuery Query = new GetAllProviderCoursesQuery(1, true);
+            GetAllProviderCoursesQuery Query = new GetAllProviderCoursesQuery(1, true, null);
 
             repoMock.Setup(r => r.GetAllProviderCourses(Query.Ukprn)).ReturnsAsync(new List<Domain.Entities.ProviderCourse>());
 
@@ -75,7 +75,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             var providersReadRepositoryMock = fixture.Freeze<Mock<IProviderCoursesReadRepository>>();
             var standardsReadRepositoryMock = fixture.Freeze<Mock<IStandardsReadRepository>>();
 
-            GetAllProviderCoursesQuery Query = new GetAllProviderCoursesQuery(1, true);
+            GetAllProviderCoursesQuery Query = new GetAllProviderCoursesQuery(1, true, null);
 
             var cancellationToken = CancellationToken.None;
 
@@ -120,7 +120,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             string larsCodeOne = "1";
             string larsCodeTwo = "2";
 
-            GetAllProviderCoursesQuery Query = new GetAllProviderCoursesQuery(1, true);
+            GetAllProviderCoursesQuery Query = new GetAllProviderCoursesQuery(1, true, null);
 
             var courses = new List<Domain.Entities.ProviderCourse>
             {
@@ -150,7 +150,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             string larsCodeOne = "1";
             string larsCodeTwo = "2";
 
-            GetAllProviderCoursesQuery Query = new GetAllProviderCoursesQuery(1, false);
+            GetAllProviderCoursesQuery Query = new GetAllProviderCoursesQuery(1, false, null);
 
             var courses = new List<Domain.Entities.ProviderCourse>
             {

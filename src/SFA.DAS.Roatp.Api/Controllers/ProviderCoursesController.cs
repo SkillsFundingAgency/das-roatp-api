@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
+using SFA.DAS.Roatp.Domain.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -33,9 +34,9 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
-        public async Task<IActionResult> GetAllCourses(int ukprn, [FromQuery] bool excludeCoursesWithoutLocation = true)
+        public async Task<IActionResult> GetAllCourses(int ukprn, [FromQuery] bool excludeCoursesWithoutLocation = true, [FromQuery] CourseType? courseType = null)
         {
-            var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, excludeCoursesWithoutLocation));
+            var response = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, excludeCoursesWithoutLocation, courseType));
             return GetResponse(response);
         }
 
