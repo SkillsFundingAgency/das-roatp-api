@@ -79,7 +79,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [ProducesResponseType(typeof(List<ProviderCourseModelExternal>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllProviderCourses(int ukprn)
         {
-            var providersResponse = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, true));
+            var providersResponse = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, true, null));
             if (!providersResponse.IsValidResponse)
             {
                 var errorsResponse =
@@ -91,7 +91,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
                     ukprn);
 
             var providerCourseModels = providersResponse.Result
-                .Where(x => x.CourseType == nameof(CourseType.Apprenticeship))
+                .Where(x => x.CourseType == CourseType.Apprenticeship)
                 .Select(provider => (ProviderCourseModelExternal)provider).ToList();
 
             var response = new ValidatedResponse<List<ProviderCourseModelExternal>>(providerCourseModels);
