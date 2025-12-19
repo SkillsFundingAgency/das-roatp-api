@@ -11,7 +11,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries
+namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries.GetAllStandards
 {
     [TestFixture]
     public class GetAllStandardsQueryHandlerTests

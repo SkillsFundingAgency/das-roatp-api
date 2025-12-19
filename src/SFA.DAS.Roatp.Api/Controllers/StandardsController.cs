@@ -1,14 +1,17 @@
 ﻿using System.Threading.Tasks;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Standards.Queries.GetAllStandards;
+using SFA.DAS.Roatp.Application.Standards.Queries.GetStandardForLarsCode;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    public class StandardsController : ControllerBase
+    public class StandardsController : ActionResponseControllerBase
     {
         private readonly ILogger<StandardsController> _logger;
         private readonly IMediator _mediator;
@@ -27,6 +30,19 @@ namespace SFA.DAS.Roatp.Api.Controllers
             _logger.LogInformation("Inner API: Request received to get all standards");
             var result = await _mediator.Send(new GetAllStandardsQuery(courseType));
             return Ok(result);
+        }
+
+        [HttpGet]
+        [Route("standards/{larsCode}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(GetStandardForLarsCodeQueryResult), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetStandardForLarsCode(string larsCode)
+        {
+            _logger.LogInformation("Inner API: Request received to get standard for larsCode {LarsCode}", larsCode);
+            var result = await _mediator.Send(new GetStandardForLarsCodeQuery(larsCode));
+            return GetResponse(result);
         }
     }
 }
