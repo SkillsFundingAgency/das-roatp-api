@@ -19,14 +19,14 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
         [Test]
         public async Task GetAllStandards_ReturnsListOfStandards()
         {
-            var standards = new List<Standard>
+            var expectedStandards = new List<Standard>
             {
                 new() { LarsCode = "1", Title = "standard 1" },
                 new() { LarsCode = "2", Title = "standard 2" }
             };
 
             var mediatorMock = new Mock<IMediator>();
-            mediatorMock.Setup(r => r.Send(It.IsAny<GetAllStandardsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetAllStandardsQueryResult(standards));
+            mediatorMock.Setup(r => r.Send(It.IsAny<GetAllStandardsQuery>(), It.IsAny<CancellationToken>())).ReturnsAsync(new GetAllStandardsQueryResult(expectedStandards));
             var sut = new StandardsController(Mock.Of<ILogger<StandardsController>>(), mediatorMock.Object);
 
             var response = await sut.GetAllStandards();
@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             var result = response.Result as OkObjectResult;
             result.Should().NotBeNull();
             var queryResult = result.Value as GetAllStandardsQueryResult;
-            queryResult.Standards.Should().BeEquivalentTo(standards);
+            queryResult.Standards.Should().BeEquivalentTo(new GetAllStandardsQueryResult(expectedStandards).Standards);
         }
     }
 }
