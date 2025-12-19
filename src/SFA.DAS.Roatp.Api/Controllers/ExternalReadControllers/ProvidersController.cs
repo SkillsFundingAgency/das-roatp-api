@@ -79,7 +79,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [ProducesResponseType(typeof(List<ProviderCourseModelExternal>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllProviderCourses(int ukprn)
         {
-            var providersResponse = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, true, null));
+            var providersResponse = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, true));
             if (!providersResponse.IsValidResponse)
             {
                 var errorsResponse =
