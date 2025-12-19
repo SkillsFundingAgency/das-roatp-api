@@ -1,4 +1,4 @@
-﻿namespace SFA.DAS.Roatp.Domain.Constants
+﻿namespace SFA.DAS.Roatp.Domain.Models
 {
     public enum CourseType
     {

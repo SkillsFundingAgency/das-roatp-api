@@ -1,8 +1,12 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Domain.Interfaces;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Standards.Queries
 {
@@ -20,8 +24,18 @@ namespace SFA.DAS.Roatp.Application.Standards.Queries
         public async Task<GetAllStandardsQueryResult> Handle(GetAllStandardsQuery request, CancellationToken cancellationToken)
         {
             var allStandards = await _standardsReadRepository.GetAllStandards();
+            if (request.CourseType.HasValue)
+            {
+                allStandards = FilterStandardsWithCourseType(allStandards, request.CourseType.Value);
+            }
             _logger.LogInformation($"Returning {allStandards.Count} standards");
             return new GetAllStandardsQueryResult(allStandards);
+        }
+        private static List<Standard> FilterStandardsWithCourseType(List<Standard> allStandards, CourseType courseTypeFilter)
+        {
+            return allStandards
+                .Where(c => c.CourseType == courseTypeFilter.ToString())
+                .ToList();
         }
     }
 }
