@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
-using SFA.DAS.Roatp.Domain.Constants;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
