@@ -1,7 +1,7 @@
-﻿using SFA.DAS.Roatp.Domain.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SFA.DAS.Roatp.Domain.Entities;
 
-namespace SFA.DAS.Roatp.Application.Standards.Queries
+namespace SFA.DAS.Roatp.Application.Standards.Queries.GetAllStandards
 {
     public class GetAllStandardsQueryResult
     {

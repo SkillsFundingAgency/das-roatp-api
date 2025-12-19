@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.Standards.Queries
+namespace SFA.DAS.Roatp.Application.Standards.Queries.GetAllStandards
 {
     public class GetAllStandardsQueryHandler : IRequestHandler<GetAllStandardsQuery, GetAllStandardsQueryResult>
     {
