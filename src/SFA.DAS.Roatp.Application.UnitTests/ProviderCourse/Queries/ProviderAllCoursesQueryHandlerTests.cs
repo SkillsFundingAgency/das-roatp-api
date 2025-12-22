@@ -169,7 +169,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
         }
 
         [Test, MoqAutoData]
-        public async Task Handle_FiltersByCourseType_ReturnsOnlyMatching(
+        public async Task Handle_FiltersByCourseType_ReturnsOnlyApprenticeship(
             [Frozen] Mock<IProviderCoursesReadRepository> providersReadRepositoryMock,
             [Frozen] Mock<IStandardsReadRepository> standardsReadRepositoryMock,
             GetAllProviderCoursesQueryHandler sut,
@@ -178,10 +178,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             var larsCodeOne = "1";
             var larsCodeTwo = "2";
 
-            var courseTypeApprenticeship = CourseType.Apprenticeship;
-            var courseTypeApprenticeshipUnit = CourseType.ApprenticeshipUnit;
+            var expectedCourseType = CourseType.Apprenticeship;
 
-            var query = new GetAllProviderCoursesQuery(1, false, courseTypeApprenticeship);
+            var query = new GetAllProviderCoursesQuery(1, false, expectedCourseType);
 
             var courses = new List<Domain.Entities.ProviderCourse>
             {
@@ -197,15 +196,38 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
 
             response.Should().NotBeNull();
             response.Result.Count.Should().Be(1);
-            response.Result.All(r => r.CourseType == courseTypeApprenticeship).Should().BeTrue();
+            response.Result.All(r => r.CourseType == expectedCourseType).Should().BeTrue();
+        }
 
-            query = new GetAllProviderCoursesQuery(1, false, courseTypeApprenticeshipUnit);
+        [Test, MoqAutoData]
+        public async Task Handle_FiltersByCourseType_ReturnsOnlyApprenticeshipUnit(
+            [Frozen] Mock<IProviderCoursesReadRepository> providersReadRepositoryMock,
+            [Frozen] Mock<IStandardsReadRepository> standardsReadRepositoryMock,
+            GetAllProviderCoursesQueryHandler sut,
+            CancellationToken cancellationToken)
+        {
+            var larsCodeOne = "1";
+            var larsCodeTwo = "2";
 
-            response = await sut.Handle(query, cancellationToken);
+            var expectedCourseType = CourseType.ApprenticeshipUnit;
+
+            var query = new GetAllProviderCoursesQuery(1, false, expectedCourseType);
+
+            var courses = new List<Domain.Entities.ProviderCourse>
+            {
+                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = "Apprenticeship" }, LarsCode = larsCodeOne},
+                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = "ApprenticeshipUnit" }, LarsCode = larsCodeTwo}
+            };
+
+            providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(courses);
+            var standards = courses.Select(course => new Standard { LarsCode = course.LarsCode }).ToList();
+            standardsReadRepositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
+
+            var response = await sut.Handle(query, cancellationToken);
 
             response.Should().NotBeNull();
             response.Result.Count.Should().Be(1);
-            response.Result.All(r => r.CourseType == courseTypeApprenticeshipUnit).Should().BeTrue();
+            response.Result.All(r => r.CourseType == expectedCourseType).Should().BeTrue();
         }
 
         [Test, MoqAutoData]
