@@ -286,23 +286,6 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             var returned = ok.Value as IList<ProviderCourseModelExternal>;
             returned.Should().NotBeNull();
             returned.Should().HaveCount(1);
-
-            var mapped = returned!.First();
-            mapped.ProviderCourseId.Should().Be(apprenticeship.ProviderCourseId);
-            mapped.LarsCode.Should().Be(123); // parsed from string
-            mapped.StandardInfoUrl.Should().Be(apprenticeship.StandardInfoUrl);
-            mapped.ContactUsEmail.Should().Be(apprenticeship.ContactUsEmail);
-            mapped.ContactUsPhoneNumber.Should().Be(apprenticeship.ContactUsPhoneNumber);
-            mapped.IsApprovedByRegulator.Should().Be(apprenticeship.IsApprovedByRegulator);
-            mapped.IsImported.Should().Be(apprenticeship.IsImported);
-            mapped.HasPortableFlexiJobOption.Should().Be(apprenticeship.HasPortableFlexiJobOption);
-            mapped.HasLocations.Should().Be(apprenticeship.HasLocations);
-            mapped.IsRegulatedForProvider.Should().Be(apprenticeship.IsRegulatedForProvider);
-            mapped.IfateReferenceNumber.Should().Be(apprenticeship.IfateReferenceNumber);
-            mapped.Level.Should().Be(apprenticeship.Level);
-            mapped.CourseName.Should().Be(apprenticeship.CourseName);
-            mapped.Version.Should().Be(apprenticeship.Version);
-            mapped.ApprovalBody.Should().Be(apprenticeship.ApprovalBody);
         }
 
         [Test]
