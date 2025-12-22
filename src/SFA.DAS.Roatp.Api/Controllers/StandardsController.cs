@@ -11,6 +11,7 @@ using SFA.DAS.Roatp.Domain.Models;
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
+    [Route("/standards")]
     public class StandardsController : ActionResponseControllerBase
     {
         private readonly ILogger<StandardsController> _logger;
@@ -23,7 +24,6 @@ namespace SFA.DAS.Roatp.Api.Controllers
         }
 
         [HttpGet]
-        [Route("standards")]
         [Produces("application/json")]
         public async Task<ActionResult<GetAllStandardsQueryResult>> GetAllStandards([FromQuery] CourseType? courseType = null)
         {
@@ -33,12 +33,12 @@ namespace SFA.DAS.Roatp.Api.Controllers
         }
 
         [HttpGet]
-        [Route("standards/{larsCode}")]
+        [Route("{larsCode}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(GetStandardForLarsCodeQueryResult), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetStandardForLarsCode(string larsCode)
+        public async Task<IActionResult> GetStandardForLarsCode([FromRoute] string larsCode)
         {
             _logger.LogInformation("Inner API: Request received to get standard for larsCode {LarsCode}", larsCode);
             var result = await _mediator.Send(new GetStandardForLarsCodeQuery(larsCode));
