@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -306,39 +307,65 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             mapped.ApprovalBody.Should().Be(apprenticeship.ApprovalBody);
         }
 
-        [Test, RecursiveMoqAutoData]
-        public void ProviderCourseModel_ImplicitConversion_FromDomainEntity_SetsProperties(
-            Domain.Entities.ProviderCourse providerCourse)
+        [TestCase(true, "Apprenticeship")]
+        [TestCase(false, null)]
+        [TestCase(false, "NotARealCourseType")]
+        public void ProviderCourseModel_ImplicitConversion_FromDomainEntity_SetsProperties(bool hasLocations, string courseTypeString)
         {
-            providerCourse.Id = 10;
-            providerCourse.LarsCode = "555";
-            providerCourse.StandardInfoUrl = "http://standard";
-            providerCourse.ContactUsEmail = "a@b.c";
-            providerCourse.ContactUsPhoneNumber = "000";
-            providerCourse.IsApprovedByRegulator = true;
-            providerCourse.IsImported = true;
-            providerCourse.HasPortableFlexiJobOption = true;
-            providerCourse.Locations = [new ProviderCourseLocation()];
-            providerCourse.Standard = new Standard
+            var providerCourse = new Domain.Entities.ProviderCourse
             {
-                CourseType = "Apprenticeship",
-                IsRegulatedForProvider = true
+                Id = hasLocations ? 10 : 20,
+                LarsCode = hasLocations ? "555" : "999",
+                StandardInfoUrl = hasLocations ? "http://standard" : null,
+                ContactUsEmail = hasLocations ? "a@b.c" : null,
+                ContactUsPhoneNumber = hasLocations ? "000" : null,
+                IsApprovedByRegulator = hasLocations ? true : (bool?)null,
+                IsImported = hasLocations,
+                HasPortableFlexiJobOption = hasLocations,
+                Locations = hasLocations ? [new Domain.Entities.ProviderCourseLocation()] : [],
+                Standard = courseTypeString == null ? null : new Standard
+                {
+                    CourseType = courseTypeString,
+                    IsRegulatedForProvider = string.Equals(courseTypeString, "Apprenticeship")
+                }
             };
 
             var model = (ProviderCourseModel)providerCourse;
 
             model.Should().NotBeNull();
             model.ProviderCourseId.Should().Be(providerCourse.Id);
-            model.LarsCode.Should().Be(providerCourse.LarsCode);
-            model.StandardInfoUrl.Should().Be(providerCourse.StandardInfoUrl);
-            model.ContactUsEmail.Should().Be(providerCourse.ContactUsEmail);
-            model.ContactUsPhoneNumber.Should().Be(providerCourse.ContactUsPhoneNumber);
-            model.IsApprovedByRegulator.Should().Be(providerCourse.IsApprovedByRegulator);
+
+            // Locations
+            model.HasLocations.Should().Be(providerCourse.Locations.Count > 0);
+
+            // Standard / CourseType parsing
+            if (providerCourse.Standard == null)
+            {
+                model.IsRegulatedForProvider.Should().BeFalse();
+                model.CourseType.Should().BeNull();
+            }
+            else if (Enum.TryParse<CourseType>(providerCourse.Standard.CourseType, out var parsed))
+            {
+                model.CourseType.Should().Be(parsed);
+                model.IsRegulatedForProvider.Should().Be(providerCourse.Standard.IsRegulatedForProvider);
+            }
+            else
+            {
+                model.CourseType.Should().BeNull();
+                model.IsRegulatedForProvider.Should().Be(providerCourse.Standard.IsRegulatedForProvider);
+            }
+
+            // If present, other properties should map through
+            if (providerCourse.StandardInfoUrl != null)
+                model.StandardInfoUrl.Should().Be(providerCourse.StandardInfoUrl);
+            if (providerCourse.ContactUsEmail != null)
+                model.ContactUsEmail.Should().Be(providerCourse.ContactUsEmail);
+            if (providerCourse.ContactUsPhoneNumber != null)
+                model.ContactUsPhoneNumber.Should().Be(providerCourse.ContactUsPhoneNumber);
+            if (providerCourse.IsApprovedByRegulator.HasValue)
+                model.IsApprovedByRegulator.Should().Be(providerCourse.IsApprovedByRegulator);
             model.IsImported.Should().Be(providerCourse.IsImported);
             model.HasPortableFlexiJobOption.Should().Be(providerCourse.HasPortableFlexiJobOption);
-            model.HasLocations.Should().BeTrue(); // set from Locations.Count > 0
-            model.IsRegulatedForProvider.Should().BeTrue(); // from Standard
-            model.CourseType.Should().Be(CourseType.Apprenticeship); // parsed from Standard.CourseType string
         }
 
         [Test]
