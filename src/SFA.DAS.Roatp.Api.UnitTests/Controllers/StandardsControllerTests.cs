@@ -40,7 +40,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             var result = response.Result as OkObjectResult;
             result.Should().NotBeNull();
             var queryResult = result.Value as GetAllStandardsQueryResult;
-            queryResult.Standards.Should().BeEquivalentTo(standards);
+
+            queryResult.Standards.Should().BeEquivalentTo(standards, options => options.ExcludingMissingMembers());
         }
 
         [Test, RecursiveMoqAutoData()]

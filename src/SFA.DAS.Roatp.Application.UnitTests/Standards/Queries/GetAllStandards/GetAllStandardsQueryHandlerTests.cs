@@ -19,26 +19,26 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries.GetAllStandards
         [Test]
         public async Task Handle_WithOutCourseTypeFilter_ReturnsListOfAllStandards()
         {
-            var standards = new List<Standard>
+            var expectedStandards = new List<Standard>
             {
                 new() { LarsCode = "1", Title = "standard 1" },
                 new() { LarsCode = "2", Title = "standard 2" }
             };
             CourseType? courseTypeFilter = null;
             var repositoryMock = new Mock<IStandardsReadRepository>();
-            repositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
+            repositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(expectedStandards);
 
             var sut = new GetAllStandardsQueryHandler(repositoryMock.Object, Mock.Of<ILogger<GetAllStandardsQueryHandler>>());
             var queryRequest = new GetAllStandardsQuery(courseTypeFilter);
             var result = await sut.Handle(queryRequest, CancellationToken.None);
 
-            result.Standards.Should().BeEquivalentTo(standards);
+            result.Standards.Should().BeEquivalentTo(new GetAllStandardsQueryResult(expectedStandards).Standards);
         }
 
         [Test]
         public async Task Handle_WithCourseType_FiltersStandards()
         {
-            var standards = new List<Standard>
+            var expectedStandards = new List<Standard>
             {
                 new() { LarsCode = "1", Title = "standard 1", CourseType = CourseType.Apprenticeship.ToString() },
                 new() { LarsCode = "2", Title = "short 1", CourseType = CourseType.ApprenticeshipUnit.ToString() },
@@ -47,7 +47,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries.GetAllStandards
             var courseTypeFilter = CourseType.ApprenticeshipUnit;
 
             var repositoryMock = new Mock<IStandardsReadRepository>();
-            repositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
+            repositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(expectedStandards);
 
             var sut = new GetAllStandardsQueryHandler(repositoryMock.Object, Mock.Of<ILogger<GetAllStandardsQueryHandler>>());
             var queryRequest = new GetAllStandardsQuery(courseTypeFilter);
@@ -60,14 +60,14 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries.GetAllStandards
         [Test]
         public async Task Handle_WithCourseType_NoMatches_ReturnsEmptyListAndLogsZero()
         {
-            var standards = new List<Standard>
+            var expectedStandards = new List<Standard>
             {
                 new() { LarsCode = "1", Title = "standard 1", CourseType = CourseType.Apprenticeship.ToString() },
                 new() { LarsCode = "2", Title = "standard 2", CourseType = CourseType.Apprenticeship.ToString() }
             };
             var courseTypeFilter = CourseType.ApprenticeshipUnit;
             var repositoryMock = new Mock<IStandardsReadRepository>();
-            repositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
+            repositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(expectedStandards);
 
             var loggerMock = new Mock<ILogger<GetAllStandardsQueryHandler>>();
             var sut = new GetAllStandardsQueryHandler(repositoryMock.Object, loggerMock.Object);

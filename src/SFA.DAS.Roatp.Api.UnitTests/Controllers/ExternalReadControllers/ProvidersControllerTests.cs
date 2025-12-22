@@ -17,6 +17,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetRegisteredProvider;
+using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
@@ -237,6 +238,54 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<List<ProviderCourseModel>>(handlerResult));
             var result = await sut.GetAllProviderCourses(ukprn);
             result.As<OkObjectResult>().Value.Should().BeEquivalentTo(handlerResult);
+        }
+
+        [Test, MoqAutoData]
+        public async Task GetAllProviderCourses_FiltersToApprenticeshipAndMapsToExternal(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Greedy] ProvidersController sut,
+            int ukprn)
+        {
+            var apprenticeship = new ProviderCourseModel
+            {
+                ProviderCourseId = 1,
+                LarsCode = "123",
+                CourseType = CourseType.Apprenticeship,
+                StandardInfoUrl = "https://standard.info",
+                ContactUsEmail = "test@example.com",
+                ContactUsPhoneNumber = "0123456789",
+                IsApprovedByRegulator = true,
+                IsImported = false,
+                HasPortableFlexiJobOption = true,
+                HasLocations = true,
+                IsRegulatedForProvider = true,
+                IfateReferenceNumber = "IFATE-1",
+                Level = 3,
+                CourseName = "Test Course",
+                Version = "1.0",
+                ApprovalBody = "Approver"
+            };
+
+            var shortCourse = new ProviderCourseModel
+            {
+                ProviderCourseId = 2,
+                LarsCode = "999",
+                CourseType = CourseType.ApprenticeshipUnit
+            };
+
+            var handlerResult = new List<ProviderCourseModel> { apprenticeship, shortCourse };
+
+            mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidatedResponse<List<ProviderCourseModel>>(handlerResult));
+
+            var actionResult = await sut.GetAllProviderCourses(ukprn);
+
+            var ok = actionResult as OkObjectResult;
+            ok.Should().NotBeNull();
+
+            var returned = ok.Value as IList<ProviderCourseModelExternal>;
+            returned.Should().NotBeNull();
+            returned.Should().HaveCount(1);
         }
 
         [Test]
