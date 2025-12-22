@@ -318,7 +318,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             providerCourse.IsApprovedByRegulator = true;
             providerCourse.IsImported = true;
             providerCourse.HasPortableFlexiJobOption = true;
-            providerCourse.Locations = new List<ProviderCourseLocation> { new ProviderCourseLocation() };
+            providerCourse.Locations = [new ProviderCourseLocation()];
             providerCourse.Standard = new Standard
             {
                 CourseType = "Apprenticeship",
@@ -339,6 +339,16 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             model.HasLocations.Should().BeTrue(); // set from Locations.Count > 0
             model.IsRegulatedForProvider.Should().BeTrue(); // from Standard
             model.CourseType.Should().Be(CourseType.Apprenticeship); // parsed from Standard.CourseType string
+        }
+
+        [Test]
+        public void ProviderCourseModel_ImplicitConversion_WhenEntityIsNull(
+            )
+        {
+            Domain.Entities.ProviderCourse providerCourse = null;
+
+            var model = (ProviderCourseModel)providerCourse;
+            model.Should().BeNull();
         }
 
         [Test]
