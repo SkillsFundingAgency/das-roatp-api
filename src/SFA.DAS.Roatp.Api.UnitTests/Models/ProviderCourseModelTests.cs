@@ -124,7 +124,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
             model.StandardInfoUrl.Should().BeNull();
             model.ContactUsEmail.Should().BeNull();
             model.ContactUsPhoneNumber.Should().BeNull();
-            model.IsApprovedByRegulator.Should().BeFalse();
+            model.IsApprovedByRegulator.Should().BeNull();
             model.IsImported.Should().Be(providerCourse.IsImported);
             model.HasPortableFlexiJobOption.Should().Be(providerCourse.HasPortableFlexiJobOption);
             model.CourseType.Should().BeNull();
