@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Application.Standards.Queries.GetAllStandards
             {
                 allStandards = FilterStandardsWithCourseType(allStandards, request.CourseType.Value);
             }
-            _logger.LogInformation($"Returning {allStandards.Count} standards");
+            _logger.LogInformation("Returning {allStandardsCount} standards", allStandards.Count);
             return new GetAllStandardsQueryResult(allStandards);
         }
         private static List<Standard> FilterStandardsWithCourseType(List<Standard> allStandards, CourseType courseTypeFilter)
