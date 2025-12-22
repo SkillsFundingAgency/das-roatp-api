@@ -17,6 +17,8 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetRegisteredProvider;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
@@ -237,6 +239,106 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers
             mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<List<ProviderCourseModel>>(handlerResult));
             var result = await sut.GetAllProviderCourses(ukprn);
             result.As<OkObjectResult>().Value.Should().BeEquivalentTo(handlerResult);
+        }
+
+        [Test, MoqAutoData]
+        public async Task GetAllProviderCourses_FiltersToApprenticeshipAndMapsToExternal(
+            [Frozen] Mock<IMediator> mediatorMock,
+            [Greedy] ProvidersController sut,
+            int ukprn)
+        {
+            var apprenticeship = new ProviderCourseModel
+            {
+                ProviderCourseId = 1,
+                LarsCode = "123",
+                CourseType = CourseType.Apprenticeship,
+                StandardInfoUrl = "https://standard.info",
+                ContactUsEmail = "test@example.com",
+                ContactUsPhoneNumber = "0123456789",
+                IsApprovedByRegulator = true,
+                IsImported = false,
+                HasPortableFlexiJobOption = true,
+                HasLocations = true,
+                IsRegulatedForProvider = true,
+                IfateReferenceNumber = "IFATE-1",
+                Level = 3,
+                CourseName = "Test Course",
+                Version = "1.0",
+                ApprovalBody = "Approver"
+            };
+
+            var shortCourse = new ProviderCourseModel
+            {
+                ProviderCourseId = 2,
+                LarsCode = "999",
+                CourseType = CourseType.ApprenticeshipUnit
+            };
+
+            var handlerResult = new List<ProviderCourseModel> { apprenticeship, shortCourse };
+
+            mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidatedResponse<List<ProviderCourseModel>>(handlerResult));
+
+            var actionResult = await sut.GetAllProviderCourses(ukprn);
+
+            var ok = actionResult as OkObjectResult;
+            ok.Should().NotBeNull();
+
+            var returned = ok.Value as IList<ProviderCourseModelExternal>;
+            returned.Should().NotBeNull();
+            returned.Should().HaveCount(1);
+
+            var mapped = returned!.First();
+            mapped.ProviderCourseId.Should().Be(apprenticeship.ProviderCourseId);
+            mapped.LarsCode.Should().Be(123); // parsed from string
+            mapped.StandardInfoUrl.Should().Be(apprenticeship.StandardInfoUrl);
+            mapped.ContactUsEmail.Should().Be(apprenticeship.ContactUsEmail);
+            mapped.ContactUsPhoneNumber.Should().Be(apprenticeship.ContactUsPhoneNumber);
+            mapped.IsApprovedByRegulator.Should().Be(apprenticeship.IsApprovedByRegulator);
+            mapped.IsImported.Should().Be(apprenticeship.IsImported);
+            mapped.HasPortableFlexiJobOption.Should().Be(apprenticeship.HasPortableFlexiJobOption);
+            mapped.HasLocations.Should().Be(apprenticeship.HasLocations);
+            mapped.IsRegulatedForProvider.Should().Be(apprenticeship.IsRegulatedForProvider);
+            mapped.IfateReferenceNumber.Should().Be(apprenticeship.IfateReferenceNumber);
+            mapped.Level.Should().Be(apprenticeship.Level);
+            mapped.CourseName.Should().Be(apprenticeship.CourseName);
+            mapped.Version.Should().Be(apprenticeship.Version);
+            mapped.ApprovalBody.Should().Be(apprenticeship.ApprovalBody);
+        }
+
+        [Test, RecursiveMoqAutoData]
+        public void ProviderCourseModel_ImplicitConversion_FromDomainEntity_SetsProperties(
+            Domain.Entities.ProviderCourse providerCourse)
+        {
+            providerCourse.Id = 10;
+            providerCourse.LarsCode = "555";
+            providerCourse.StandardInfoUrl = "http://standard";
+            providerCourse.ContactUsEmail = "a@b.c";
+            providerCourse.ContactUsPhoneNumber = "000";
+            providerCourse.IsApprovedByRegulator = true;
+            providerCourse.IsImported = true;
+            providerCourse.HasPortableFlexiJobOption = true;
+            providerCourse.Locations = new List<ProviderCourseLocation> { new ProviderCourseLocation() };
+            providerCourse.Standard = new Standard
+            {
+                CourseType = "Apprenticeship",
+                IsRegulatedForProvider = true
+            };
+
+            var model = (ProviderCourseModel)providerCourse;
+
+            model.Should().NotBeNull();
+            model.ProviderCourseId.Should().Be(providerCourse.Id);
+            model.LarsCode.Should().Be(providerCourse.LarsCode);
+            model.StandardInfoUrl.Should().Be(providerCourse.StandardInfoUrl);
+            model.ContactUsEmail.Should().Be(providerCourse.ContactUsEmail);
+            model.ContactUsPhoneNumber.Should().Be(providerCourse.ContactUsPhoneNumber);
+            model.IsApprovedByRegulator.Should().Be(providerCourse.IsApprovedByRegulator);
+            model.IsImported.Should().Be(providerCourse.IsImported);
+            model.HasPortableFlexiJobOption.Should().Be(providerCourse.HasPortableFlexiJobOption);
+            model.HasLocations.Should().BeTrue(); // set from Locations.Count > 0
+            model.IsRegulatedForProvider.Should().BeTrue(); // from Standard
+            model.CourseType.Should().Be(CourseType.Apprenticeship); // parsed from Standard.CourseType string
         }
 
         [Test]
