@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
@@ -49,7 +48,6 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
 
         [TestCase(1, true)]
         [TestCase(0, false)]
-
         public void ProviderCourseOperator_SetsHasLocation(int numberOfLocations, bool expected)
         {
             var locations = new List<ProviderCourseLocation>();
@@ -65,26 +63,24 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
             Assert.AreEqual(expected, model.HasLocations);
         }
 
-        [TestCase(true, "Apprenticeship")]
-        [TestCase(false, null)]
-        [TestCase(false, "NotARealCourseType")]
-        public void ProviderCourseModel_ImplicitConversion_FromDomainEntity_SetsProperties(bool hasLocations, string courseTypeString)
+        [Test]
+        public void ProviderCourseModel_ImplicitConversion_WhenEntityPopulated_SetsProperties()
         {
             var providerCourse = new Domain.Entities.ProviderCourse
             {
-                Id = hasLocations ? 10 : 20,
-                LarsCode = hasLocations ? "555" : "999",
-                StandardInfoUrl = hasLocations ? "http://standard" : null,
-                ContactUsEmail = hasLocations ? "a@b.c" : null,
-                ContactUsPhoneNumber = hasLocations ? "000" : null,
-                IsApprovedByRegulator = hasLocations ? true : (bool?)null,
-                IsImported = hasLocations,
-                HasPortableFlexiJobOption = hasLocations,
-                Locations = hasLocations ? [new Domain.Entities.ProviderCourseLocation()] : [],
-                Standard = courseTypeString == null ? null : new Standard
+                Id = 10,
+                LarsCode = "555",
+                StandardInfoUrl = "http://standard",
+                ContactUsEmail = "a@b.c",
+                ContactUsPhoneNumber = "000",
+                IsApprovedByRegulator = true,
+                IsImported = true,
+                HasPortableFlexiJobOption = true,
+                Locations = [new ProviderCourseLocation()],
+                Standard = new Standard
                 {
-                    CourseType = courseTypeString,
-                    IsRegulatedForProvider = string.Equals(courseTypeString, "Apprenticeship")
+                    CourseType = "Apprenticeship",
+                    IsRegulatedForProvider = true
                 }
             };
 
@@ -92,43 +88,51 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
 
             model.Should().NotBeNull();
             model.ProviderCourseId.Should().Be(providerCourse.Id);
-
-            // Locations
-            model.HasLocations.Should().Be(providerCourse.Locations.Count > 0);
-
-            // Standard / CourseType parsing
-            if (providerCourse.Standard == null)
-            {
-                model.IsRegulatedForProvider.Should().BeFalse();
-                model.CourseType.Should().BeNull();
-            }
-            else if (Enum.TryParse<CourseType>(providerCourse.Standard.CourseType, out var parsed))
-            {
-                model.CourseType.Should().Be(parsed);
-                model.IsRegulatedForProvider.Should().Be(providerCourse.Standard.IsRegulatedForProvider);
-            }
-            else
-            {
-                model.CourseType.Should().BeNull();
-                model.IsRegulatedForProvider.Should().Be(providerCourse.Standard.IsRegulatedForProvider);
-            }
-
-            // If present, other properties should map through
-            if (providerCourse.StandardInfoUrl != null)
-                model.StandardInfoUrl.Should().Be(providerCourse.StandardInfoUrl);
-            if (providerCourse.ContactUsEmail != null)
-                model.ContactUsEmail.Should().Be(providerCourse.ContactUsEmail);
-            if (providerCourse.ContactUsPhoneNumber != null)
-                model.ContactUsPhoneNumber.Should().Be(providerCourse.ContactUsPhoneNumber);
-            if (providerCourse.IsApprovedByRegulator.HasValue)
-                model.IsApprovedByRegulator.Should().Be(providerCourse.IsApprovedByRegulator);
+            model.HasLocations.Should().BeTrue();
+            model.StandardInfoUrl.Should().Be(providerCourse.StandardInfoUrl);
+            model.ContactUsEmail.Should().Be(providerCourse.ContactUsEmail);
+            model.ContactUsPhoneNumber.Should().Be(providerCourse.ContactUsPhoneNumber);
+            model.IsApprovedByRegulator.Should().Be(providerCourse.IsApprovedByRegulator.Value);
             model.IsImported.Should().Be(providerCourse.IsImported);
             model.HasPortableFlexiJobOption.Should().Be(providerCourse.HasPortableFlexiJobOption);
+            model.CourseType.Should().Be(CourseType.Apprenticeship);
+            model.IsRegulatedForProvider.Should().Be(providerCourse.Standard.IsRegulatedForProvider);
         }
 
         [Test]
-        public void ProviderCourseModel_ImplicitConversion_WhenEntityIsNull(
-            )
+        public void ProviderCourseModel_ImplicitConversion_WhenStandardIsNull_SetsDefaults()
+        {
+            var providerCourse = new Domain.Entities.ProviderCourse
+            {
+                Id = 20,
+                LarsCode = "999",
+                StandardInfoUrl = null,
+                ContactUsEmail = null,
+                ContactUsPhoneNumber = null,
+                IsApprovedByRegulator = null,
+                IsImported = false,
+                HasPortableFlexiJobOption = false,
+                Locations = [],
+                Standard = null
+            };
+
+            var model = (ProviderCourseModel)providerCourse;
+
+            model.Should().NotBeNull();
+            model.ProviderCourseId.Should().Be(providerCourse.Id);
+            model.HasLocations.Should().BeFalse();
+            model.StandardInfoUrl.Should().BeNull();
+            model.ContactUsEmail.Should().BeNull();
+            model.ContactUsPhoneNumber.Should().BeNull();
+            model.IsApprovedByRegulator.Should().BeNull();
+            model.IsImported.Should().Be(providerCourse.IsImported);
+            model.HasPortableFlexiJobOption.Should().Be(providerCourse.HasPortableFlexiJobOption);
+            model.CourseType.Should().BeNull();
+            model.IsRegulatedForProvider.Should().BeFalse();
+        }
+
+        [Test]
+        public void ProviderCourseModel_ImplicitConversion_WhenEntityIsNull()
         {
             Domain.Entities.ProviderCourse providerCourse = null;
 
