@@ -41,6 +41,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
             providerCourse.ContactUsEmail = patchedProviderCourse.ContactUsEmail;
             providerCourse.ContactUsPhoneNumber = patchedProviderCourse.ContactUsPhoneNumber;
             providerCourse.StandardInfoUrl = patchedProviderCourse.StandardInfoUrl;
+            providerCourse.HasOnlineDeliveryOption = patchedProviderCourse.HasOnlineDeliveryOption;
 
             var response = await _providerCoursesWriteRepository.PatchProviderCourse(providerCourse, command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseDetails);
 
