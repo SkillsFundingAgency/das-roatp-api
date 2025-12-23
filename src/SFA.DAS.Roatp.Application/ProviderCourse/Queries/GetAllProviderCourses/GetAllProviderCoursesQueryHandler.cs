@@ -8,6 +8,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
 {
@@ -45,6 +46,11 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
                 providerCoursesModel = RemoveUnapprovedRegulatedStandards(providerCoursesModel);
             }
 
+            if (request.CourseType.HasValue)
+            {
+                providerCoursesModel = FilterStandardsWithCourseType(providerCoursesModel, request.CourseType.Value);
+            }
+
             foreach (var p in providerCoursesModel)
             {
                 var course = standardsLookup.Single(c => c.LarsCode == p.LarsCode);
@@ -53,6 +59,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses
             }
 
             return new ValidatedResponse<List<ProviderCourseModel>>(providerCoursesModel);
+        }
+
+        private static List<ProviderCourseModel> FilterStandardsWithCourseType(List<ProviderCourseModel> providerCoursesModel, CourseType courseTypeFilter)
+        {
+            return providerCoursesModel
+                .Where(c => c.CourseType == courseTypeFilter)
+                .ToList();
         }
 
         private static List<Domain.Entities.ProviderCourse> FilterExpiredStandards(List<Domain.Entities.ProviderCourse> providerCourses, List<Standard> standardsLookup)
