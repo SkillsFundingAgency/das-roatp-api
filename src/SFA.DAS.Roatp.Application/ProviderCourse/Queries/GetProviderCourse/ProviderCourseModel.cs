@@ -19,7 +19,8 @@ public class ProviderCourseModel : ProviderCourseModelBase
             IsImported = providerCourse.IsImported,
             HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption,
             HasLocations = providerCourse.Locations.Count > 0,
-            IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false
+            IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false,
+            HasHundredPercentEmployerDeliveryOption = providerCourse.HasOnlineDeliveryOption
         };
 
         return model;

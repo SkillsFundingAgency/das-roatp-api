@@ -1,4 +1,5 @@
 ﻿namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries;
+
 public class ProviderCourseModelBase
 {
     public int ProviderCourseId { get; set; }
@@ -17,4 +18,5 @@ public class ProviderCourseModelBase
     public string ApprovalBody { get; set; }
     public bool IsRegulatedForProvider { get; set; }
     public bool HasLocations { get; set; }
+    public bool HasOnlineDeliveryOption { get; set; }
 }

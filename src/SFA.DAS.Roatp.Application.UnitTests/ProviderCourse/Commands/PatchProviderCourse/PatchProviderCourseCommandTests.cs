@@ -14,6 +14,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         private const string ContactUsPhoneNumber = "ContactUsPhoneNumber";
         private const string StandardInfoUrl = "StandardInfoUrl";
         private const string IsApprovedByRegulator = "IsApprovedByRegulator";
+        private const string HasOnlineDeliveryOption = "HasOnlineDeliveryOption";
 
         [Test]
         public void Command_PatchContainsStandardInfoUrl_StandardInfoUrlIsSet()
@@ -96,6 +97,26 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         }
 
         [Test]
+        public void Command_PatchContainsHasOnlineDeliveryOption_HasOnlineDeliveryOptionIsSet()
+        {
+            var ukprn = 10000001;
+            var larsCode = "1";
+            var testValue = "true";
+            var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+            patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = HasOnlineDeliveryOption, value = testValue });
+
+            var command = new PatchProviderCourseCommand
+            {
+                Ukprn = ukprn,
+                LarsCode = larsCode,
+                Patch = patchCommand
+            };
+
+            command.HasOnlineDeliveryOption.Should().BeTrue();
+            command.IsPresentHasOnlineDeliveryOption.Should().BeTrue();
+        }
+
+        [Test]
         public void Command_PatchContainsNoDetails_FieldsAreNotSet()
         {
             var ukprn = 10000001;
@@ -110,6 +131,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
             };
 
             command.IsApprovedByRegulator.Should().BeNull();
+            command.IsPresentHasOnlineDeliveryOption.Should().BeFalse();
             command.IsPresentIsApprovedByRegulator.Should().BeFalse();
             command.ContactUsEmail.Should().BeNull();
             command.IsPresentContactUsEmail.Should().BeFalse();

@@ -118,6 +118,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.PatchProvider
             command.ContactUsPhoneNumber.Should().BeNull();
             command.IsPresentContactUsPhoneNumber.Should().BeFalse();
             command.StandardInfoUrl.Should().BeNull();
+            command.IsPresentHasOnlineDeliveryOption.Should().BeFalse();
             command.IsPresentStandardInfoUrl.Should().BeFalse();
         }
     }

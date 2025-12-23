@@ -14,6 +14,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
         public const string StandardInfoUrlIdentifier = "StandardInfoUrl";
         public const string ContactUsPhoneNumberIdentifier = "ContactUsPhoneNumber";
         private const string ContactUsEmailIdentifier = "ContactUsEmail";
+        private const string HasOnlineDeliveryOptionIdentifier = "HasOnlineDeliveryOption";
 
         public int Ukprn { get; set; }
         public string LarsCode { get; set; }
@@ -47,9 +48,27 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
             }
         }
 
+        public bool? HasOnlineDeliveryOption
+        {
+            get
+            {
+                var hasOnlineDeliveryOption = Patch.Operations.FirstOrDefault(operation =>
+                    operation.path == HasOnlineDeliveryOptionIdentifier && operation.op.Equals(Replace, StringComparison.CurrentCultureIgnoreCase))?.value;
+
+                if (bool.TryParse(hasOnlineDeliveryOption?.ToString(), out var result))
+                    return result;
+
+                return null;
+            }
+        }
+
         public bool IsPresentIsApprovedByRegulator =>
             Patch.Operations.Any(operation =>
                 operation.path == IsApprovedByRegulatorIdentifier && operation.op.Equals(Replace, StringComparison.CurrentCultureIgnoreCase));
+
+        public bool IsPresentHasOnlineDeliveryOption =>
+            Patch.Operations.Any(operation =>
+                operation.path == HasOnlineDeliveryOptionIdentifier && operation.op.Equals(Replace, StringComparison.CurrentCultureIgnoreCase));
 
         public bool IsPresentStandardInfoUrl =>
             Patch.Operations.Any(operation =>

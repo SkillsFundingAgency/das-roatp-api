@@ -32,6 +32,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             {
                 course.ProviderId = 1;
                 course.LarsCode = larsCodeIncrement.ToString();
+                course.Standard = new Standard { LarsCode = course.LarsCode, IsRegulatedForProvider = false };
+                course.IsApprovedByRegulator = true;
+                course.Locations = [new ProviderCourseLocation()];
                 larsCodeIncrement++;
 
             }

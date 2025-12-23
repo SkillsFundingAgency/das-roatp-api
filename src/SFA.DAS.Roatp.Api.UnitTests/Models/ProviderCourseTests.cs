@@ -15,13 +15,15 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
             var contactUsEmail = "test@test.com";
             var contactUsPhoneNumber = "1234567890";
             var standardInfoUrl = "http://www.test.com";
+            var hasOnlineDeliveryOption = true;
 
             var entity = new ProviderCourse
             {
                 ContactUsEmail = contactUsEmail,
                 ContactUsPhoneNumber = contactUsPhoneNumber,
                 StandardInfoUrl = standardInfoUrl,
-                IsApprovedByRegulator = isApprovedByRegulator
+                IsApprovedByRegulator = isApprovedByRegulator,
+                HasOnlineDeliveryOption = hasOnlineDeliveryOption
             };
 
             var patchProviderCourse = new ProviderCourse
@@ -29,7 +31,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models
                 ContactUsEmail = contactUsEmail,
                 ContactUsPhoneNumber = contactUsPhoneNumber,
                 StandardInfoUrl = standardInfoUrl,
-                IsApprovedByRegulator = isApprovedByRegulator
+                IsApprovedByRegulator = isApprovedByRegulator,
+                HasOnlineDeliveryOption = hasOnlineDeliveryOption
             };
 
             var expectedPatchProvider = (Domain.Models.ProviderCourse)entity;

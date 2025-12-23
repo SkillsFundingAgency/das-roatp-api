@@ -51,6 +51,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
             patchCommand.Replace(path => path.ContactUsPhoneNumber, patch.ContactUsPhoneNumber);
             patchCommand.Replace(path => path.StandardInfoUrl, patch.StandardInfoUrl);
             patchCommand.Replace(path => path.IsApprovedByRegulator, patch.IsApprovedByRegulator);
+            patchCommand.Replace(path => path.HasOnlineDeliveryOption, patch.HasOnlineDeliveryOption);
 
             var command = new PatchProviderCourseCommand
             {
@@ -67,7 +68,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
                 c => c.ContactUsEmail == patch.ContactUsEmail &&
                      c.ContactUsPhoneNumber == patch.ContactUsPhoneNumber &&
                      c.StandardInfoUrl == patch.StandardInfoUrl &&
-                     c.IsApprovedByRegulator == patch.IsApprovedByRegulator), command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseDetails));
+                     c.IsApprovedByRegulator == patch.IsApprovedByRegulator &&
+                     c.HasOnlineDeliveryOption == patch.HasOnlineDeliveryOption), command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderCourseDetails));
         }
     }
 }
