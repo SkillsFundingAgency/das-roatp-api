@@ -12,6 +12,7 @@
         public string ContactUsPageUrl { get; set; }
         public bool IsImported { get; set; } = false;
         public bool HasPortableFlexiJobOption { get; set; }
+        public bool HasOnlineDeliveryOption { get; set; }
 
         public static implicit operator ProviderCourse(Entities.ProviderCourse source)
         {
@@ -28,7 +29,8 @@
                 ContactUsEmail = source.ContactUsEmail,
                 ContactUsPhoneNumber = source.ContactUsPhoneNumber,
                 IsImported = source.IsImported,
-                HasPortableFlexiJobOption = source.HasPortableFlexiJobOption
+                HasPortableFlexiJobOption = source.HasPortableFlexiJobOption,
+                HasOnlineDeliveryOption = source.HasOnlineDeliveryOption
             };
         }
     }

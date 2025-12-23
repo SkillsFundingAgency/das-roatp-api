@@ -16,6 +16,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
         public const string PatchOperationContainsUnavailableOperationErrorMessage = "This patch operation contains an unexpected operation and will not continue";
 
         public const string IsApprovedByRegulatorIsNotABooleanErrorMessage = "The patch contains an update for IsApprovedByRegulator that is not a boolean value";
+        public const string HasOnlineDeliveryOptionIsNotABooleanErrorMessage = "The patch contains an update for HasOnlineDeliveryOption that is not a boolean value";
 
         public static readonly IList<string> PatchFields = new ReadOnlyCollection<string>(
                 new List<string>
@@ -23,7 +24,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
                     "ContactUsEmail",
                     "ContactUsPhoneNumber",
                     "StandardInfoUrl",
-                    "IsApprovedByRegulator"
+                    "IsApprovedByRegulator",
+                    "HasOnlineDeliveryOption"
                 });
 
         public PatchProviderCourseCommandValidator(IProvidersReadRepository providersReadRepository,
@@ -59,6 +61,11 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse
             RuleFor(c => c.StandardInfoUrl)
                 .MustBeValidUrl("Website")
                 .When(c => c.IsPresentStandardInfoUrl);
+
+            RuleFor(c => c.HasOnlineDeliveryOption != null)
+                .Equal(true)
+                .When(c => c.IsPresentHasOnlineDeliveryOption)
+                .WithMessage(HasOnlineDeliveryOptionIsNotABooleanErrorMessage);
         }
     }
 }

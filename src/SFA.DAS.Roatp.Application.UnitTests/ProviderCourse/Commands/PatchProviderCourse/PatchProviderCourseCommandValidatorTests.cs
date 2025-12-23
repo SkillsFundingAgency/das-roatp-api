@@ -23,6 +23,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
         private const string ContactUsEmail = "ContactUsEmail";
         private const string ContactUsPhoneNumber = "ContactUsPhoneNumber";
         private const string StandardInfoUrl = "StandardInfoUrl";
+        private const string HasOnlineDeliveryOption = "HasOnlineDeliveryOption";
 
         private const string Replace = "replace";
 
@@ -459,6 +460,77 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProvi
             result.IsValid.Should().BeFalse();
             result.Errors.Should().HaveCount(1);
             result.ShouldHaveValidationErrorFor(c => c.StandardInfoUrl).WithErrorMessage(UrlValidationMessages.UrlWrongFormat("Website"));
+        }
+
+        [Test]
+        public async Task Validate_Patch_HasOnlineDeliveryOption_MatchingOperations_NoErrorMessage()
+        {
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
+            var ukprn = 10000001;
+            var larsCode = "1";
+
+            var command = new PatchProviderCourseCommand
+            {
+                Ukprn = ukprn,
+                LarsCode = larsCode,
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
+            };
+
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
+            {
+                Operations =
+                {
+                    new Operation<Domain.Models.PatchProviderCourse>
+                        { op = Replace, path = HasOnlineDeliveryOption, value = "True" }
+                }
+            };
+
+            var result = await validator.TestValidateAsync(command);
+
+            result.ShouldNotHaveAnyValidationErrors();
+            result.IsValid.Should().BeTrue();
+        }
+
+        [TestCase("True", true)]
+        [TestCase("False", true)]
+        [TestCase("true", true)]
+        [TestCase("false", true)]
+        [TestCase("not boolean", false)]
+        [TestCase("2", false)]
+        public async Task Validate_Patch_HasOnlineDeliveryOption_VariousFieldValues_MatchingErrors(string hasOnlineDeliveryOptionValue, bool isNoErrorExpected)
+        {
+            var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
+            var ukprn = 10000001;
+            var larsCode = "1";
+
+            var command = new PatchProviderCourseCommand
+            {
+                Ukprn = ukprn,
+                LarsCode = larsCode,
+                Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>()
+            };
+
+            command.Patch = new JsonPatchDocument<Domain.Models.PatchProviderCourse>
+            {
+                Operations =
+                {
+                    new Operation<Domain.Models.PatchProviderCourse>
+                        { op = Replace, path = HasOnlineDeliveryOption, value = hasOnlineDeliveryOptionValue }
+                }
+            };
+
+            var result = await validator.TestValidateAsync(command);
+            if (isNoErrorExpected)
+            {
+                result.ShouldNotHaveAnyValidationErrors();
+                result.IsValid.Should().BeTrue();
+            }
+            else
+            {
+                result.IsValid.Should().BeFalse();
+                result.Errors.Should().HaveCount(1);
+                PatchProviderCourseCommandValidator.HasOnlineDeliveryOptionIsNotABooleanErrorMessage.Should().Be(result.Errors[0].ErrorMessage);
+            }
         }
     }
 }
