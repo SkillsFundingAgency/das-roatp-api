@@ -1,6 +1,6 @@
 CREATE PROCEDURE [dbo].[GetCourseProviderDetails]
 	@Ukprn BIGINT,
-	@Larscode BIGINT,
+	@larscode nvarchar(10),
 	@Latitude FLOAT NULL,
 	@Longitude FLOAT NULL,
 	@Location VARCHAR(200) NULL,
