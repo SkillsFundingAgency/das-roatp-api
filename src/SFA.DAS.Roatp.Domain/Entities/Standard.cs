@@ -14,5 +14,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public int SectorSubjectAreaTier1 { get; set; }
         public virtual List<ProviderCourse> ProviderCourses { get; set; }
         public bool IsRegulatedForProvider { get; set; }
+        public string CourseType { get; set; }
     }
 }

@@ -1,8 +1,12 @@
-﻿namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
+﻿using System;
+using SFA.DAS.Roatp.Domain.Models;
+
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
 public class ProviderCourseModel : ProviderCourseModelBase
 {
     public string LarsCode { get; set; }
+    public CourseType? CourseType { get; set; }
 
     public static implicit operator ProviderCourseModel(Domain.Entities.ProviderCourse providerCourse)
     {
@@ -21,6 +25,11 @@ public class ProviderCourseModel : ProviderCourseModelBase
             HasLocations = providerCourse.Locations.Count > 0,
             IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false
         };
+
+        if (Enum.TryParse<CourseType>(providerCourse.Standard?.CourseType, out var parsedCourseType))
+        {
+            model.CourseType = parsedCourseType;
+        }
 
         return model;
     }
