@@ -184,8 +184,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
 
             var courses = new List<Domain.Entities.ProviderCourse>
             {
-                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = "Apprenticeship" }, LarsCode = larsCodeOne},
-                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = "ApprenticeshipUnit" }, LarsCode = larsCodeTwo}
+                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.Apprenticeship }, LarsCode = larsCodeOne},
+                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.ApprenticeshipUnit }, LarsCode = larsCodeTwo}
             };
 
             providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(courses);
@@ -215,8 +215,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
 
             var courses = new List<Domain.Entities.ProviderCourse>
             {
-                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = "Apprenticeship" }, LarsCode = larsCodeOne},
-                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = "ApprenticeshipUnit" }, LarsCode = larsCodeTwo}
+                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.Apprenticeship }, LarsCode = larsCodeOne},
+                new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.ApprenticeshipUnit }, LarsCode = larsCodeTwo}
             };
 
             providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(courses);
@@ -237,24 +237,21 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             GetAllProviderCoursesQueryHandler sut,
             CancellationToken cancellationToken)
         {
-            // Arrange
             const int ukprn = 1;
             var query = new GetAllProviderCoursesQuery(ukprn, false, null);
 
             var courses = new List<Domain.Entities.ProviderCourse>
             {
-                new() { ProviderId = ukprn, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = "Apprenticeship" }, LarsCode = "1" },
-                new() { ProviderId = ukprn, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = "ApprenticeshipUnit" }, LarsCode = "2" }
+                new() { ProviderId = ukprn, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.Apprenticeship }, LarsCode = "1" },
+                new() { ProviderId = ukprn, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.ApprenticeshipUnit }, LarsCode = "2" }
             };
 
             providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(ukprn)).ReturnsAsync(courses);
             var standards = courses.Select(course => new Standard { LarsCode = course.LarsCode }).ToList();
             standardsReadRepositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
 
-            // Act
             var response = await sut.Handle(query, cancellationToken);
 
-            // Assert
             response.Should().NotBeNull();
             response.Result.Should().HaveCount(2);
             response.Result.Should().ContainSingle(r => r.CourseType == CourseType.Apprenticeship);
