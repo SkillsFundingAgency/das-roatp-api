@@ -1,24 +1,23 @@
-﻿namespace SFA.DAS.Roatp.Domain.Models
+﻿namespace SFA.DAS.Roatp.Domain.Models;
+
+public class PatchProviderCourse
 {
-    public class PatchProviderCourse
+    public bool? IsApprovedByRegulator { get; set; }
+    public string StandardInfoUrl { get; set; }
+    public string ContactUsPhoneNumber { get; set; }
+    public string ContactUsEmail { get; set; }
+
+    public bool HasOnlineDeliveryOption { get; set; }
+
+    public static implicit operator PatchProviderCourse(Entities.ProviderCourse source)
     {
-        public bool? IsApprovedByRegulator { get; set; }
-        public string StandardInfoUrl { get; set; }
-        public string ContactUsPhoneNumber { get; set; }
-        public string ContactUsEmail { get; set; }
-
-        public bool HasOnlineDeliveryOption { get; set; }
-
-        public static implicit operator PatchProviderCourse(Entities.ProviderCourse source)
+        return new PatchProviderCourse
         {
-            return new PatchProviderCourse
-            {
-                IsApprovedByRegulator = source.IsApprovedByRegulator,
-                StandardInfoUrl = source.StandardInfoUrl,
-                ContactUsPhoneNumber = source.ContactUsPhoneNumber,
-                ContactUsEmail = source.ContactUsEmail,
-                HasOnlineDeliveryOption = source.HasOnlineDeliveryOption
-            };
-        }
+            IsApprovedByRegulator = source.IsApprovedByRegulator,
+            StandardInfoUrl = source.StandardInfoUrl,
+            ContactUsPhoneNumber = source.ContactUsPhoneNumber,
+            ContactUsEmail = source.ContactUsEmail,
+            HasOnlineDeliveryOption = source.HasOnlineDeliveryOption
+        };
     }
 }
