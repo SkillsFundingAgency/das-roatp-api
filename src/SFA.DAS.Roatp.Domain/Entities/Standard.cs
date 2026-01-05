@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public virtual List<ProviderCourse> ProviderCourses { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public int Duration { get; set; }
-        public string DurationUnits { get; set; }
+        public DurationUnits DurationUnits { get; set; }
         public string Route { get; set; }
         public ApprenticeshipType ApprenticeshipType { get; set; }
         public CourseType CourseType { get; set; }
