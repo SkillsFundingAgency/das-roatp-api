@@ -13,30 +13,28 @@ using SFA.DAS.Roatp.Application.Standards.Queries.GetAllStandards;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
+namespace SFA.DAS.Roatp.Api.UnitTests.Controllers;
+
+[TestFixture]
+public class StandardsControllerTests
 {
-    [TestFixture]
-    public class StandardsControllerTests
+    [Test, RecursiveMoqAutoData()]
+    public async Task GetAllStandards_ReturnsListOfStandards(
+        List<Standard> standards,
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<ILogger<StandardsController>> loggerMock,
+        [Greedy] StandardsController sut)
     {
-        [Test, RecursiveMoqAutoData()]
-        public async Task GetAllStandards_ReturnsListOfStandards(
-            List<Standard> standards,
-            [Frozen] Mock<IMediator> mediatorMock,
-            [Frozen] Mock<ILogger<StandardsController>> loggerMock)
-        {
-            var sut = new StandardsController(loggerMock.Object, mediatorMock.Object);
+        mediatorMock
+            .Setup(r => r.Send(It.IsAny<GetAllStandardsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new GetAllStandardsQueryResult(standards));
 
-            mediatorMock
-                .Setup(r => r.Send(It.IsAny<GetAllStandardsQuery>(), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new GetAllStandardsQueryResult(standards));
+        var response = await sut.GetAllStandards();
 
-            var response = await sut.GetAllStandards();
+        var result = response.Result as OkObjectResult;
+        result.Should().NotBeNull();
+        var queryResult = result.Value as GetAllStandardsQueryResult;
 
-            var result = response.Result as OkObjectResult;
-            result.Should().NotBeNull();
-            var queryResult = result.Value as GetAllStandardsQueryResult;
-
-            queryResult.Standards.Should().BeEquivalentTo(standards, options => options.ExcludingMissingMembers());
-        }
+        queryResult.Standards.Should().BeEquivalentTo(standards, options => options.ExcludingMissingMembers());
     }
 }
