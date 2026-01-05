@@ -3,6 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Standards.Queries.GetAllStandards;
 using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries.GetAllStandards
 {
@@ -31,8 +32,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries.GetAllStandards
                 ApprovalBody = "Some Body",
                 IsRegulatedForProvider = true,
                 Route = "Test Route",
-                ApprenticeshipType = "Higher",
-                CourseType = "FullTime"
+                ApprenticeshipType = ApprenticeshipType.Apprenticeship,
+                CourseType = CourseType.Apprenticeship
             };
 
             var sut = new GetAllStandardsQueryResult(new List<Standard> { source });

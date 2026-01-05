@@ -34,7 +34,7 @@ namespace SFA.DAS.Roatp.Application.Standards.Queries.GetAllStandards
         private static List<Standard> FilterStandardsWithCourseType(List<Standard> allStandards, CourseType courseTypeFilter)
         {
             return allStandards
-                .Where(c => c.CourseType == courseTypeFilter.ToString())
+                .Where(c => c.CourseType == courseTypeFilter)
                 .ToList();
         }
     }

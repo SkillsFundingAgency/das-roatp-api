@@ -1,7 +1,7 @@
 ﻿namespace SFA.DAS.Roatp.Domain.Models;
 
-public enum CourseType
+public enum ApprenticeshipType
 {
     Apprenticeship = 1,
-    ApprenticeshipUnit = 2
+    FoundationApprenticeship = 2
 }

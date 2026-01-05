@@ -9,7 +9,7 @@ using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
-[Route("api/Courses/providers/count")]
+[Route("courses/providers-count")]
 public class CoursesCountController(IMediator _mediator) : ActionResponseControllerBase
 {
     [HttpGet]

@@ -40,9 +40,9 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries.GetAllStandards
         {
             var expectedStandards = new List<Standard>
             {
-                new() { LarsCode = "1", Title = "standard 1", CourseType = CourseType.Apprenticeship.ToString() },
-                new() { LarsCode = "2", Title = "short 1", CourseType = CourseType.ApprenticeshipUnit.ToString() },
-                new() { LarsCode = "3", Title = "short 2", CourseType = CourseType.ApprenticeshipUnit.ToString() }
+                new() { LarsCode = "1", Title = "standard 1", CourseType = CourseType.Apprenticeship },
+                new() { LarsCode = "2", Title = "short 1", CourseType = CourseType.ApprenticeshipUnit},
+                new() { LarsCode = "3", Title = "short 2", CourseType = CourseType.ApprenticeshipUnit}
             };
             var courseTypeFilter = CourseType.ApprenticeshipUnit;
 
@@ -54,7 +54,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries.GetAllStandards
             var result = await sut.Handle(queryRequest, CancellationToken.None);
 
             result.Standards.Should().HaveCount(2);
-            result.Standards.Should().OnlyContain(s => s.CourseType == courseTypeFilter.ToString());
+            result.Standards.Should().OnlyContain(s => s.CourseType == courseTypeFilter);
         }
 
         [Test]
@@ -62,8 +62,8 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries.GetAllStandards
         {
             var expectedStandards = new List<Standard>
             {
-                new() { LarsCode = "1", Title = "standard 1", CourseType = CourseType.Apprenticeship.ToString() },
-                new() { LarsCode = "2", Title = "standard 2", CourseType = CourseType.Apprenticeship.ToString() }
+                new() { LarsCode = "1", Title = "standard 1", CourseType = CourseType.Apprenticeship },
+                new() { LarsCode = "2", Title = "standard 2", CourseType = CourseType.Apprenticeship }
             };
             var courseTypeFilter = CourseType.ApprenticeshipUnit;
             var repositoryMock = new Mock<IStandardsReadRepository>();

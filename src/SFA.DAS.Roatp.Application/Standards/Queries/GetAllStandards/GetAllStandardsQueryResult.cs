@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Standards.Queries.GetAllStandards
 {
@@ -41,8 +42,8 @@ namespace SFA.DAS.Roatp.Application.Standards.Queries.GetAllStandards
         public string ApprovalBody { get; set; }
         public bool IsRegulatedForProvider { get; set; }
         public string Route { get; set; }
-        public string ApprenticeshipType { get; set; }
-        public string CourseType { get; set; }
+        public ApprenticeshipType ApprenticeshipType { get; set; }
+        public CourseType CourseType { get; set; }
     }
 
 }
