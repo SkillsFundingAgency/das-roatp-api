@@ -1,5 +1,4 @@
-﻿using System;
-using SFA.DAS.Roatp.Domain.Models;
+﻿using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
@@ -23,13 +22,9 @@ public class ProviderCourseModel : ProviderCourseModelBase
             IsImported = providerCourse.IsImported,
             HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption,
             HasLocations = providerCourse.Locations.Count > 0,
-            IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false
+            IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false,
+            CourseType = providerCourse.Standard?.CourseType
         };
-
-        if (Enum.TryParse<CourseType>(providerCourse.Standard?.CourseType, out var parsedCourseType))
-        {
-            model.CourseType = parsedCourseType;
-        }
 
         return model;
     }
