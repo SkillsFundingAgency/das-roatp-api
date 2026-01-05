@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using MediatR;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
@@ -35,9 +34,6 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpGet]
         [Route("{larsCode}")]
         [Produces("application/json")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(GetStandardForLarsCodeQueryResult), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetStandardForLarsCode([FromRoute] string larsCode)
         {
             _logger.LogInformation("Inner API: Request received to get standard for larsCode {LarsCode}", larsCode);
