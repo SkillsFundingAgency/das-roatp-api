@@ -4,17 +4,21 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Common;
 
-public class CourseTypeUkprnValidator : AbstractValidator<ICourseTypeUkprn>
+public static class CourseTypeUkprnValidator
 {
     public const string ProviderCourseTypeNotFoundErrorMessage = "No provider course type found with given ukprn";
 
-    public CourseTypeUkprnValidator(IProviderCourseTypesReadRepository providerCourseTypesReadRepository)
+    public static IRuleBuilderOptions<T, CourseTypeUkprnValidationObject> ValidateCourseTypeForUkprn<T>(
+        this IRuleBuilderInitial<T, CourseTypeUkprnValidationObject> ruleBuilder,
+        IProviderCourseTypesReadRepository providerCourseTypesReadRepository
+    ) where T : IUkprn, ICourseType
     {
-        RuleFor(c => c.Ukprn)
-            .MustAsync(async (command, ukprn, cancellation) =>
+        return ruleBuilder
+            .MustAsync(async (validationObject, cancellationToken) =>
             {
-                var providerCourseTypes = await providerCourseTypesReadRepository.GetProviderCourseTypesByUkprn(ukprn);
-                return providerCourseTypes != null && providerCourseTypes.Any(a => a.CourseType == command.CourseType);
+                var providerCourseTypes =
+                    await providerCourseTypesReadRepository.GetProviderCourseTypesByUkprn(validationObject.Ukprn);
+                return providerCourseTypes != null && providerCourseTypes.Any(a => a.CourseType == validationObject.CourseType);
             })
             .WithMessage(ProviderCourseTypeNotFoundErrorMessage);
     }

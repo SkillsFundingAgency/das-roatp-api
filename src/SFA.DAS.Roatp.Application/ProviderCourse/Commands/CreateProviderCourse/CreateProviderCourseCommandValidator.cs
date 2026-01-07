@@ -103,7 +103,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                 .WithMessage(c => ValidationMessages.IsRequired(nameof(c.StandardInfoUrl)))
                 .MustBeValidUrl("Website");
 
-            Include(new CourseTypeUkprnValidator(providerCourseTypesReadRepository));
+            RuleFor(a => new CourseTypeUkprnValidationObject { Ukprn = a.Ukprn, CourseType = a.CourseType })
+                .ValidateCourseTypeForUkprn(providerCourseTypesReadRepository);
 
         }
 

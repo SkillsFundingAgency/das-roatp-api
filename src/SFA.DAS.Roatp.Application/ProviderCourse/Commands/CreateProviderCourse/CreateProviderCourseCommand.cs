@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 {
-    public class CreateProviderCourseCommand : IRequest<ValidatedResponse<int>>, IUkprn, ILarsCodeUkprn, ILarsCode, IUserInfo, ICourseTypeUkprn
+    public class CreateProviderCourseCommand : IRequest<ValidatedResponse<int>>, IUkprn, ILarsCodeUkprn, ILarsCode, IUserInfo, ICourseType
     {
         public string UserId { get; set; }
         public string UserDisplayName { get; set; }
