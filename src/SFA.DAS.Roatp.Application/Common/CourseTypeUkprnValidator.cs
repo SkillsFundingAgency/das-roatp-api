@@ -14,7 +14,7 @@ public class CourseTypeUkprnValidator : AbstractValidator<ICourseTypeUkprn>
             .MustAsync(async (command, ukprn, cancellation) =>
             {
                 var providerCourseTypes = await providerCourseTypesReadRepository.GetProviderCourseTypesByUkprn(ukprn);
-                return providerCourseTypes.Any(a => a.CourseType == command.CourseType.ToString());
+                return providerCourseTypes != null && providerCourseTypes.Any(a => a.CourseType == command.CourseType);
             })
             .WithMessage(ProviderCourseTypeNotFoundErrorMessage);
     }

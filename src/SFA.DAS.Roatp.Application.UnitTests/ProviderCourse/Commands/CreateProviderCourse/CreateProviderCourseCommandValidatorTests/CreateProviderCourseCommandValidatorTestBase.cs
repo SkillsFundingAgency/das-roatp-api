@@ -48,7 +48,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
             regionsReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(new List<Region> { new Region { Id = ValidRegionId } });
 
             providerCourseTypesReadRepositoryMock = new Mock<IProviderCourseTypesReadRepository>();
-            providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>())).ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { Id = 1, CourseType = CourseType.Apprenticeship.ToString(), Ukprn = ValidUkprn } });
+            providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>())).ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { Id = 1, CourseType = CourseType.Apprenticeship, Ukprn = ValidUkprn } });
 
             return new CreateProviderCourseCommandValidator(providersReadRepositoryMock.Object, standardsReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, regionsReadRepositoryMock.Object, providerCourseTypesReadRepositoryMock.Object);
         }

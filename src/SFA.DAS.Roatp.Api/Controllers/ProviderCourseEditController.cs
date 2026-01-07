@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpPatch]
         public async Task<IActionResult> PatchProviderCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] JsonPatchDocument<PatchProviderCourse> request, [FromQuery] string userId, [FromQuery] string userDisplayName)
         {
-            _logger.LogInformation("Inner API: Request to patch course contact details for ukprn: {ukprn} larscode: {larscode}", ukprn, larsCode);
+            _logger.LogInformation("Inner API: Request to patch course contact details for ukprn: {Ukprn} larsCode: {LarsCode}", ukprn, larsCode);
 
             var response = await _mediator.Send(new PatchProviderCourseCommand
             {
@@ -46,7 +46,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateProviderCourse([FromRoute] int ukprn, [FromRoute] string larsCode, ProviderCourseAddModel providerCourseAddModel, [FromQuery] string userId, [FromQuery] string userDisplayName)
         {
-            _logger.LogInformation("Inner API: Received command to add course: {larscode} to provider: {ukprn}", larsCode, ukprn);
+            _logger.LogInformation("Inner API: Received command to add course: {LarsCode} to provider: {Ukprn}", larsCode, ukprn);
 
             CreateProviderCourseCommand command = providerCourseAddModel;
             command.Ukprn = ukprn;
