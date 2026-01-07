@@ -16,7 +16,6 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
     public const string RegionIdNotFoundMessage = "At least one of the region id was not found";
     public const string LarsCodeUkprnCombinationAlreadyExistsMessage = "Ukprn and LarsCode combination already exists";
     public const string LarsCodeInvalidMessage = "Larscode must be greater than zero";
-    public const string ProviderCourseTypeNotFoundErrorMessage = "No provider course type found with given ukprn";
     public CreateProviderCourseCommandValidator(
         IProvidersReadRepository providersReadRepository,
         IStandardsReadRepository standardsReadRepository,
@@ -32,7 +31,7 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
             .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage(LarsCodeInvalidMessage)
-            .MustAsync(async (model, larsCode, cancellation) =>
+            .MustAsync(async (model, larsCode, _) =>
             {
                 var providerCourse = await providerCoursesReadRepository.GetProviderCourseByUkprn(model.Ukprn, larsCode);
                 return providerCourse == null;
@@ -69,7 +68,7 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
                             .NotEmpty()
                             .WithMessage(AtleastOneLocationIsRequiredMessage)
                             .MustAsync(
-                                async (command, providerLocations, cancellation) =>
+                                async (command, providerLocations, _) =>
                                 {
                                     var locations = await providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
                                     return !providerLocations.Any(providerLocation => locations.All(l => l.NavigationId != providerLocation.ProviderLocationId));
@@ -79,7 +78,7 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
                     .Otherwise(() =>
                     {
                         RuleFor((c) => c.SubregionIds)
-                            .MustAsync(async (subregionIds, cancellation) =>
+                            .MustAsync(async (subregionIds, _) =>
                             {
                                 var regions = await regionsReadRepository.GetAllRegions();
                                 return subregionIds.All(id => regions.Any(r => r.Id == id));
