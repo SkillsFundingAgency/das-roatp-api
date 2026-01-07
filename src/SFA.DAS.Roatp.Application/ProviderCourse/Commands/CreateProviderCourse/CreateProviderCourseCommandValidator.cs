@@ -4,43 +4,43 @@ using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
+
+public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProviderCourseCommand>
 {
-    public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProviderCourseCommand>
+    public const string RegulatedStandardMustBeApprovedMessage = "The standard is regulated and you must be approved by the regulator";
+    public const string RegulatorsApprovalNotRequired = "This course is not regulated, IsApprovedByRegulator should be null";
+    public const string EitherNationalOrRegionalMessage = "If the national delivery option is available, then the sub-regions are not required";
+    public const string AtleastOneLocationIsRequiredMessage = "National delivery option is not set and there are no regions or provider locations either. Any one of these is required.";
+    public const string LocationIdNotFoundMessage = "At least one of the location ids was not found";
+    public const string RegionIdNotFoundMessage = "At least one of the region id was not found";
+    public const string LarsCodeUkprnCombinationAlreadyExistsMessage = "Ukprn and LarsCode combination already exists";
+    public const string LarsCodeInvalidMessage = "Larscode must be greater than zero";
+    public const string ProviderCourseTypeNotFoundErrorMessage = "No provider course type found with given ukprn";
+    public CreateProviderCourseCommandValidator(
+        IProvidersReadRepository providersReadRepository,
+        IStandardsReadRepository standardsReadRepository,
+        IProviderCoursesReadRepository providerCoursesReadRepository,
+        IProviderLocationsReadRepository providerLocationsReadRepository,
+        IRegionsReadRepository regionsReadRepository,
+        IProviderCourseTypesReadRepository providerCourseTypesReadRepository)
     {
-        public const string RegulatedStandardMustBeApprovedMessage = "The standard is regulated and you must be approved by the regulator";
-        public const string RegulatorsApprovalNotRequired = "This course is not regulated, IsApprovedByRegulator should be null";
-        public const string EitherNationalOrRegionalMessage = "If the national delivery option is available, then the sub-regions are not required";
-        public const string AtleastOneLocationIsRequiredMessage = "National delivery option is not set and there are no regions or provider locations either. Any one of these is required.";
-        public const string LocationIdNotFoundMessage = "At least one of the location ids was not found";
-        public const string RegionIdNotFoundMessage = "At least one of the region id was not found";
-        public const string LarsCodeUkprnCombinationAlreadyExistsMessage = "Ukprn and LarsCode combination already exists";
-        public const string LarsCodeInvalidMessage = "Larscode must be greater than zero";
-        public const string ProviderCourseTypeNotFoundErrorMessage = "No provider course type found with given ukprn";
-        public CreateProviderCourseCommandValidator(
-            IProvidersReadRepository providersReadRepository,
-            IStandardsReadRepository standardsReadRepository,
-            IProviderCoursesReadRepository providerCoursesReadRepository,
-            IProviderLocationsReadRepository providerLocationsReadRepository,
-            IRegionsReadRepository regionsReadRepository,
-            IProviderCourseTypesReadRepository providerCourseTypesReadRepository)
-        {
-            Include(new UserInfoValidator());
+        Include(new UserInfoValidator());
 
-            Include(new UkprnValidator(providersReadRepository));
-            RuleFor(x => x.LarsCode)
-                .Cascade(CascadeMode.Stop)
-                .NotEmpty()
-                .WithMessage(LarsCodeInvalidMessage)
-                .MustAsync(async (model, larsCode, cancellation) =>
-                {
-                    var providerCourse = await providerCoursesReadRepository.GetProviderCourseByUkprn(model.Ukprn, larsCode);
-                    return providerCourse == null;
-                })
-                .WithMessage(LarsCodeUkprnCombinationAlreadyExistsMessage)
-                .When(_ => true, ApplyConditionTo.CurrentValidator);
+        Include(new UkprnValidator(providersReadRepository));
+        RuleFor(x => x.LarsCode)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty()
+            .WithMessage(LarsCodeInvalidMessage)
+            .MustAsync(async (model, larsCode, cancellation) =>
+            {
+                var providerCourse = await providerCoursesReadRepository.GetProviderCourseByUkprn(model.Ukprn, larsCode);
+                return providerCourse == null;
+            })
+            .WithMessage(LarsCodeUkprnCombinationAlreadyExistsMessage)
+            .When(_ => true, ApplyConditionTo.CurrentValidator);
 
-            WhenAsync(
+        WhenAsync(
                 async (command, _) => await IsStandardRegulated(command.LarsCode, standardsReadRepository),
                 () =>
                 {
@@ -48,14 +48,14 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                         .Equal(true)
                         .WithMessage(RegulatedStandardMustBeApprovedMessage);
                 })
-                .Otherwise(() =>
-                {
-                    RuleFor(c => c.IsApprovedByRegulator)
-                        .Null()
-                        .WithMessage(RegulatorsApprovalNotRequired);
-                });
+            .Otherwise(() =>
+            {
+                RuleFor(c => c.IsApprovedByRegulator)
+                    .Null()
+                    .WithMessage(RegulatorsApprovalNotRequired);
+            });
 
-            When((command) => command.HasNationalDeliveryOption, () =>
+        When((command) => command.HasNationalDeliveryOption, () =>
             {
                 RuleFor((c) => c.SubregionIds)
                     .Empty()
@@ -64,55 +64,54 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
             .Otherwise(() =>
             {
                 When((command) => command.SubregionIds == null || command.SubregionIds.Count == 0, () =>
-                {
-                    RuleFor((c) => c.ProviderLocations)
-                        .NotEmpty()
-                        .WithMessage(AtleastOneLocationIsRequiredMessage)
-                        .MustAsync(
-                            async (command, providerLocations, cancellation) =>
+                    {
+                        RuleFor((c) => c.ProviderLocations)
+                            .NotEmpty()
+                            .WithMessage(AtleastOneLocationIsRequiredMessage)
+                            .MustAsync(
+                                async (command, providerLocations, cancellation) =>
+                                {
+                                    var locations = await providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
+                                    return !providerLocations.Any(providerLocation => locations.All(l => l.NavigationId != providerLocation.ProviderLocationId));
+                                })
+                            .WithMessage(LocationIdNotFoundMessage);
+                    })
+                    .Otherwise(() =>
+                    {
+                        RuleFor((c) => c.SubregionIds)
+                            .MustAsync(async (subregionIds, cancellation) =>
                             {
-                                var locations = await providerLocationsReadRepository.GetAllProviderLocations(command.Ukprn);
-                                return !providerLocations.Any(providerLocation => locations.All(l => l.NavigationId != providerLocation.ProviderLocationId));
+                                var regions = await regionsReadRepository.GetAllRegions();
+                                return subregionIds.All(id => regions.Any(r => r.Id == id));
                             })
-                        .WithMessage(LocationIdNotFoundMessage);
-                })
-                .Otherwise(() =>
-                {
-                    RuleFor((c) => c.SubregionIds)
-                        .MustAsync(async (subregionIds, cancellation) =>
-                        {
-                            var regions = await regionsReadRepository.GetAllRegions();
-                            return subregionIds.All(id => regions.Any(r => r.Id == id));
-                        })
-                        .WithMessage(RegionIdNotFoundMessage);
-                });
+                            .WithMessage(RegionIdNotFoundMessage);
+                    });
             });
 
-            RuleFor(c => c.ContactUsEmail)
-                .NotEmpty()
-                .WithMessage(c => ValidationMessages.IsRequired(nameof(c.ContactUsEmail)))
-                .MustBeValidEmail();
+        RuleFor(c => c.ContactUsEmail)
+            .NotEmpty()
+            .WithMessage(c => ValidationMessages.IsRequired(nameof(c.ContactUsEmail)))
+            .MustBeValidEmail();
 
-            RuleFor(c => c.ContactUsPhoneNumber)
-                .NotEmpty()
-                .WithMessage(c => ValidationMessages.IsRequired(nameof(c.ContactUsPhoneNumber)))
-                .MustBeValidPhoneNumber();
+        RuleFor(c => c.ContactUsPhoneNumber)
+            .NotEmpty()
+            .WithMessage(c => ValidationMessages.IsRequired(nameof(c.ContactUsPhoneNumber)))
+            .MustBeValidPhoneNumber();
 
-            RuleFor(c => c.StandardInfoUrl)
-                .NotEmpty()
-                .WithMessage(c => ValidationMessages.IsRequired(nameof(c.StandardInfoUrl)))
-                .MustBeValidUrl("Website");
+        RuleFor(c => c.StandardInfoUrl)
+            .NotEmpty()
+            .WithMessage(c => ValidationMessages.IsRequired(nameof(c.StandardInfoUrl)))
+            .MustBeValidUrl("Website");
 
-            RuleFor(a => new CourseTypeUkprnValidationObject { Ukprn = a.Ukprn, CourseType = a.CourseType })
-                .ValidateCourseTypeForUkprn(providerCourseTypesReadRepository);
+        RuleFor(a => new CourseTypeUkprnValidationObject { Ukprn = a.Ukprn, CourseType = a.CourseType })
+            .ValidateCourseTypeForUkprn(providerCourseTypesReadRepository);
 
-        }
+    }
 
-        private async Task<bool> IsStandardRegulated(string larsCode, IStandardsReadRepository standardsReadRepository)
-        {
-            var standard = await standardsReadRepository.GetStandard(larsCode);
-            var result = standard.IsRegulatedForProvider;
-            return result;
-        }
+    private async Task<bool> IsStandardRegulated(string larsCode, IStandardsReadRepository standardsReadRepository)
+    {
+        var standard = await standardsReadRepository.GetStandard(larsCode);
+        var result = standard.IsRegulatedForProvider;
+        return result;
     }
 }
