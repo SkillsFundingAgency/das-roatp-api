@@ -16,12 +16,14 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         public const string RegionIdNotFoundMessage = "At least one of the region id was not found";
         public const string LarsCodeUkprnCombinationAlreadyExistsMessage = "Ukprn and LarsCode combination already exists";
         public const string LarsCodeInvalidMessage = "Larscode must be greater than zero";
+        public const string ProviderCourseTypeNotFoundErrorMessage = "No provider course type found with given ukprn";
         public CreateProviderCourseCommandValidator(
             IProvidersReadRepository providersReadRepository,
             IStandardsReadRepository standardsReadRepository,
             IProviderCoursesReadRepository providerCoursesReadRepository,
             IProviderLocationsReadRepository providerLocationsReadRepository,
-            IRegionsReadRepository regionsReadRepository)
+            IRegionsReadRepository regionsReadRepository,
+            IProviderCourseTypesReadRepository providerCourseTypesReadRepository)
         {
             Include(new UserInfoValidator());
 
@@ -100,6 +102,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                 .NotEmpty()
                 .WithMessage(c => ValidationMessages.IsRequired(nameof(c.StandardInfoUrl)))
                 .MustBeValidUrl("Website");
+
+            Include(new CourseTypeUkprnValidator(providerCourseTypesReadRepository));
 
         }
 

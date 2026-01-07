@@ -26,20 +26,22 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries
             GetAllProviderCoursesQueryHandler sut,
             CancellationToken cancellationToken)
         {
-            GetAllProviderCoursesQuery Query = new GetAllProviderCoursesQuery(1, true);
+            var query = new GetAllProviderCoursesQuery(1, true);
             var larsCodeIncrement = 1;
             foreach (var course in courses)
             {
                 course.ProviderId = 1;
                 course.LarsCode = larsCodeIncrement.ToString();
+                course.Locations = new List<ProviderCourseLocation> { new ProviderCourseLocation() };
+                course.IsApprovedByRegulator = true;
                 larsCodeIncrement++;
 
             }
-            providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(Query.Ukprn)).ReturnsAsync(courses);
+            providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(courses);
             var standards = courses.Select(course => new Standard { LarsCode = course.LarsCode }).ToList();
             standardsReadRepositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(standards);
 
-            var response = await sut.Handle(Query, cancellationToken);
+            var response = await sut.Handle(query, cancellationToken);
 
             response.Should().NotBeNull();
             response.Result.Count.Should().Be(courses.Count);

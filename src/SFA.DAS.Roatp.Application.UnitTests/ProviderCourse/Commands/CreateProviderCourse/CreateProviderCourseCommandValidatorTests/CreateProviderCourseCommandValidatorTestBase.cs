@@ -4,6 +4,7 @@ using Moq;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests
 {
@@ -14,6 +15,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
         protected Mock<IStandardsReadRepository> standardsReadRepositoryMock;
         protected Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock;
         protected Mock<IRegionsReadRepository> regionsReadRepositoryMock;
+        protected Mock<IProviderCourseTypesReadRepository> providerCourseTypesReadRepositoryMock;
         public const int ValidUkprn = 10012002;
         protected const string ValidComboLarsCode = "321";
         protected const string RegulatedLarsCode = "123";
@@ -45,7 +47,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProv
             regionsReadRepositoryMock = new Mock<IRegionsReadRepository>();
             regionsReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(new List<Region> { new Region { Id = ValidRegionId } });
 
-            return new CreateProviderCourseCommandValidator(providersReadRepositoryMock.Object, standardsReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, regionsReadRepositoryMock.Object);
+            providerCourseTypesReadRepositoryMock = new Mock<IProviderCourseTypesReadRepository>();
+            providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>())).ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { Id = 1, CourseType = CourseType.Apprenticeship.ToString(), Ukprn = ValidUkprn } });
+
+            return new CreateProviderCourseCommandValidator(providersReadRepositoryMock.Object, standardsReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, regionsReadRepositoryMock.Object, providerCourseTypesReadRepositoryMock.Object);
         }
     }
 }

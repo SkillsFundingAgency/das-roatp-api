@@ -7,6 +7,7 @@ using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
+using SFA.DAS.Roatp.Application.Standards.Queries.GetStandardForLarsCode;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Api.Controllers
@@ -52,7 +53,8 @@ namespace SFA.DAS.Roatp.Api.Controllers
             command.LarsCode = larsCode;
             command.UserId = userId;
             command.UserDisplayName = userDisplayName;
-
+            var standardForLarsCode = await _mediator.Send(new GetStandardForLarsCodeQuery(larsCode));
+            command.CourseType = standardForLarsCode.Result.CourseType;
             var response = await _mediator.Send(command);
 
             return GetPostResponse(response, $"/providers/{ukprn}/courses");
