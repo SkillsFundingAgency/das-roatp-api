@@ -23,19 +23,18 @@ public class ProviderCourseModel : ProviderCourseModelBase
             HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption,
             HasLocations = providerCourse.Locations.Count > 0,
             IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false,
-            CourseType = providerCourse.Standard?.CourseType
+            CourseType = providerCourse.Standard?.CourseType,
+            HasOnlineDeliveryOption = providerCourse.HasOnlineDeliveryOption
         };
 
         return model;
     }
 
-    public void AttachCourseDetails(string ifateRefNum, int level, string title, string version,
-            string approvalBody)
+    public void AttachCourseDetails(string ifateRefNum, int level, string title, string approvalBody)
     {
         IfateReferenceNumber = ifateRefNum;
         Level = level;
         CourseName = title;
-        Version = version;
         ApprovalBody = approvalBody;
     }
 }
