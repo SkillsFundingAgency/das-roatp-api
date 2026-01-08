@@ -67,6 +67,7 @@ BEGIN
         ,ContactUsEmail email
         ,ContactUsPhoneNumber phone
         ,ContactUsPageUrl website
+        ,ISNULL(ab2.HasOnlineDeliveryOption, 0) HasOnlineDeliveryOption
     INTO #MainQuery        
     FROM
     (
@@ -86,6 +87,7 @@ BEGIN
             ,MAX(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) DayRelease
             ,MIN(CASE WHEN DayRelease = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) DayReleaseDistance
             ,SUM(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) DayReleaseCount
+            ,ISNULL(HasOnlineDeliveryOption,0) HasOnlineDeliveryOption
 
             -- priority for at workplace over at provider (by ukprn and course)
             ,ROW_NUMBER() OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]
@@ -109,6 +111,7 @@ BEGIN
                    WHEN 0 THEN 0 ELSE 1 END AtEmployer
                   ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
                   ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
+                  ,ISNULL(pc1.HasOnlineDeliveryOption,0) HasOnlineDeliveryOption
                   ,CASE
                    WHEN st1.Latitude IS NULL THEN 0  -- no distance check
                    WHEN [LocationType] = 0 THEN 2  -- Provider
@@ -196,6 +199,7 @@ BEGIN
             ,providers.email
             ,providers.phone
             ,providers.website
+            ,providers.hasOnlineDeliveryOption
             ,providers.leavers
             ,providers.achievementRate
             ,providers.employerReviews
@@ -234,6 +238,7 @@ BEGIN
             ,email email
             ,phone phone
             ,website website
+            ,CAST(CASE WHEN HasOnlineDeliveryOption = 1 THEN 1 ELSE 0 END AS BIT) hasOnlineDeliveryOption
             -- Achievement Rates
             ,ISNULL(qp1.[Leavers],'-') leavers
             ,ISNULL(qp1.[AchievementRate],'-') achievementRate
@@ -257,4 +262,5 @@ BEGIN
     
     DROP TABLE #MainQuery;
     SELECT REPLACE(@JSON,'\/','/');
+
 END
