@@ -1,8 +1,7 @@
-﻿using SFA.DAS.Roatp.Domain.Models;
-
-namespace SFA.DAS.Roatp.Application.Common;
+﻿namespace SFA.DAS.Roatp.Application.Common;
 
 public interface ICourseType
 {
-    public CourseType CourseType { get; }
+    int Ukprn { get; }
+    string LarsCode { get; }
 }

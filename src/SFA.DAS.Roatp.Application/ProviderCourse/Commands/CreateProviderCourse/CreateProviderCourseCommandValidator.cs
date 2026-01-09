@@ -102,8 +102,7 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
             .WithMessage(c => ValidationMessages.IsRequired(nameof(c.StandardInfoUrl)))
             .MustBeValidUrl("Website");
 
-        RuleFor(a => new CourseTypeUkprnValidationObject { Ukprn = a.Ukprn, CourseType = a.CourseType })
-            .ValidateCourseTypeForUkprn(providerCourseTypesReadRepository);
+        Include(new CourseTypeValidator(providerCourseTypesReadRepository, standardsReadRepository));
 
     }
 

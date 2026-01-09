@@ -2,7 +2,6 @@
 using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
-using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 {
@@ -18,7 +17,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         public string ContactUsEmail { get; set; }
         public bool HasNationalDeliveryOption { get; set; }
         public bool HasOnlineDeliveryOption { get; set; }
-        public CourseType CourseType { get; set; }
         public List<ProviderCourseLocationCommandModel> ProviderLocations { get; set; } = new List<ProviderCourseLocationCommandModel>();
         public List<int> SubregionIds { get; set; } = new List<int>();
 
