@@ -25,5 +25,9 @@ public class StandardConfiguration : IEntityTypeConfiguration<Standard>
         builder.Property(e => e.ApprenticeshipType).HasConversion(
             v => v.ToString(),
             v => (ApprenticeshipType)Enum.Parse(typeof(ApprenticeshipType), v));
+        builder.Property(e => e.DurationUnits).HasConversion(
+            v => v.ToString(),
+            v => (DurationUnits)Enum.Parse(typeof(DurationUnits), v));
+
     }
 }

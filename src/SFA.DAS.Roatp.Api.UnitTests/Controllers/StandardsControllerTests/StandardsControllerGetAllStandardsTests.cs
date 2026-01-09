@@ -14,10 +14,10 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Api.UnitTests.Controllers;
+namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.StandardsControllerTests;
 
 [TestFixture]
-public class StandardsControllerTests
+public class StandardsControllerGetAllStandardsTests
 {
     [Test, RecursiveMoqAutoData()]
     public async Task GetAllStandards_ReturnsListOfStandards(

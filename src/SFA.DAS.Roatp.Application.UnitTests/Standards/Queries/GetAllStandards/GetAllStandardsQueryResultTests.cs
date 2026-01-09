@@ -30,6 +30,8 @@ public class GetAllStandardsQueryResultTests
             .Excluding(s => s.Version)
             .Excluding(s => s.SectorSubjectAreaTier1)
             .Excluding(s => s.ProviderCourses)
+            .Excluding(s => s.Duration)
+            .Excluding(s => s.DurationUnits)
         );
     }
 }
