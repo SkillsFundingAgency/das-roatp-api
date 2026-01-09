@@ -2,6 +2,6 @@
 
 public enum CourseType
 {
-    Apprenticeship = 1,
-    ApprenticeshipUnit = 2
+    Apprenticeship,
+    ApprenticeshipUnit
 }
