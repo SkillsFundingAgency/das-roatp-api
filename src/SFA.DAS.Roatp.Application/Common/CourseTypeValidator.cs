@@ -6,14 +6,14 @@ namespace SFA.DAS.Roatp.Application.Common;
 
 public class CourseTypeValidator : AbstractValidator<ICourseType>
 {
-    public const string ProviderCourseTypeNotFoundErrorMessage = "No provider course type found with given ukprn";
+    public const string ProviderCourseTypeNotFoundErrorMessage = "Provider is not allowed to add this course type";
 
     public CourseTypeValidator(IProviderCourseTypesReadRepository providerCourseTypesReadRepository,
         IStandardsReadRepository standardsReadRepository)
     {
         RuleFor(x => x.LarsCode)
             .Cascade(CascadeMode.Stop)
-            .MustAsync(async (course, larsCode, cancellationToken) =>
+            .MustAsync(async (course, larsCode, _) =>
                 {
                     var standard = await standardsReadRepository.GetStandard(larsCode);
                     var providerCourseTypes =
