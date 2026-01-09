@@ -1,8 +1,11 @@
-﻿namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
+﻿using SFA.DAS.Roatp.Domain.Models;
+
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
 public class ProviderCourseModel : ProviderCourseModelBase
 {
     public string LarsCode { get; set; }
+    public CourseType? CourseType { get; set; }
 
     public static implicit operator ProviderCourseModel(Domain.Entities.ProviderCourse providerCourse)
     {
@@ -19,19 +22,19 @@ public class ProviderCourseModel : ProviderCourseModelBase
             IsImported = providerCourse.IsImported,
             HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption,
             HasLocations = providerCourse.Locations.Count > 0,
-            IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false
+            IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false,
+            CourseType = providerCourse.Standard?.CourseType,
+            HasOnlineDeliveryOption = providerCourse.HasOnlineDeliveryOption
         };
 
         return model;
     }
 
-    public void AttachCourseDetails(string ifateRefNum, int level, string title, string version,
-            string approvalBody)
+    public void AttachCourseDetails(string ifateRefNum, int level, string title, string approvalBody)
     {
         IfateReferenceNumber = ifateRefNum;
         Level = level;
         CourseName = title;
-        Version = version;
         ApprovalBody = approvalBody;
     }
 }
