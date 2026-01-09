@@ -62,8 +62,8 @@ public class PatchProviderCourseCommandValidator : AbstractValidator<PatchProvid
             .MustBeValidUrl("Website")
             .When(c => c.IsPresentStandardInfoUrl);
 
-        RuleFor(c => c.HasOnlineDeliveryOption != null)
-            .Equal(true)
+        RuleFor(c => c.HasOnlineDeliveryOption)
+            .NotEmpty()
             .When(c => c.IsPresentHasOnlineDeliveryOption)
             .WithMessage(HasOnlineDeliveryOptionIsNotABooleanErrorMessage);
     }
