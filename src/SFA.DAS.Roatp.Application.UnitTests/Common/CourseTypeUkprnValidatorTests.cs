@@ -75,7 +75,7 @@ public class CourseTypeUkprnValidatorTests
     }
 
     [Test]
-    public async Task Validate_WhenNull_RetunrsInvalid()
+    public async Task Validate_WhenNull_ReturnsInvalid()
     {
         // Arrange
         var ukprn = 10000001;
