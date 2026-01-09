@@ -55,21 +55,10 @@ public class PatchProviderCourseCommand : IRequest<ValidatedResponse<bool>>, IUk
             var hasOnlineDeliveryOption = Patch.Operations.FirstOrDefault(operation =>
                 operation.path == HasOnlineDeliveryOptionIdentifier && operation.op.Equals(Replace, StringComparison.CurrentCultureIgnoreCase))?.value;
 
-            if (hasOnlineDeliveryOption is bool boolVal)
-                return boolVal;
-
-            var valueString = hasOnlineDeliveryOption?.ToString();
-
-            if (bool.TryParse(valueString, out var result))
+            if (bool.TryParse(hasOnlineDeliveryOption?.ToString(), out var result))
                 return result;
 
-            if (!int.TryParse(valueString, out var parsedInt)) return null;
-            return parsedInt switch
-            {
-                1 => true,
-                0 => false,
-                _ => null
-            };
+            return null;
         }
     }
 

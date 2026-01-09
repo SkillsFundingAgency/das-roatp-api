@@ -496,9 +496,6 @@ public class PatchProviderCourseCommandValidatorTests
     [TestCase("true", true)]
     [TestCase("false", true)]
     [TestCase("not boolean", false)]
-    [TestCase("", false)]
-    [TestCase("1", true)]
-    [TestCase("0", true)]
     [TestCase("2", false)]
     public async Task Validate_Patch_HasOnlineDeliveryOption_VariousFieldValues_MatchingErrors(string hasOnlineDeliveryOptionValue, bool isValid)
     {
