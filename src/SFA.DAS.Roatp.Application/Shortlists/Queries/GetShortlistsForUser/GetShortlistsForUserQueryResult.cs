@@ -45,6 +45,7 @@ public class ShortlistProviderModel
     public bool HasDayRelease { get; set; }
     public decimal? DayReleaseDistance { get; set; }
     public int DayReleaseCount { get; set; }
+    public bool HasOnlineDeliveryOption { get; set; }
     public string Email { get; set; }
     public string Phone { get; set; }
     public string Website { get; set; }
