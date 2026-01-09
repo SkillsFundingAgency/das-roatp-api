@@ -30,13 +30,11 @@ public class ProviderCourseModel : ProviderCourseModelBase
         return model;
     }
 
-    public void AttachCourseDetails(string ifateRefNum, int level, string title, string version,
-            string approvalBody)
+    public void AttachCourseDetails(string ifateRefNum, int level, string title, string approvalBody)
     {
         IfateReferenceNumber = ifateRefNum;
         Level = level;
         CourseName = title;
-        Version = version;
         ApprovalBody = approvalBody;
     }
 }

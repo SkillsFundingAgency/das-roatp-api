@@ -32,17 +32,15 @@ public class ProviderCourseModelTests
         {
             Title = "course title",
             Level = 1,
-            Version = "1.1",
             ApprovalBody = "ABC",
             IsRegulatedForProvider = true
         };
 
-        model.AttachCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title, standardLookup.Version, standardLookup.ApprovalBody);
+        model.AttachCourseDetails(standardLookup.IfateReferenceNumber, standardLookup.Level, standardLookup.Title, standardLookup.ApprovalBody);
 
         Assert.That(model, Is.Not.Null);
         standardLookup.Title.Should().Be(model.CourseName);
         standardLookup.Level.Should().Be(model.Level);
-        standardLookup.Version.Should().Be(model.Version);
         standardLookup.ApprovalBody.Should().Be(model.ApprovalBody);
     }
 

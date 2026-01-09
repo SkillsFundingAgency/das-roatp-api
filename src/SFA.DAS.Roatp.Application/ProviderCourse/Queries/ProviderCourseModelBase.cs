@@ -15,7 +15,6 @@ public class ProviderCourseModelBase
     public bool? HasHundredPercentEmployerDeliveryOption { get; set; }
     public bool HasPortableFlexiJobOption { get; set; }
     public bool HasOnlineDeliveryOption { get; set; }
-    public string Version { get; set; }
     public string ApprovalBody { get; set; }
     public bool IsRegulatedForProvider { get; set; }
     public bool HasLocations { get; set; }
