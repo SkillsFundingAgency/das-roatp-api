@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Text.Json.Serialization;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 
 namespace SFA.DAS.Roatp.Api.Models
@@ -11,8 +10,7 @@ namespace SFA.DAS.Roatp.Api.Models
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
         public bool HasNationalDeliveryOption { get; set; }
-        [JsonRequired]
-        public bool HasOnlineDeliveryOption { get; set; }
+        public bool HasOnlineDeliveryOption { get; set; } = false;
         public List<ProviderCourseLocationCommandModel> ProviderLocations { get; set; }
         public List<int> SubregionIds { get; set; }
 
