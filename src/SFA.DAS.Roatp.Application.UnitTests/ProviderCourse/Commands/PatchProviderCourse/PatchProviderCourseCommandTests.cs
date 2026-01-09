@@ -4,119 +4,297 @@ using Microsoft.AspNetCore.JsonPatch.Operations;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProviderCourse
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.PatchProviderCourse;
+
+[TestFixture]
+public class PatchProviderCourseCommandTests
 {
-    [TestFixture]
-    public class PatchProviderCourseCommandTests
+    private const string Replace = "replace";
+    private const string ContactUsEmail = "ContactUsEmail";
+    private const string ContactUsPhoneNumber = "ContactUsPhoneNumber";
+    private const string StandardInfoUrl = "StandardInfoUrl";
+    private const string IsApprovedByRegulator = "IsApprovedByRegulator";
+    private const string HasOnlineDeliveryOption = "HasOnlineDeliveryOption";
+
+    [Test]
+    public void Command_PatchContainsStandardInfoUrl_StandardInfoUrlIsSet()
     {
-        private const string Replace = "replace";
-        private const string ContactUsEmail = "ContactUsEmail";
-        private const string ContactUsPhoneNumber = "ContactUsPhoneNumber";
-        private const string StandardInfoUrl = "StandardInfoUrl";
-        private const string IsApprovedByRegulator = "IsApprovedByRegulator";
+        var ukprn = 10000001;
+        var larsCode = "1";
+        var testValue = "value";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = StandardInfoUrl, value = testValue });
 
-        [Test]
-        public void Command_PatchContainsStandardInfoUrl_StandardInfoUrlIsSet()
+        var command = new PatchProviderCourseCommand
         {
-            var ukprn = 10000001;
-            var larsCode = "1";
-            var testValue = "value";
-            var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
-            patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = StandardInfoUrl, value = testValue });
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
 
-            var command = new PatchProviderCourseCommand
-            {
-                Ukprn = ukprn,
-                LarsCode = larsCode,
-                Patch = patchCommand
-            };
+        testValue.Should().Be(command.StandardInfoUrl);
+        command.IsPresentStandardInfoUrl.Should().BeTrue();
+    }
 
-            testValue.Should().Be(command.StandardInfoUrl);
-            command.IsPresentStandardInfoUrl.Should().BeTrue();
-        }
+    [Test]
+    public void Command_PatchContainsStandardInfoUrlWithUppercaseReplace_StandardInfoUrlIsSet()
+    {
+        var ukprn = 10000002;
+        var larsCode = "2";
+        var testValue = "upper-case-replace";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = "REPLACE", path = StandardInfoUrl, value = testValue });
 
-        [Test]
-        public void Command_PatchContainsContactUsEmail_ContactUsEmailIsSet()
+        var command = new PatchProviderCourseCommand
         {
-            var ukprn = 10000001;
-            var larsCode = "1";
-            var testValue = "value";
-            var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
-            patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = ContactUsEmail, value = testValue });
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
 
-            var command = new PatchProviderCourseCommand
-            {
-                Ukprn = ukprn,
-                LarsCode = larsCode,
-                Patch = patchCommand
-            };
+        command.StandardInfoUrl.Should().Be(testValue);
+        command.IsPresentStandardInfoUrl.Should().BeTrue();
+    }
 
-            testValue.Should().Be(command.ContactUsEmail);
-            command.IsPresentContactUsEmail.Should().BeTrue();
-        }
+    [Test]
+    public void Command_PatchContainsStandardInfoUrlWithNonReplaceOp_Ignored()
+    {
+        var ukprn = 10000003;
+        var larsCode = "3";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = "add", path = StandardInfoUrl, value = "ignored" });
 
-        [Test]
-        public void Command_PatchContainsContactUsPhoneNumber_ContactUsPhoneNumberIsSet()
+        var command = new PatchProviderCourseCommand
         {
-            var ukprn = 10000001;
-            var larsCode = "1";
-            var testValue = "value";
-            var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
-            patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = ContactUsPhoneNumber, value = testValue });
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
 
-            var command = new PatchProviderCourseCommand
-            {
-                Ukprn = ukprn,
-                LarsCode = larsCode,
-                Patch = patchCommand
-            };
+        command.StandardInfoUrl.Should().BeNull();
+        command.IsPresentStandardInfoUrl.Should().BeFalse();
+    }
 
-            testValue.Should().Be(command.ContactUsPhoneNumber);
-            command.IsPresentContactUsPhoneNumber.Should().BeTrue();
-        }
+    [Test]
+    public void Command_PatchContainsContactUsEmail_ContactUsEmailIsSet()
+    {
+        var ukprn = 10000001;
+        var larsCode = "1";
+        var testValue = "value";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = ContactUsEmail, value = testValue });
 
-        [Test]
-        public void Command_PatchContainsIsApprovedByRegulator_IsApprovedByRegulatorIsSet()
+        var command = new PatchProviderCourseCommand
         {
-            var ukprn = 10000001;
-            var larsCode = "1";
-            var testValue = "true";
-            var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
-            patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = IsApprovedByRegulator, value = testValue });
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
 
-            var command = new PatchProviderCourseCommand
-            {
-                Ukprn = ukprn,
-                LarsCode = larsCode,
-                Patch = patchCommand
-            };
+        testValue.Should().Be(command.ContactUsEmail);
+        command.IsPresentContactUsEmail.Should().BeTrue();
+    }
 
-            command.IsApprovedByRegulator.Should().BeTrue();
-            command.IsPresentIsApprovedByRegulator.Should().BeTrue();
-        }
+    [Test]
+    public void Command_PatchContainsContactUsPhoneNumber_ContactUsPhoneNumberIsSet()
+    {
+        var ukprn = 10000001;
+        var larsCode = "1";
+        var testValue = "value";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = ContactUsPhoneNumber, value = testValue });
 
-        [Test]
-        public void Command_PatchContainsNoDetails_FieldsAreNotSet()
+        var command = new PatchProviderCourseCommand
         {
-            var ukprn = 10000001;
-            var larsCode = "1";
-            var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
 
-            var command = new PatchProviderCourseCommand
-            {
-                Ukprn = ukprn,
-                LarsCode = larsCode,
-                Patch = patchCommand
-            };
+        testValue.Should().Be(command.ContactUsPhoneNumber);
+        command.IsPresentContactUsPhoneNumber.Should().BeTrue();
+    }
 
-            command.IsApprovedByRegulator.Should().BeNull();
-            command.IsPresentIsApprovedByRegulator.Should().BeFalse();
-            command.ContactUsEmail.Should().BeNull();
-            command.IsPresentContactUsEmail.Should().BeFalse();
-            command.ContactUsPhoneNumber.Should().BeNull();
-            command.IsPresentContactUsPhoneNumber.Should().BeFalse();
-            command.StandardInfoUrl.Should().BeNull();
-            command.IsPresentStandardInfoUrl.Should().BeFalse();
-        }
+    [Test]
+    public void Command_PatchContainsIsApprovedByRegulator_IsApprovedByRegulatorIsSet()
+    {
+        var ukprn = 10000001;
+        var larsCode = "1";
+        var testValue = "true";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = IsApprovedByRegulator, value = testValue });
+
+        var command = new PatchProviderCourseCommand
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
+
+        command.IsApprovedByRegulator.Should().BeTrue();
+        command.IsPresentIsApprovedByRegulator.Should().BeTrue();
+    }
+
+    [Test]
+    public void Command_PatchContainsIsApprovedByRegulatorWithInvalidValue_IsApprovedByRegulatorIsNullButPresent()
+    {
+        var ukprn = 10000004;
+        var larsCode = "4";
+        var invalidValue = "not-a-bool";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = IsApprovedByRegulator, value = invalidValue });
+
+        var command = new PatchProviderCourseCommand
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
+
+        command.IsApprovedByRegulator.Should().BeNull();
+        command.IsPresentIsApprovedByRegulator.Should().BeTrue();
+    }
+
+    [Test]
+    public void Command_PatchContainsHasOnlineDeliveryOption_HasOnlineDeliveryOptionIsSet()
+    {
+        var ukprn = 10000001;
+        var larsCode = "1";
+        var testValue = "true";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = HasOnlineDeliveryOption, value = testValue });
+
+        var command = new PatchProviderCourseCommand
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
+
+        command.HasOnlineDeliveryOption.Should().BeTrue();
+        command.IsPresentHasOnlineDeliveryOption.Should().BeTrue();
+    }
+
+    [Test]
+    public void Command_PatchContainsNoDetails_FieldsAreNotSet()
+    {
+        var ukprn = 10000001;
+        var larsCode = "1";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+
+        var command = new PatchProviderCourseCommand
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
+
+        command.IsApprovedByRegulator.Should().BeNull();
+        command.IsPresentHasOnlineDeliveryOption.Should().BeFalse();
+        command.IsPresentIsApprovedByRegulator.Should().BeFalse();
+        command.ContactUsEmail.Should().BeNull();
+        command.IsPresentContactUsEmail.Should().BeFalse();
+        command.ContactUsPhoneNumber.Should().BeNull();
+        command.IsPresentContactUsPhoneNumber.Should().BeFalse();
+        command.StandardInfoUrl.Should().BeNull();
+        command.IsPresentStandardInfoUrl.Should().BeFalse();
+    }
+
+    [Test]
+    public void Command_PatchContainsHasOnlineDeliveryOptionWithInvalidValue_HasOnlineDeliveryOptionIsNullButPresent()
+    {
+        var ukprn = 10000005;
+        var larsCode = "5";
+        var invalidValue = "123";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = HasOnlineDeliveryOption, value = invalidValue });
+
+        var command = new PatchProviderCourseCommand
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
+
+        command.HasOnlineDeliveryOption.Should().BeNull();
+        command.IsPresentHasOnlineDeliveryOption.Should().BeTrue();
+    }
+
+    [Test]
+    public void Command_PatchContainsHasOnlineDeliveryOption_UppercaseReplace_IsSet()
+    {
+        var ukprn = 10000006;
+        var larsCode = "6";
+        var testValue = "True";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = "REPLACE", path = HasOnlineDeliveryOption, value = testValue });
+
+        var command = new PatchProviderCourseCommand
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
+
+        command.HasOnlineDeliveryOption.Should().BeTrue();
+        command.IsPresentHasOnlineDeliveryOption.Should().BeTrue();
+    }
+
+    [Test]
+    public void Command_PatchContainsHasOnlineDeliveryOption_WithNullValue_ReturnsNullButIsPresent()
+    {
+        var ukprn = 10000007;
+        var larsCode = "7";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = HasOnlineDeliveryOption, value = null });
+
+        var command = new PatchProviderCourseCommand
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
+
+        command.HasOnlineDeliveryOption.Should().BeNull();
+        command.IsPresentHasOnlineDeliveryOption.Should().BeTrue();
+    }
+
+    [Test]
+    public void Command_PatchContainsHasOnlineDeliveryOption_NonReplaceOp_Ignored()
+    {
+        var ukprn = 10000008;
+        var larsCode = "8";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = "remove", path = HasOnlineDeliveryOption, value = "true" });
+
+        var command = new PatchProviderCourseCommand
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
+
+        command.HasOnlineDeliveryOption.Should().BeNull();
+        command.IsPresentHasOnlineDeliveryOption.Should().BeFalse();
+    }
+
+    [Test]
+    public void Command_PatchContainsHasOnlineDeliveryOption_PathCasingMismatch_Ignored()
+    {
+        var ukprn = 10000009;
+        var larsCode = "9";
+        var testValue = "true";
+        var patchCommand = new JsonPatchDocument<Domain.Models.PatchProviderCourse>();
+        patchCommand.Operations.Add(new Operation<Domain.Models.PatchProviderCourse> { op = Replace, path = "hasonlinedeliveryoption", value = testValue });
+
+        var command = new PatchProviderCourseCommand
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            Patch = patchCommand
+        };
+
+        command.HasOnlineDeliveryOption.Should().BeNull();
+        command.IsPresentHasOnlineDeliveryOption.Should().BeFalse();
     }
 }
