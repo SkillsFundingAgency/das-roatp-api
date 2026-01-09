@@ -497,7 +497,7 @@ public class PatchProviderCourseCommandValidatorTests
     [TestCase("false", true)]
     [TestCase("not boolean", false)]
     [TestCase("2", false)]
-    public async Task Validate_Patch_HasOnlineDeliveryOption_VariousFieldValues_MatchingErrors(string hasOnlineDeliveryOptionValue, bool isNoErrorExpected)
+    public async Task Validate_Patch_HasOnlineDeliveryOption_VariousFieldValues_MatchingErrors(string hasOnlineDeliveryOptionValue, bool isValid)
     {
         var validator = new PatchProviderCourseCommandValidator(_providersReadRepo.Object, _providerCoursesReadRepo.Object);
         var ukprn = 10000001;
@@ -520,7 +520,7 @@ public class PatchProviderCourseCommandValidatorTests
         };
 
         var result = await validator.TestValidateAsync(command);
-        if (isNoErrorExpected)
+        if (isValid)
         {
             result.ShouldNotHaveAnyValidationErrors();
             result.IsValid.Should().BeTrue();
