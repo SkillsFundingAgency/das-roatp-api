@@ -1,8 +1,9 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.Standards.Queries;
-using System.Threading.Tasks;
+using SFA.DAS.Roatp.Application.Standards.Queries.GetAllStandards;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
@@ -21,10 +22,10 @@ namespace SFA.DAS.Roatp.Api.Controllers
         [HttpGet]
         [Route("standards")]
         [Produces("application/json")]
-        public async Task<ActionResult<GetAllStandardsQueryResult>> GetAllStandards()
+        public async Task<ActionResult<GetAllStandardsQueryResult>> GetAllStandards([FromQuery] CourseType? courseType = null)
         {
             _logger.LogInformation("Inner API: Request received to get all standards");
-            var result = await _mediator.Send(new GetAllStandardsQuery());
+            var result = await _mediator.Send(new GetAllStandardsQuery(courseType));
             return Ok(result);
         }
     }
