@@ -1,4 +1,5 @@
 ﻿namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries;
+
 public class ProviderCourseModelBase
 {
     public int ProviderCourseId { get; set; }
