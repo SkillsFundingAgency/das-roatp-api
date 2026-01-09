@@ -13,6 +13,7 @@ using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
+using SFA.DAS.Roatp.Application.Standards.Queries.GetStandardForLarsCode;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -49,6 +50,9 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
             [Greedy] ProviderCourseEditController sut,
             int ukprn, string larsCode, ProviderCourseAddModel model, int providerCourseId, string userId, string userDisplayName)
         {
+            mediatorMock.Setup(m => m.Send(It.IsAny<GetStandardForLarsCodeQuery>(), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidatedResponse<GetStandardForLarsCodeQueryResult>(new GetStandardForLarsCodeQueryResult()));
+
             mediatorMock.Setup(m => m.Send(It.Is<CreateProviderCourseCommand>(c => c.Ukprn == ukprn && c.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<int>(providerCourseId));
 
             var result = await sut.CreateProviderCourse(ukprn, larsCode, model, userId, userDisplayName);

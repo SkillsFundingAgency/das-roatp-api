@@ -1,8 +1,11 @@
-﻿namespace SFA.DAS.Roatp.Domain.Entities;
+﻿using SFA.DAS.Roatp.Domain.Models;
+
+namespace SFA.DAS.Roatp.Domain.Entities;
+
 public class ProviderCourseType
 {
     public int Id { get; set; }
     public int Ukprn { get; set; }
-    public string CourseType { get; set; }
-    public string LearningType { get; set; }
+    public CourseType CourseType { get; set; }
+    public LearningType LearningType { get; set; }
 }

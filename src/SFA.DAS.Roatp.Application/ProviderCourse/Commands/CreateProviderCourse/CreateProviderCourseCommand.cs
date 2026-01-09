@@ -5,7 +5,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 {
-    public class CreateProviderCourseCommand : IRequest<ValidatedResponse<int>>, IUkprn, ILarsCodeUkprn, ILarsCode, IUserInfo
+    public class CreateProviderCourseCommand : IRequest<ValidatedResponse<int>>, IUkprn, ILarsCodeUkprn, ILarsCode, IUserInfo, ICourseType
     {
         public string UserId { get; set; }
         public string UserDisplayName { get; set; }
@@ -16,6 +16,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
         public bool HasNationalDeliveryOption { get; set; }
+        public bool HasOnlineDeliveryOption { get; set; }
         public List<ProviderCourseLocationCommandModel> ProviderLocations { get; set; } = new List<ProviderCourseLocationCommandModel>();
         public List<int> SubregionIds { get; set; } = new List<int>();
 
@@ -28,7 +29,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                 ContactUsPhoneNumber = source.ContactUsPhoneNumber,
                 ContactUsEmail = source.ContactUsEmail,
                 HasPortableFlexiJobOption = false,
-                IsImported = false
+                IsImported = false,
+                HasOnlineDeliveryOption = source.HasOnlineDeliveryOption,
             };
     }
 }
