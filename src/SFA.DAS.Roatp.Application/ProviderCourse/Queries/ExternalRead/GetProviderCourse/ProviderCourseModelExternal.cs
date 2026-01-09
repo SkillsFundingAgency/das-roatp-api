@@ -1,35 +1,34 @@
 ﻿using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
-namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
+
+public class ProviderCourseModelExternal : ProviderCourseModelBase
 {
-    public class ProviderCourseModelExternal : ProviderCourseModelBase
+    public int LarsCode { get; set; }
+
+    public static implicit operator ProviderCourseModelExternal(ProviderCourseModel providerCourseModel)
     {
-        public int LarsCode { get; set; }
+        if (providerCourseModel == null) return null;
 
-        public static implicit operator ProviderCourseModelExternal(ProviderCourseModel providerCourseModel)
+        var model = new ProviderCourseModelExternal
         {
-            if (providerCourseModel == null) return null;
+            ProviderCourseId = providerCourseModel.ProviderCourseId,
+            LarsCode = int.TryParse(providerCourseModel.LarsCode, out var l) ? l : 0,
+            StandardInfoUrl = providerCourseModel.StandardInfoUrl,
+            ContactUsPhoneNumber = providerCourseModel.ContactUsPhoneNumber,
+            ContactUsEmail = providerCourseModel.ContactUsEmail,
+            IsApprovedByRegulator = providerCourseModel.IsApprovedByRegulator,
+            IsImported = providerCourseModel.IsImported,
+            HasPortableFlexiJobOption = providerCourseModel.HasPortableFlexiJobOption,
+            HasOnlineDeliveryOption = providerCourseModel.HasOnlineDeliveryOption,
+            HasLocations = providerCourseModel.HasLocations,
+            IsRegulatedForProvider = providerCourseModel.IsRegulatedForProvider,
+            IfateReferenceNumber = providerCourseModel.IfateReferenceNumber,
+            Level = providerCourseModel.Level,
+            CourseName = providerCourseModel.CourseName,
+            ApprovalBody = providerCourseModel.ApprovalBody
+        };
 
-            var model = new ProviderCourseModelExternal
-            {
-                ProviderCourseId = providerCourseModel.ProviderCourseId,
-                LarsCode = int.TryParse(providerCourseModel.LarsCode, out var l) ? l : 0,
-                StandardInfoUrl = providerCourseModel.StandardInfoUrl,
-                ContactUsPhoneNumber = providerCourseModel.ContactUsPhoneNumber,
-                ContactUsEmail = providerCourseModel.ContactUsEmail,
-                IsApprovedByRegulator = providerCourseModel.IsApprovedByRegulator,
-                IsImported = providerCourseModel.IsImported,
-                HasPortableFlexiJobOption = providerCourseModel.HasPortableFlexiJobOption,
-                HasLocations = providerCourseModel.HasLocations,
-                IsRegulatedForProvider = providerCourseModel.IsRegulatedForProvider,
-                IfateReferenceNumber = providerCourseModel.IfateReferenceNumber,
-                Level = providerCourseModel.Level,
-                CourseName = providerCourseModel.CourseName,
-                Version = providerCourseModel.Version,
-                ApprovalBody = providerCourseModel.ApprovalBody
-            };
-
-            return model;
-        }
+        return model;
     }
 }
