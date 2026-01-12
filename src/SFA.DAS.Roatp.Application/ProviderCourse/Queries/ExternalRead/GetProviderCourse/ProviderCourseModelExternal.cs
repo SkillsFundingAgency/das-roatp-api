@@ -18,7 +18,6 @@ public class ProviderCourseModelExternal : ProviderCourseModelBase
             ContactUsPhoneNumber = providerCourseModel.ContactUsPhoneNumber,
             ContactUsEmail = providerCourseModel.ContactUsEmail,
             IsApprovedByRegulator = providerCourseModel.IsApprovedByRegulator,
-            IsImported = providerCourseModel.IsImported,
             HasPortableFlexiJobOption = providerCourseModel.HasPortableFlexiJobOption,
             HasOnlineDeliveryOption = providerCourseModel.HasOnlineDeliveryOption,
             HasLocations = providerCourseModel.HasLocations,

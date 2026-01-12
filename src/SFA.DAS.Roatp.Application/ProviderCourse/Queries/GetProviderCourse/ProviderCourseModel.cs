@@ -19,7 +19,6 @@ public class ProviderCourseModel : ProviderCourseModelBase
             ContactUsPhoneNumber = providerCourse.ContactUsPhoneNumber,
             ContactUsEmail = providerCourse.ContactUsEmail,
             IsApprovedByRegulator = providerCourse.IsApprovedByRegulator,
-            IsImported = providerCourse.IsImported,
             HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption,
             HasLocations = providerCourse.Locations.Count > 0,
             IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false,
