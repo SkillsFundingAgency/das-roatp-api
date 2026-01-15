@@ -103,7 +103,6 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
             .MustBeValidUrl("Website");
 
         Include(new CourseTypeValidator(providerCourseTypesReadRepository, standardsReadRepository));
-
     }
 
     private async Task<bool> IsStandardRegulated(string larsCode, IStandardsReadRepository standardsReadRepository)

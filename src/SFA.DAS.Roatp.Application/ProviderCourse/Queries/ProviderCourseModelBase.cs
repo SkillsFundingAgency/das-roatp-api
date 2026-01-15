@@ -10,7 +10,6 @@ public class ProviderCourseModelBase
     public string ContactUsPhoneNumber { get; set; }
     public string ContactUsEmail { get; set; }
     public bool? IsApprovedByRegulator { get; set; }
-    public bool IsImported { get; set; } = false;
     public bool? HasNationalDeliveryOption { get; set; }
     public bool? HasHundredPercentEmployerDeliveryOption { get; set; }
     public bool HasPortableFlexiJobOption { get; set; }

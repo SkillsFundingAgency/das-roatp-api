@@ -6,7 +6,7 @@ namespace SFA.DAS.Roatp.Application.Common;
 
 public class CourseTypeValidator : AbstractValidator<ICourseType>
 {
-    public const string ProviderCourseTypeNotFoundErrorMessage = "Provider is not allowed to add this course type";
+    public const string ProviderCourseTypeNotFoundErrorMessage = "This course type is not associated with the provider";
 
     public CourseTypeValidator(IProviderCourseTypesReadRepository providerCourseTypesReadRepository,
         IStandardsReadRepository standardsReadRepository)
