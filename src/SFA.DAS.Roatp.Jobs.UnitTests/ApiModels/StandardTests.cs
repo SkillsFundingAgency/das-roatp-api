@@ -9,8 +9,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.ApiModels
     [TestFixture]
     public class StandardTests
     {
-        [Test]
-        [AutoData]
+        [Test, AutoData]
         public void Operator_ReturnsDomainEntity(StandardModel source)
         {
             var expectedLevel = 1;
