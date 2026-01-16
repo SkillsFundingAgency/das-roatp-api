@@ -8,11 +8,11 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SFA.DAS.Roatp.Api.Infrastructure;
 
-public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
+public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
 {
     private readonly IApiVersionDescriptionProvider _provider;
 
-    public ConfigureSwaggerOptions(IApiVersionDescriptionProvider provider)
+    public ConfigureSwaggerGenOptions(IApiVersionDescriptionProvider provider)
     {
         _provider = provider ?? throw new ArgumentNullException(nameof(provider));
     }
@@ -31,12 +31,6 @@ public class ConfigureSwaggerOptions : IConfigureOptions<SwaggerGenOptions>
                 Version = apiVersionDescription.ApiVersion.ToString()
             });
         }
-
-        // Include ApiDescriptions where ApiExplorer GroupName equals the swagger doc name
-        options.DocInclusionPredicate((docName, apiDesc) =>
-        {
-            return string.Equals(apiDesc.GroupName, docName, StringComparison.OrdinalIgnoreCase);
-        });
 
         options.OperationFilter<SwaggerHeaderFilter>();
     }

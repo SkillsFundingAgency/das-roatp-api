@@ -4,7 +4,6 @@ using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
-using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -27,6 +26,7 @@ using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
 using SFA.DAS.Telemetry.Startup;
 using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace SFA.DAS.Roatp.Api;
 
@@ -120,19 +120,16 @@ public class Startup
 
         services.AddSwaggerGen(options =>
         {
-            // keep conflict resolver; actual SwaggerDoc registration moved into ConfigureSwaggerOptions
             options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
-            // keep operation filter registration here (optional - ConfigureSwaggerOptions also registers it)
             options.OperationFilter<SwaggerHeaderFilter>();
         });
-        // Register the IConfigureOptions<SwaggerGenOptions> so Swagger documents are created using the ApiVersionDescriptionProvider
-        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
 
+        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
+        services.AddTransient<IConfigureOptions<SwaggerUIOptions>, ConfigureSwaggerUiOptions>();
     }
 
-    // Non-static so the ApiVersionDescriptionProvider can be injected
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
+    public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
         if (env.IsDevelopment())
         {
@@ -143,20 +140,7 @@ public class Startup
 
         app.UseSwagger();
 
-        app.UseSwaggerUI(options =>
-        {
-            var ordered = provider.ApiVersionDescriptions
-                .OrderBy(d => d.GroupName, StringComparer.OrdinalIgnoreCase)
-                .ThenByDescending(d => d.ApiVersion);
-
-            foreach (var description in ordered)
-            {
-                var docName = $"{description.GroupName}V{description.ApiVersion.MajorVersion}";
-                options.SwaggerEndpoint($"/swagger/{docName}/swagger.json", $"{description.GroupName} V{description.ApiVersion.MajorVersion}");
-            }
-
-            options.RoutePrefix = string.Empty;
-        });
+        app.UseSwaggerUI();
 
         app.UseHttpsRedirection();
 
