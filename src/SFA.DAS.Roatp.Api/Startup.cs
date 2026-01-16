@@ -13,7 +13,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SFA.DAS.Api.Common.AppStart;
@@ -26,6 +26,7 @@ using SFA.DAS.Roatp.Application.Extensions;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
 using SFA.DAS.Telemetry.Startup;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SFA.DAS.Roatp.Api;
 
@@ -119,23 +120,15 @@ public class Startup
 
         services.AddSwaggerGen(options =>
         {
+            // keep conflict resolver; actual SwaggerDoc registration moved into ConfigureSwaggerOptions
             options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
-            var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
-
-            foreach (var apiVersionDescription in provider.ApiVersionDescriptions)
-            {
-                var docName = $"{apiVersionDescription.GroupName}V{apiVersionDescription.ApiVersion.MajorVersion}";
-
-                options.SwaggerDoc(docName, new OpenApiInfo
-                {
-                    Title = $"{apiVersionDescription.GroupName} V{apiVersionDescription.ApiVersion.MajorVersion}",
-                    Version = apiVersionDescription.ApiVersion.ToString()
-                });
-            }
-
+            // keep operation filter registration here (optional - ConfigureSwaggerOptions also registers it)
             options.OperationFilter<SwaggerHeaderFilter>();
         });
+        // Register the IConfigureOptions<SwaggerGenOptions> so Swagger documents are created using the ApiVersionDescriptionProvider
+        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerOptions>();
+
     }
 
     // Non-static so the ApiVersionDescriptionProvider can be injected
