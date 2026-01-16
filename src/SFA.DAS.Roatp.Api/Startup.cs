@@ -125,12 +125,11 @@ public class Startup
 
             foreach (var apiVersionDescription in provider.ApiVersionDescriptions)
             {
-                // Make the doc name unique by appending the ApiVersion
-                var docName = $"{apiVersionDescription.GroupName}-{apiVersionDescription.ApiVersion}";
+                var docName = $"{apiVersionDescription.GroupName}V{apiVersionDescription.ApiVersion.MajorVersion}";
 
                 options.SwaggerDoc(docName, new OpenApiInfo
                 {
-                    Title = $"{apiVersionDescription.GroupName} v{apiVersionDescription.ApiVersion}",
+                    Title = $"{apiVersionDescription.GroupName} V{apiVersionDescription.ApiVersion.MajorVersion}",
                     Version = apiVersionDescription.ApiVersion.ToString()
                 });
             }
@@ -142,16 +141,6 @@ public class Startup
     // Non-static so the ApiVersionDescriptionProvider can be injected
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
     {
-        var logger = app.ApplicationServices.GetRequiredService<ILogger<Startup>>();
-
-        // Log what ApiExplorer reports
-        logger.LogInformation("ApiVersionDescriptions count: {Count}", provider.ApiVersionDescriptions.Count());
-        foreach (var d in provider.ApiVersionDescriptions)
-        {
-            logger.LogInformation("ApiVersionDescription: GroupName={GroupName}, ApiVersion={ApiVersion}, IsDeprecated={IsDeprecated}",
-                d.GroupName, d.ApiVersion, d.IsDeprecated);
-        }
-
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -163,15 +152,14 @@ public class Startup
 
         app.UseSwaggerUI(options =>
         {
-            // Register an endpoint for every ApiVersionDescription using the ApiExplorer GroupName.
             var ordered = provider.ApiVersionDescriptions
                 .OrderBy(d => d.GroupName, StringComparer.OrdinalIgnoreCase)
                 .ThenByDescending(d => d.ApiVersion);
 
             foreach (var description in ordered)
             {
-                var docName = $"{description.GroupName}-{description.ApiVersion}";
-                options.SwaggerEndpoint($"/swagger/{docName}/swagger.json", $"{description.GroupName} v{description.ApiVersion}");
+                var docName = $"{description.GroupName}V{description.ApiVersion.MajorVersion}";
+                options.SwaggerEndpoint($"/swagger/{docName}/swagger.json", $"{description.GroupName} V{description.ApiVersion.MajorVersion}");
             }
 
             options.RoutePrefix = string.Empty;
