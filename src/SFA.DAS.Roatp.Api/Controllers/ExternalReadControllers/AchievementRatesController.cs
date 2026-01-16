@@ -25,6 +25,11 @@ public class AchievementRatesController : ControllerBase
     }
 
     [HttpGet]
+    [MapToApiVersion("2.0")]
+    public IActionResult GetV2() => Ok("v2");
+
+    [HttpGet]
+    [MapToApiVersion("1.0")]
     [Route("Overall")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(List<NationalAchievementRateOverall>), 200)]

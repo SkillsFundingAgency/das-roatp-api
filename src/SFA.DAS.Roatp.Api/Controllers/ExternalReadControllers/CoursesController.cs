@@ -25,9 +25,12 @@ public class CoursesController : ActionResponseControllerBase
         _logger = logger;
     }
 
-
+    [HttpGet]
+    [MapToApiVersion("2.0")]
+    public IActionResult GetV2() => Ok("v2");
 
     [HttpGet]
+    [MapToApiVersion("1.0")]
     [Route("{larsCode}/providers")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetProvidersForLarsCodeQueryResult), StatusCodes.Status200OK)]
@@ -39,6 +42,7 @@ public class CoursesController : ActionResponseControllerBase
     }
 
     [HttpGet]
+    [MapToApiVersion("1.0")]
     [Route("{larsCode}/providers/{ukprn:int}/details")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

@@ -117,21 +117,23 @@ public class Startup
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
-        // Register a Swagger document for every (group, version) combination and expose them in the UI.
+        // Replace the existing services.AddSwaggerGen(...) block with this:
         services.AddSwaggerGen(options =>
         {
             options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
+            // Temporary provider to get ApiVersionDescriptions at startup.
             var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
 
+            // Register a document for every ApiVersionDescription (group + version).
             foreach (var apiVersionDescription in provider.ApiVersionDescriptions)
             {
-                options.SwaggerDoc($"Course {apiVersionDescription.GroupName} v{apiVersionDescription.ApiVersion}",
-                    new OpenApiInfo
-                    {
-                        Title = $"Course {apiVersionDescription.GroupName} v{apiVersionDescription.ApiVersion}",
-                        Version = apiVersionDescription.ApiVersion.ToString()
-                    });
+                var docName = $"{apiVersionDescription.GroupName}-v{apiVersionDescription.ApiVersion}";
+                options.SwaggerDoc(docName, new OpenApiInfo
+                {
+                    Title = $"Course {apiVersionDescription.GroupName} v{apiVersionDescription.ApiVersion}",
+                    Version = apiVersionDescription.ApiVersion.ToString()
+                });
             }
 
             options.OperationFilter<SwaggerHeaderFilter>();
@@ -139,8 +141,19 @@ public class Startup
     }
 
     // Non-static so the ApiVersionDescriptionProvider can be injected
+    // Non-static so the ApiVersionDescriptionProvider can be injected
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
     {
+        var logger = app.ApplicationServices.GetRequiredService<ILogger<Startup>>();
+
+        // Log what ApiExplorer reports
+        logger.LogInformation("ApiVersionDescriptions count: {Count}", provider.ApiVersionDescriptions.Count());
+        foreach (var d in provider.ApiVersionDescriptions)
+        {
+            logger.LogInformation("ApiVersionDescription: GroupName={GroupName}, ApiVersion={ApiVersion}, IsDeprecated={IsDeprecated}",
+                d.GroupName, d.ApiVersion, d.IsDeprecated);
+        }
+
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
@@ -149,11 +162,20 @@ public class Startup
         app.UseAuthentication();
 
         app.UseSwagger();
+
         app.UseSwaggerUI(options =>
         {
-            foreach (var apiVersionDescription in provider.ApiVersionDescriptions)
+            // Register an endpoint for every ApiVersionDescription using the same docName format.
+            var ordered = provider.ApiVersionDescriptions
+                .OrderBy(d => d.GroupName, StringComparer.OrdinalIgnoreCase)
+                .ThenByDescending(d => d.ApiVersion);
+
+            foreach (var description in ordered)
             {
-                options.SwaggerEndpoint($"/swagger/{apiVersionDescription.GroupName}/v{apiVersionDescription.ApiVersion}/swagger.json", $"Course {apiVersionDescription.GroupName} v{apiVersionDescription.ApiVersion}");
+                var docName = $"{description.GroupName}-v{description.ApiVersion}";
+                var url = $"/swagger/{docName}/swagger.json";
+                logger.LogInformation("Registering Swagger endpoint: {Url} -> {Title}", url, $"Course {description.GroupName} v{description.ApiVersion}");
+                options.SwaggerEndpoint(url, $"Course {description.GroupName} v{description.ApiVersion}");
             }
 
             options.RoutePrefix = string.Empty;
