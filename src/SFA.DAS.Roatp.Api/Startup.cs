@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
+using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -85,8 +87,15 @@ public class Startup
 
         services.AddApiVersioning(opt =>
         {
+
             opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
-            opt.DefaultApiVersion = new ApiVersion(1, 0);
+            opt.AssumeDefaultVersionWhenUnspecified = false; // prevent blanket default
+            opt.ReportApiVersions = true;
+
+        }).AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
         });
 
         services.AddApplicationRegistrations();
@@ -96,7 +105,7 @@ public class Startup
             {
                 if (!IsEnvironmentLocalOrDev)
                     o.Conventions.Add(new AuthorizeByPathControllerModelConvention());
-                o.Conventions.Add(new ApiExplorerGroupingConvention());
+                //o.Conventions.Add(new ApiExplorerGroupingConvention());
             })
             .AddJsonOptions(options =>
             {
@@ -108,15 +117,29 @@ public class Startup
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
+        // Register a Swagger document for every (group, version) combination and expose them in the UI.
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc(Constants.EndpointGroups.Management, new OpenApiInfo { Title = "Course Management", Version = "v1" });
-            options.SwaggerDoc(Constants.EndpointGroups.Integration, new OpenApiInfo { Title = "Roatp Integration", Version = "v1" });
+            options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+            var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
+
+            foreach (var apiVersionDescription in provider.ApiVersionDescriptions)
+            {
+                options.SwaggerDoc($"Course {apiVersionDescription.GroupName} v{apiVersionDescription.ApiVersion}",
+                    new OpenApiInfo
+                    {
+                        Title = $"Course {apiVersionDescription.GroupName} v{apiVersionDescription.ApiVersion}",
+                        Version = apiVersionDescription.ApiVersion.ToString()
+                    });
+            }
+
             options.OperationFilter<SwaggerHeaderFilter>();
         });
     }
 
-    public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    // Non-static so the ApiVersionDescriptionProvider can be injected
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
     {
         if (env.IsDevelopment())
         {
@@ -128,8 +151,11 @@ public class Startup
         app.UseSwagger();
         app.UseSwaggerUI(options =>
         {
-            options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Management}/swagger.json", Constants.EndpointGroups.Management);
-            options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Integration}/swagger.json", Constants.EndpointGroups.Integration);
+            foreach (var apiVersionDescription in provider.ApiVersionDescriptions)
+            {
+                options.SwaggerEndpoint($"/swagger/{apiVersionDescription.GroupName}/v{apiVersionDescription.ApiVersion}/swagger.json", $"Course {apiVersionDescription.GroupName} v{apiVersionDescription.ApiVersion}");
+            }
+
             options.RoutePrefix = string.Empty;
         });
 

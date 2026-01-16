@@ -1,5 +1,6 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,8 @@ using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseTrainingProvidersCount;
 namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
+[ApiVersion("1.0")]
+
 [Route("courses/providers-count")]
 public class CoursesCountController(IMediator _mediator) : ActionResponseControllerBase
 {

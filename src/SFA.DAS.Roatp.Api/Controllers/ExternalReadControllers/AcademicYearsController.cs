@@ -1,12 +1,15 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using Asp.Versioning;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.Application.AcademicYears.Queries.GetLatest;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 
 [ApiController]
+[ApiVersion("1.0")]
+[ApiVersion("2.0")]
 [Route("/api/[controller]/")]
 public class AcademicYearsController : ControllerBase
 {

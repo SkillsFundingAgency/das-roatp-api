@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,8 @@ using SFA.DAS.Roatp.Application.ProviderContact.Queries.GetProviderContact;
 namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
+[ApiVersion("1.0")]
+
 [Route("/providers/{ukprn}/contact")]
 public class ProviderContactController(IMediator _mediator) : ActionResponseControllerBase
 

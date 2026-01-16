@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -8,6 +9,8 @@ using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Locations.Commands.DeleteLocation;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
+
+[ApiVersion("1.0")]
 
 [Route("/providers/{ukprn}/locations/{id}")]
 public class ProviderLocationDeleteController : ActionResponseControllerBase

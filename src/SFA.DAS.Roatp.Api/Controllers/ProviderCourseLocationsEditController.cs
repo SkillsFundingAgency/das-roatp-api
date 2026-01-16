@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -10,6 +11,7 @@ using SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProviderCour
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
     public class ProviderCourseLocationsEditController : ActionResponseControllerBase
     {
         private readonly IMediator _mediator;

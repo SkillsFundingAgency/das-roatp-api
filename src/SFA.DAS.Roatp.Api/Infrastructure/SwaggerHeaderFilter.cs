@@ -1,8 +1,8 @@
-﻿using Microsoft.OpenApi.Any;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
-using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Api.Infrastructure;
 

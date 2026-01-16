@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,8 @@ using SFA.DAS.Roatp.Domain.Models;
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
+    [ApiVersion("2.0")]
     [Route("/api/[controller]/")]
     public class ProvidersController : ActionResponseControllerBase
     {

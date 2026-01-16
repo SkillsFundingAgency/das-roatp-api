@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -16,8 +17,11 @@ using SFA.DAS.Roatp.Application.Shortlists.Queries.GetShortlistsForUser;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
 
-[Route("[controller]")]
 [ApiController]
+
+[ApiVersion("1.0")]
+
+[Route("[controller]")]
 public class ShortlistsController(IMediator _mediator) : ActionResponseControllerBase
 {
     [HttpPost]

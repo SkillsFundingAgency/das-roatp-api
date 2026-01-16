@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -9,6 +10,8 @@ using SFA.DAS.Roatp.Domain.Entities;
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 
 [ApiController]
+[ApiVersion("1.0")]
+[ApiVersion("2.0")]
 [Route("/api/[controller]/")]
 public class AchievementRatesController : ControllerBase
 {

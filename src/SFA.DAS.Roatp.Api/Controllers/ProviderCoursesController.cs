@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +12,8 @@ using SFA.DAS.Roatp.Domain.Models;
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
+
     [Route("[controller]")]
     public class ProviderCoursesController : ActionResponseControllerBase
 

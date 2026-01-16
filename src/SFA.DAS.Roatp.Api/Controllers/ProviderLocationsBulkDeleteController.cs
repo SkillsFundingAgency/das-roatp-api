@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -9,6 +10,8 @@ using SFA.DAS.Roatp.Application.Locations.Commands.BulkDelete;
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
+
     public class ProviderLocationsBulkDeleteController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderLocationsBulkDeleteController> _logger;
@@ -26,7 +29,7 @@ namespace SFA.DAS.Roatp.Api.Controllers
         public async Task<IActionResult> BulkDeleteProviderLocations([FromRoute] int ukprn, [FromQuery] string userId, [FromQuery] string userDisplayName)
         {
             _logger.LogInformation("Inner API: Request received to bulk delete provider locations ukprn: {ukprn}  userid:{userid}", ukprn, userId);
-            
+
             var command = new BulkDeleteProviderLocationsCommand(ukprn, userId, userDisplayName);
             var response = await _mediator.Send(command);
 

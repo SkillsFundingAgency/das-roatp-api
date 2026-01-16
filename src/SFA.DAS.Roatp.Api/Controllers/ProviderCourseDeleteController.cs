@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse;
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
     public class ProviderCourseDeleteController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderCourseDeleteController> _logger;

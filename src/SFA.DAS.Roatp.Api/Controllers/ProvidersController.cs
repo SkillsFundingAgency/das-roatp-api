@@ -1,14 +1,16 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using Asp.Versioning;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProvider;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
     public class ProvidersController : ActionResponseControllerBase
     {
         private readonly ILogger<ProvidersController> _logger;

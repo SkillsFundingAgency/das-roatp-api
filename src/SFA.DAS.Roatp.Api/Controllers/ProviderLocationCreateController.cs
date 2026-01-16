@@ -1,15 +1,17 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using Asp.Versioning;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation;
-using System.Threading.Tasks;
 using SFA.DAS.Roatp.Api.Infrastructure;
-using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
+
     public class ProviderLocationCreateController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderLocationCreateController> _logger;

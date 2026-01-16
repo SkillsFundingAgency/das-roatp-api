@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
@@ -13,6 +14,8 @@ using SFA.DAS.Roatp.Domain.Models;
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
+
     [Route("/providers")]
     public class ProviderEditController : ActionResponseControllerBase
     {

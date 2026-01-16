@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,6 +11,7 @@ using SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderCours
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
+    [ApiVersion("1.0")]
     public class ProviderCourseLocationsController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderCourseLocationsController> _logger;
