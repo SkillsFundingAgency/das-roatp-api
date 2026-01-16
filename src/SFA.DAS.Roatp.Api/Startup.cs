@@ -117,21 +117,20 @@ public class Startup
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             });
 
-        // Replace the existing services.AddSwaggerGen(...) block with this:
         services.AddSwaggerGen(options =>
         {
             options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
-            // Temporary provider to get ApiVersionDescriptions at startup.
             var provider = services.BuildServiceProvider().GetRequiredService<IApiVersionDescriptionProvider>();
 
-            // Register a document for every ApiVersionDescription (group + version).
             foreach (var apiVersionDescription in provider.ApiVersionDescriptions)
             {
-                var docName = $"{apiVersionDescription.GroupName}-v{apiVersionDescription.ApiVersion}";
+                // Make the doc name unique by appending the ApiVersion
+                var docName = $"{apiVersionDescription.GroupName}-{apiVersionDescription.ApiVersion}";
+
                 options.SwaggerDoc(docName, new OpenApiInfo
                 {
-                    Title = $"Course {apiVersionDescription.GroupName} v{apiVersionDescription.ApiVersion}",
+                    Title = $"{apiVersionDescription.GroupName} v{apiVersionDescription.ApiVersion}",
                     Version = apiVersionDescription.ApiVersion.ToString()
                 });
             }
@@ -140,7 +139,6 @@ public class Startup
         });
     }
 
-    // Non-static so the ApiVersionDescriptionProvider can be injected
     // Non-static so the ApiVersionDescriptionProvider can be injected
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, IApiVersionDescriptionProvider provider)
     {
@@ -165,17 +163,15 @@ public class Startup
 
         app.UseSwaggerUI(options =>
         {
-            // Register an endpoint for every ApiVersionDescription using the same docName format.
+            // Register an endpoint for every ApiVersionDescription using the ApiExplorer GroupName.
             var ordered = provider.ApiVersionDescriptions
                 .OrderBy(d => d.GroupName, StringComparer.OrdinalIgnoreCase)
                 .ThenByDescending(d => d.ApiVersion);
 
             foreach (var description in ordered)
             {
-                var docName = $"{description.GroupName}-v{description.ApiVersion}";
-                var url = $"/swagger/{docName}/swagger.json";
-                logger.LogInformation("Registering Swagger endpoint: {Url} -> {Title}", url, $"Course {description.GroupName} v{description.ApiVersion}");
-                options.SwaggerEndpoint(url, $"Course {description.GroupName} v{description.ApiVersion}");
+                var docName = $"{description.GroupName}-{description.ApiVersion}";
+                options.SwaggerEndpoint($"/swagger/{docName}/swagger.json", $"{description.GroupName} v{description.ApiVersion}");
             }
 
             options.RoutePrefix = string.Empty;
