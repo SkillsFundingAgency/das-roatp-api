@@ -105,7 +105,7 @@ public class Startup
             {
                 if (!IsEnvironmentLocalOrDev)
                     o.Conventions.Add(new AuthorizeByPathControllerModelConvention());
-                //o.Conventions.Add(new ApiExplorerGroupingConvention());
+                o.Conventions.Add(new ApiExplorerGroupingConvention());
             })
             .AddJsonOptions(options =>
             {
