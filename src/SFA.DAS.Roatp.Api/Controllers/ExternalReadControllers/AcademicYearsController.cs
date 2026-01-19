@@ -26,6 +26,7 @@ public class AcademicYearsController : ControllerBase
 
     [HttpGet]
     [MapToApiVersion("1.0")]
+    [MapToApiVersion("2.0")]
     [Route("latest")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
