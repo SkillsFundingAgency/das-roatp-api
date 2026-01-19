@@ -26,6 +26,7 @@ public class AchievementRatesController : ControllerBase
 
     [HttpGet]
     [MapToApiVersion("2.0")]
+    [Route("GetV2")]
     public IActionResult GetV2() => Ok("v2");
 
     [HttpGet]

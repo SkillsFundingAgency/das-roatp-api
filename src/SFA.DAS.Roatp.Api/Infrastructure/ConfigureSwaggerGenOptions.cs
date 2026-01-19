@@ -32,6 +32,15 @@ public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
             });
         }
 
+        // Include actions based on ApiExplorer.GroupName ("Integration"/"Management")
+        // Match docs with suffix "V{major}" by comparing the prefix to apiDesc.GroupName
+        options.DocInclusionPredicate((docName, apiDesc) =>
+        {
+            var dashIndex = docName.IndexOf('V');
+            var groupPrefix = dashIndex > 0 ? docName[..dashIndex] : docName;
+            return string.Equals(apiDesc.GroupName, groupPrefix, StringComparison.OrdinalIgnoreCase);
+        });
+
         options.OperationFilter<SwaggerHeaderFilter>();
     }
 }
