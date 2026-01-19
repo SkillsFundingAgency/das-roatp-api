@@ -9,11 +9,12 @@ using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 using SFA.DAS.Roatp.Domain.Models;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion(ApiVersionNumber.One)]
     public class ProviderCourseEditController : ActionResponseControllerBase
     {
         private readonly IMediator _mediator;

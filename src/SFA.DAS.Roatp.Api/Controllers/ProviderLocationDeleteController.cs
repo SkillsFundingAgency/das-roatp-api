@@ -7,10 +7,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Locations.Commands.DeleteLocation;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
 
-[ApiVersion("1.0")]
+[ApiVersion(ApiVersionNumber.One)]
 
 [Route("/providers/{ukprn}/locations/{id}")]
 public class ProviderLocationDeleteController : ActionResponseControllerBase

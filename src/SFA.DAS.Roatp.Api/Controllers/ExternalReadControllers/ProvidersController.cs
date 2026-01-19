@@ -16,12 +16,13 @@ using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetRegisteredProvider;
 using SFA.DAS.Roatp.Domain.Models;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
-    [ApiVersion("2.0")]
+    [ApiVersion(ApiVersionNumber.One)]
+    [ApiVersion(ApiVersionNumber.Two)]
     [Route("/api/[controller]/")]
     public class ProvidersController : ActionResponseControllerBase
     {
@@ -35,7 +36,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         }
 
         [HttpGet]
-        [MapToApiVersion("2.0")]
+        [MapToApiVersion(ApiVersionNumber.Two)]
         [Route("GetV2")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -43,8 +44,8 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         public IActionResult GetV2() => Ok("v2");
 
         [HttpGet]
-        [MapToApiVersion("1.0")]
-        [MapToApiVersion("2.0")]
+        [MapToApiVersion(ApiVersionNumber.One)]
+        [MapToApiVersion(ApiVersionNumber.Two)]
         [Route("")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(GetProvidersQueryResult), StatusCodes.Status200OK)]
@@ -60,8 +61,8 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         }
 
         [HttpGet]
-        [MapToApiVersion("1.0")]
-        [MapToApiVersion("2.0")]
+        [MapToApiVersion(ApiVersionNumber.One)]
+        [MapToApiVersion(ApiVersionNumber.Two)]
         [Route("{ukprn:int}/summary")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(GetProviderSummaryQueryResult), StatusCodes.Status200OK)]
@@ -73,8 +74,8 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         }
 
         [HttpGet]
-        [MapToApiVersion("1.0")]
-        [MapToApiVersion("2.0")]
+        [MapToApiVersion(ApiVersionNumber.One)]
+        [MapToApiVersion(ApiVersionNumber.Two)]
         [Route("{ukprn:int}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(GetProviderSummaryQueryResult), StatusCodes.Status200OK)]
@@ -89,8 +90,8 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         /// <param name="ukprn"></param>
         /// <returns></returns>
         [HttpGet]
-        [MapToApiVersion("1.0")]
-        [MapToApiVersion("2.0")]
+        [MapToApiVersion(ApiVersionNumber.One)]
+        [MapToApiVersion(ApiVersionNumber.Two)]
         [Route("{ukprn}/courses")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -119,8 +120,8 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         }
 
         [HttpGet]
-        [MapToApiVersion("1.0")]
-        [MapToApiVersion("2.0")]
+        [MapToApiVersion(ApiVersionNumber.One)]
+        [MapToApiVersion(ApiVersionNumber.Two)]
         [Route("{ukprn}/courses/{larsCode}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]

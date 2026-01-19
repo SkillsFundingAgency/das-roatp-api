@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
 
-[ApiVersion("1.0")]
+[ApiVersion(ApiVersionNumber.One)]
 
 [Route("[controller]")]
 public class ShortlistsController(IMediator _mediator) : ActionResponseControllerBase

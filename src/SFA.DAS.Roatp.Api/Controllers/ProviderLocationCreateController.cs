@@ -6,11 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Locations.Commands.CreateLocation;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion(ApiVersionNumber.One)]
 
     public class ProviderLocationCreateController : ActionResponseControllerBase
     {

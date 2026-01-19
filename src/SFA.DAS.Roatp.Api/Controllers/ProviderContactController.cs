@@ -7,11 +7,12 @@ using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.ProviderContact.Commands.CreateProviderContact;
 using SFA.DAS.Roatp.Application.ProviderContact.Queries.GetProviderContact;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
-[ApiVersion("1.0")]
+[ApiVersion(ApiVersionNumber.One)]
 
 [Route("/providers/{ukprn}/contact")]
 public class ProviderContactController(IMediator _mediator) : ActionResponseControllerBase

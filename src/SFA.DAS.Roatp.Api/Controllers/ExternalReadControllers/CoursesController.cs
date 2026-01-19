@@ -7,12 +7,13 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 
 [ApiController]
-[ApiVersion("1.0")]
-[ApiVersion("2.0")]
+[ApiVersion(ApiVersionNumber.One)]
+[ApiVersion(ApiVersionNumber.Two)]
 [Route("/api/[controller]/")]
 public class CoursesController : ActionResponseControllerBase
 {
@@ -26,7 +27,7 @@ public class CoursesController : ActionResponseControllerBase
     }
 
     [HttpGet]
-    [MapToApiVersion("2.0")]
+    [MapToApiVersion(ApiVersionNumber.Two)]
     [Route("GetV2")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -34,8 +35,8 @@ public class CoursesController : ActionResponseControllerBase
     public IActionResult GetV2() => Ok("v2");
 
     [HttpGet]
-    [MapToApiVersion("1.0")]
-    [MapToApiVersion("2.0")]
+    [MapToApiVersion(ApiVersionNumber.One)]
+    [MapToApiVersion(ApiVersionNumber.Two)]
     [Route("{larsCode}/providers")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetProvidersForLarsCodeQueryResult), StatusCodes.Status200OK)]
@@ -47,8 +48,8 @@ public class CoursesController : ActionResponseControllerBase
     }
 
     [HttpGet]
-    [MapToApiVersion("1.0")]
-    [MapToApiVersion("2.0")]
+    [MapToApiVersion(ApiVersionNumber.One)]
+    [MapToApiVersion(ApiVersionNumber.Two)]
     [Route("{larsCode}/providers/{ukprn:int}/details")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

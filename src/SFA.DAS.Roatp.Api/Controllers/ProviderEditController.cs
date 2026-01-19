@@ -10,11 +10,12 @@ using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider;
 using SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider;
 using SFA.DAS.Roatp.Domain.Models;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion(ApiVersionNumber.One)]
 
     [Route("/providers")]
     public class ProviderEditController : ActionResponseControllerBase

@@ -8,11 +8,12 @@ using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Domain.Models;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
-    [ApiVersion("1.0")]
+    [ApiVersion(ApiVersionNumber.One)]
 
     [Route("[controller]")]
     public class ProviderCoursesController : ActionResponseControllerBase
