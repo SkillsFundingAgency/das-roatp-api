@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Asp.Versioning;
 using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
@@ -38,9 +39,46 @@ public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
         // Match docs with suffix "V{major}" by comparing the prefix to apiDesc.GroupName
         options.DocInclusionPredicate((docName, apiDesc) =>
         {
-            var dashIndex = docName.IndexOf('V');
-            var groupPrefix = dashIndex > 0 ? docName[..dashIndex] : docName;
-            return string.Equals(apiDesc.GroupName, groupPrefix, StringComparison.OrdinalIgnoreCase);
+            var vIndex = docName.LastIndexOf('V');
+            if (vIndex <= 0) return false;
+
+            var group = docName[..vIndex];
+            var versionPart = docName[(vIndex + 1)..];
+            if (!int.TryParse(versionPart, out var major)) return false;
+
+            // Must match the controller group
+            if (!string.Equals(apiDesc.GroupName, group, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            // Determine supported majors from endpoint metadata
+            // Prefer MapToApiVersion at action level; fallback to ApiVersion at controller level
+            var endpointMetadata = apiDesc.ActionDescriptor.EndpointMetadata;
+
+            var mappedMajors = endpointMetadata
+                .OfType<MapToApiVersionAttribute>()
+                .SelectMany(a => a.Versions)
+                .Select(v => v.MajorVersion)
+                .Where(m => m.HasValue)
+                .Select(m => m!.Value)
+                .Distinct()
+                .ToArray();
+
+            if (mappedMajors.Length == 0)
+            {
+                mappedMajors = endpointMetadata
+                    .OfType<ApiVersionAttribute>()
+                    .SelectMany(a => a.Versions)
+                    .Select(v => v.MajorVersion)
+                    .Where(m => m.HasValue)
+                    .Select(m => m!.Value)
+                    .Distinct()
+                    .ToArray();
+            }
+
+            // If no version info is found, exclude to avoid cross-version leakage
+            if (mappedMajors.Length == 0) return false;
+
+            return mappedMajors.Contains(major);
         });
 
         options.OperationFilter<SwaggerHeaderFilter>();
