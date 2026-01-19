@@ -23,6 +23,10 @@ public class AcademicYearsController : ControllerBase
     [HttpGet]
     [MapToApiVersion("2.0")]
     [Route("GetV2")]
+    [Route("/providers/{ukprn}")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public IActionResult GetV2() => Ok("v2");
 
     [HttpGet]
