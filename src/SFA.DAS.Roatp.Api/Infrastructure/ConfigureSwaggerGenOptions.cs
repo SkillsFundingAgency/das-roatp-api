@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Asp.Versioning.ApiExplorer;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +9,7 @@ using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace SFA.DAS.Roatp.Api.Infrastructure;
 
+[ExcludeFromCodeCoverage]
 public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
 {
     private readonly IApiVersionDescriptionProvider _provider;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using Asp.Versioning.ApiExplorer;
 using Microsoft.AspNetCore.Builder;
@@ -7,6 +8,7 @@ using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace SFA.DAS.Roatp.Api.AppStart;
 
+[ExcludeFromCodeCoverage]
 public sealed class ConfigureSwaggerUiOptions : IConfigureOptions<SwaggerUIOptions>
 {
     private readonly IApiVersionDescriptionProvider _provider;
