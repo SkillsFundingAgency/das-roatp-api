@@ -51,7 +51,7 @@ public sealed class ApiVersionHeaderValidationMiddleware
             return;
         }
 
-        var mappedMajors = endpoint.Metadata
+        var mapToApiVersionMajors = endpoint.Metadata
             .OfType<MapToApiVersionAttribute>()
             .SelectMany(a => a.Versions)
             .Select(v => v.MajorVersion)
@@ -61,7 +61,17 @@ public sealed class ApiVersionHeaderValidationMiddleware
             .OrderBy(x => x)
             .ToArray();
 
-        if (mappedMajors.Length == 0)
+        var apiVersionMajors = endpoint.Metadata
+           .OfType<ApiVersionAttribute>()
+           .SelectMany(a => a.Versions)
+           .Select(v => v.MajorVersion)
+           .Where(m => m.HasValue)
+           .Select(m => m!.Value)
+           .Distinct()
+           .OrderBy(x => x)
+           .ToArray();
+
+        if (mapToApiVersionMajors.Length == 0 && apiVersionMajors.Length == 0)
         {
             await WriteProblem(context, StatusCodes.Status400BadRequest,
                 "Unsupported API version",
@@ -79,7 +89,6 @@ public sealed class ApiVersionHeaderValidationMiddleware
             Status = status,
             Title = title,
             Detail = detail,
-            Type = $"https://httpstatuses.com/{status}"
         };
 
         context.Response.StatusCode = status;

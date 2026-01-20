@@ -89,11 +89,12 @@ public class Startup
         services.AddApiVersioning(opt =>
         {
 
+
             opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
             opt.AssumeDefaultVersionWhenUnspecified = false; // prevent blanket default
             opt.ReportApiVersions = true;
-
-        }).AddApiExplorer(options =>
+        })
+        .AddApiExplorer(options =>
         {
             options.GroupNameFormat = "'v'VVV";
             options.SubstituteApiVersionInUrl = true;
@@ -148,6 +149,9 @@ public class Startup
         app.UseApiVersionHeaderValidation();
 
         app.UseHealthChecks();
+
+        if (env.IsDevelopment())
+            app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {

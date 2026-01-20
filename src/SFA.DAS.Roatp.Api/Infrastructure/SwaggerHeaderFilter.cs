@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using Asp.Versioning;
+using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
 
@@ -18,20 +20,68 @@ public class SwaggerHeaderFilter : IOperationFilter
 
         operation.Parameters ??= new List<OpenApiParameter>();
 
-        // Do not add if a header parameter with the same name already exists.
-        var alreadyHas = operation.Parameters
-            .Any(p => string.Equals(p.Name, VersionHeaderName, StringComparison.OrdinalIgnoreCase)
-                      && p.In == ParameterLocation.Header);
+        // Discover supported major versions from endpoint metadata
+        var endpointMetadata = context.ApiDescription.ActionDescriptor.EndpointMetadata;
 
-        if (alreadyHas) return;
+        var mappedMajors = endpointMetadata
+            .OfType<MapToApiVersionAttribute>()
+            .SelectMany(a => a.Versions)
+            .Select(v => v.MajorVersion)
+            .Where(m => m.HasValue)
+            .Select(m => m!.Value)
+            .Distinct()
+            .OrderBy(m => m)
+            .ToArray();
 
-        operation.Parameters.Insert(0, new OpenApiParameter
+        if (mappedMajors.Length == 0)
         {
-            Name = VersionHeaderName,
-            In = ParameterLocation.Header,
-            Description = "API version (header)",
-            Required = false,
-            Schema = new OpenApiSchema { Type = "string" }
-        });
+            mappedMajors = endpointMetadata
+                .OfType<ApiVersionAttribute>()
+                .SelectMany(a => a.Versions)
+                .Select(v => v.MajorVersion)
+                .Where(m => m.HasValue)
+                .Select(m => m!.Value)
+                .Distinct()
+                .OrderBy(m => m)
+                .ToArray();
+        }
+
+        // Choose a default: first supported major (or fallback to 1 if nothing discovered)
+        var defaultMajor = mappedMajors.Length > 0 ? mappedMajors.First() : 1;
+        var defaultValue = $"{defaultMajor}.0";
+
+        // Find existing header parameter if present
+        var existing = operation.Parameters
+            .FirstOrDefault(p => string.Equals(p.Name, VersionHeaderName, StringComparison.OrdinalIgnoreCase)
+                                 && p.In == ParameterLocation.Header);
+
+        if (existing is null)
+        {
+            // Insert new parameter
+            operation.Parameters.Insert(0, new OpenApiParameter
+            {
+                Name = VersionHeaderName,
+                In = ParameterLocation.Header,
+                Description = $"Example: {defaultValue}",
+                Required = false,
+                Schema = new OpenApiSchema
+                {
+                    Type = "string",
+                    Default = new OpenApiString(defaultValue),
+                    Example = new OpenApiString(defaultValue)
+                }
+            });
+        }
+        else
+        {
+            // Update existing parameter without re-adding
+            existing.Description = $"Example: {defaultValue}";
+            existing.Required = false;
+
+            existing.Schema ??= new OpenApiSchema { Type = "string" };
+            existing.Schema.Type = "string";
+            existing.Schema.Default = new OpenApiString(defaultValue);
+            existing.Schema.Example = new OpenApiString(defaultValue);
+        }
     }
 }
