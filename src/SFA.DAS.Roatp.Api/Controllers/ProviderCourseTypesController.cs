@@ -12,7 +12,6 @@ using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiVersion(ApiVersionNumber.One)]
-
 [Route("/providers/{ukprn}/course-types", Name = RouteNames.GetProviderCourseTypes)]
 public class ProviderCourseTypesController(IMediator _mediator, ILogger<ProviderCourseLocationsController> _logger) : ActionResponseControllerBase
 {

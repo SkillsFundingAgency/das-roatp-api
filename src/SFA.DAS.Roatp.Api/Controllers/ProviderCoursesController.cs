@@ -14,7 +14,6 @@ namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
     [ApiVersion(ApiVersionNumber.One)]
-
     [Route("[controller]")]
     public class ProviderCoursesController : ActionResponseControllerBase
 

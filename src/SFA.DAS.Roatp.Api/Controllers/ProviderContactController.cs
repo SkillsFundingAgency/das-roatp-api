@@ -13,7 +13,6 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
 [ApiVersion(ApiVersionNumber.One)]
-
 [Route("/providers/{ukprn}/contact")]
 public class ProviderContactController(IMediator _mediator) : ActionResponseControllerBase
 

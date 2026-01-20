@@ -19,9 +19,7 @@ using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
-
 [ApiVersion(ApiVersionNumber.One)]
-
 [Route("[controller]")]
 public class ShortlistsController(IMediator _mediator) : ActionResponseControllerBase
 {
