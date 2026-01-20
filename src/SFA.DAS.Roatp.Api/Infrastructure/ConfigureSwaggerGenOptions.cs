@@ -35,6 +35,16 @@ public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
             });
         }
 
+        DocInclusionPredicate(options);
+
+        AddOpenIdSecurityRequirement(options);
+        AddBearerSecurityRequirement(options);
+
+        options.OperationFilter<SwaggerHeaderFilter>();
+    }
+
+    private static void DocInclusionPredicate(SwaggerGenOptions options)
+    {
         // Include actions based on ApiExplorer.GroupName ("Integration"/"Management")
         // Match docs with suffix "V{major}" by comparing the prefix to apiDesc.GroupName
         options.DocInclusionPredicate((docName, apiDesc) =>
@@ -80,7 +90,65 @@ public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
 
             return mappedMajors.Contains(major);
         });
+    }
 
-        options.OperationFilter<SwaggerHeaderFilter>();
+    private static void AddOpenIdSecurityRequirement(SwaggerGenOptions options)
+    {
+        // OpenID Connect discovery endpoint (replace with your tenant authority if needed)
+        // Example for Microsoft Entra ID tenant: https://login.microsoftonline.com/{tenantId}/v2.0
+        var discoveryUrl = new Uri("https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration");
+
+        var openIdScheme = new OpenApiSecurityScheme
+        {
+            Type = SecuritySchemeType.OpenIdConnect,
+            OpenIdConnectUrl = discoveryUrl,
+            Description = "Interactive login as user",
+            Name = "Auhorization",
+            In = ParameterLocation.Header,
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "OpenIdConnect"
+            }
+        };
+
+        options.AddSecurityDefinition("OpenIdConnect", openIdScheme);
+
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                openIdScheme,
+                Array.Empty<string>()
+            }
+        });
+    }
+
+    private static void AddBearerSecurityRequirement(SwaggerGenOptions options)
+    {
+        // Global Bearer auth for Swagger UI
+        var securityScheme = new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Description = "Enter JWT as: Bearer {token}",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            }
+        };
+
+        options.AddSecurityDefinition("Bearer", securityScheme);
+
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                securityScheme,
+                Array.Empty<string>()
+            }
+        });
     }
 }
