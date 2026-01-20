@@ -91,7 +91,6 @@ public class ProviderCourseModelTests
         model.ContactUsEmail.Should().Be(providerCourse.ContactUsEmail);
         model.ContactUsPhoneNumber.Should().Be(providerCourse.ContactUsPhoneNumber);
         model.IsApprovedByRegulator.Should().Be(providerCourse.IsApprovedByRegulator.Value);
-        model.IsImported.Should().Be(providerCourse.IsImported);
         model.HasPortableFlexiJobOption.Should().Be(providerCourse.HasPortableFlexiJobOption);
         model.CourseType.Should().Be(CourseType.Apprenticeship);
         model.IsRegulatedForProvider.Should().Be(providerCourse.Standard.IsRegulatedForProvider);
@@ -123,7 +122,6 @@ public class ProviderCourseModelTests
         model.ContactUsEmail.Should().BeNull();
         model.ContactUsPhoneNumber.Should().BeNull();
         model.IsApprovedByRegulator.Should().BeNull();
-        model.IsImported.Should().Be(providerCourse.IsImported);
         model.HasPortableFlexiJobOption.Should().Be(providerCourse.HasPortableFlexiJobOption);
         model.CourseType.Should().BeNull();
         model.IsRegulatedForProvider.Should().BeFalse();
