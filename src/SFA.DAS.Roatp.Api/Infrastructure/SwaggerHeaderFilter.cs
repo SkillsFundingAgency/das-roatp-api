@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
-using Asp.Versioning;
 using Microsoft.OpenApi.Any;
 using Microsoft.OpenApi.Models;
 using Swashbuckle.AspNetCore.SwaggerGen;
@@ -22,28 +21,7 @@ public class SwaggerHeaderFilter : IOperationFilter
 
         var endpointMetadata = context.ApiDescription.ActionDescriptor.EndpointMetadata;
 
-        var mappedMajors = endpointMetadata
-            .OfType<MapToApiVersionAttribute>()
-            .SelectMany(a => a.Versions)
-            .Select(v => v.MajorVersion)
-            .Where(m => m.HasValue)
-            .Select(m => m!.Value)
-            .Distinct()
-            .OrderBy(m => m)
-            .ToArray();
-
-        if (mappedMajors.Length == 0)
-        {
-            mappedMajors = endpointMetadata
-                .OfType<ApiVersionAttribute>()
-                .SelectMany(a => a.Versions)
-                .Select(v => v.MajorVersion)
-                .Where(m => m.HasValue)
-                .Select(m => m!.Value)
-                .Distinct()
-                .OrderBy(m => m)
-                .ToArray();
-        }
+        var mappedMajors = ApiVersionMetadata.SupportedAPIVersions(endpointMetadata);
 
         var defaultMajor = mappedMajors.Length > 0 ? mappedMajors.First() : 1;
         var defaultValue = $"{defaultMajor}.0";
