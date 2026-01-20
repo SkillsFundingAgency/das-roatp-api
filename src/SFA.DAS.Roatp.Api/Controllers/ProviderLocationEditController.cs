@@ -13,7 +13,6 @@ namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
     [ApiVersion(ApiVersionNumber.One)]
-
     public class ProviderLocationEditController : ActionResponseControllerBase
     {
         private readonly IMediator _mediator;

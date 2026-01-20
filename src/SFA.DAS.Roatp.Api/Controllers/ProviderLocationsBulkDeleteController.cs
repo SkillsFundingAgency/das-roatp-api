@@ -12,7 +12,6 @@ namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
     [ApiVersion(ApiVersionNumber.One)]
-
     public class ProviderLocationsBulkDeleteController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderLocationsBulkDeleteController> _logger;

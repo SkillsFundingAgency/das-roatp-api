@@ -13,7 +13,6 @@ namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
     [ApiVersion(ApiVersionNumber.One)]
-
     public class ProviderLocationsBulkInsertController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderLocationsBulkInsertController> _logger;

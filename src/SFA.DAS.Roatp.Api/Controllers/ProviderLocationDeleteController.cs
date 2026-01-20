@@ -12,7 +12,6 @@ using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiVersion(ApiVersionNumber.One)]
-
 [Route("/providers/{ukprn}/locations/{id}")]
 public class ProviderLocationDeleteController : ActionResponseControllerBase
 {

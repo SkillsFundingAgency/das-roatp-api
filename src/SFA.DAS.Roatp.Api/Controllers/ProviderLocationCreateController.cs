@@ -12,7 +12,6 @@ namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
     [ApiVersion(ApiVersionNumber.One)]
-
     public class ProviderLocationCreateController : ActionResponseControllerBase
     {
         private readonly ILogger<ProviderLocationCreateController> _logger;

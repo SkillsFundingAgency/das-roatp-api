@@ -12,7 +12,6 @@ namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
     [ApiVersion(ApiVersionNumber.One)]
-
     public class RegionsController : Controller
     {
         private readonly ILogger<RegionsController> _logger;

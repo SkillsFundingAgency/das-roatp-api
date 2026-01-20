@@ -16,7 +16,6 @@ namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
     [ApiVersion(ApiVersionNumber.One)]
-
     [Route("/providers")]
     public class ProviderEditController : ActionResponseControllerBase
     {
