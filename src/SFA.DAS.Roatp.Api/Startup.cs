@@ -139,12 +139,13 @@ public class Startup
         app.UseAuthentication();
 
         app.UseSwagger();
-
         app.UseSwaggerUI();
 
         app.UseHttpsRedirection();
 
         app.UseRouting();
+
+        app.UseApiVersionHeaderValidation();
 
         app.UseHealthChecks();
 
