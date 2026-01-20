@@ -9,53 +9,51 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Api.Controllers
+namespace SFA.DAS.Roatp.Api.Controllers;
+
+[ApiController]
+public class ProviderCourseEditController : ActionResponseControllerBase
 {
-    [ApiController]
-    public class ProviderCourseEditController : ActionResponseControllerBase
+    private readonly IMediator _mediator;
+    private readonly ILogger<ProviderCourseEditController> _logger;
+
+    public ProviderCourseEditController(IMediator mediator, ILogger<ProviderCourseEditController> logger)
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<ProviderCourseEditController> _logger;
+        _mediator = mediator;
+        _logger = logger;
+    }
 
-        public ProviderCourseEditController(IMediator mediator, ILogger<ProviderCourseEditController> logger)
+    [Route("/providers/{ukprn}/courses/{larsCode}")]
+    [HttpPatch]
+    public async Task<IActionResult> PatchProviderCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] JsonPatchDocument<PatchProviderCourse> request, [FromQuery] string userId, [FromQuery] string userDisplayName)
+    {
+        _logger.LogInformation("Inner API: Request to patch course contact details for ukprn: {Ukprn} larsCode: {LarsCode}", ukprn, larsCode);
+
+        var response = await _mediator.Send(new PatchProviderCourseCommand
         {
-            _mediator = mediator;
-            _logger = logger;
-        }
+            Ukprn = ukprn,
+            LarsCode = larsCode,
+            UserId = userId,
+            UserDisplayName = userDisplayName,
+            Patch = request
+        });
 
-        [Route("/providers/{ukprn}/courses/{larsCode}")]
-        [HttpPatch]
-        public async Task<IActionResult> PatchProviderCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] JsonPatchDocument<PatchProviderCourse> request, [FromQuery] string userId, [FromQuery] string userDisplayName)
-        {
-            _logger.LogInformation("Inner API: Request to patch course contact details for ukprn: {ukprn} larscode: {larscode}", ukprn, larsCode);
+        return GetNoContentResponse(response);
+    }
 
-            var response = await _mediator.Send(new PatchProviderCourseCommand
-            {
-                Ukprn = ukprn,
-                LarsCode = larsCode,
-                UserId = userId,
-                UserDisplayName = userDisplayName,
-                Patch = request
-            });
+    [Route("/providers/{ukprn}/courses/{larsCode}")]
+    [HttpPost]
+    public async Task<IActionResult> CreateProviderCourse([FromRoute] int ukprn, [FromRoute] string larsCode, ProviderCourseAddModel providerCourseAddModel, [FromQuery] string userId, [FromQuery] string userDisplayName)
+    {
+        _logger.LogInformation("Inner API: Received command to add course: {LarsCode} to provider: {Ukprn}", larsCode, ukprn);
 
-            return GetNoContentResponse(response);
-        }
+        CreateProviderCourseCommand command = providerCourseAddModel;
+        command.Ukprn = ukprn;
+        command.LarsCode = larsCode;
+        command.UserId = userId;
+        command.UserDisplayName = userDisplayName;
+        var response = await _mediator.Send(command);
 
-        [Route("/providers/{ukprn}/courses/{larsCode}")]
-        [HttpPost]
-        public async Task<IActionResult> CreateProviderCourse([FromRoute] int ukprn, [FromRoute] string larsCode, ProviderCourseAddModel providerCourseAddModel, [FromQuery] string userId, [FromQuery] string userDisplayName)
-        {
-            _logger.LogInformation("Inner API: Received command to add course: {larscode} to provider: {ukprn}", larsCode, ukprn);
-
-            CreateProviderCourseCommand command = providerCourseAddModel;
-            command.Ukprn = ukprn;
-            command.LarsCode = larsCode;
-            command.UserId = userId;
-            command.UserDisplayName = userDisplayName;
-
-            var response = await _mediator.Send(command);
-
-            return GetPostResponse(response, $"/providers/{ukprn}/courses");
-        }
+        return GetPostResponse(response, $"/providers/{ukprn}/courses");
     }
 }

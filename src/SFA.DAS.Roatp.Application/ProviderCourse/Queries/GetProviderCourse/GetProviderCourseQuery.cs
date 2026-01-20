@@ -2,17 +2,16 @@
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
-namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse
-{
-    public class GetProviderCourseQuery : IRequest<ValidatedResponse<ProviderCourseModel>>, ILarsCodeUkprn, IUkprn
-    {
-        public int Ukprn { get; }
-        public string LarsCode { get; }
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
-        public GetProviderCourseQuery(int ukprn, string larsCode)
-        {
-            Ukprn = ukprn;
-            LarsCode = larsCode;
-        }
+public class GetProviderCourseQuery : IRequest<ValidatedResponse<ProviderCourseModel>>, ILarsCodeUkprn, IUkprn, ICourseType
+{
+    public int Ukprn { get; }
+    public string LarsCode { get; }
+
+    public GetProviderCourseQuery(int ukprn, string larsCode)
+    {
+        Ukprn = ukprn;
+        LarsCode = larsCode;
     }
 }

@@ -10,6 +10,7 @@ namespace SFA.DAS.Roatp.Api.Models
         public string ContactUsPhoneNumber { get; set; }
         public string ContactUsEmail { get; set; }
         public bool HasNationalDeliveryOption { get; set; }
+        public bool HasOnlineDeliveryOption { get; set; } = false;
         public List<ProviderCourseLocationCommandModel> ProviderLocations { get; set; }
         public List<int> SubregionIds { get; set; }
 
@@ -21,6 +22,7 @@ namespace SFA.DAS.Roatp.Api.Models
                 ContactUsPhoneNumber = source.ContactUsPhoneNumber,
                 ContactUsEmail = source.ContactUsEmail,
                 HasNationalDeliveryOption = source.HasNationalDeliveryOption,
+                HasOnlineDeliveryOption = source.HasOnlineDeliveryOption,
                 ProviderLocations = source.ProviderLocations,
                 SubregionIds = source.SubregionIds
             };
