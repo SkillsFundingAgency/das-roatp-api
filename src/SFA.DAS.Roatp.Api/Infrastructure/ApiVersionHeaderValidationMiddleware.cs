@@ -51,7 +51,7 @@ public sealed class ApiVersionHeaderValidationMiddleware
             return;
         }
 
-        var mapToApiVersionMajors = endpoint.Metadata
+        var mappedMajors = endpoint.Metadata
             .OfType<MapToApiVersionAttribute>()
             .SelectMany(a => a.Versions)
             .Select(v => v.MajorVersion)
@@ -61,17 +61,20 @@ public sealed class ApiVersionHeaderValidationMiddleware
             .OrderBy(x => x)
             .ToArray();
 
-        var apiVersionMajors = endpoint.Metadata
-           .OfType<ApiVersionAttribute>()
-           .SelectMany(a => a.Versions)
-           .Select(v => v.MajorVersion)
-           .Where(m => m.HasValue)
-           .Select(m => m!.Value)
-           .Distinct()
-           .OrderBy(x => x)
-           .ToArray();
+        if (mappedMajors.Length == 0)
+        {
+            mappedMajors = endpoint.Metadata
+                .OfType<ApiVersionAttribute>()
+                .SelectMany(a => a.Versions)
+                .Select(v => v.MajorVersion)
+                .Where(m => m.HasValue)
+                .Select(m => m!.Value)
+                .Distinct()
+                .OrderBy(m => m)
+                .ToArray();
+        }
 
-        if (mapToApiVersionMajors.Length == 0 && apiVersionMajors.Length == 0)
+        if (mappedMajors.Length == 0)
         {
             await WriteProblem(context, StatusCodes.Status400BadRequest,
                 "Unsupported API version",

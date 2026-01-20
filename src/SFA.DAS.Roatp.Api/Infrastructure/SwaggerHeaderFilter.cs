@@ -20,7 +20,6 @@ public class SwaggerHeaderFilter : IOperationFilter
 
         operation.Parameters ??= new List<OpenApiParameter>();
 
-        // Discover supported major versions from endpoint metadata
         var endpointMetadata = context.ApiDescription.ActionDescriptor.EndpointMetadata;
 
         var mappedMajors = endpointMetadata
@@ -46,18 +45,15 @@ public class SwaggerHeaderFilter : IOperationFilter
                 .ToArray();
         }
 
-        // Choose a default: first supported major (or fallback to 1 if nothing discovered)
         var defaultMajor = mappedMajors.Length > 0 ? mappedMajors.First() : 1;
         var defaultValue = $"{defaultMajor}.0";
 
-        // Find existing header parameter if present
         var existing = operation.Parameters
             .FirstOrDefault(p => string.Equals(p.Name, VersionHeaderName, StringComparison.OrdinalIgnoreCase)
                                  && p.In == ParameterLocation.Header);
 
         if (existing is null)
         {
-            // Insert new parameter
             operation.Parameters.Insert(0, new OpenApiParameter
             {
                 Name = VersionHeaderName,
@@ -74,7 +70,6 @@ public class SwaggerHeaderFilter : IOperationFilter
         }
         else
         {
-            // Update existing parameter without re-adding
             existing.Description = $"Example: {defaultValue}";
             existing.Required = false;
 
