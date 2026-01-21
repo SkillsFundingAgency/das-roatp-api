@@ -83,7 +83,6 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         /// <returns></returns>
         [HttpGet]
         [MapToApiVersion(ApiVersionNumber.One)]
-        [MapToApiVersion(ApiVersionNumber.Two)]
         [Route("{ukprn}/courses")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -113,7 +112,6 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 
         [HttpGet]
         [MapToApiVersion(ApiVersionNumber.One)]
-        [MapToApiVersion(ApiVersionNumber.Two)]
         [Route("{ukprn}/courses/{larsCode}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
