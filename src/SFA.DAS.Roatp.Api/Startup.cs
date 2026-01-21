@@ -150,7 +150,7 @@ public class Startup
 
         app.UseHealthChecks();
 
-        if (env.IsDevelopment())
+        if (!env.IsDevelopment())
             app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>

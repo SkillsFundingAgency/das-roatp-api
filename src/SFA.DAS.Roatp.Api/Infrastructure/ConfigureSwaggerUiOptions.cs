@@ -20,9 +20,7 @@ public sealed class ConfigureSwaggerUiOptions : IConfigureOptions<SwaggerUIOptio
 
     public void Configure(SwaggerUIOptions options)
     {
-        foreach (var description in _provider.ApiVersionDescriptions
-                      .OrderBy(d => d.GroupName, StringComparer.OrdinalIgnoreCase)
-                      .ThenByDescending(d => d.ApiVersion))
+        foreach (var description in _provider.ApiVersionDescriptions.OrderBy(d => d.GroupName))
         {
             var docName = $"{description.GroupName}V{description.ApiVersion.MajorVersion}";
             options.SwaggerEndpoint($"/swagger/{docName}/swagger.json", $"{description.GroupName} V{description.ApiVersion.MajorVersion}");

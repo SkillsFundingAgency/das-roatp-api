@@ -23,7 +23,7 @@ public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
     {
         options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
 
-        foreach (var apiVersionDescription in _provider.ApiVersionDescriptions)
+        foreach (var apiVersionDescription in _provider.ApiVersionDescriptions.OrderBy(d => d.GroupName))
         {
             var docName = $"{apiVersionDescription.GroupName}V{apiVersionDescription.ApiVersion.MajorVersion}";
 
