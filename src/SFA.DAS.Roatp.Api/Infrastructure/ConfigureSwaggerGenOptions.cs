@@ -36,7 +36,6 @@ public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
 
         DocInclusionPredicate(options);
 
-        AddOpenIdSecurityRequirement(options);
         AddBearerSecurityRequirement(options);
 
         options.OperationFilter<SwaggerHeaderFilter>();
@@ -65,37 +64,6 @@ public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
             if (mappedMajors.Length == 0) return false;
 
             return mappedMajors.Contains(major);
-        });
-    }
-
-    private static void AddOpenIdSecurityRequirement(SwaggerGenOptions options)
-    {
-        // OpenID Connect discovery endpoint (replace with your tenant authority if needed)
-        // Example for Microsoft Entra ID tenant: https://login.microsoftonline.com/{tenantId}/v2.0
-        var discoveryUrl = new Uri("https://login.microsoftonline.com/common/v2.0/.well-known/openid-configuration");
-
-        var openIdScheme = new OpenApiSecurityScheme
-        {
-            Type = SecuritySchemeType.OpenIdConnect,
-            OpenIdConnectUrl = discoveryUrl,
-            Description = "Interactive login as user",
-            Name = "Auhorization",
-            In = ParameterLocation.Header,
-            Reference = new OpenApiReference
-            {
-                Type = ReferenceType.SecurityScheme,
-                Id = "OpenIdConnect"
-            }
-        };
-
-        options.AddSecurityDefinition("OpenIdConnect", openIdScheme);
-
-        options.AddSecurityRequirement(new OpenApiSecurityRequirement
-        {
-            {
-                openIdScheme,
-                Array.Empty<string>()
-            }
         });
     }
 
