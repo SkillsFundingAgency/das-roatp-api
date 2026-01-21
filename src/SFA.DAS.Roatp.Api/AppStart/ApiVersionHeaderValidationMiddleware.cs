@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using SFA.DAS.Roatp.Api.Infrastructure;
 
-namespace SFA.DAS.Roatp.Api.Infrastructure;
+namespace SFA.DAS.Roatp.Api.AppStart;
 
 [ExcludeFromCodeCoverage]
 public sealed class ApiVersionHeaderValidationMiddleware
@@ -28,7 +29,7 @@ public sealed class ApiVersionHeaderValidationMiddleware
 
         if (!context.Request.Headers.TryGetValue(HeaderName, out var values) || values.Count == 0)
         {
-            await WriteProblem(context, StatusCodes.Status406NotAcceptable,
+            await WriteProblem(context, StatusCodes.Status400BadRequest,
                 "Invalid or missing API version",
                 $"The {HeaderName} header is required. Specify the API version using the '{HeaderName}' header.");
             return;
@@ -36,7 +37,7 @@ public sealed class ApiVersionHeaderValidationMiddleware
 
         if (!double.TryParse(values[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var requestedMajor))
         {
-            await WriteProblem(context, StatusCodes.Status406NotAcceptable,
+            await WriteProblem(context, StatusCodes.Status400BadRequest,
                 "Invalid or missing API version",
                 $"The {HeaderName} header value is not a valid API version. Use version, e.g. '1' or '1.0'.");
             return;

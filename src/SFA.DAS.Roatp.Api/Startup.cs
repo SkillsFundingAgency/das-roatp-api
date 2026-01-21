@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
 using Microsoft.AspNetCore.Builder;
@@ -91,7 +90,7 @@ public class Startup
 
 
             opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
-            opt.AssumeDefaultVersionWhenUnspecified = false; // prevent blanket default
+            opt.AssumeDefaultVersionWhenUnspecified = false;
             opt.ReportApiVersions = true;
         })
         .AddApiExplorer(options =>
@@ -121,8 +120,6 @@ public class Startup
 
         services.AddSwaggerGen(options =>
         {
-            options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-
             options.OperationFilter<SwaggerHeaderFilter>();
         });
 
