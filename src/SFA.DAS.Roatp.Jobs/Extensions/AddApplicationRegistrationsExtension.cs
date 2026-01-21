@@ -5,7 +5,6 @@ using SFA.DAS.Roatp.Jobs.Configuration;
 using SFA.DAS.Roatp.Jobs.Services;
 
 namespace SFA.DAS.Roatp.Jobs.Extensions;
-
 public static class AddApplicationRegistrationsExtension
 {
     public static IServiceCollection AddServiceRegistrations(this IServiceCollection services, IConfiguration configuration)
