@@ -28,7 +28,7 @@ public sealed class ApiVersionHeaderValidationMiddleware
 
         if (!context.Request.Headers.TryGetValue(HeaderName, out var values) || values.Count == 0)
         {
-            await WriteProblem(context, StatusCodes.Status400BadRequest,
+            await WriteProblem(context, StatusCodes.Status406NotAcceptable,
                 "Invalid or missing API version",
                 $"The {HeaderName} header is required. Specify the API version using the '{HeaderName}' header.");
             return;
@@ -36,7 +36,7 @@ public sealed class ApiVersionHeaderValidationMiddleware
 
         if (!double.TryParse(values[0], NumberStyles.AllowDecimalPoint, CultureInfo.InvariantCulture, out var requestedMajor))
         {
-            await WriteProblem(context, StatusCodes.Status400BadRequest,
+            await WriteProblem(context, StatusCodes.Status406NotAcceptable,
                 "Invalid or missing API version",
                 $"The {HeaderName} header value is not a valid API version. Use version, e.g. '1' or '1.0'.");
             return;
@@ -53,7 +53,7 @@ public sealed class ApiVersionHeaderValidationMiddleware
 
         if (mappedMajors.Length == 0)
         {
-            await WriteProblem(context, StatusCodes.Status400BadRequest,
+            await WriteProblem(context, StatusCodes.Status406NotAcceptable,
                 "Unsupported API version",
                 $"The requested API version '{requestedMajor.ToString("0.0", CultureInfo.InvariantCulture)}' is not supported.");
             return;

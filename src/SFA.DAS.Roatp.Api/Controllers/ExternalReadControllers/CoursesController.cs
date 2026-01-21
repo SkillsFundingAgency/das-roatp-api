@@ -28,11 +28,19 @@ public class CoursesController : ActionResponseControllerBase
 
     [HttpGet]
     [MapToApiVersion(ApiVersionNumber.Two)]
-    [Route("GetV2")]
+    [Route("GetVersion")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
     public IActionResult GetV2() => Ok("v2");
+
+    [HttpGet]
+    [MapToApiVersion(ApiVersionNumber.One)]
+    [Route("GetVersion")]
+    [Produces("application/json")]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status200OK)]
+    public IActionResult GetV1() => Ok("v1");
 
     [HttpGet]
     [MapToApiVersion(ApiVersionNumber.One)]
