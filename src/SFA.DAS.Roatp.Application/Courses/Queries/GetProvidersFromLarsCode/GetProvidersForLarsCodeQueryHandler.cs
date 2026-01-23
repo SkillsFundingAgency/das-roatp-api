@@ -4,13 +4,14 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 
-public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersForLarsCodeQuery, ValidatedResponse<GetProvidersForLarsCodeQueryResult>>
+public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersForLarsCodeQueryV2, ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>>
 {
     private readonly IProvidersReadRepository _providersReadRepository;
     private readonly ILogger<GetProvidersForLarsCodeQueryHandler> _logger;
@@ -20,17 +21,20 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
         _logger = logger;
     }
 
-    public async Task<ValidatedResponse<GetProvidersForLarsCodeQueryResult>> Handle(GetProvidersForLarsCodeQuery request, CancellationToken cancellationToken)
+    public async Task<ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>> Handle(GetProvidersForLarsCodeQueryV2 request, CancellationToken cancellationToken)
     {
         var isWorkplace = (bool?)null;
         var isProvider = (bool?)null;
         var isBlockRelease = (bool?)null;
         var isDayRelease = (bool?)null;
+        var isOnline = (bool?)null;
 
-        if (request.DeliveryModes.Contains(DeliveryMode.Workplace)) isWorkplace = true;
-        if (request.DeliveryModes.Contains(DeliveryMode.Provider)) isProvider = true;
-        if (request.DeliveryModes.Contains(DeliveryMode.BlockRelease)) isBlockRelease = true;
-        if (request.DeliveryModes.Contains(DeliveryMode.DayRelease)) isDayRelease = true;
+        if (request.DeliveryModes.Contains(DeliveryModeV2.Workplace)) isWorkplace = true;
+        if (request.DeliveryModes.Contains(DeliveryModeV2.Provider)) isProvider = true;
+        if (request.DeliveryModes.Contains(DeliveryModeV2.BlockRelease)) isBlockRelease = true;
+        if (request.DeliveryModes.Contains(DeliveryModeV2.DayRelease)) isDayRelease = true;
+        if (request.DeliveryModes.Contains(DeliveryModeV2.Online)) isOnline = true;
+
         string qar = null;
 
         if (request.Qar.Count > 0)
@@ -60,6 +64,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             IsProvider = isProvider,
             IsBlockRelease = isBlockRelease,
             IsDayRelease = isDayRelease,
+            IsOnline = isOnline,
             Latitude = request.Latitude,
             Longitude = request.Longitude,
             Location = request.Location,
@@ -75,7 +80,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
 
         var first = results[0];
 
-        var result = new GetProvidersForLarsCodeQueryResult
+        var result = new GetProvidersForLarsCodeQueryResultV2
         {
             Page = first.Page,
             PageSize = first.PageSize,
@@ -85,18 +90,19 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             StandardName = first.StandardName,
             QarPeriod = first.QarPeriod,
             ReviewPeriod = first.ReviewPeriod,
-            Providers = new List<ProviderData>()
+            Providers = new List<ProviderDataV2>()
         };
 
-        if (first.Ukprn == 0) return new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(result);
+        if (first.Ukprn == 0) return new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(result);
 
         foreach (var item in results)
         {
-            var provider = new ProviderData
+            var provider = new ProviderDataV2
             {
                 Ordering = item.Ordering,
                 Ukprn = item.Ukprn,
                 ProviderName = item.ProviderName,
+                HasOnlineDeliveryOption = item.HasOnlineDeliveryOption,
                 ShortlistId = item.ShortlistId,
                 Leavers = item.Leavers,
                 AchievementRate = item.AchievementRate,
@@ -136,6 +142,6 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             result.Providers.Add(provider);
         }
 
-        return new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(result);
+        return new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(result);
     }
 }

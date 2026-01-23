@@ -9,6 +9,8 @@ using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -26,16 +28,17 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         [Frozen] Mock<ILogger<GetProvidersForLarsCodeQueryHandler>> loggerMock,
         GetProvidersForLarsCodeQueryHandler sut,
         List<ProviderSearchModel> pagedProviderDetails,
-        GetProvidersFromLarsCodeRequest request,
+        GetProvidersFromLarsCodeRequestV2 request,
         string larsCode,
         CancellationToken cancellationToken)
     {
-        request.DeliveryModes = new List<DeliveryMode?>
+        request.DeliveryModes = new List<DeliveryModeV2?>
         {
-            DeliveryMode.Provider,
-            DeliveryMode.BlockRelease,
-            DeliveryMode.DayRelease,
-            DeliveryMode.Workplace
+            DeliveryModeV2.Provider,
+            DeliveryModeV2.BlockRelease,
+            DeliveryModeV2.DayRelease,
+            DeliveryModeV2.Workplace,
+            DeliveryModeV2.Online
         };
 
         var isProvider = true;
@@ -43,7 +46,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         var isBlockRelease = true;
         var isDayRelease = true;
 
-        GetProvidersForLarsCodeQuery query = new GetProvidersForLarsCodeQuery(larsCode, request);
+        GetProvidersForLarsCodeQueryV2 query = new GetProvidersForLarsCodeQueryV2(larsCode, request);
 
         foreach (var detail in pagedProviderDetails)
         {
@@ -152,12 +155,12 @@ public class GetProvidersForLarsCodeQueryHandlerTests
     public async Task Handle_NoData_ReturnsExpectedResult(
     [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
     GetProvidersForLarsCodeQueryHandler sut,
-    GetProvidersFromLarsCodeRequest request,
+    GetProvidersFromLarsCodeRequestV2 request,
     CancellationToken cancellationToken)
     {
         string larsCode = "2";
         int larsCodeValue = 2;
-        var query = new GetProvidersForLarsCodeQuery(larsCode, request);
+        var query = new GetProvidersForLarsCodeQueryV2(larsCode, request);
 
         List<ProviderSearchModel> pagedProviderDetails = new()
         {
@@ -178,7 +181,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
             cancellationToken
         )).ReturnsAsync(pagedProviderDetails);
 
-        var expectedResult = new GetProvidersForLarsCodeQueryResult
+        var expectedResult = new GetProvidersForLarsCodeQueryResultV2
         {
             Page = request.Page ?? Pagination.DefaultPage,
             PageSize = request.PageSize ?? Pagination.DefaultPageSize,
@@ -188,7 +191,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
             Providers = []
         };
 
-        var expectedValidatedResult = new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(expectedResult);
+        var expectedValidatedResult = new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(expectedResult);
 
         var response = await sut.Handle(query, cancellationToken);
         var result = response.Result;
@@ -212,12 +215,12 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         string larsCode,
         CancellationToken cancellationToken)
     {
-        request.DeliveryModes = new List<DeliveryMode?>
+        request.DeliveryModes = new List<DeliveryModeV1?>
         {
-            DeliveryMode.Provider,
-            DeliveryMode.BlockRelease,
-            DeliveryMode.DayRelease,
-            DeliveryMode.Workplace
+            DeliveryModeV1.Provider,
+            DeliveryModeV1.BlockRelease,
+            DeliveryModeV1.DayRelease,
+            DeliveryModeV1.Workplace
         };
 
         var isProvider = true;
@@ -232,7 +235,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         var dayReleasesValues = "1,1,0";
         var blockReleasesValues = "1,0,1";
 
-        GetProvidersForLarsCodeQuery query = new GetProvidersForLarsCodeQuery(larsCode, request);
+        GetProvidersForLarsCodeQueryV2 query = new GetProvidersForLarsCodeQueryV2(larsCode, request);
 
         foreach (var detail in pagedProviderDetails)
         {

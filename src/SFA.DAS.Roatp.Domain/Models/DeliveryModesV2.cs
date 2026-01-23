@@ -1,9 +1,10 @@
 ﻿namespace SFA.DAS.Roatp.Domain.Models;
 
-public enum DeliveryMode
+public enum DeliveryModeV2
 {
     Workplace,
     Provider,
     DayRelease,
-    BlockRelease
+    BlockRelease,
+    Online
 }

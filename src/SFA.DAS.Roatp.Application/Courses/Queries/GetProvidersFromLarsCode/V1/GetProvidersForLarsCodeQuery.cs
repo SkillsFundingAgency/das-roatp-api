@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
 
 public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvidersForLarsCodeQueryResult>>,
     ICoordinates, ILarsCode
@@ -17,7 +17,7 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
     public decimal? Latitude { get; }
     public decimal? Longitude { get; }
     public string Location { get; }
-    public List<DeliveryMode> DeliveryModes { get; } = new();
+    public List<DeliveryModeV1> DeliveryModes { get; } = new();
 
     public List<ProviderRating> EmployerProviderRatings { get; } = new();
 
@@ -41,7 +41,7 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
 
         if (request.DeliveryModes != null)
         {
-            DeliveryModes.AddRange(from val in request.DeliveryModes where val != null select (DeliveryMode)val);
+            DeliveryModes.AddRange(from val in request.DeliveryModes where val != null select (DeliveryModeV1)val);
         }
 
         if (request.EmployerProviderRatings != null)

@@ -2,9 +2,9 @@
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2;
 
-public class GetProvidersForLarsCodeQueryValidator : AbstractValidator<GetProvidersForLarsCodeQuery>
+public class GetProvidersForLarsCodeQueryValidator : AbstractValidator<GetProvidersForLarsCodeQueryV2>
 {
     public const string OrderByRequiredErrorMessage = "The OrderBy value is required";
     public const string DistanceErrorMessage = "Distance must be greater than 0";

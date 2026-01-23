@@ -8,6 +8,7 @@
     @provider bit = null,     -- 0 or 1 include training at providers+
     @blockrelease bit = null, -- 0 or 1 include block release
     @dayrelease bit = null,   -- 0 or 1 include day release
+    @hasOnlineDeliveryOption bit = null,       -- 0 or 1 include online training
     @Latitude float = null,
     @Longitude float = null,
     @Distance int = null, -- Distance should always set when Longitude & Longitude set
@@ -16,6 +17,7 @@
     @apprenticeProviderRatings varchar(100) = null, -- any combo of 'Excellent', 'Good', 'Poor', 'VeryPoor' and 'NotYetReviewed' , or NULL
     @Location varchar(200) = null,
     @userid uniqueidentifier = null
+
 as
 
 SET NOCOUNT ON
@@ -33,6 +35,7 @@ IF @workplace IS NULL  SET @workplace = 0;
 IF @provider  IS NULL  SET @provider  = 0;
 IF @blockrelease IS NULL  SET @blockrelease = 0;
 IF @dayrelease IS NULL  SET @dayrelease = 0;
+IF @hasOnlineDeliveryOption IS NULL  SET @hasOnlineDeliveryOption = 0;
 
 -- local working
 DECLARE @skip int = (@page - 1) * @pageSize;
@@ -149,6 +152,7 @@ AS
                             ,ab2.Ukprn ) - (@pageSize * (@page-1)) "providers.ordering"  -- and ordered within the page of results
         ,ab2.Ukprn "providers.ukprn"
         ,ab2.LegalName "providers.providername"
+        ,CAST(MAX(CASE WHEN ISNULL(ab2.HasOnlineDeliveryOption,0)=1 THEN 1 ELSE 0 END) AS bit) HasOnlineDeliveryOption
         -- List of locations
         ,COUNT(*) "providers.locationsCount"
         ,STRING_AGG(LocationType,',') WITHIN GROUP (ORDER BY LocationOrdering, Distance) "providers.locations.locationType"
@@ -175,6 +179,7 @@ AS
             ,AtEmployer
             ,BlockRelease
             ,DayRelease
+            ,HasOnlineDeliveryOption
             ,Course_Location
             ,LocationOrdering
             ,Distance
@@ -190,13 +195,14 @@ AS
             (
             -- Managing Standards Course Location data
             SELECT pr1.[Ukprn], pr1.LegalName
-                  ,[LarsCode]
+                  ,pc1.[LarsCode]
                   ,[LocationType]
                   -- Is at Employer ?
                   ,CASE [LocationType] 
                    WHEN 0 THEN 0 ELSE 1 END AtEmployer
                   ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
                   ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
+                  ,ISNULL(pc1.[HasOnlineDeliveryOption],0) HasOnlineDeliveryOption
                   ,CASE [LocationType] 
                    WHEN 0 THEN pl1.Postcode
                    WHEN 1 THEN 'National'
@@ -229,6 +235,7 @@ AS
               JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
               JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
               JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
+              LEFT JOIN [dbo].[ProviderCourseType] pct1 on pct1.[Ukprn] = pr1.[Ukprn]
               LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
               WHERE 1=1 
               -- regulated check
@@ -241,7 +248,9 @@ AS
         AND LocationOrdering != 3 -- exclude outside Regions
         -- Distance filter check if requested
         AND (@Distance IS NULL OR Distance <= @Distance)
-        -- Logic to match to Checkboxes for training locations 
+        -- Online delivery filter: when requested, only include courses that have online option
+        AND (@hasOnlineDeliveryOption = 0 OR ISNULL(HasOnlineDeliveryOption,0) = 1)
+        -- Logic to match to ChHeckboxes for training locations 
         -- At apprentice's workplace and/or training at providers
         -- And at training provider for Day release and/or Block Release options
         -- Provider = 0, National = 1, Regional = 2
@@ -315,6 +324,7 @@ SELECT
     ,"providers.ordering"
     ,"providers.ukprn"
     ,"providers.providername"
+    ,"HasOnlineDeliveryOption"
     ,"providers.locationsCount"
     ,"providers.locations.locationType"
     ,"providers.locations.courseDistances"

@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -6,7 +7,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
@@ -28,13 +31,30 @@ public class CoursesController : ActionResponseControllerBase
 
     [HttpGet]
     [MapToApiVersion(ApiVersionNumber.One)]
-    [Route("{larsCode}/providers")]
+    [Route("{larsCode:int}/providers")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetProvidersForLarsCodeQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] string larsCode, [FromQuery] GetProvidersFromLarsCodeRequest request)
+    public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] int larsCode, [FromQuery] GetProvidersFromLarsCodeRequest request)
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
-        var response = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode, request));
+        var responseV2 = await _mediator.Send(new GetProvidersForLarsCodeQueryV2(larsCode.ToString(), request));
+        var v1Result = (GetProvidersForLarsCodeQueryResult)responseV2.Result;
+        var responseV1 = responseV2.IsValidResponse
+            ? new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(v1Result)
+            : new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(responseV2.Errors.ToList());
+        return GetResponse(responseV1);
+    }
+
+    [HttpGet]
+    [MapToApiVersion(ApiVersionNumber.Two)]
+    [Route("{larsCode}/providers")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetProvidersForLarsCodeQueryResultV2), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] string larsCode, [FromQuery] GetProvidersFromLarsCodeRequestV2 request)
+    {
+        _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
+        GetProvidersFromLarsCodeRequestV2 requestV2 = request;
+        var response = await _mediator.Send(new GetProvidersForLarsCodeQueryV2(larsCode, requestV2));
         return GetResponse(response);
     }
 

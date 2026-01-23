@@ -8,7 +8,8 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -21,46 +22,48 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
         [MoqAutoData]
         public async Task GetProvidersForLarsCode_InvokesQueryHandler(
             GetProvidersFromLarsCodeRequest request,
-            GetProvidersForLarsCodeQueryResult queryResult,
+            GetProvidersForLarsCodeQueryResultV2 queryResultV2,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] CoursesController sut)
         {
-            var larsCode = "1";
-            var larsCodeMatch = 1;
-            queryResult.LarsCode = larsCodeMatch;
-            mediatorMock.Setup(m => m.Send(
-                It.Is<GetProvidersForLarsCodeQuery>(
-                    q =>
-                            q.LarsCode == larsCode
-                            && q.Latitude == request.Latitude
-                            && q.Longitude == request.Longitude
-                            && q.OrderBy == request.OrderBy
-                            && q.Distance == request.Distance
-                            && q.Page == request.Page
-                            && q.PageSize == request.PageSize
-                            && q.Location == request.Location
-                            && q.UserId == request.UserId
-                ), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(queryResult));
+            var larsCodeInt = 1;
+            var larsCodeString = "1";
+            queryResultV2.LarsCode = larsCodeInt;
 
-            var result = await sut.GetProvidersForLarsCode(larsCode, request);
+            mediatorMock.Setup(m => m.Send(
+                It.Is<GetProvidersForLarsCodeQueryV2>(
+                    q =>
+                        q.LarsCode == larsCodeString
+                        && q.Latitude == request.Latitude
+                        && q.Longitude == request.Longitude
+                        && q.OrderBy == request.OrderBy
+                        && q.Distance == request.Distance
+                        && q.Page == request.Page
+                        && q.PageSize == request.PageSize
+                        && q.Location == request.Location
+                        && q.UserId == request.UserId
+                ), It.IsAny<CancellationToken>()))
+                .ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(queryResultV2));
+
+            var result = await sut.GetProvidersForLarsCode(larsCodeInt, request);
 
             var actualResult = result.As<OkObjectResult>().Value.As<GetProvidersForLarsCodeQueryResult>();
 
             using (new AssertionScope())
             {
-                actualResult.Page.Should().Be(queryResult.Page);
-                actualResult.PageSize.Should().Be(queryResult.PageSize);
-                actualResult.TotalPages.Should().Be(queryResult.TotalPages);
-                actualResult.TotalCount.Should().Be(queryResult.TotalCount);
-                actualResult.LarsCode.Should().Be(larsCodeMatch);
-                actualResult.StandardName.Should().Be(queryResult.StandardName);
-                actualResult.QarPeriod.Should().Be(queryResult.QarPeriod);
-                actualResult.ReviewPeriod.Should().Be(queryResult.ReviewPeriod);
+                actualResult.Page.Should().Be(queryResultV2.Page);
+                actualResult.PageSize.Should().Be(queryResultV2.PageSize);
+                actualResult.TotalPages.Should().Be(queryResultV2.TotalPages);
+                actualResult.TotalCount.Should().Be(queryResultV2.TotalCount);
+                actualResult.LarsCode.Should().Be(larsCodeInt);
+                actualResult.StandardName.Should().Be(queryResultV2.StandardName);
+                actualResult.QarPeriod.Should().Be(queryResultV2.QarPeriod);
+                actualResult.ReviewPeriod.Should().Be(queryResultV2.ReviewPeriod);
             }
 
-            mediatorMock.Verify(m => m.Send(It.Is<GetProvidersForLarsCodeQuery>(
+            mediatorMock.Verify(m => m.Send(It.Is<GetProvidersForLarsCodeQueryV2>(
                 q =>
-                    q.LarsCode == larsCode
+                    q.LarsCode == larsCodeString
                     && q.Latitude == request.Latitude
                     && q.Longitude == request.Longitude
                     && q.OrderBy == request.OrderBy

@@ -4,6 +4,7 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -16,8 +17,8 @@ public class GetProvidersForLarsCodeQueryTests
     public void Operator_PopulatesQueryFromGetProvidersFromLarsCodeRequest(string larsCode, GetProvidersFromLarsCodeRequest request)
     {
         var model = new GetProvidersForLarsCodeQuery(larsCode, request);
-        var mappedDeliveryModes = new List<DeliveryMode>();
-        mappedDeliveryModes.AddRange(from val in request.DeliveryModes where val != null select (DeliveryMode)val);
+        var mappedDeliveryModes = new List<DeliveryModeV1>();
+        mappedDeliveryModes.AddRange(from val in request.DeliveryModes where val != null select (DeliveryModeV1)val);
 
         var mappedEmployerProviderRatings = new List<ProviderRating>();
         mappedEmployerProviderRatings.AddRange(from val in request.EmployerProviderRatings where val != null select (ProviderRating)val);

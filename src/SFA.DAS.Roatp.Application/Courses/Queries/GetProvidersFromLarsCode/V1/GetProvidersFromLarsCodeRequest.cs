@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
 public class GetProvidersFromLarsCodeRequest
 {
     public ProviderOrderBy? OrderBy { get; set; }
@@ -10,7 +10,7 @@ public class GetProvidersFromLarsCodeRequest
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
     public string Location { get; set; }
-    public List<DeliveryMode?> DeliveryModes { get; set; }
+    public List<DeliveryModeV1?> DeliveryModes { get; set; }
 
     public List<ProviderRating?> EmployerProviderRatings { get; set; }
 
