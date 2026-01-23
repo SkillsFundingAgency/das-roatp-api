@@ -21,14 +21,13 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1
         public static implicit operator GetProvidersForLarsCodeQueryResult(GetProvidersForLarsCodeQueryResultV2 v2)
         {
             if (v2 == null) return null;
-
             return new GetProvidersForLarsCodeQueryResult
             {
                 Page = v2.Page,
                 PageSize = v2.PageSize,
                 TotalPages = v2.TotalPages,
                 TotalCount = v2.TotalCount,
-                LarsCode = v2.LarsCode,
+                LarsCode = int.TryParse(v2.LarsCode, out int larsCodeValue) ? larsCodeValue : 0,
                 StandardName = v2.StandardName,
                 QarPeriod = v2.QarPeriod,
                 ReviewPeriod = v2.ReviewPeriod,

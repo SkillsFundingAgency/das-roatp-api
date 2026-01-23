@@ -158,8 +158,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
     GetProvidersFromLarsCodeRequestV2 request,
     CancellationToken cancellationToken)
     {
-        string larsCode = "2";
-        int larsCodeValue = 2;
+        const string larsCode = "2";
         var query = new GetProvidersForLarsCodeQueryV2(larsCode, request);
 
         List<ProviderSearchModel> pagedProviderDetails = new()
@@ -187,7 +186,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
             PageSize = request.PageSize ?? Pagination.DefaultPageSize,
             TotalPages = 0,
             TotalCount = 0,
-            LarsCode = larsCodeValue,
+            LarsCode = larsCode,
             Providers = []
         };
 

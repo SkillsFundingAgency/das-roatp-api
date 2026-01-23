@@ -86,7 +86,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             PageSize = first.PageSize,
             TotalCount = first.TotalCount,
             TotalPages = first.TotalPages,
-            LarsCode = int.TryParse(first.LarsCode, out var l) ? l : 0,
+            LarsCode = first.LarsCode,
             StandardName = first.StandardName,
             QarPeriod = first.QarPeriod,
             ReviewPeriod = first.ReviewPeriod,
