@@ -21,8 +21,8 @@ public class GetProvidersForLarsCodeQueryValidatorTests
 
     private static readonly Func<IStandardsReadRepository, IValidator<object>>[] ValidatorFactories = new Func<IStandardsReadRepository, IValidator<object>>[]
     {
-        repo => new WrapperValidator<GetProvidersForLarsCodeQuery>(new SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1.GetProvidersForLarsCodeQueryValidator(repo)),
-        repo => new WrapperValidator<GetProvidersForLarsCodeQueryV2>(new SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2.GetProvidersForLarsCodeQueryValidator(repo)),
+        repo => new WrapperValidator<GetProvidersForLarsCodeQuery>(new Application.Courses.Queries.GetProvidersFromLarsCode.V1.GetProvidersForLarsCodeQueryValidator(repo)),
+        repo => new WrapperValidator<GetProvidersForLarsCodeQueryV2>(new Application.Courses.Queries.GetProvidersFromLarsCode.V2.GetProvidersForLarsCodeQueryValidator(repo)),
     };
 
     private static readonly Func<object>[] RequestFactories = new Func<object>[]

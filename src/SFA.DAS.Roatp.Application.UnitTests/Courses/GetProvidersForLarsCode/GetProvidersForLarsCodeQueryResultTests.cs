@@ -5,7 +5,7 @@ using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests;
+namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForLarsCode;
 
 
 [TestFixture]
