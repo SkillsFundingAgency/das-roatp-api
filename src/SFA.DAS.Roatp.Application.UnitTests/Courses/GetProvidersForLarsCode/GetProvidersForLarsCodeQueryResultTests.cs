@@ -141,4 +141,109 @@ public class GetProvidersForLarsCodeQueryResultTests
             v1provider.ApprenticeRating.Should().Be(ProviderRating.Excellent);
         }
     }
+
+
+    [Test]
+    public void ImplicitConversion_FromV2_WithNullProviders_LeavesProvidersNull()
+    {
+        var v2 = new GetProvidersForLarsCodeQueryResultV2
+        {
+            Page = 1,
+            PageSize = 20,
+            TotalPages = 1,
+            TotalCount = 0,
+            LarsCode = "321",
+            StandardName = "Std",
+            QarPeriod = "2020/21",
+            ReviewPeriod = "2021/22",
+            Providers = null
+        };
+
+        GetProvidersForLarsCodeQueryResult v1 = v2;
+
+        using (new AssertionScope())
+        {
+            v1.Should().NotBeNull();
+            v1.Providers.Should().BeNull("null input Providers should remain null as the converter uses the null-conditional operator without defaulting to an empty list");
+        }
+    }
+
+    [Test]
+    public void ImplicitConversion_FromV2_WithNonNumericLarsCode_SetsLarsCodeToZero()
+    {
+        var v2 = new GetProvidersForLarsCodeQueryResultV2
+        {
+            Page = 1,
+            PageSize = 10,
+            TotalPages = 1,
+            TotalCount = 1,
+            LarsCode = "ABC123", // non-numeric
+            StandardName = "Standard",
+            QarPeriod = "2022/23",
+            ReviewPeriod = "2023/24",
+            Providers = new List<ProviderDataV2>()
+        };
+
+        GetProvidersForLarsCodeQueryResult v1 = v2;
+
+        v1.LarsCode.Should().Be(0);
+    }
+
+    [Test]
+    public void ImplicitConversion_FromV2_WithProviderNullFields_PreservesNulls()
+    {
+        var v2 = new GetProvidersForLarsCodeQueryResultV2
+        {
+            Page = 1,
+            PageSize = 10,
+            TotalPages = 1,
+            TotalCount = 1,
+            LarsCode = "100",
+            StandardName = null,
+            QarPeriod = null,
+            ReviewPeriod = null,
+            Providers = new List<ProviderDataV2>
+            {
+                new ProviderDataV2
+                {
+                    Ordering = 0,
+                    Ukprn = 10000001,
+                    ProviderName = null,
+                    ShortlistId = null,
+                    Locations = null,
+                    Leavers = null,
+                    AchievementRate = null,
+                    EmployerReviews = null,
+                    EmployerStars = null,
+                    EmployerRating = ProviderRating.Excellent,
+                    ApprenticeReviews = null,
+                    ApprenticeStars = null,
+                    ApprenticeRating = ProviderRating.Good
+                }
+            }
+        };
+
+        GetProvidersForLarsCodeQueryResult v1 = v2;
+
+        using (new AssertionScope())
+        {
+            v1.StandardName.Should().BeNull();
+            v1.QarPeriod.Should().BeNull();
+            v1.ReviewPeriod.Should().BeNull();
+
+            v1.Providers.Should().NotBeNull().And.HaveCount(v1.Providers.Count);
+            var p = v1.Providers.First();
+            p.ProviderName.Should().BeNull();
+            p.ShortlistId.Should().BeNull();
+            p.Locations.Should().BeNull();
+            p.Leavers.Should().BeNull();
+            p.AchievementRate.Should().BeNull();
+            p.EmployerReviews.Should().BeNull();
+            p.EmployerStars.Should().BeNull();
+            p.EmployerRating.Should().Be(ProviderRating.Excellent);
+            p.ApprenticeReviews.Should().BeNull();
+            p.ApprenticeStars.Should().BeNull();
+            p.ApprenticeRating.Should().Be(ProviderRating.Good);
+        }
+    }
 }
