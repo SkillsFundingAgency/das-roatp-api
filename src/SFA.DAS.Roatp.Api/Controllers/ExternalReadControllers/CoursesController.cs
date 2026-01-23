@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -41,7 +40,7 @@ public class CoursesController : ActionResponseControllerBase
         var v1Result = (GetProvidersForLarsCodeQueryResult)responseV2.Result;
         var responseV1 = responseV2.IsValidResponse
             ? new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(v1Result)
-            : new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(responseV2.Errors.ToList());
+            : new ValidatedResponse<GetProvidersForLarsCodeQueryResult>([.. responseV2.Errors]);
         return GetResponse(responseV1);
     }
 
@@ -53,8 +52,7 @@ public class CoursesController : ActionResponseControllerBase
     public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] string larsCode, [FromQuery] GetProvidersFromLarsCodeRequestV2 request)
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
-        GetProvidersFromLarsCodeRequestV2 requestV2 = request;
-        var response = await _mediator.Send(new GetProvidersForLarsCodeQueryV2(larsCode, requestV2));
+        var response = await _mediator.Send(new GetProvidersForLarsCodeQueryV2(larsCode, request));
         return GetResponse(response);
     }
 
