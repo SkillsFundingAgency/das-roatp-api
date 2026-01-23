@@ -16,22 +16,21 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests
 {
     [TestFixture]
-    public class GetProvidersForLarsCodeTests
+    public class GetProvidersForLarsCodeV1Tests
     {
         [Test, MoqAutoData]
-        public async Task GetProvidersForLarsCode_InvokesQueryHandler(
+        public async Task GetProvidersForLarsCodeV1_InvokesQueryHandler(
             GetProvidersFromLarsCodeRequest request,
             GetProvidersForLarsCodeQueryResultV2 queryResultV2,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] CoursesController sut)
         {
-            const string larsCodeString = "1";
-            queryResultV2.LarsCode = larsCodeString;
+            const int larsCodeInt = 1;
+            queryResultV2.LarsCode = larsCodeInt.ToString();
 
             mediatorMock.Setup(m => m.Send(
-                It.Is<GetProvidersForLarsCodeQueryV2>(
-                    q =>
-                        q.LarsCode == larsCodeString
+                    It.Is<GetProvidersForLarsCodeQueryV2>(q =>
+                        q.LarsCode == larsCodeInt.ToString()
                         && q.Latitude == request.Latitude
                         && q.Longitude == request.Longitude
                         && q.OrderBy == request.OrderBy
@@ -39,13 +38,17 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
                         && q.Page == request.Page
                         && q.PageSize == request.PageSize
                         && q.Location == request.Location
-                        && q.UserId == request.UserId
-                ), It.IsAny<CancellationToken>()))
+                        && q.UserId == request.UserId),
+                    It.IsAny<CancellationToken>()))
                 .ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(queryResultV2));
 
-            var result = await sut.GetProvidersForLarsCode(larsCodeString, request);
+            var result = await sut.GetProvidersForLarsCode(larsCodeInt, request);
 
-            var actualResult = result.As<OkObjectResult>().Value.As<GetProvidersForLarsCodeQueryResultV2>();
+            var ok = result.As<OkObjectResult>();
+            ok.Should().NotBeNull();
+
+            var actualResult = ok.Value.As<GetProvidersForLarsCodeQueryResult>();
+            actualResult.Should().NotBeNull();
 
             using (new AssertionScope())
             {
@@ -53,15 +56,15 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
                 actualResult.PageSize.Should().Be(queryResultV2.PageSize);
                 actualResult.TotalPages.Should().Be(queryResultV2.TotalPages);
                 actualResult.TotalCount.Should().Be(queryResultV2.TotalCount);
-                actualResult.LarsCode.Should().Be(larsCodeString);
+                actualResult.LarsCode.Should().Be(larsCodeInt);
                 actualResult.StandardName.Should().Be(queryResultV2.StandardName);
                 actualResult.QarPeriod.Should().Be(queryResultV2.QarPeriod);
                 actualResult.ReviewPeriod.Should().Be(queryResultV2.ReviewPeriod);
             }
 
-            mediatorMock.Verify(m => m.Send(It.Is<GetProvidersForLarsCodeQueryV2>(
-                q =>
-                    q.LarsCode == larsCodeString
+            mediatorMock.Verify(m => m.Send(
+                It.Is<GetProvidersForLarsCodeQueryV2>(q =>
+                    q.LarsCode == larsCodeInt.ToString()
                     && q.Latitude == request.Latitude
                     && q.Longitude == request.Longitude
                     && q.OrderBy == request.OrderBy
@@ -69,8 +72,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
                     && q.Page == request.Page
                     && q.PageSize == request.PageSize
                     && q.Location == request.Location
-                    && q.UserId == request.UserId
-            ), It.IsAny<CancellationToken>()));
+                    && q.UserId == request.UserId),
+                It.IsAny<CancellationToken>()));
         }
     }
 }
