@@ -18,8 +18,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
     [TestFixture]
     public class GetProvidersForLarsCodeTests
     {
-        [Test]
-        [MoqAutoData]
+        [Test, MoqAutoData]
         public async Task GetProvidersForLarsCode_InvokesQueryHandler(
             GetProvidersFromLarsCodeRequest request,
             GetProvidersForLarsCodeQueryResultV2 queryResultV2,

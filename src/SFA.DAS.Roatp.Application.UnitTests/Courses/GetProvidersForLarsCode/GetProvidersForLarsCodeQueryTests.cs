@@ -3,7 +3,6 @@ using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
@@ -36,10 +35,12 @@ public class GetProvidersForLarsCodeQueryTests
             model.LarsCode.Should().Be(larsCode);
             model.Latitude.Should().Be(request.Latitude);
             model.Longitude.Should().Be(request.Longitude);
+            model.Location.Should().Be(request.Location);
             model.OrderBy.Should().Be(request.OrderBy);
             model.Distance.Should().Be(request.Distance);
             model.Page.Should().Be(request.Page);
             model.PageSize.Should().Be(request.PageSize);
+            model.UserId.Should().Be(request.UserId);
 
             model.DeliveryModes.Should().BeEquivalentTo(mappedDeliveryModes);
             model.EmployerProviderRatings.Should().BeEquivalentTo(mappedEmployerProviderRatings);

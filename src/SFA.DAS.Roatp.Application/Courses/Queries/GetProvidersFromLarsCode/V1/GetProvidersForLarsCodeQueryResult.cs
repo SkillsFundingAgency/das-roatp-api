@@ -18,7 +18,6 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1
 
         public List<ProviderData> Providers { get; set; }
 
-        // Implicit conversion from V2 to V1
         public static implicit operator GetProvidersForLarsCodeQueryResult(GetProvidersForLarsCodeQueryResultV2 v2)
         {
             if (v2 == null) return null;
