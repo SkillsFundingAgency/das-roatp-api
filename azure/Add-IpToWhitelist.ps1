@@ -5,13 +5,19 @@ param (
     [Parameter(Mandatory=$true)]
     [string]$WebAppName,
 
-    [Parameter(Mandatory=$true)]
-    [string]$IpAddress, # Can be a single IP or comma-separated list
+    [Parameter(Mandatory=$false)]
+    [string]$IpAddress, # Can be a single IP or comma-separated list (optional)
 
     [int]$Priority = 100,
 
     [string]$RuleNamePrefix = "Whitelisted IP"
 )
+
+# Check if IpAddress is empty or not provided
+if ([string]::IsNullOrWhiteSpace($IpAddress)) {
+    Write-Host "No WhitelistedIpAddress provided for this environment. Skipping IP whitelisting."
+    exit 0
+}
 
 try {
     $webApp = Get-AzWebApp -ResourceGroupName $ResourceGroupName -Name $WebAppName
@@ -23,6 +29,11 @@ try {
 
     # Split inputs by comma and trim whitespace
     $ips = $IpAddress -split ',' | ForEach-Object { $_.Trim() } | Where-Object { -not [string]::IsNullOrWhiteSpace($_) }
+
+    if ($ips.Count -eq 0) {
+        Write-Host "No valid IPs found in WhitelistedIpAddress. Skipping."
+        exit 0
+    }
 
     foreach ($ip in $ips) {
         $ruleName = "$RuleNamePrefix - $ip"
