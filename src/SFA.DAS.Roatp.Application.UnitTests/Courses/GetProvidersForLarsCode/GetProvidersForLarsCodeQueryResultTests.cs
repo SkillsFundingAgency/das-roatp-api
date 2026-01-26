@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForLarsCode;
 public class GetProvidersForLarsCodeQueryResultTests
 {
     [Test, MoqAutoData]
-    public void ImplicitConversion_FromV2_ToV1_MapsProvidersAndTopLevelFields(GetProvidersForLarsCodeQueryResultV2 v2)
+    public void ImplicitConversion_FromV2ToV1_MapsProvidersAndTopLevelFields(GetProvidersForLarsCodeQueryResultV2 v2)
     {
         GetProvidersForLarsCodeQueryResult v1 = v2;
 
