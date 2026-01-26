@@ -34,9 +34,9 @@ public class GetProvidersFromLarsCodeRequestV2
             Longitude = v1.Longitude,
             Location = v1.Location,
             DeliveryModes = v1.DeliveryModes?.Select(dm => (DeliveryModeV2?)dm).ToList(),
-            EmployerProviderRatings = v1.EmployerProviderRatings?.Select(r => (ProviderRating?)r).ToList(),
-            ApprenticeProviderRatings = v1.ApprenticeProviderRatings?.Select(r => (ProviderRating?)r).ToList(),
-            Qar = v1.Qar?.Select(q => (QarRating?)q).ToList(),
+            EmployerProviderRatings = v1.EmployerProviderRatings?.Select(r => r).ToList(),
+            ApprenticeProviderRatings = v1.ApprenticeProviderRatings?.Select(r => r).ToList(),
+            Qar = v1.Qar?.Select(q => q).ToList(),
             Page = v1.Page,
             PageSize = v1.PageSize,
             UserId = v1.UserId

@@ -37,10 +37,10 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
         int? Page,
         int? PageSize,
         Guid? UserId,
-        IEnumerable<DeliveryModeV2>? DeliveryModes,
-        IEnumerable<ProviderRating>? EmployerProviderRatings,
-        IEnumerable<ProviderRating>? ApprenticeProviderRatings,
-        IEnumerable<QarRating>? QarRatings
+        IEnumerable<DeliveryModeV2> DeliveryModes,
+        IEnumerable<ProviderRating> EmployerProviderRatings,
+        IEnumerable<ProviderRating> ApprenticeProviderRatings,
+        IEnumerable<QarRating> QarRatings
     );
 
     public GetProvidersForLarsCodeQuery(string larsCode, GetProvidersFromLarsCodeRequestV2 request)
