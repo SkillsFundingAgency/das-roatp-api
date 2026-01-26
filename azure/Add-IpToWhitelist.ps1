@@ -13,8 +13,8 @@ param (
     [string]$RuleNamePrefix = "Whitelisted IP"
 )
 
-# Check if IpAddress is empty or not provided
-if ([string]::IsNullOrWhiteSpace($IpAddress)) {
+# Check if IpAddress is empty, not provided, or was not substituted (still contains the literal variable reference)
+if ([string]::IsNullOrWhiteSpace($IpAddress) -or $IpAddress -match '^\$\(') {
     Write-Host "No WhitelistedIpAddress provided for this environment. Skipping IP whitelisting."
     exit 0
 }
