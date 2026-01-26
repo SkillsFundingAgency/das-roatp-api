@@ -36,7 +36,7 @@ public class CoursesController : ActionResponseControllerBase
     public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] int larsCode, [FromQuery] GetProvidersFromLarsCodeRequest request)
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
-        var responseV2 = await _mediator.Send(new GetProvidersForLarsCodeQueryV2(larsCode.ToString(), request));
+        var responseV2 = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode.ToString(), request));
         var v1Result = (GetProvidersForLarsCodeQueryResult)responseV2.Result;
         var responseV1 = responseV2.IsValidResponse
             ? new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(v1Result)
@@ -52,7 +52,7 @@ public class CoursesController : ActionResponseControllerBase
     public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] string larsCode, [FromQuery] GetProvidersFromLarsCodeRequestV2 request)
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
-        var response = await _mediator.Send(new GetProvidersForLarsCodeQueryV2(larsCode, request));
+        var response = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode, request));
         return GetResponse(response);
     }
 

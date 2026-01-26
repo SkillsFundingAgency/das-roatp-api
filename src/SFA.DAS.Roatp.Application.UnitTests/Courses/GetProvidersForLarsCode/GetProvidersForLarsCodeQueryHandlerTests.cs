@@ -46,7 +46,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         var isBlockRelease = true;
         var isDayRelease = true;
 
-        GetProvidersForLarsCodeQueryV2 query = new GetProvidersForLarsCodeQueryV2(larsCode, request);
+        GetProvidersForLarsCodeQuery query = new GetProvidersForLarsCodeQuery(larsCode, request);
 
         foreach (var detail in pagedProviderDetails)
         {
@@ -159,7 +159,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
     CancellationToken cancellationToken)
     {
         const string larsCode = "2";
-        var query = new GetProvidersForLarsCodeQueryV2(larsCode, request);
+        var query = new GetProvidersForLarsCodeQuery(larsCode, request);
 
         List<ProviderSearchModel> pagedProviderDetails = new()
         {
@@ -234,7 +234,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         var dayReleasesValues = "1,1,0";
         var blockReleasesValues = "1,0,1";
 
-        GetProvidersForLarsCodeQueryV2 query = new GetProvidersForLarsCodeQueryV2(larsCode, request);
+        GetProvidersForLarsCodeQuery query = new GetProvidersForLarsCodeQuery(larsCode, request);
 
         foreach (var detail in pagedProviderDetails)
         {

@@ -31,7 +31,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             queryResultV2.LarsCode = larsCodeInt.ToString();
 
             mediatorMock.Setup(m => m.Send(
-                    It.Is<GetProvidersForLarsCodeQueryV2>(q =>
+                    It.Is<GetProvidersForLarsCodeQuery>(q =>
                         q.LarsCode == larsCodeInt.ToString()
                         && q.Latitude == request.Latitude
                         && q.Longitude == request.Longitude
@@ -65,7 +65,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             }
 
             mediatorMock.Verify(m => m.Send(
-                It.Is<GetProvidersForLarsCodeQueryV2>(q =>
+                It.Is<GetProvidersForLarsCodeQuery>(q =>
                     q.LarsCode == larsCodeInt.ToString()
                     && q.Latitude == request.Latitude
                     && q.Longitude == request.Longitude
@@ -88,7 +88,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
         {
             var response = new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(new List<ValidationFailure>());
             mediatorMock.Setup(m => m.Send(
-                  It.Is<GetProvidersForLarsCodeQueryV2>(q =>
+                  It.Is<GetProvidersForLarsCodeQuery>(q =>
                       q.LarsCode == larsCodeInt.ToString()
                       && q.Latitude == request.Latitude
                       && q.Longitude == request.Longitude
@@ -106,7 +106,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             result.Should().BeOfType<NotFoundResult>();
 
             mediatorMock.Verify(m => m.Send(
-                It.Is<GetProvidersForLarsCodeQueryV2>(q => q.LarsCode == larsCodeInt.ToString()),
+                It.Is<GetProvidersForLarsCodeQuery>(q => q.LarsCode == larsCodeInt.ToString()),
                 It.IsAny<CancellationToken>()), Times.Once);
         }
 
@@ -127,7 +127,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             var response = new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(validationErrors);
 
             mediatorMock.Setup(m => m.Send(
-                  It.Is<GetProvidersForLarsCodeQueryV2>(q =>
+                  It.Is<GetProvidersForLarsCodeQuery>(q =>
                       q.LarsCode == larsCodeInt.ToString()
                       && q.Latitude == request.Latitude
                       && q.Longitude == request.Longitude
@@ -155,7 +155,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             errors[1].ErrorMessage.Should().Be("Longitude is required");
 
             mediatorMock.Verify(m => m.Send(
-                It.Is<GetProvidersForLarsCodeQueryV2>(q => q.LarsCode == larsCodeInt.ToString()),
+                It.Is<GetProvidersForLarsCodeQuery>(q => q.LarsCode == larsCodeInt.ToString()),
                 It.IsAny<CancellationToken>()), Times.Once);
         }
     }

@@ -11,7 +11,7 @@ using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 
-public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersForLarsCodeQueryV2, ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>>
+public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersForLarsCodeQuery, ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>>
 {
     private readonly IProvidersReadRepository _providersReadRepository;
     private readonly ILogger<GetProvidersForLarsCodeQueryHandler> _logger;
@@ -21,7 +21,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
         _logger = logger;
     }
 
-    public async Task<ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>> Handle(GetProvidersForLarsCodeQueryV2 request, CancellationToken cancellationToken)
+    public async Task<ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>> Handle(GetProvidersForLarsCodeQuery request, CancellationToken cancellationToken)
     {
         var isWorkplace = (bool?)null;
         var isProvider = (bool?)null;

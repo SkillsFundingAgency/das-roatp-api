@@ -28,7 +28,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             queryResultV2.LarsCode = larsCodeString;
 
             mediatorMock.Setup(m => m.Send(
-                It.Is<GetProvidersForLarsCodeQueryV2>(
+                It.Is<GetProvidersForLarsCodeQuery>(
                     q =>
                         q.LarsCode == larsCodeString
                         && q.Latitude == request.Latitude
@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
                 actualResult.ReviewPeriod.Should().Be(queryResultV2.ReviewPeriod);
             }
 
-            mediatorMock.Verify(m => m.Send(It.Is<GetProvidersForLarsCodeQueryV2>(
+            mediatorMock.Verify(m => m.Send(It.Is<GetProvidersForLarsCodeQuery>(
                 q =>
                     q.LarsCode == larsCodeString
                     && q.Latitude == request.Latitude
