@@ -28,70 +28,79 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
     public List<ProviderRating> ApprenticeProviderRatings { get; } = new();
     public List<QarRating> Qar { get; } = new();
 
+    private readonly record struct PopulateParams(
+        decimal? Latitude,
+        string Location,
+        decimal? Longitude,
+        ProviderOrderBy? OrderBy,
+        decimal? Distance,
+        int? Page,
+        int? PageSize,
+        Guid? UserId,
+        IEnumerable<DeliveryModeV2>? DeliveryModes,
+        IEnumerable<ProviderRating>? EmployerProviderRatings,
+        IEnumerable<ProviderRating>? ApprenticeProviderRatings,
+        IEnumerable<QarRating>? QarRatings
+    );
+
     public GetProvidersForLarsCodeQuery(string larsCode, GetProvidersFromLarsCodeRequestV2 request)
     {
         LarsCode = larsCode;
-        PopulateFrom(
-            latitude: request.Latitude,
-            location: request.Location,
-            longitude: request.Longitude,
-            orderBy: request.OrderBy,
-            distance: request.Distance,
-            page: request.Page,
-            pageSize: request.PageSize,
-            userId: request.UserId,
-            deliveryModes: request.DeliveryModes?.Where(x => x != null).Select(x => (DeliveryModeV2)x),
-            employerProviderRatings: request.EmployerProviderRatings?.Where(x => x != null).Select(x => (ProviderRating)x),
-            apprenticeProviderRatings: request.ApprenticeProviderRatings?.Where(x => x != null).Select(x => (ProviderRating)x),
-            qarRatings: request.Qar?.Where(x => x != null).Select(x => (QarRating)x)
+
+        var args = new PopulateParams(
+            Latitude: request.Latitude,
+            Location: request.Location,
+            Longitude: request.Longitude,
+            OrderBy: request.OrderBy,
+            Distance: request.Distance,
+            Page: request.Page,
+            PageSize: request.PageSize,
+            UserId: request.UserId,
+            DeliveryModes: request.DeliveryModes?.Where(x => x != null).Select(x => (DeliveryModeV2)x),
+            EmployerProviderRatings: request.EmployerProviderRatings?.Where(x => x != null).Select(x => (ProviderRating)x),
+            ApprenticeProviderRatings: request.ApprenticeProviderRatings?.Where(x => x != null).Select(x => (ProviderRating)x),
+            QarRatings: request.Qar?.Where(x => x != null).Select(x => (QarRating)x)
         );
+
+        PopulateFrom(args);
     }
 
     public GetProvidersForLarsCodeQuery(string larsCode, GetProvidersFromLarsCodeRequest request)
     {
         LarsCode = larsCode;
-        PopulateFrom(
-            latitude: request.Latitude,
-            location: request.Location,
-            longitude: request.Longitude,
-            orderBy: request.OrderBy,
-            distance: request.Distance,
-            page: request.Page,
-            pageSize: request.PageSize,
-            userId: request.UserId,
-            deliveryModes: request.DeliveryModes?.Where(x => x != null).Select(x => (DeliveryModeV2)x),
-            employerProviderRatings: request.EmployerProviderRatings?.Where(x => x != null).Select(x => (ProviderRating)x),
-            apprenticeProviderRatings: request.ApprenticeProviderRatings?.Where(x => x != null).Select(x => (ProviderRating)x),
-            qarRatings: request.Qar?.Where(x => x != null).Select(x => (QarRating)x)
+
+        var args = new PopulateParams(
+            Latitude: request.Latitude,
+            Location: request.Location,
+            Longitude: request.Longitude,
+            OrderBy: request.OrderBy,
+            Distance: request.Distance,
+            Page: request.Page,
+            PageSize: request.PageSize,
+            UserId: request.UserId,
+            DeliveryModes: request.DeliveryModes?.Where(x => x != null).Select(x => (DeliveryModeV2)x),
+            EmployerProviderRatings: request.EmployerProviderRatings?.Where(x => x != null).Select(x => (ProviderRating)x),
+            ApprenticeProviderRatings: request.ApprenticeProviderRatings?.Where(x => x != null).Select(x => (ProviderRating)x),
+            QarRatings: request.Qar?.Where(x => x != null).Select(x => (QarRating)x)
         );
+
+        PopulateFrom(args);
     }
 
-    private void PopulateFrom(
-        decimal? latitude,
-        string location,
-        decimal? longitude,
-        ProviderOrderBy? orderBy,
-        decimal? distance,
-        int? page,
-        int? pageSize,
-        Guid? userId,
-        IEnumerable<DeliveryModeV2>? deliveryModes,
-        IEnumerable<ProviderRating>? employerProviderRatings,
-        IEnumerable<ProviderRating>? apprenticeProviderRatings,
-        IEnumerable<QarRating>? qarRatings)
+    private void PopulateFrom(PopulateParams args)
     {
-        Latitude = latitude;
-        Location = location;
-        Longitude = longitude;
-        OrderBy = orderBy;
-        Distance = distance;
-        Page = page;
-        PageSize = pageSize;
-        UserId = userId;
+        Latitude = args.Latitude;
+        Location = args.Location;
+        Longitude = args.Longitude;
+        OrderBy = args.OrderBy;
+        Distance = args.Distance;
+        Page = args.Page;
+        PageSize = args.PageSize;
+        UserId = args.UserId;
 
-        if (deliveryModes != null) DeliveryModes.AddRange(deliveryModes);
-        if (employerProviderRatings != null) EmployerProviderRatings.AddRange(employerProviderRatings);
-        if (apprenticeProviderRatings != null) ApprenticeProviderRatings.AddRange(apprenticeProviderRatings);
-        if (qarRatings != null) Qar.AddRange(qarRatings);
+        if (args.DeliveryModes != null) DeliveryModes.AddRange(args.DeliveryModes);
+        if (args.EmployerProviderRatings != null) EmployerProviderRatings.AddRange(args.EmployerProviderRatings);
+        if (args.ApprenticeProviderRatings != null) ApprenticeProviderRatings.AddRange(args.ApprenticeProviderRatings);
+        if (args.QarRatings != null) Qar.AddRange(args.QarRatings);
     }
 }
