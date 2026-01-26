@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -23,7 +23,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
         [Test, MoqAutoData]
         public async Task GetProvidersForLarsCodeV1_InvokesQueryHandler(
             GetProvidersFromLarsCodeRequest request,
-            GetProvidersForLarsCodeQueryResultV2 queryResultV2,
+            GetProvidersForLarsCodeQueryResult queryResultV2,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] CoursesController sut)
         {
@@ -42,14 +42,14 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
                         && q.Location == request.Location
                         && q.UserId == request.UserId),
                     It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(queryResultV2));
+                .ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(queryResultV2));
 
             var result = await sut.GetProvidersForLarsCode(larsCodeInt, request);
 
             var ok = result.As<OkObjectResult>();
             ok.Should().NotBeNull();
 
-            var actualResult = ok.Value.As<GetProvidersForLarsCodeQueryResult>();
+            var actualResult = ok.Value.As<GetProvidersForLarsCodeQueryResultV1Model>();
             actualResult.Should().NotBeNull();
 
             using (new AssertionScope())
@@ -82,11 +82,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
         public async Task GetProvidersForLarsCodeV1_WhenResultNullAndValid_ReturnsNotFound(
             GetProvidersFromLarsCodeRequest request,
             int larsCodeInt,
-            GetProvidersForLarsCodeQueryResultV2 queryResultV2,
+            GetProvidersForLarsCodeQueryResult queryResultV2,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] CoursesController sut)
         {
-            var response = new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(new List<ValidationFailure>());
+            var response = new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(new List<ValidationFailure>());
             mediatorMock.Setup(m => m.Send(
                   It.Is<GetProvidersForLarsCodeQuery>(q =>
                       q.LarsCode == larsCodeInt.ToString()
@@ -114,7 +114,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
         public async Task GetProvidersForLarsCodeV1_WhenInvalid_ReturnsBadRequest(
             GetProvidersFromLarsCodeRequest request,
             int larsCodeInt,
-            GetProvidersForLarsCodeQueryResultV2 queryResultV2,
+            GetProvidersForLarsCodeQueryResult queryResultV2,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] CoursesController sut)
         {
@@ -124,7 +124,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
              new ValidationFailure("Longitude", "Longitude is required")
             };
 
-            var response = new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(validationErrors);
+            var response = new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(validationErrors);
 
             mediatorMock.Setup(m => m.Send(
                   It.Is<GetProvidersForLarsCodeQuery>(q =>

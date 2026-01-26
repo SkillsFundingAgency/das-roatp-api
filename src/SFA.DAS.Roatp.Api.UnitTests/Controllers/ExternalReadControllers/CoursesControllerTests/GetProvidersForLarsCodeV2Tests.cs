@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -19,8 +19,8 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
     {
         [Test, MoqAutoData]
         public async Task GetProvidersForLarsCodeV2_InvokesQueryHandler(
-            GetProvidersFromLarsCodeRequestV2 request,
-            GetProvidersForLarsCodeQueryResultV2 queryResultV2,
+            GetProvidersFromLarsCodeRequest request,
+            GetProvidersForLarsCodeQueryResult queryResultV2,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] CoursesController sut)
         {
@@ -40,11 +40,11 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
                         && q.Location == request.Location
                         && q.UserId == request.UserId
                 ), It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(queryResultV2));
+                .ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(queryResultV2));
 
             var result = await sut.GetProvidersForLarsCode(larsCodeString, request);
 
-            var actualResult = result.As<OkObjectResult>().Value.As<GetProvidersForLarsCodeQueryResultV2>();
+            var actualResult = result.As<OkObjectResult>().Value.As<GetProvidersForLarsCodeQueryResult>();
 
             using (new AssertionScope())
             {

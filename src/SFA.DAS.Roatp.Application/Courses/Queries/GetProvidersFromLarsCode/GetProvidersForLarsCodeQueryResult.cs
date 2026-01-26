@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode
 {
-    public class GetProvidersForLarsCodeQueryResultV2
+    public class GetProvidersForLarsCodeQueryResult
     {
         public int Page { get; set; }
         public int PageSize { get; set; }
@@ -14,6 +14,6 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2
         public string QarPeriod { get; set; }
         public string ReviewPeriod { get; set; }
 
-        public List<ProviderDataV2> Providers { get; set; }
+        public List<ProviderData> Providers { get; set; }
     }
 }

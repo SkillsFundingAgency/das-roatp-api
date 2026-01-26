@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using MediatR;
 using SFA.DAS.Roatp.Application.Common;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 
-public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>>,
+public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvidersForLarsCodeQueryResult>>,
     ICoordinates, ILarsCode
 {
     public string LarsCode { get; }
@@ -21,7 +20,7 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
     public int? Page { get; private set; }
     public int? PageSize { get; private set; }
     public Guid? UserId { get; private set; }
-    public List<DeliveryModeV2> DeliveryModes { get; } = new();
+    public List<DeliveryMode> DeliveryModes { get; } = new();
 
     public List<ProviderRating> EmployerProviderRatings { get; } = new();
 
@@ -37,13 +36,13 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
         int? Page,
         int? PageSize,
         Guid? UserId,
-        IEnumerable<DeliveryModeV2> DeliveryModes,
+        IEnumerable<DeliveryMode> DeliveryModes,
         IEnumerable<ProviderRating> EmployerProviderRatings,
         IEnumerable<ProviderRating> ApprenticeProviderRatings,
         IEnumerable<QarRating> QarRatings
     );
 
-    public GetProvidersForLarsCodeQuery(string larsCode, GetProvidersFromLarsCodeRequestV2 request)
+    public GetProvidersForLarsCodeQuery(string larsCode, GetProvidersFromLarsCodeRequest request)
     {
         LarsCode = larsCode;
 
@@ -56,18 +55,13 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
             Page: request.Page,
             PageSize: request.PageSize,
             UserId: request.UserId,
-            DeliveryModes: request.DeliveryModes?.OfType<DeliveryModeV2>(),
+            DeliveryModes: request.DeliveryModes?.OfType<DeliveryMode>(),
             EmployerProviderRatings: request.EmployerProviderRatings?.OfType<ProviderRating>(),
             ApprenticeProviderRatings: request.ApprenticeProviderRatings?.OfType<ProviderRating>(),
             QarRatings: request.Qar?.OfType<QarRating>()
         );
 
         PopulateFrom(args);
-    }
-
-    public GetProvidersForLarsCodeQuery(string larsCode, GetProvidersFromLarsCodeRequest request)
-        : this(larsCode, (GetProvidersFromLarsCodeRequestV2)request)
-    {
     }
 
     private void PopulateFrom(PopulateParams args)

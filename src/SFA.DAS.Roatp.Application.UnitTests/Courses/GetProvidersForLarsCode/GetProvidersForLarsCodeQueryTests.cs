@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -25,7 +24,7 @@ public class GetProvidersForLarsCodeQueryTests
         int? pageSize,
         Guid? userId)
     {
-        var request = new GetProvidersFromLarsCodeRequestV2
+        var request = new GetProvidersFromLarsCodeRequest
         {
             Latitude = latitude,
             Longitude = longitude,
@@ -35,7 +34,7 @@ public class GetProvidersForLarsCodeQueryTests
             Page = page,
             PageSize = pageSize,
             UserId = userId,
-            DeliveryModes = new List<DeliveryModeV2?> { null, DeliveryModeV2.Provider, DeliveryModeV2.DayRelease },
+            DeliveryModes = new List<DeliveryMode?> { null, DeliveryMode.Provider, DeliveryMode.DayRelease },
             EmployerProviderRatings = new List<ProviderRating?> { null, ProviderRating.Good },
             ApprenticeProviderRatings = new List<ProviderRating?> { null, ProviderRating.Excellent },
             Qar = new List<QarRating?> { null, QarRating.Good }
@@ -53,7 +52,7 @@ public class GetProvidersForLarsCodeQueryTests
         sut.PageSize.Should().Be(pageSize);
         sut.UserId.Should().Be(userId);
 
-        sut.DeliveryModes.Should().BeEquivalentTo(new[] { DeliveryModeV2.Provider, DeliveryModeV2.DayRelease });
+        sut.DeliveryModes.Should().BeEquivalentTo(new[] { DeliveryMode.Provider, DeliveryMode.DayRelease });
         sut.EmployerProviderRatings.Should().BeEquivalentTo(new[] { ProviderRating.Good });
         sut.ApprenticeProviderRatings.Should().BeEquivalentTo(new[] { ProviderRating.Excellent });
         sut.Qar.Should().BeEquivalentTo(new[] { QarRating.Good });
@@ -62,7 +61,7 @@ public class GetProvidersForLarsCodeQueryTests
     [Test, RecursiveMoqAutoData]
     public void Constructor_V2Request_NullCollections_ResultEmptyLists(
         string larsCode,
-        GetProvidersFromLarsCodeRequestV2 request)
+        GetProvidersFromLarsCodeRequest request)
     {
         request.DeliveryModes = null;
         request.EmployerProviderRatings = null;
@@ -106,7 +105,7 @@ public class GetProvidersForLarsCodeQueryTests
             Page = page,
             PageSize = pageSize,
             UserId = userId,
-            DeliveryModes = new List<DeliveryModeV1?> { null, DeliveryModeV1.Provider, DeliveryModeV1.Workplace },
+            DeliveryModes = new List<DeliveryMode?> { null, DeliveryMode.Provider, DeliveryMode.Workplace },
             EmployerProviderRatings = new List<ProviderRating?> { null, ProviderRating.Poor },
             ApprenticeProviderRatings = new List<ProviderRating?> { null, ProviderRating.Good },
             Qar = new List<QarRating?> { null, QarRating.Poor }
@@ -126,7 +125,7 @@ public class GetProvidersForLarsCodeQueryTests
 
         var expectedModes = request.DeliveryModes!
             .Where(x => x != null)
-            .Select(x => (DeliveryModeV2)x!)
+            .Select(x => (DeliveryMode)x!)
             .ToList();
 
         sut.DeliveryModes.Should().BeEquivalentTo(expectedModes);
@@ -163,7 +162,7 @@ public class GetProvidersForLarsCodeQueryTests
     [Test]
     public void Properties_PrivateSetters_ReadOnlyExternally()
     {
-        var request = new GetProvidersFromLarsCodeRequestV2
+        var request = new GetProvidersFromLarsCodeRequest
         {
             Latitude = 1.23m,
             Longitude = 4.56m,

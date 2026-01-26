@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Roatp.Domain.Models;
 
-public enum DeliveryModeV2
+public enum DeliveryMode
 {
     Workplace,
     Provider,

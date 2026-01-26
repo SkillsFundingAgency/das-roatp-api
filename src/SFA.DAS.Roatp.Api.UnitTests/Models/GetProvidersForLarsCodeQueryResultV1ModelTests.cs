@@ -4,20 +4,20 @@ using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForLarsCode;
+namespace SFA.DAS.Roatp.Api.UnitTests.Models;
 
 [TestFixture]
-public class GetProvidersForLarsCodeQueryResultTests
+public class GetProvidersForLarsCodeQueryResultV1ModelTests
 {
     [Test, MoqAutoData]
-    public void ImplicitConversion_FromV2ToV1_MapsProvidersAndTopLevelFields(GetProvidersForLarsCodeQueryResultV2 v2)
+    public void ImplicitConversion_FromV2ToV1_MapsProvidersAndTopLevelFields(GetProvidersForLarsCodeQueryResult v2)
     {
-        GetProvidersForLarsCodeQueryResult v1 = v2;
+        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
 
         using (new AssertionScope())
         {
@@ -33,16 +33,17 @@ public class GetProvidersForLarsCodeQueryResultTests
 
             v1.Providers.Should().NotBeNull().And.HaveCount(v2.Providers.Count);
             v1.Providers.Should().BeEquivalentTo(v2.Providers, options => options
-                .ExcludingMissingMembers());
+                .ExcludingMissingMembers()
+                .Excluding(p => p.HasOnlineDeliveryOption));
         }
     }
 
     [Test]
     public void ImplicitConversion_FromV2_Null_ReturnsNull()
     {
-        GetProvidersForLarsCodeQueryResultV2 v2 = null;
+        GetProvidersForLarsCodeQueryResult v2 = null;
 
-        GetProvidersForLarsCodeQueryResult v1 = v2;
+        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
 
         v1.Should().BeNull();
     }
@@ -51,7 +52,7 @@ public class GetProvidersForLarsCodeQueryResultTests
     public void ImplicitConversion_FromV2_WithEmptyProviders_MapsToEmptyList()
     {
         const string LarsCode = "123";
-        var v2 = new GetProvidersForLarsCodeQueryResultV2
+        var v2 = new GetProvidersForLarsCodeQueryResult
         {
             Page = 1,
             PageSize = 10,
@@ -61,10 +62,10 @@ public class GetProvidersForLarsCodeQueryResultTests
             StandardName = "Std",
             QarPeriod = "2022/23",
             ReviewPeriod = "2023/24",
-            Providers = new List<ProviderDataV2>()
+            Providers = new List<ProviderData>()
         };
 
-        GetProvidersForLarsCodeQueryResult v1 = v2;
+        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
 
         using (new AssertionScope())
         {
@@ -78,7 +79,7 @@ public class GetProvidersForLarsCodeQueryResultTests
     public void ImplicitConversion_FromV2_MapsProviderItemFieldsCorrectly()
     {
         var shortlistId = Guid.NewGuid();
-        var v2 = new GetProvidersForLarsCodeQueryResultV2
+        var v2 = new GetProvidersForLarsCodeQueryResult
         {
             Page = 2,
             PageSize = 5,
@@ -88,9 +89,9 @@ public class GetProvidersForLarsCodeQueryResultTests
             StandardName = "My Standard",
             QarPeriod = "2021/22",
             ReviewPeriod = "2022/23",
-            Providers = new List<ProviderDataV2>
+            Providers = new List<ProviderData>
             {
-                new ProviderDataV2
+                new ProviderData
                 {
                     Ordering = 42,
                     Ukprn = 12345678,
@@ -110,7 +111,7 @@ public class GetProvidersForLarsCodeQueryResultTests
             }
         };
 
-        GetProvidersForLarsCodeQueryResult v1 = v2;
+        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
 
         using (new AssertionScope())
         {
@@ -146,7 +147,7 @@ public class GetProvidersForLarsCodeQueryResultTests
     [Test]
     public void ImplicitConversion_FromV2_WithNullProviders_LeavesProvidersNull()
     {
-        var v2 = new GetProvidersForLarsCodeQueryResultV2
+        var v2 = new GetProvidersForLarsCodeQueryResult
         {
             Page = 1,
             PageSize = 20,
@@ -159,7 +160,7 @@ public class GetProvidersForLarsCodeQueryResultTests
             Providers = null
         };
 
-        GetProvidersForLarsCodeQueryResult v1 = v2;
+        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
 
         using (new AssertionScope())
         {
@@ -171,7 +172,7 @@ public class GetProvidersForLarsCodeQueryResultTests
     [Test]
     public void ImplicitConversion_FromV2_WithNonNumericLarsCode_SetsLarsCodeToZero()
     {
-        var v2 = new GetProvidersForLarsCodeQueryResultV2
+        var v2 = new GetProvidersForLarsCodeQueryResult
         {
             Page = 1,
             PageSize = 10,
@@ -181,10 +182,10 @@ public class GetProvidersForLarsCodeQueryResultTests
             StandardName = "Standard",
             QarPeriod = "2022/23",
             ReviewPeriod = "2023/24",
-            Providers = new List<ProviderDataV2>()
+            Providers = new List<ProviderData>()
         };
 
-        GetProvidersForLarsCodeQueryResult v1 = v2;
+        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
 
         v1.LarsCode.Should().Be(0);
     }
@@ -192,7 +193,7 @@ public class GetProvidersForLarsCodeQueryResultTests
     [Test]
     public void ImplicitConversion_FromV2_WithProviderNullFields_PreservesNulls()
     {
-        var v2 = new GetProvidersForLarsCodeQueryResultV2
+        var v2 = new GetProvidersForLarsCodeQueryResult
         {
             Page = 1,
             PageSize = 10,
@@ -202,9 +203,9 @@ public class GetProvidersForLarsCodeQueryResultTests
             StandardName = null,
             QarPeriod = null,
             ReviewPeriod = null,
-            Providers = new List<ProviderDataV2>
+            Providers = new List<ProviderData>
             {
-                new ProviderDataV2
+                new ProviderData
                 {
                     Ordering = 0,
                     Ukprn = 10000001,
@@ -223,7 +224,7 @@ public class GetProvidersForLarsCodeQueryResultTests
             }
         };
 
-        GetProvidersForLarsCodeQueryResult v1 = v2;
+        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
 
         using (new AssertionScope())
         {

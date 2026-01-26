@@ -1,8 +1,9 @@
-﻿using SFA.DAS.Roatp.Domain.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+
 public class GetProvidersFromLarsCodeRequest
 {
     public ProviderOrderBy? OrderBy { get; set; }
@@ -10,7 +11,7 @@ public class GetProvidersFromLarsCodeRequest
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
     public string Location { get; set; }
-    public List<DeliveryModeV1?> DeliveryModes { get; set; }
+    public List<DeliveryMode?> DeliveryModes { get; set; }
 
     public List<ProviderRating?> EmployerProviderRatings { get; set; }
 

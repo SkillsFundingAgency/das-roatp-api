@@ -4,14 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V2;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 
-public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersForLarsCodeQuery, ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>>
+public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersForLarsCodeQuery, ValidatedResponse<GetProvidersForLarsCodeQueryResult>>
 {
     private readonly IProvidersReadRepository _providersReadRepository;
     private readonly ILogger<GetProvidersForLarsCodeQueryHandler> _logger;
@@ -21,7 +20,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
         _logger = logger;
     }
 
-    public async Task<ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>> Handle(GetProvidersForLarsCodeQuery request, CancellationToken cancellationToken)
+    public async Task<ValidatedResponse<GetProvidersForLarsCodeQueryResult>> Handle(GetProvidersForLarsCodeQuery request, CancellationToken cancellationToken)
     {
         var isWorkplace = (bool?)null;
         var isProvider = (bool?)null;
@@ -29,11 +28,11 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
         var isDayRelease = (bool?)null;
         var isOnline = (bool?)null;
 
-        if (request.DeliveryModes.Contains(DeliveryModeV2.Workplace)) isWorkplace = true;
-        if (request.DeliveryModes.Contains(DeliveryModeV2.Provider)) isProvider = true;
-        if (request.DeliveryModes.Contains(DeliveryModeV2.BlockRelease)) isBlockRelease = true;
-        if (request.DeliveryModes.Contains(DeliveryModeV2.DayRelease)) isDayRelease = true;
-        if (request.DeliveryModes.Contains(DeliveryModeV2.Online)) isOnline = true;
+        if (request.DeliveryModes.Contains(DeliveryMode.Workplace)) isWorkplace = true;
+        if (request.DeliveryModes.Contains(DeliveryMode.Provider)) isProvider = true;
+        if (request.DeliveryModes.Contains(DeliveryMode.BlockRelease)) isBlockRelease = true;
+        if (request.DeliveryModes.Contains(DeliveryMode.DayRelease)) isDayRelease = true;
+        if (request.DeliveryModes.Contains(DeliveryMode.Online)) isOnline = true;
 
         string qar = null;
 
@@ -80,7 +79,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
 
         var first = results[0];
 
-        var result = new GetProvidersForLarsCodeQueryResultV2
+        var result = new GetProvidersForLarsCodeQueryResult
         {
             Page = first.Page,
             PageSize = first.PageSize,
@@ -90,14 +89,14 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             StandardName = first.StandardName,
             QarPeriod = first.QarPeriod,
             ReviewPeriod = first.ReviewPeriod,
-            Providers = new List<ProviderDataV2>()
+            Providers = new List<ProviderData>()
         };
 
-        if (first.Ukprn == 0) return new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(result);
+        if (first.Ukprn == 0) return new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(result);
 
         foreach (var item in results)
         {
-            var provider = new ProviderDataV2
+            var provider = new ProviderData
             {
                 Ordering = item.Ordering,
                 Ukprn = item.Ukprn,
@@ -142,6 +141,6 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             result.Providers.Add(provider);
         }
 
-        return new ValidatedResponse<GetProvidersForLarsCodeQueryResultV2>(result);
+        return new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(result);
     }
 }
