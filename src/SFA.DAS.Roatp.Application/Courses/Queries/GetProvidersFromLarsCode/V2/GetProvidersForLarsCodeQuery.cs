@@ -56,35 +56,18 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
             Page: request.Page,
             PageSize: request.PageSize,
             UserId: request.UserId,
-            DeliveryModes: request.DeliveryModes?.Where(x => x != null).Select(x => (DeliveryModeV2)x),
-            EmployerProviderRatings: request.EmployerProviderRatings?.Where(x => x != null).Select(x => (ProviderRating)x),
-            ApprenticeProviderRatings: request.ApprenticeProviderRatings?.Where(x => x != null).Select(x => (ProviderRating)x),
-            QarRatings: request.Qar?.Where(x => x != null).Select(x => (QarRating)x)
+            DeliveryModes: request.DeliveryModes?.OfType<DeliveryModeV2>(),
+            EmployerProviderRatings: request.EmployerProviderRatings?.OfType<ProviderRating>(),
+            ApprenticeProviderRatings: request.ApprenticeProviderRatings?.OfType<ProviderRating>(),
+            QarRatings: request.Qar?.OfType<QarRating>()
         );
 
         PopulateFrom(args);
     }
 
     public GetProvidersForLarsCodeQuery(string larsCode, GetProvidersFromLarsCodeRequest request)
+        : this(larsCode, (GetProvidersFromLarsCodeRequestV2)request)
     {
-        LarsCode = larsCode;
-
-        var args = new PopulateParams(
-            Latitude: request.Latitude,
-            Location: request.Location,
-            Longitude: request.Longitude,
-            OrderBy: request.OrderBy,
-            Distance: request.Distance,
-            Page: request.Page,
-            PageSize: request.PageSize,
-            UserId: request.UserId,
-            DeliveryModes: request.DeliveryModes?.Where(x => x != null).Select(x => (DeliveryModeV2)x),
-            EmployerProviderRatings: request.EmployerProviderRatings?.Where(x => x != null).Select(x => (ProviderRating)x),
-            ApprenticeProviderRatings: request.ApprenticeProviderRatings?.Where(x => x != null).Select(x => (ProviderRating)x),
-            QarRatings: request.Qar?.Where(x => x != null).Select(x => (QarRating)x)
-        );
-
-        PopulateFrom(args);
     }
 
     private void PopulateFrom(PopulateParams args)
