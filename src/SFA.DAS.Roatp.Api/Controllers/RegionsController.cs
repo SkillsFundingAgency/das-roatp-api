@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.Regions.Queries;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
+    [ApiVersion(ApiVersionNumber.One)]
     public class RegionsController : Controller
     {
         private readonly ILogger<RegionsController> _logger;

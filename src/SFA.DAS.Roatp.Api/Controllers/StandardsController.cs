@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -7,10 +8,12 @@ using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Standards.Queries.GetAllStandards;
 using SFA.DAS.Roatp.Application.Standards.Queries.GetStandardForLarsCode;
 using SFA.DAS.Roatp.Domain.Models;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers
 {
     [ApiController]
+    [ApiVersion(ApiVersionNumber.One)]
     [Route("/standards")]
     public class StandardsController : ActionResponseControllerBase
     {

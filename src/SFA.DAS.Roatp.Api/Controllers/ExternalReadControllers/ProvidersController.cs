@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,10 +16,13 @@ using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetRegisteredProvider;
 using SFA.DAS.Roatp.Domain.Models;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
 {
     [ApiController]
+    [ApiVersion(ApiVersionNumber.One)]
+    [ApiVersion(ApiVersionNumber.Two)]
     [Route("/api/[controller]/")]
     public class ProvidersController : ActionResponseControllerBase
     {
@@ -32,6 +36,8 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         }
 
         [HttpGet]
+        [MapToApiVersion(ApiVersionNumber.One)]
+        [MapToApiVersion(ApiVersionNumber.Two)]
         [Route("")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(GetProvidersQueryResult), StatusCodes.Status200OK)]
@@ -47,6 +53,8 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         }
 
         [HttpGet]
+        [MapToApiVersion(ApiVersionNumber.One)]
+        [MapToApiVersion(ApiVersionNumber.Two)]
         [Route("{ukprn:int}/summary")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(GetProviderSummaryQueryResult), StatusCodes.Status200OK)]
@@ -58,6 +66,8 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         }
 
         [HttpGet]
+        [MapToApiVersion(ApiVersionNumber.One)]
+        [MapToApiVersion(ApiVersionNumber.Two)]
         [Route("{ukprn:int}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(GetProviderSummaryQueryResult), StatusCodes.Status200OK)]
@@ -72,6 +82,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         /// <param name="ukprn"></param>
         /// <returns></returns>
         [HttpGet]
+        [MapToApiVersion(ApiVersionNumber.One)]
         [Route("{ukprn}/courses")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
@@ -100,6 +111,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         }
 
         [HttpGet]
+        [MapToApiVersion(ApiVersionNumber.One)]
         [Route("{ukprn}/courses/{larsCode}")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]

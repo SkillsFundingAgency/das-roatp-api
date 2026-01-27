@@ -1,14 +1,18 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.OverallNationalAchievementRates.Queries.GetOverallAchievementRates;
 using SFA.DAS.Roatp.Domain.Entities;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 
 [ApiController]
+[ApiVersion(ApiVersionNumber.One)]
+[ApiVersion(ApiVersionNumber.Two)]
 [Route("/api/[controller]/")]
 public class AchievementRatesController : ControllerBase
 {
@@ -22,6 +26,8 @@ public class AchievementRatesController : ControllerBase
     }
 
     [HttpGet]
+    [MapToApiVersion(ApiVersionNumber.One)]
+    [MapToApiVersion(ApiVersionNumber.Two)]
     [Route("Overall")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(List<NationalAchievementRateOverall>), 200)]

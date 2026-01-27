@@ -11,7 +11,7 @@ using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.ApplicationInsights;
-using Microsoft.OpenApi.Models;
+using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
 using SFA.DAS.Api.Common.AppStart;
@@ -24,6 +24,8 @@ using SFA.DAS.Roatp.Application.Extensions;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
 using SFA.DAS.Telemetry.Startup;
+using Swashbuckle.AspNetCore.SwaggerGen;
+using Swashbuckle.AspNetCore.SwaggerUI;
 
 namespace SFA.DAS.Roatp.Api;
 
@@ -85,8 +87,16 @@ public class Startup
 
         services.AddApiVersioning(opt =>
         {
+
+
             opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
-            opt.DefaultApiVersion = new ApiVersion(1, 0);
+            opt.AssumeDefaultVersionWhenUnspecified = false;
+            opt.ReportApiVersions = true;
+        })
+        .AddApiExplorer(options =>
+        {
+            options.GroupNameFormat = "'v'VVV";
+            options.SubstituteApiVersionInUrl = true;
         });
 
         services.AddApplicationRegistrations();
@@ -110,10 +120,11 @@ public class Startup
 
         services.AddSwaggerGen(options =>
         {
-            options.SwaggerDoc(Constants.EndpointGroups.Management, new OpenApiInfo { Title = "Course Management", Version = "v1" });
-            options.SwaggerDoc(Constants.EndpointGroups.Integration, new OpenApiInfo { Title = "Roatp Integration", Version = "v1" });
             options.OperationFilter<SwaggerHeaderFilter>();
         });
+
+        services.AddTransient<IConfigureOptions<SwaggerGenOptions>, ConfigureSwaggerGenOptions>();
+        services.AddTransient<IConfigureOptions<SwaggerUIOptions>, ConfigureSwaggerUiOptions>();
     }
 
     public static void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -126,18 +137,18 @@ public class Startup
         app.UseAuthentication();
 
         app.UseSwagger();
-        app.UseSwaggerUI(options =>
-        {
-            options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Management}/swagger.json", Constants.EndpointGroups.Management);
-            options.SwaggerEndpoint($"/swagger/{Constants.EndpointGroups.Integration}/swagger.json", Constants.EndpointGroups.Integration);
-            options.RoutePrefix = string.Empty;
-        });
+        app.UseSwaggerUI();
 
         app.UseHttpsRedirection();
 
         app.UseRouting();
 
+        app.UseApiVersionHeaderValidation();
+
         app.UseHealthChecks();
+
+        if (!env.IsDevelopment())
+            app.UseAuthorization();
 
         app.UseEndpoints(endpoints =>
         {

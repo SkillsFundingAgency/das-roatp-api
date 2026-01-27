@@ -1,12 +1,16 @@
-﻿using MediatR;
+﻿using System.Threading.Tasks;
+using Asp.Versioning;
+using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.Application.AcademicYears.Queries.GetLatest;
-using System.Threading.Tasks;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 
 [ApiController]
+[ApiVersion(ApiVersionNumber.One)]
+[ApiVersion(ApiVersionNumber.Two)]
 [Route("/api/[controller]/")]
 public class AcademicYearsController : ControllerBase
 {
@@ -18,6 +22,8 @@ public class AcademicYearsController : ControllerBase
     }
 
     [HttpGet]
+    [MapToApiVersion(ApiVersionNumber.One)]
+    [MapToApiVersion(ApiVersionNumber.Two)]
     [Route("latest")]
     [Produces("application/json")]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]

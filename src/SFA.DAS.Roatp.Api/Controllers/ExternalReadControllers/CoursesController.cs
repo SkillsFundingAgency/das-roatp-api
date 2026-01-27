@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -6,10 +7,13 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 
 [ApiController]
+[ApiVersion(ApiVersionNumber.One)]
+[ApiVersion(ApiVersionNumber.Two)]
 [Route("/api/[controller]/")]
 public class CoursesController : ActionResponseControllerBase
 {
@@ -22,9 +26,8 @@ public class CoursesController : ActionResponseControllerBase
         _logger = logger;
     }
 
-
-
     [HttpGet]
+    [MapToApiVersion(ApiVersionNumber.One)]
     [Route("{larsCode}/providers")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetProvidersForLarsCodeQueryResult), StatusCodes.Status200OK)]
@@ -36,6 +39,7 @@ public class CoursesController : ActionResponseControllerBase
     }
 
     [HttpGet]
+    [MapToApiVersion(ApiVersionNumber.One)]
     [Route("{larsCode}/providers/{ukprn:int}/details")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
