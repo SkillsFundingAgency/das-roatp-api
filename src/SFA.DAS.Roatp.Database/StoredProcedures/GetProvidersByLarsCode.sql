@@ -235,7 +235,7 @@ AS
               JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
               JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
               JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
-              LEFT JOIN [dbo].[ProviderCourseType] pct1 on pct1.[Ukprn] = pr1.[Ukprn]
+              JOIN [dbo].[ProviderCourseType] pct1 on pct1.[Ukprn] = pr1.[Ukprn]
               LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
               WHERE 1=1 
               -- regulated check
