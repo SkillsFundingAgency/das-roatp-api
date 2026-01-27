@@ -250,7 +250,6 @@ AS
         AND (@Distance IS NULL OR Distance <= @Distance)
         -- Online delivery filter: when requested, only include courses that have online option
         AND (@hasOnlineDeliveryOption = 0 OR ISNULL(HasOnlineDeliveryOption,0) = 1)
-        -- Logic to match to ChHeckboxes for training locations 
         -- At apprentice's workplace and/or training at providers
         -- And at training provider for Day release and/or Block Release options
         -- Provider = 0, National = 1, Regional = 2
