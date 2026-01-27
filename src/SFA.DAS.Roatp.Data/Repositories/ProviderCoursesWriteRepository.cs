@@ -39,6 +39,7 @@ internal class ProviderCoursesWriteRepository : IProviderCoursesWriteRepository
                 providerCourse.ContactUsPhoneNumber = patchedProviderCourseEntity.ContactUsPhoneNumber;
                 providerCourse.StandardInfoUrl = patchedProviderCourseEntity.StandardInfoUrl;
                 providerCourse.IsApprovedByRegulator = patchedProviderCourseEntity.IsApprovedByRegulator;
+                providerCourse.HasOnlineDeliveryOption = patchedProviderCourseEntity.HasOnlineDeliveryOption;
 
                 await _roatpDataContext.SaveChangesAsync();
                 await transaction.CommitAsync();
