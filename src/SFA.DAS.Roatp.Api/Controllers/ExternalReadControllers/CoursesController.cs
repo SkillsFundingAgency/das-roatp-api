@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
@@ -59,6 +60,11 @@ public class CoursesController : ActionResponseControllerBase
                 );
         if (courseProviderDetails == null)
             return NotFound();
+
+        var v1ResultModel = (GetCourseProviderDetailsResultV1Model)courseProviderDetails.Result;
+        var responseV1 = courseProviderDetails.IsValidResponse
+            ? new ValidatedResponse<GetCourseProviderDetailsResultV1Model>(v1ResultModel)
+            : new ValidatedResponse<GetCourseProviderDetailsResultV1Model>([.. courseProviderDetails.Errors]);
 
         return GetResponse(courseProviderDetails);
     }
