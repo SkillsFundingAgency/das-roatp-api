@@ -23,7 +23,6 @@ public class GetCourseProviderDetailsResultV1ModelTests
             .ExcludingMissingMembers()
             .Excluding(p => p.HasOnlineDeliveryOption)
             .Excluding(p => p.CourseType)
-            .Excluding(p => p.Locations)
             .Excluding(p => p.LarsCode));
 
         var expectedLarsCode = int.TryParse(source.LarsCode, out var parsed) ? parsed : 0;

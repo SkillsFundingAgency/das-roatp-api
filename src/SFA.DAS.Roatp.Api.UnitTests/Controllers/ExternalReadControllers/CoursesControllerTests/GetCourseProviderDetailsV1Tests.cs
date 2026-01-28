@@ -27,6 +27,7 @@ public sealed class GetCourseProviderDetailsV1Tests
         [Greedy] CoursesController sut
     )
     {
+        queryResult.LarsCode = larsCode.ToString();
         mediatorMock.Setup(m => m.Send(
             It.Is<GetCourseProviderDetailsQuery>(q =>
                 q.LarsCode == larsCode.ToString() &&
@@ -54,7 +55,15 @@ public sealed class GetCourseProviderDetailsV1Tests
         result.Should().BeOfType<OkObjectResult>();
         var ok = result as OkObjectResult;
         ok.Should().NotBeNull();
-        ok!.Value.Should().BeEquivalentTo(queryResult);
+
+        var v1Model = ok!.Value as GetCourseProviderDetailsResultV1Model;
+        v1Model.Should().NotBeNull();
+
+        v1Model!.Should().BeEquivalentTo(queryResult, options => options
+            .ExcludingMissingMembers()
+            .Excluding(x => x.LarsCode));
+
+        v1Model.LarsCode.Should().Be(larsCode);
     }
 
     [Test, MoqAutoData]

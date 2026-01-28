@@ -66,7 +66,7 @@ public class CoursesController : ActionResponseControllerBase
             ? new ValidatedResponse<GetCourseProviderDetailsResultV1Model>(v1ResultModel)
             : new ValidatedResponse<GetCourseProviderDetailsResultV1Model>([.. courseProviderDetails.Errors]);
 
-        return GetResponse(courseProviderDetails);
+        return GetResponse(responseV1);
     }
 
     [HttpGet]

@@ -67,6 +67,7 @@ public sealed class GetCourseProviderDetailsResultV1Model
                 ApprenticeStars = source.Reviews.ApprenticeStars,
                 ApprenticeRating = source.Reviews.ApprenticeRating,
             },
+            Locations = source.Locations,
             ShortlistId = source.ShortlistId
         };
     }
