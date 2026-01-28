@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
@@ -40,6 +41,36 @@ public class CoursesController : ActionResponseControllerBase
 
     [HttpGet]
     [MapToApiVersion(ApiVersionNumber.One)]
+    [Route("{larsCode:int}/providers/{ukprn:int}/details")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetCourseProviderDetailsResultV1Model), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCourseProviderDetails([FromRoute] int larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsRequest request)
+    {
+        var courseProviderDetails =
+            await _mediator.Send(
+                new GetCourseProviderDetailsQuery(
+                    ukprn,
+                    larsCode.ToString(),
+                    request.ShortlistUserId,
+                    request.Location,
+                    request.Longitude,
+                    request.Latitude
+                    )
+                );
+        if (courseProviderDetails == null)
+            return NotFound();
+
+        var v1ResultModel = (GetCourseProviderDetailsResultV1Model)courseProviderDetails.Result;
+        var responseV1 = courseProviderDetails.IsValidResponse
+            ? new ValidatedResponse<GetCourseProviderDetailsResultV1Model>(v1ResultModel)
+            : new ValidatedResponse<GetCourseProviderDetailsResultV1Model>([.. courseProviderDetails.Errors]);
+
+        return GetResponse(responseV1);
+    }
+
+    [HttpGet]
+    [MapToApiVersion(ApiVersionNumber.Two)]
     [Route("{larsCode}/providers/{ukprn:int}/details")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
