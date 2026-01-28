@@ -12,11 +12,14 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
     ICoordinates, ILarsCode
 {
     public string LarsCode { get; }
-    public ProviderOrderBy? OrderBy { get; }
-    public decimal? Distance { get; }
-    public decimal? Latitude { get; }
-    public decimal? Longitude { get; }
-    public string Location { get; }
+    public decimal? Latitude { get; private set; }
+    public decimal? Longitude { get; private set; }
+    public string Location { get; private set; }
+    public ProviderOrderBy? OrderBy { get; private set; }
+    public decimal? Distance { get; private set; }
+    public int? Page { get; private set; }
+    public int? PageSize { get; private set; }
+    public Guid? UserId { get; private set; }
     public List<DeliveryMode> DeliveryModes { get; } = new();
 
     public List<ProviderRating> EmployerProviderRatings { get; } = new();
@@ -24,39 +27,57 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
     public List<ProviderRating> ApprenticeProviderRatings { get; } = new();
     public List<QarRating> Qar { get; } = new();
 
-    public int? Page { get; }
-    public int? PageSize { get; }
-    public Guid? UserId { get; }
+    private readonly record struct PopulateParams(
+        decimal? Latitude,
+        string Location,
+        decimal? Longitude,
+        ProviderOrderBy? OrderBy,
+        decimal? Distance,
+        int? Page,
+        int? PageSize,
+        Guid? UserId,
+        IEnumerable<DeliveryMode> DeliveryModes,
+        IEnumerable<ProviderRating> EmployerProviderRatings,
+        IEnumerable<ProviderRating> ApprenticeProviderRatings,
+        IEnumerable<QarRating> QarRatings
+    );
+
     public GetProvidersForLarsCodeQuery(string larsCode, GetProvidersFromLarsCodeRequest request)
     {
         LarsCode = larsCode;
-        Latitude = request.Latitude;
-        Location = request.Location;
-        Longitude = request.Longitude;
-        OrderBy = request.OrderBy;
-        Distance = request.Distance;
-        Page = request.Page;
-        PageSize = request.PageSize;
-        UserId = request.UserId;
 
-        if (request.DeliveryModes != null)
-        {
-            DeliveryModes.AddRange(from val in request.DeliveryModes where val != null select (DeliveryMode)val);
-        }
+        var args = new PopulateParams(
+            Latitude: request.Latitude,
+            Location: request.Location,
+            Longitude: request.Longitude,
+            OrderBy: request.OrderBy,
+            Distance: request.Distance,
+            Page: request.Page,
+            PageSize: request.PageSize,
+            UserId: request.UserId,
+            DeliveryModes: request.DeliveryModes?.OfType<DeliveryMode>(),
+            EmployerProviderRatings: request.EmployerProviderRatings?.OfType<ProviderRating>(),
+            ApprenticeProviderRatings: request.ApprenticeProviderRatings?.OfType<ProviderRating>(),
+            QarRatings: request.Qar?.OfType<QarRating>()
+        );
 
-        if (request.EmployerProviderRatings != null)
-        {
-            EmployerProviderRatings.AddRange(from val in request.EmployerProviderRatings where val != null select (ProviderRating)val);
-        }
+        PopulateFrom(args);
+    }
 
-        if (request.ApprenticeProviderRatings != null)
-        {
-            ApprenticeProviderRatings.AddRange(from val in request.ApprenticeProviderRatings where val != null select (ProviderRating)val);
-        }
+    private void PopulateFrom(PopulateParams args)
+    {
+        Latitude = args.Latitude;
+        Location = args.Location;
+        Longitude = args.Longitude;
+        OrderBy = args.OrderBy;
+        Distance = args.Distance;
+        Page = args.Page;
+        PageSize = args.PageSize;
+        UserId = args.UserId;
 
-        if (request.Qar != null)
-        {
-            Qar.AddRange(from val in request.Qar where val != null select (QarRating)val);
-        }
+        if (args.DeliveryModes != null) DeliveryModes.AddRange(args.DeliveryModes);
+        if (args.EmployerProviderRatings != null) EmployerProviderRatings.AddRange(args.EmployerProviderRatings);
+        if (args.ApprenticeProviderRatings != null) ApprenticeProviderRatings.AddRange(args.ApprenticeProviderRatings);
+        if (args.QarRatings != null) Qar.AddRange(args.QarRatings);
     }
 }

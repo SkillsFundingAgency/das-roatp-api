@@ -1,8 +1,9 @@
-﻿using SFA.DAS.Roatp.Domain.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+
 public class GetProvidersFromLarsCodeRequest
 {
     public ProviderOrderBy? OrderBy { get; set; }
