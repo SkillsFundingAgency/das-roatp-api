@@ -12,7 +12,7 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.Api.UnitTests.Models;
 
 [TestFixture]
-public class GetProvidersForLarsCodeQueryResultV1ModelTests
+public class GetProvidersForLarsCodeResultV1ModelTests
 {
     [Test, MoqAutoData]
     public void ImplicitConversion_FromV2ToV1_MapsProvidersAndTopLevelFields(GetProvidersForLarsCodeQueryResult v2)
