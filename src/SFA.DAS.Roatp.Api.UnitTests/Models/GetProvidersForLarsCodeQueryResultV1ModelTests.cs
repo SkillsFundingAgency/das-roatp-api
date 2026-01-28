@@ -17,7 +17,7 @@ public class GetProvidersForLarsCodeQueryResultV1ModelTests
     [Test, MoqAutoData]
     public void ImplicitConversion_FromV2ToV1_MapsProvidersAndTopLevelFields(GetProvidersForLarsCodeQueryResult v2)
     {
-        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultV1Model v1 = v2;
 
         using (new AssertionScope())
         {
@@ -43,7 +43,7 @@ public class GetProvidersForLarsCodeQueryResultV1ModelTests
     {
         GetProvidersForLarsCodeQueryResult v2 = null;
 
-        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultV1Model v1 = v2;
 
         v1.Should().BeNull();
     }
@@ -65,7 +65,7 @@ public class GetProvidersForLarsCodeQueryResultV1ModelTests
             Providers = new List<ProviderData>()
         };
 
-        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultV1Model v1 = v2;
 
         using (new AssertionScope())
         {
@@ -111,7 +111,7 @@ public class GetProvidersForLarsCodeQueryResultV1ModelTests
             }
         };
 
-        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultV1Model v1 = v2;
 
         using (new AssertionScope())
         {
@@ -160,7 +160,7 @@ public class GetProvidersForLarsCodeQueryResultV1ModelTests
             Providers = null
         };
 
-        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultV1Model v1 = v2;
 
         using (new AssertionScope())
         {
@@ -185,7 +185,7 @@ public class GetProvidersForLarsCodeQueryResultV1ModelTests
             Providers = new List<ProviderData>()
         };
 
-        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultV1Model v1 = v2;
 
         v1.LarsCode.Should().Be(0);
     }
@@ -224,7 +224,7 @@ public class GetProvidersForLarsCodeQueryResultV1ModelTests
             }
         };
 
-        GetProvidersForLarsCodeQueryResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultV1Model v1 = v2;
 
         using (new AssertionScope())
         {

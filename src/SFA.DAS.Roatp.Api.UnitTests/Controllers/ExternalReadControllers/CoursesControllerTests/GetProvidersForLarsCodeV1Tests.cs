@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             var ok = result.As<OkObjectResult>();
             ok.Should().NotBeNull();
 
-            var actualResult = ok.Value.As<GetProvidersForLarsCodeQueryResultV1Model>();
+            var actualResult = ok.Value.As<GetProvidersForLarsCodeResultV1Model>();
             actualResult.Should().NotBeNull();
 
             using (new AssertionScope())
