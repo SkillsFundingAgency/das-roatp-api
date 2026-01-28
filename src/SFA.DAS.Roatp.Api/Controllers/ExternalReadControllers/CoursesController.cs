@@ -40,6 +40,31 @@ public class CoursesController : ActionResponseControllerBase
 
     [HttpGet]
     [MapToApiVersion(ApiVersionNumber.One)]
+    [Route("{larsCode:int}/providers/{ukprn:int}/details")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetCourseProviderDetailsResultV1Model), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCourseProviderDetails([FromRoute] int larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsRequest request)
+    {
+        var courseProviderDetails =
+            await _mediator.Send(
+                new GetCourseProviderDetailsQuery(
+                    ukprn,
+                    larsCode.ToString(),
+                    request.ShortlistUserId,
+                    request.Location,
+                    request.Longitude,
+                    request.Latitude
+                    )
+                );
+        if (courseProviderDetails == null)
+            return NotFound();
+
+        return GetResponse(courseProviderDetails);
+    }
+
+    [HttpGet]
+    [MapToApiVersion(ApiVersionNumber.Two)]
     [Route("{larsCode}/providers/{ukprn:int}/details")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]

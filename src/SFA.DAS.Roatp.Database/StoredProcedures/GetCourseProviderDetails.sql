@@ -93,6 +93,8 @@ BEGIN
 	SELECT 
 		 ab2.Ukprn AS 'Ukprn'
 		,ab2.LegalName AS 'ProviderName'
+		,CAST(MAX(CASE WHEN ISNULL(ab2.HasOnlineDeliveryOption,0)=1 THEN 1 ELSE 0 END) AS bit) HasOnlineDeliveryOption
+		,ab2.CourseType AS 'CourseType'
 		,MainAddressLine1 AS 'MainAddressLine1'
 		,MainAddressLine2 AS 'MainAddressLine2'
 		,MainAddressLine3 AS 'MainAddressLine3'
@@ -152,6 +154,8 @@ BEGIN
 			,AtEmployer
 			,BlockRelease
 			,DayRelease
+			,HasOnlineDeliveryOption
+			,CourseType
 			,Course_Location
 			,LocationOrdering
 			,Distance
@@ -185,7 +189,7 @@ BEGIN
 			(
 			-- Managing Standards Course Location data
 			SELECT pr1.[Ukprn], pr1.LegalName
-				  ,[LarsCode]
+				  ,pc1.[LarsCode]
 				  ,[LocationType]
 				  -- Is at Employer ?
 				  ,CASE [LocationType] 
@@ -201,6 +205,8 @@ BEGIN
 				   ELSE 1 END AtEmployer
 				  ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
 				  ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
+				  ,ISNULL(pc1.[HasOnlineDeliveryOption],0) HasOnlineDeliveryOption
+				  ,s1.[CourseType]
 				  ,CASE [LocationType] 
 				   WHEN 0 THEN pl1.Postcode
 				   WHEN 1 THEN 'National'
@@ -251,10 +257,12 @@ BEGIN
 			  LEFT JOIN [dbo].[ProviderAddress] pad on pad.ProviderId = pr1.Id
 			  JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
 			  JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
+			  JOIN [dbo].[ProviderCourseType] pct1 on pct1.Ukprn = pr1.Ukprn
+			  JOIN [dbo].[Standard] s1 on s1.LarsCode = pc1.LarsCode
 			  LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
 			  WHERE 
 				  -- specific Training Course 
-				  [LarsCode] = @larscode
+				  pc1.[LarsCode] = @larscode
 				  -- specific Training Provider 
 				  AND pr1.[Ukprn] = @ukprn
 			  ) ab1 
