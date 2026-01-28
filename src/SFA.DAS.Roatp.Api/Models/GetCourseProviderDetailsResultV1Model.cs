@@ -21,6 +21,10 @@ public sealed class GetCourseProviderDetailsResultV1Model
 
     public static implicit operator GetCourseProviderDetailsResultV1Model(GetCourseProviderDetailsQueryResult source)
     {
+        if (source == null)
+        {
+            return null;
+        }
         return new GetCourseProviderDetailsResultV1Model
         {
             Ukprn = source.Ukprn,
