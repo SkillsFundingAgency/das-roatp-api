@@ -37,10 +37,9 @@ public class CoursesController : ActionResponseControllerBase
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
         var responseV2 = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode.ToString(), request));
-        var v1Result = (GetProvidersForLarsCodeResultV1Model)responseV2.Result;
         var responseV1 = responseV2.IsValidResponse
-            ? new ValidatedResponse<GetProvidersForLarsCodeResultV1Model>(v1Result)
-            : new ValidatedResponse<GetProvidersForLarsCodeResultV1Model>([.. responseV2.Errors]);
+         ? new ValidatedResponse<GetProvidersForLarsCodeResultV1Model>((GetProvidersForLarsCodeResultV1Model)responseV2.Result)
+         : new ValidatedResponse<GetProvidersForLarsCodeResultV1Model>([.. responseV2.Errors]);
         return GetResponse(responseV1);
     }
 
