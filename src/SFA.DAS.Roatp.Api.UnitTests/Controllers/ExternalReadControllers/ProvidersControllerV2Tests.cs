@@ -22,10 +22,9 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers;
 
-public class ProvidersControllerTests
+public class ProvidersControllerV2Tests
 {
-    [Test]
-    [MoqAutoData]
+    [Test, MoqAutoData]
     public async Task GetProviders_CallsMediator_WithLiveEqualsFalse(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProvidersController sut
@@ -51,8 +50,7 @@ public class ProvidersControllerTests
         (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
     }
 
-    [Test]
-    [MoqAutoData]
+    [Test, MoqAutoData]
     public async Task GetProviders_CallsMediator_WithLiveEqualsTrue(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProvidersController sut
@@ -259,14 +257,14 @@ public class ProvidersControllerTests
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidatedResponse<List<ProviderCourseModel>>(handlerResult));
 
-        var actionResult = await sut.GetAllProviderCourses(ukprn);
+        var actionResult = await sut.GetAllProviderCoursesV2(ukprn);
 
         var ok = actionResult as OkObjectResult;
         ok.Should().NotBeNull();
 
         var returned = ok.Value as IList<ProviderCourseModelExternal>;
         returned.Should().NotBeNull();
-        returned.Should().HaveCount(1);
+        returned.Should().HaveCount(handlerResult.Count);
     }
 
     [Test]
@@ -281,17 +279,17 @@ public class ProvidersControllerTests
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProvidersController sut,
         int ukprn,
-        int larsCode,
+        string larsCode,
         ProviderCourseModel handlerResult)
     {
         handlerResult.LarsCode = larsCode.ToString();
-        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseQuery>(q => q.Ukprn == ukprn && q.LarsCode == larsCode.ToString()), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<ProviderCourseModel>(handlerResult));
+        mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseQuery>(q => q.Ukprn == ukprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<ProviderCourseModel>(handlerResult));
         var result = await sut.GetProviderCourse(ukprn, larsCode);
         var mappedResult = (ProviderCourseModelExternal)handlerResult;
         (result as OkObjectResult).Value.Should().BeEquivalentTo(mappedResult);
 
         mediatorMock.Verify(a =>
-                a.Send(It.Is<GetProviderCourseQuery>(t => t.Ukprn == ukprn && t.LarsCode == larsCode.ToString()), It.IsAny<CancellationToken>()),
+                a.Send(It.Is<GetProviderCourseQuery>(t => t.Ukprn == ukprn && t.LarsCode == larsCode), It.IsAny<CancellationToken>()),
             Times.Once
         );
     }

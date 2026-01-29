@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
@@ -76,19 +77,43 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
             return GetResponse(await _mediator.Send(new GetRegisteredProviderQuery(ukprn), cancellationToken));
         }
 
-        /// <summary>
-        /// Gets all the courses for the given provider
-        /// </summary>
-        /// <param name="ukprn"></param>
-        /// <returns></returns>
         [HttpGet]
         [MapToApiVersion(ApiVersionNumber.One)]
         [Route("{ukprn}/courses")]
         [Produces("application/json")]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(List<ProviderCourseModelExternal>), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(List<ProviderCourseModelExternalModelV1>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetAllProviderCourses(int ukprn)
+        {
+            var providersResponse = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, true, null));
+            if (!providersResponse.IsValidResponse)
+            {
+                var errorsResponse =
+                    new ValidatedResponse<List<ProviderCourseModelExternalModelV1>>(providersResponse.Errors.ToList());
+                return GetResponse(errorsResponse);
+            }
+
+            _logger.LogInformation("{Count} Provider courses found for {Ukprn}:", providersResponse.Result.Count,
+                    ukprn);
+
+            var v1Response = new ValidatedResponse<List<ProviderCourseModelExternalModelV1>>(
+                providersResponse.Result
+                    .Where(x => x.CourseType == CourseType.Apprenticeship)
+                    .Select(x => (ProviderCourseModelExternalModelV1)(ProviderCourseModelExternal)x)
+                    .ToList());
+
+            return GetResponse(v1Response);
+        }
+
+        [HttpGet]
+        [MapToApiVersion(ApiVersionNumber.Two)]
+        [Route("{ukprn}/courses")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(List<ProviderCourseModelExternal>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetAllProviderCoursesV2(int ukprn)
         {
             var providersResponse = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, true, null));
             if (!providersResponse.IsValidResponse)
@@ -102,10 +127,35 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
                     ukprn);
 
             var providerCourseModels = providersResponse.Result
-                .Where(x => x.CourseType == CourseType.Apprenticeship)
                 .Select(provider => (ProviderCourseModelExternal)provider).ToList();
 
             var response = new ValidatedResponse<List<ProviderCourseModelExternal>>(providerCourseModels);
+
+            return GetResponse(response);
+        }
+
+        [HttpGet]
+        [MapToApiVersion(ApiVersionNumber.One)]
+        [Route("{ukprn}/courses/{larsCode:int}")]
+        [Produces("application/json")]
+        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+        [ProducesResponseType(typeof(ProviderCourseModelExternalModelV1), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetProviderCourse(int ukprn, int larsCode)
+        {
+            var providerResponse = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode.ToString()));
+            if (!providerResponse.IsValidResponse)
+            {
+                var errorsResponse =
+                    new ValidatedResponse<ProviderCourseModelExternalModelV1>(providerResponse.Errors.ToList());
+                return GetResponse(errorsResponse);
+            }
+
+            _logger.LogInformation("Course data found for {Ukprn} and {LarsCode}", ukprn, larsCode);
+
+            var V1Response = (ProviderCourseModelExternalModelV1)(ProviderCourseModelExternal)providerResponse.Result;
+
+            var response = new ValidatedResponse<ProviderCourseModelExternalModelV1>(V1Response);
 
             return GetResponse(response);
         }
@@ -117,9 +167,9 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
         [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
         [ProducesResponseType(typeof(ProviderCourseModelExternal), StatusCodes.Status200OK)]
-        public async Task<IActionResult> GetProviderCourse(int ukprn, int larsCode)
+        public async Task<IActionResult> GetProviderCourse(int ukprn, string larsCode)
         {
-            var providerResponse = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode.ToString()));
+            var providerResponse = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode));
             if (!providerResponse.IsValidResponse)
             {
                 var errorsResponse =

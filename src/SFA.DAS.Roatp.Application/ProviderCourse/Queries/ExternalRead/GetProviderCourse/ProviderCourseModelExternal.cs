@@ -4,7 +4,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProvi
 
 public class ProviderCourseModelExternal : ProviderCourseModelBase
 {
-    public int LarsCode { get; set; }
+    public string LarsCode { get; set; }
 
     public static implicit operator ProviderCourseModelExternal(ProviderCourseModel providerCourseModel)
     {
@@ -13,7 +13,7 @@ public class ProviderCourseModelExternal : ProviderCourseModelBase
         var model = new ProviderCourseModelExternal
         {
             ProviderCourseId = providerCourseModel.ProviderCourseId,
-            LarsCode = int.TryParse(providerCourseModel.LarsCode, out var l) ? l : 0,
+            LarsCode = providerCourseModel.LarsCode,
             StandardInfoUrl = providerCourseModel.StandardInfoUrl,
             ContactUsPhoneNumber = providerCourseModel.ContactUsPhoneNumber,
             ContactUsEmail = providerCourseModel.ContactUsEmail,
@@ -25,7 +25,8 @@ public class ProviderCourseModelExternal : ProviderCourseModelBase
             IfateReferenceNumber = providerCourseModel.IfateReferenceNumber,
             Level = providerCourseModel.Level,
             CourseName = providerCourseModel.CourseName,
-            ApprovalBody = providerCourseModel.ApprovalBody
+            ApprovalBody = providerCourseModel.ApprovalBody,
+            CourseType = providerCourseModel.CourseType,
         };
 
         return model;
