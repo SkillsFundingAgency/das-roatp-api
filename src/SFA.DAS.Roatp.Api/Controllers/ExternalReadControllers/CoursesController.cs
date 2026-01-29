@@ -61,9 +61,8 @@ public class CoursesController : ActionResponseControllerBase
         if (courseProviderDetails == null)
             return NotFound();
 
-        var v1ResultModel = (GetCourseProviderDetailsResultV1Model)courseProviderDetails.Result;
         var responseV1 = courseProviderDetails.IsValidResponse
-            ? new ValidatedResponse<GetCourseProviderDetailsResultV1Model>(v1ResultModel)
+            ? new ValidatedResponse<GetCourseProviderDetailsResultV1Model>((GetCourseProviderDetailsResultV1Model)courseProviderDetails.Result)
             : new ValidatedResponse<GetCourseProviderDetailsResultV1Model>([.. courseProviderDetails.Errors]);
 
         return GetResponse(responseV1);
