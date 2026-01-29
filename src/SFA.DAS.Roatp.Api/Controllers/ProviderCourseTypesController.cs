@@ -1,14 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.ProviderCourseTypes.Queries.GetProviderCourseTypes;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
 
+[ApiVersion(ApiVersionNumber.One)]
 [Route("/providers/{ukprn}/course-types", Name = RouteNames.GetProviderCourseTypes)]
 public class ProviderCourseTypesController(IMediator _mediator, ILogger<ProviderCourseLocationsController> _logger) : ActionResponseControllerBase
 {

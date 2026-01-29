@@ -1,0 +1,98 @@
+using System;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Asp.Versioning.ApiExplorer;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
+using Microsoft.OpenApi.Models;
+using Swashbuckle.AspNetCore.SwaggerGen;
+
+namespace SFA.DAS.Roatp.Api.Infrastructure;
+
+[ExcludeFromCodeCoverage]
+public class ConfigureSwaggerGenOptions : IConfigureOptions<SwaggerGenOptions>
+{
+    private readonly IApiVersionDescriptionProvider _provider;
+
+    public ConfigureSwaggerGenOptions(IApiVersionDescriptionProvider provider)
+    {
+        _provider = provider ?? throw new ArgumentNullException(nameof(provider));
+    }
+
+    public void Configure(SwaggerGenOptions options)
+    {
+        options.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+
+        foreach (var apiVersionDescription in _provider.ApiVersionDescriptions.OrderBy(d => d.GroupName))
+        {
+            var docName = $"{apiVersionDescription.GroupName}V{apiVersionDescription.ApiVersion.MajorVersion}";
+
+            options.SwaggerDoc(docName, new OpenApiInfo
+            {
+                Title = $"{apiVersionDescription.GroupName} V{apiVersionDescription.ApiVersion.MajorVersion}",
+                Version = apiVersionDescription.ApiVersion.ToString()
+            });
+        }
+
+        DocInclusionPredicate(options);
+
+        AddBearerSecurityRequirement(options);
+
+        options.OperationFilter<SwaggerHeaderFilter>();
+    }
+
+    private static void DocInclusionPredicate(SwaggerGenOptions options)
+    {
+        options.DocInclusionPredicate((docName, apiDesc) =>
+        {
+            var vIndex = docName.LastIndexOf('V');
+            if (vIndex <= 0) return false;
+
+            var group = docName[..vIndex];
+            var versionPart = docName[(vIndex + 1)..];
+            if (!int.TryParse(versionPart, out var major)) return false;
+
+            // Must match the controller group
+            if (!string.Equals(apiDesc.GroupName, group, StringComparison.OrdinalIgnoreCase))
+                return false;
+
+            var endpointMetadata = apiDesc.ActionDescriptor.EndpointMetadata;
+
+            int[] mappedMajors = ApiVersionMetadata.SupportedAPIVersions(endpointMetadata);
+
+            // If no version info is found, exclude to avoid cross-version leakage
+            if (mappedMajors.Length == 0) return false;
+
+            return mappedMajors.Contains(major);
+        });
+    }
+
+    private static void AddBearerSecurityRequirement(SwaggerGenOptions options)
+    {
+        // Global Bearer auth for Swagger UI
+        var securityScheme = new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Description = "Enter JWT as: Bearer {token}",
+            In = ParameterLocation.Header,
+            Type = SecuritySchemeType.Http,
+            Scheme = "bearer",
+            BearerFormat = "JWT",
+            Reference = new OpenApiReference
+            {
+                Type = ReferenceType.SecurityScheme,
+                Id = "Bearer"
+            }
+        };
+
+        options.AddSecurityDefinition("Bearer", securityScheme);
+
+        options.AddSecurityRequirement(new OpenApiSecurityRequirement
+        {
+            {
+                securityScheme,
+                Array.Empty<string>()
+            }
+        });
+    }
+}

@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using Asp.Versioning;
 using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
@@ -8,10 +9,12 @@ using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 using SFA.DAS.Roatp.Domain.Models;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
+[ApiVersion(ApiVersionNumber.One)]
 public class ProviderCourseEditController : ActionResponseControllerBase
 {
     private readonly IMediator _mediator;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Asp.Versioning;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Http;
@@ -13,11 +14,13 @@ using SFA.DAS.Roatp.Application.Shortlists.Commands.DeleteExpiredShortlists;
 using SFA.DAS.Roatp.Application.Shortlists.Commands.DeleteShortlist;
 using SFA.DAS.Roatp.Application.Shortlists.Queries.GetShortlistCountForUser;
 using SFA.DAS.Roatp.Application.Shortlists.Queries.GetShortlistsForUser;
+using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
 
-[Route("[controller]")]
 [ApiController]
+[ApiVersion(ApiVersionNumber.One)]
+[Route("[controller]")]
 public class ShortlistsController(IMediator _mediator) : ActionResponseControllerBase
 {
     [HttpPost]

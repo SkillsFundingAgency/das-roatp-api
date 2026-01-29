@@ -10,4 +10,10 @@ public static class Constants
         public const string Integration = nameof(Integration);
         public const string Management = nameof(Management);
     }
+
+    public static class ApiVersionNumber
+    {
+        public const string One = "1.0";
+        public const string Two = "2.0";
+    }
 }
