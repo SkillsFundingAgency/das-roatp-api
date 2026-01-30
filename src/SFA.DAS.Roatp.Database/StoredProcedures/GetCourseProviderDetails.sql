@@ -259,15 +259,12 @@ BEGIN
 			  JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
 			  JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
 			  JOIN [dbo].[Standard] s1 on s1.LarsCode = pc1.LarsCode
+			  JOIN [dbo].[ProviderCourseType] pct1 on pct1.Ukprn = pr1.Ukprn AND pct1.CourseType = s1.CourseType
 			  LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
 			  WHERE 
 				  -- specific Training Course 
 				  pc1.[LarsCode] = @larscode
 				  AND pr1.[Ukprn] = @ukprn
-				  AND EXISTS (
-				  SELECT 1
-				  FROM [dbo].[ProviderCourseType] pct1
-				  WHERE pct1.Ukprn = pr1.Ukprn AND pct1.CourseType = s1.CourseType)
 			  ) ab1 
 		) ab2
 	-- Standards and QAR data
