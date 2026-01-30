@@ -46,7 +46,7 @@ public class ProviderCourseModelExternalModelV1Tests
     [Test, MoqAutoData]
     public void ImplicitConversion_SetsLarsCodeToZero_WhenParseFails(ProviderCourseModelExternal source)
     {
-        var cases = new[] { (string?)null, string.Empty, "abc", "12x" };
+        var cases = new[] { null, string.Empty, "abc", "12x" };
 
         foreach (var inputLarsCode in cases)
         {
