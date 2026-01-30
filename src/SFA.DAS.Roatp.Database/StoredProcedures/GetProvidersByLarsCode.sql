@@ -236,16 +236,13 @@ AS
               JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
               JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
 			  JOIN [dbo].[Standard] s1 on s1.LarsCode = pc1.LarsCode
+			  JOIN [dbo].[ProviderCourseType] pct1 on pct1.Ukprn = pr1.Ukprn AND pct1.CourseType = s1.CourseType
               LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
               WHERE 1=1 
               -- regulated check
 			  AND (@IsRegulatedForProvider = 0 OR (@IsRegulatedForProvider = 1 AND IsNull(pc1.[IsApprovedByRegulator],0) = 1))
               -- specific Training Course 
               AND pc1.[LarsCode] = @larscode
-              AND EXISTS (
-				  SELECT 1
-				  FROM [dbo].[ProviderCourseType] pct1
-				  WHERE pct1.Ukprn = pr1.Ukprn AND pct1.CourseType = s1.CourseType)
               ) ab1 
         WHERE 1=1
         AND LocationOrdering != 3 -- exclude outside Regions
