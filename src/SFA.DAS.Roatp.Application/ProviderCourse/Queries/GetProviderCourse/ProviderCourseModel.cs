@@ -1,11 +1,8 @@
-﻿using SFA.DAS.Roatp.Domain.Models;
-
-namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
+﻿namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
 public class ProviderCourseModel : ProviderCourseModelBase
 {
     public string LarsCode { get; set; }
-    public CourseType? CourseType { get; set; }
 
     public static implicit operator ProviderCourseModel(Domain.Entities.ProviderCourse providerCourse)
     {
