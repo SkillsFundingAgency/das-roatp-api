@@ -8,4 +8,6 @@ public class ProviderCourseType
     public int Ukprn { get; set; }
     public CourseType CourseType { get; set; }
     public LearningType LearningType { get; set; }
+    public virtual Provider Provider { get; set; }
+
 }
