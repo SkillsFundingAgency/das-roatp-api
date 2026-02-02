@@ -7,6 +7,7 @@ using SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider;
 using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.CreateProvider
@@ -45,7 +46,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Commands.CreateProvider
             providerRegistrationDetailsWriteRepositoryMock.Setup(p => p.GetProviderRegistrationDetail(provider.Ukprn))
                 .ReturnsAsync(() => null);
             await sut.Handle(command, new CancellationToken());
-            providersWriteRepositoryMock.Verify(p => p.Create(It.Is<Provider>(c => c.ProviderRegistrationDetail != null && c.ProviderRegistrationDetail.Ukprn == command.Ukprn && c.ProviderRegistrationDetail.LegalName == command.LegalName && c.ProviderRegistrationDetail.StatusId == OrganisationStatus.Onboarding && c.ProviderRegistrationDetail.ProviderTypeId == ProviderType.Main && c.ProviderRegistrationDetail.OrganisationTypeId == 0), command.UserId, command.UserDisplayName, AuditEventTypes.CreateProvider));
+            providersWriteRepositoryMock.Verify(p => p.Create(It.Is<Provider>(c => c.ProviderRegistrationDetail != null && c.ProviderRegistrationDetail.Ukprn == command.Ukprn && c.ProviderRegistrationDetail.LegalName == command.LegalName && c.ProviderRegistrationDetail.StatusId == (int)OrganisationStatus.Onboarding && c.ProviderRegistrationDetail.ProviderTypeId == (int)ProviderType.Main && c.ProviderRegistrationDetail.OrganisationTypeId == 0), command.UserId, command.UserDisplayName, AuditEventTypes.CreateProvider));
         }
     }
 }

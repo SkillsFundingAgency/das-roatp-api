@@ -3,10 +3,10 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Data.Repositories;
 using SFA.DAS.Roatp.Data.UnitTests.Setup;
-using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Models;
 using ProviderCourse = SFA.DAS.Roatp.Domain.Entities.ProviderCourse;
-using ProviderType = SFA.DAS.Roatp.Domain.Constants.ProviderType;
+using ProviderType = SFA.DAS.Roatp.Domain.Models.ProviderType;
 
 namespace SFA.DAS.Roatp.Data.UnitTests.Repositories;
 
@@ -29,8 +29,8 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
         {
             new ProviderRegistrationDetail
             {
-                StatusId = OrganisationStatus.Active,
-                ProviderTypeId = ProviderType.Main,
+                StatusId = (int)OrganisationStatus.Active,
+                ProviderTypeId = (int)ProviderType.Main,
                 Provider = new Provider
                 {
                     Ukprn = 1,
@@ -64,8 +64,8 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
             },
             new ProviderRegistrationDetail
             {
-                StatusId = OrganisationStatus.Active,
-                ProviderTypeId = ProviderType.Main,
+                StatusId = (int)OrganisationStatus.Active,
+                ProviderTypeId = (int)ProviderType.Main,
                 Provider = new Provider
                 {
                     Ukprn = 2,
@@ -76,8 +76,8 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
             },
             new ProviderRegistrationDetail
             {
-                StatusId = OrganisationStatus.Active,
-                ProviderTypeId = ProviderType.Main,
+                StatusId = (int)OrganisationStatus.Active,
+                ProviderTypeId = (int)ProviderType.Main,
                 Provider = new Provider
                 {
                     Ukprn = 3,
@@ -99,8 +99,8 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
             },
             new ProviderRegistrationDetail
             {
-                StatusId = OrganisationStatus.Removed,
-                ProviderTypeId = ProviderType.Main,
+                StatusId = (int)OrganisationStatus.Removed,
+                ProviderTypeId = (int)ProviderType.Main,
                 Provider = new Provider
                 {
                     Ukprn = 4,
@@ -119,8 +119,8 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
             },
             new ProviderRegistrationDetail
             {
-                StatusId = OrganisationStatus.Active,
-                ProviderTypeId = ProviderType.Supporting,
+                StatusId = (int)OrganisationStatus.Active,
+                ProviderTypeId = (int)ProviderType.Supporting,
                 Provider = new Provider
                 {
                     Ukprn = 5,

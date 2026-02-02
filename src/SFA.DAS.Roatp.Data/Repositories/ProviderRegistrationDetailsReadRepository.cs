@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
@@ -31,9 +30,9 @@ namespace SFA.DAS.Roatp.Data.Repositories
         {
             var activeProviders = await _roatpDataContext.ProviderRegistrationDetails
                 .Where(x =>
-                        x.StatusId == OrganisationStatus.Active ||
-                        x.StatusId == OrganisationStatus.ActiveNotTakingOnApprentices ||
-                        x.StatusId == OrganisationStatus.Onboarding)
+                        x.StatusId == (int)OrganisationStatus.Active ||
+                        x.StatusId == (int)OrganisationStatus.ActiveNotTakingOnApprentices ||
+                        x.StatusId == (int)OrganisationStatus.Onboarding)
                 .Include(r => r.Provider)
                     .ThenInclude(a => a.ProviderAddress)
                 .AsNoTracking()
@@ -66,11 +65,11 @@ namespace SFA.DAS.Roatp.Data.Repositories
         [ExcludeFromCodeCoverage]
         public async Task<ProviderRegistrationDetail> GetProviderRegistrationDetail(int ukprn, CancellationToken cancellationToken)
             => await _roatpDataContext
-                    .ProviderRegistrationDetails
+                .ProviderRegistrationDetails
                     .Where(x =>
-                        x.StatusId == OrganisationStatus.Active ||
-                        x.StatusId == OrganisationStatus.ActiveNotTakingOnApprentices ||
-                        x.StatusId == OrganisationStatus.Onboarding)
+                        x.StatusId == (int)OrganisationStatus.Active ||
+                        x.StatusId == (int)OrganisationStatus.ActiveNotTakingOnApprentices ||
+                        x.StatusId == (int)OrganisationStatus.Onboarding)
                     .Include(r => r.Provider)
                     .AsNoTracking()
                     .SingleOrDefaultAsync(p => p.Ukprn == ukprn, cancellationToken);

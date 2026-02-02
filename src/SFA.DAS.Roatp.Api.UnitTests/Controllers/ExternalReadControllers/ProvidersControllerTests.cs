@@ -14,6 +14,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
+using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderRegisterDetailsLookup;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetRegisteredProvider;

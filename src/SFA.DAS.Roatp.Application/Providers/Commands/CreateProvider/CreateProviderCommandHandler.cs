@@ -7,6 +7,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider
 {
@@ -37,10 +38,10 @@ namespace SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider
                 {
                     Ukprn = provider.Ukprn,
                     LegalName = provider.LegalName,
-                    StatusId = OrganisationStatus.Onboarding,
+                    StatusId = (int)OrganisationStatus.Onboarding,
                     StatusDate = DateTime.UtcNow,
                     OrganisationTypeId = organisationTypeUnassigned,
-                    ProviderTypeId = ProviderType.Main
+                    ProviderTypeId = (int)ProviderType.Main
                 };
             }
             provider.ProviderRegistrationDetail = detail;
