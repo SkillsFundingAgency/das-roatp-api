@@ -135,16 +135,44 @@ public class GetProvidersForLarsCodeQueryTests
     }
 
     [Test, RecursiveMoqAutoData]
-    public void Constructor_V1Request_EmptyCollections_ResultEmptyLists(
+    public void Constructor_RequestWithNullCollections_LeavesListsEmpty(
         string larsCode,
-        GetProvidersFromLarsCodeRequest request)
+        decimal? latitude,
+        decimal? longitude,
+        string location,
+        ProviderOrderBy? orderBy,
+        decimal? distance,
+        int? page,
+        int? pageSize,
+        Guid? userId)
     {
-        request.DeliveryModes = new List<DeliveryMode?>();
-        request.EmployerProviderRatings = new List<ProviderRating?>();
-        request.ApprenticeProviderRatings = new List<ProviderRating?>();
-        request.Qar = new List<QarRating?>();
+        var request = new GetProvidersFromLarsCodeRequest
+        {
+            Latitude = latitude,
+            Longitude = longitude,
+            Location = location,
+            OrderBy = orderBy,
+            Distance = distance,
+            Page = page,
+            PageSize = pageSize,
+            UserId = userId,
+            DeliveryModes = null,
+            EmployerProviderRatings = null,
+            ApprenticeProviderRatings = null,
+            Qar = null
+        };
 
         var sut = new GetProvidersForLarsCodeQuery(larsCode, request);
+
+        sut.LarsCode.Should().Be(larsCode);
+        sut.Latitude.Should().Be(latitude);
+        sut.Longitude.Should().Be(longitude);
+        sut.Location.Should().Be(location);
+        sut.OrderBy.Should().Be(orderBy);
+        sut.Distance.Should().Be(distance);
+        sut.Page.Should().Be(page);
+        sut.PageSize.Should().Be(pageSize);
+        sut.UserId.Should().Be(userId);
 
         sut.DeliveryModes.Should().NotBeNull();
         sut.DeliveryModes.Should().BeEmpty();
