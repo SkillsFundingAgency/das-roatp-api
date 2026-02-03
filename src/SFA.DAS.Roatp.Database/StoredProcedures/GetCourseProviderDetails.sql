@@ -93,8 +93,7 @@ BEGIN
 	SELECT 
 		 ab2.Ukprn AS 'Ukprn'
 		,ab2.LegalName AS 'ProviderName'
-		,CAST(MAX(CASE WHEN ISNULL(ab2.HasOnlineDeliveryOption,0)=1 THEN 1 ELSE 0 END) 
-			  OVER (PARTITION BY ab2.Larscode, ab2.Ukprn) AS bit) HasOnlineDeliveryOption
+		,CAST(MAX(CAST(ab2.HasOnlineDeliveryOption AS INT)) OVER (PARTITION BY ab2.Larscode, ab2.Ukprn) AS bit) HasOnlineDeliveryOption
 		,ab2.CourseType AS 'CourseType'
 		,MainAddressLine1 AS 'MainAddressLine1'
 		,MainAddressLine2 AS 'MainAddressLine2'
