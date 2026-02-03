@@ -12,8 +12,11 @@ public sealed class GetCourseProviderDetailsQueryResult
     public ContactModel Contact { get; set; }
     public string CourseName { get; set; }
     public int Level { get; set; }
-    public int LarsCode { get; set; }
+    public string LarsCode { get; set; }
     public string IFateReferenceNumber { get; set; }
+    public bool HasOnlineDeliveryOption { get; set; }
+    public CourseType CourseType { get; set; }
+
     public QarModel QAR { get; set; }
     public ReviewModel Reviews { get; set; }
     public IEnumerable<LocationModel> Locations { get; set; } = [];
@@ -43,8 +46,10 @@ public sealed class GetCourseProviderDetailsQueryResult
             },
             CourseName = source.CourseName,
             Level = source.Level,
-            LarsCode = int.TryParse(source.LarsCode, out var l) ? l : 0,
+            LarsCode = source.LarsCode,
             IFateReferenceNumber = source.IFateReferenceNumber,
+            HasOnlineDeliveryOption = source.HasOnlineDeliveryOption,
+            CourseType = source.CourseType,
             QAR = new QarModel()
             {
                 Period = source.Period,
