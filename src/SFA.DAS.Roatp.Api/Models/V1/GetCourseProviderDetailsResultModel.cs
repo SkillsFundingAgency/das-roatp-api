@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
+namespace SFA.DAS.Roatp.Api.Models.V1;
 
-public sealed class GetCourseProviderDetailsResultV1Model
+public sealed class GetCourseProviderDetailsResultModel
 {
     public int Ukprn { get; set; }
     public string ProviderName { get; set; }
@@ -19,13 +20,13 @@ public sealed class GetCourseProviderDetailsResultV1Model
     public IEnumerable<LocationModel> Locations { get; set; } = [];
     public Guid? ShortlistId { get; set; }
 
-    public static implicit operator GetCourseProviderDetailsResultV1Model(GetCourseProviderDetailsQueryResult source)
+    public static implicit operator GetCourseProviderDetailsResultModel(GetCourseProviderDetailsQueryResult source)
     {
         if (source == null)
         {
             return null;
         }
-        return new GetCourseProviderDetailsResultV1Model
+        return new GetCourseProviderDetailsResultModel
         {
             Ukprn = source.Ukprn,
             ProviderName = source.ProviderName,

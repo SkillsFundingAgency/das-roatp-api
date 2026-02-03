@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
+using SFA.DAS.Roatp.Api.Models.V1;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
@@ -56,7 +57,7 @@ public sealed class GetCourseProviderDetailsV1Tests
         var ok = result as OkObjectResult;
         ok.Should().NotBeNull();
 
-        var v1Model = ok!.Value as GetCourseProviderDetailsResultV1Model;
+        var v1Model = ok!.Value as GetCourseProviderDetailsResultModel;
         v1Model.Should().NotBeNull();
 
         v1Model!.Should().BeEquivalentTo(queryResult, options => options

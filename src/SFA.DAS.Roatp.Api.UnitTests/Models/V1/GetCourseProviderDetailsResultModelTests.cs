@@ -1,22 +1,21 @@
 using System;
 using FluentAssertions;
 using NUnit.Framework;
+using SFA.DAS.Roatp.Api.Models.V1;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Api.UnitTests.Models;
+namespace SFA.DAS.Roatp.Api.UnitTests.Models.V1;
 
 [TestFixture]
-public class GetCourseProviderDetailsResultV1ModelTests
+public class GetCourseProviderDetailsResultModelTests
 {
     [Test, MoqAutoData]
     public void ImplicitOperator_WithValidSource_MapsAllFields(
         GetCourseProviderDetailsQueryResult source)
     {
-        // Act
-        GetCourseProviderDetailsResultV1Model result = source;
+        GetCourseProviderDetailsResultModel result = source;
 
-        // Assert
         result.Should().NotBeNull();
 
         result.Should().BeEquivalentTo(source, options => options
@@ -34,7 +33,7 @@ public class GetCourseProviderDetailsResultV1ModelTests
     {
         GetCourseProviderDetailsQueryResult source = null;
 
-        GetCourseProviderDetailsResultV1Model result = source;
+        GetCourseProviderDetailsResultModel result = source;
 
         result.Should().BeNull();
     }
@@ -44,7 +43,7 @@ public class GetCourseProviderDetailsResultV1ModelTests
     {
         source.LarsCode = "ABC";
 
-        GetCourseProviderDetailsResultV1Model result = source;
+        GetCourseProviderDetailsResultModel result = source;
 
         result.LarsCode.Should().Be(0);
     }
@@ -56,7 +55,7 @@ public class GetCourseProviderDetailsResultV1ModelTests
 
         Assert.Throws<NullReferenceException>(() =>
         {
-            GetCourseProviderDetailsResultV1Model r = source;
+            GetCourseProviderDetailsResultModel r = source;
             _ = r.Address;
         });
     }
@@ -68,7 +67,7 @@ public class GetCourseProviderDetailsResultV1ModelTests
 
         Assert.Throws<NullReferenceException>(() =>
         {
-            GetCourseProviderDetailsResultV1Model r = source;
+            GetCourseProviderDetailsResultModel r = source;
             _ = r.Contact;
         });
     }
@@ -80,7 +79,7 @@ public class GetCourseProviderDetailsResultV1ModelTests
 
         Assert.Throws<NullReferenceException>(() =>
         {
-            GetCourseProviderDetailsResultV1Model r = source;
+            GetCourseProviderDetailsResultModel r = source;
             _ = r.QAR;
         });
     }
@@ -92,7 +91,7 @@ public class GetCourseProviderDetailsResultV1ModelTests
 
         Assert.Throws<NullReferenceException>(() =>
         {
-            GetCourseProviderDetailsResultV1Model r = source;
+            GetCourseProviderDetailsResultModel r = source;
             _ = r.Reviews;
         });
     }

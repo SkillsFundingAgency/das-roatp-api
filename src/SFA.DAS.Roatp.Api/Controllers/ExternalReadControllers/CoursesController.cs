@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Api.Models.V1;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
@@ -44,10 +45,10 @@ public class CoursesController : ActionResponseControllerBase
     [Route("{larsCode:int}/providers/{ukprn:int}/details")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(GetCourseProviderDetailsResultV1Model), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetCourseProviderDetailsResultModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCourseProviderDetails([FromRoute] int larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsRequest request)
     {
-        var courseProviderDetails =
+        ValidatedResponse<GetCourseProviderDetailsQueryResult> queryResult =
             await _mediator.Send(
                 new GetCourseProviderDetailsQuery(
                     ukprn,
@@ -58,12 +59,12 @@ public class CoursesController : ActionResponseControllerBase
                     request.Latitude
                     )
                 );
-        if (courseProviderDetails == null)
+        if (queryResult == null)
             return NotFound();
 
-        var responseV1 = courseProviderDetails.IsValidResponse
-            ? new ValidatedResponse<GetCourseProviderDetailsResultV1Model>((GetCourseProviderDetailsResultV1Model)courseProviderDetails.Result)
-            : new ValidatedResponse<GetCourseProviderDetailsResultV1Model>([.. courseProviderDetails.Errors]);
+        var responseV1 = queryResult.IsValidResponse
+            ? new ValidatedResponse<GetCourseProviderDetailsResultModel>((GetCourseProviderDetailsResultModel)queryResult.Result)
+            : new ValidatedResponse<GetCourseProviderDetailsResultModel>([.. queryResult.Errors]);
 
         return GetResponse(responseV1);
     }
