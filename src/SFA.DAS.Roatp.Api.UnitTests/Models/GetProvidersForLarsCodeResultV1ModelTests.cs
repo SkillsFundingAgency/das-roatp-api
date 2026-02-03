@@ -33,7 +33,6 @@ public class GetProvidersForLarsCodeResultV1ModelTests
 
             v1.Providers.Should().NotBeNull().And.HaveCount(source.Providers.Count);
             v1.Providers.Should().BeEquivalentTo(source.Providers, options => options
-                .ExcludingMissingMembers()
                 .Excluding(p => p.HasOnlineDeliveryOption));
         }
     }
