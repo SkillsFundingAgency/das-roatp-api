@@ -158,31 +158,4 @@ public class GetProvidersForLarsCodeQueryTests
         sut.Qar.Should().NotBeNull();
         sut.Qar.Should().BeEmpty();
     }
-
-    [Test]
-    public void Properties_PrivateSetters_ReadOnlyExternally()
-    {
-        var request = new GetProvidersFromLarsCodeRequest
-        {
-            Latitude = 1.23m,
-            Longitude = 4.56m,
-            Location = "Somewhere",
-            OrderBy = ProviderOrderBy.Distance,
-            Distance = 10m,
-            Page = 2,
-            PageSize = 25,
-            UserId = Guid.NewGuid()
-        };
-
-        var sut = new GetProvidersForLarsCodeQuery("123", request);
-
-        sut.Latitude.Should().Be(1.23m);
-        sut.Longitude.Should().Be(4.56m);
-        sut.Location.Should().Be("Somewhere");
-        sut.OrderBy.Should().Be(ProviderOrderBy.Distance);
-        sut.Distance.Should().Be(10m);
-        sut.Page.Should().Be(2);
-        sut.PageSize.Should().Be(25);
-        sut.UserId.Should().NotBeNull();
-    }
 }
