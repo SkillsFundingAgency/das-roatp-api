@@ -1,20 +1,20 @@
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Api.Models;
+using SFA.DAS.Roatp.Api.Models.V1;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Api.UnitTests.Models;
+namespace SFA.DAS.Roatp.Api.UnitTests.Models.V1;
 
 [TestFixture]
-public class ProviderCourseModelExternalModelV1Tests
+public class ProviderCourseModelExternalModelTests
 {
     [Test, MoqAutoData]
     public void ImplicitConversion_WhenSourceIsNull_ReturnsNull()
     {
         ProviderCourseModelExternal source = null;
 
-        ProviderCourseModelExternalModelV1 result = source;
+        ProviderCourseModelExternalModel result = source;
 
         result.Should().BeNull();
     }
@@ -33,7 +33,7 @@ public class ProviderCourseModelExternalModelV1Tests
         {
             source.LarsCode = inputLarsCode;
 
-            ProviderCourseModelExternalModelV1 result = source;
+            ProviderCourseModelExternalModel result = source;
 
             result.Should().BeEquivalentTo(source, options => options
                 .Excluding(c => c.LarsCode)
@@ -52,7 +52,7 @@ public class ProviderCourseModelExternalModelV1Tests
         {
             source.LarsCode = inputLarsCode;
 
-            ProviderCourseModelExternalModelV1 result = source;
+            ProviderCourseModelExternalModel result = source;
 
             result.Should().BeEquivalentTo(source, options => options
                  .Excluding(c => c.LarsCode)

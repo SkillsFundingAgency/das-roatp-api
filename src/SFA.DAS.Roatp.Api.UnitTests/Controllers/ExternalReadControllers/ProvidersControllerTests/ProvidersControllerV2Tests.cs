@@ -16,7 +16,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers;
+namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.ProvidersControllerTests;
 
 public class ProvidersControllerV2Tests
 {
