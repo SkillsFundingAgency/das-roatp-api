@@ -8,7 +8,7 @@
     @provider bit = null,     -- 0 or 1 include training at providers+
     @blockrelease bit = null, -- 0 or 1 include block release
     @dayrelease bit = null,   -- 0 or 1 include day release
-    @hasOnlineDeliveryOption bit = null,       -- 0 or 1 include online training
+    @hasOnlineDeliveryOption bit = null,       
     @Latitude float = null,
     @Longitude float = null,
     @Distance int = null, -- Distance should always set when Longitude & Longitude set

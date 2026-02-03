@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
+using SFA.DAS.Roatp.Api.Models.V1;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -49,7 +49,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
             var ok = result.As<OkObjectResult>();
             ok.Should().NotBeNull();
 
-            var actualResult = ok.Value.As<GetProvidersForLarsCodeResultV1Model>();
+            var actualResult = ok.Value.As<GetProvidersForLarsCodeResultModel>();
             actualResult.Should().NotBeNull();
 
             using (new AssertionScope())

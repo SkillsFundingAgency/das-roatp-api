@@ -5,9 +5,9 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Api.Models.V1;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
@@ -32,14 +32,14 @@ public class CoursesController : ActionResponseControllerBase
     [MapToApiVersion(ApiVersionNumber.One)]
     [Route("{larsCode:int}/providers")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(GetProvidersForLarsCodeResultV1Model), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetProvidersForLarsCodeResultModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] int larsCode, [FromQuery] GetProvidersFromLarsCodeRequest request)
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
-        var responseV2 = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode.ToString(), request));
+        ValidatedResponse<GetProvidersForLarsCodeQueryResult> responseV2 = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode.ToString(), request));
         var responseV1 = responseV2.IsValidResponse
-         ? new ValidatedResponse<GetProvidersForLarsCodeResultV1Model>((GetProvidersForLarsCodeResultV1Model)responseV2.Result)
-         : new ValidatedResponse<GetProvidersForLarsCodeResultV1Model>([.. responseV2.Errors]);
+         ? new ValidatedResponse<GetProvidersForLarsCodeResultModel>((GetProvidersForLarsCodeResultModel)responseV2.Result)
+         : new ValidatedResponse<GetProvidersForLarsCodeResultModel>([.. responseV2.Errors]);
         return GetResponse(responseV1);
     }
 

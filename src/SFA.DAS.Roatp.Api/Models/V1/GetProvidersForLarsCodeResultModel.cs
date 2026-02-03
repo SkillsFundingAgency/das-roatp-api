@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using SFA.DAS.Roatp.Domain.Models;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1
+namespace SFA.DAS.Roatp.Api.Models.V1
 {
-    public class GetProvidersForLarsCodeResultV1Model
+    public class GetProvidersForLarsCodeResultModel
     {
         public int Page { get; set; }
         public int PageSize { get; set; }
@@ -16,12 +15,12 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1
         public string QarPeriod { get; set; }
         public string ReviewPeriod { get; set; }
 
-        public List<ProviderDataV1> Providers { get; set; }
+        public List<ProviderData> Providers { get; set; } = new List<ProviderData>();
 
-        public static implicit operator GetProvidersForLarsCodeResultV1Model(GetProvidersForLarsCodeQueryResult v2)
+        public static implicit operator GetProvidersForLarsCodeResultModel(GetProvidersForLarsCodeQueryResult v2)
         {
             if (v2 == null) return null;
-            return new GetProvidersForLarsCodeResultV1Model
+            return new GetProvidersForLarsCodeResultModel
             {
                 Page = v2.Page,
                 PageSize = v2.PageSize,
@@ -31,7 +30,7 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1
                 StandardName = v2.StandardName,
                 QarPeriod = v2.QarPeriod,
                 ReviewPeriod = v2.ReviewPeriod,
-                Providers = v2.Providers?.Select(p => new ProviderDataV1
+                Providers = v2.Providers.Select(p => new ProviderData
                 {
                     Ordering = p.Ordering,
                     Ukprn = p.Ukprn,
@@ -51,20 +50,5 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1
         }
     }
 
-    public class ProviderDataV1
-    {
-        public long Ordering { get; set; }
-        public int Ukprn { get; set; }
-        public string ProviderName { get; set; }
-        public Guid? ShortlistId { get; set; }
-        public List<ProviderLocationModel> Locations { get; set; }
-        public string Leavers { get; set; }
-        public string AchievementRate { get; set; }
-        public string EmployerReviews { get; set; }
-        public string EmployerStars { get; set; }
-        public ProviderRating EmployerRating { get; set; }
-        public string ApprenticeReviews { get; set; }
-        public string ApprenticeStars { get; set; }
-        public ProviderRating ApprenticeRating { get; set; }
-    }
+
 }

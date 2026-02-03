@@ -14,6 +14,6 @@ namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode
         public string QarPeriod { get; set; }
         public string ReviewPeriod { get; set; }
 
-        public List<ProviderData> Providers { get; set; }
+        public List<ProviderData> Providers { get; set; } = new List<ProviderData>();
     }
 }

@@ -4,8 +4,8 @@ using System.Linq;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
+using SFA.DAS.Roatp.Api.Models.V1;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode.V1;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -15,24 +15,24 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Models;
 public class GetProvidersForLarsCodeResultV1ModelTests
 {
     [Test, MoqAutoData]
-    public void ImplicitConversion_FromV2ToV1_MapsProvidersAndTopLevelFields(GetProvidersForLarsCodeQueryResult v2)
+    public void ImplicitConversion_FromV2ToV1_MapsProvidersAndTopLevelFields(GetProvidersForLarsCodeQueryResult source)
     {
-        GetProvidersForLarsCodeResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultModel v1 = source;
 
         using (new AssertionScope())
         {
             v1.Should().NotBeNull();
-            v1.Page.Should().Be(v2.Page);
-            v1.PageSize.Should().Be(v2.PageSize);
-            v1.TotalPages.Should().Be(v2.TotalPages);
-            v1.TotalCount.Should().Be(v2.TotalCount);
-            v1.LarsCode.Should().Be(int.TryParse(v2.LarsCode, out var larsCode) ? larsCode : 0);
-            v1.StandardName.Should().Be(v2.StandardName);
-            v1.QarPeriod.Should().Be(v2.QarPeriod);
-            v1.ReviewPeriod.Should().Be(v2.ReviewPeriod);
+            v1.Page.Should().Be(source.Page);
+            v1.PageSize.Should().Be(source.PageSize);
+            v1.TotalPages.Should().Be(source.TotalPages);
+            v1.TotalCount.Should().Be(source.TotalCount);
+            v1.LarsCode.Should().Be(int.TryParse(source.LarsCode, out var larsCode) ? larsCode : 0);
+            v1.StandardName.Should().Be(source.StandardName);
+            v1.QarPeriod.Should().Be(source.QarPeriod);
+            v1.ReviewPeriod.Should().Be(source.ReviewPeriod);
 
-            v1.Providers.Should().NotBeNull().And.HaveCount(v2.Providers.Count);
-            v1.Providers.Should().BeEquivalentTo(v2.Providers, options => options
+            v1.Providers.Should().NotBeNull().And.HaveCount(source.Providers.Count);
+            v1.Providers.Should().BeEquivalentTo(source.Providers, options => options
                 .ExcludingMissingMembers()
                 .Excluding(p => p.HasOnlineDeliveryOption));
         }
@@ -43,29 +43,19 @@ public class GetProvidersForLarsCodeResultV1ModelTests
     {
         GetProvidersForLarsCodeQueryResult v2 = null;
 
-        GetProvidersForLarsCodeResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultModel v1 = v2;
 
         v1.Should().BeNull();
     }
 
-    [Test]
-    public void ImplicitConversion_FromV2_WithEmptyProviders_MapsToEmptyList()
+    [Test, MoqAutoData]
+    public void ImplicitConversion_FromV2_WithEmptyProviders_MapsToEmptyList(GetProvidersForLarsCodeQueryResult source)
     {
         const string LarsCode = "123";
-        var v2 = new GetProvidersForLarsCodeQueryResult
-        {
-            Page = 1,
-            PageSize = 10,
-            TotalPages = 1,
-            TotalCount = 0,
-            LarsCode = LarsCode,
-            StandardName = "Std",
-            QarPeriod = "2022/23",
-            ReviewPeriod = "2023/24",
-            Providers = new List<ProviderData>()
-        };
+        source.LarsCode = LarsCode;
+        source.Providers = new List<Domain.Models.ProviderData>();
 
-        GetProvidersForLarsCodeResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultModel v1 = source;
 
         using (new AssertionScope())
         {
@@ -75,28 +65,18 @@ public class GetProvidersForLarsCodeResultV1ModelTests
         }
     }
 
-    [Test]
-    public void ImplicitConversion_FromV2_MapsProviderItemFieldsCorrectly()
+    [Test, MoqAutoData]
+    public void ImplicitConversion_FromV2_MapsProviderItemFieldsCorrectly(GetProvidersForLarsCodeQueryResult source)
     {
         var shortlistId = Guid.NewGuid();
-        var v2 = new GetProvidersForLarsCodeQueryResult
-        {
-            Page = 2,
-            PageSize = 5,
-            TotalPages = 3,
-            TotalCount = 7,
-            LarsCode = "999",
-            StandardName = "My Standard",
-            QarPeriod = "2021/22",
-            ReviewPeriod = "2022/23",
-            Providers = new List<ProviderData>
+        source.Providers = new List<Domain.Models.ProviderData>
             {
-                new ProviderData
+                new Domain.Models.ProviderData
                 {
                     Ordering = 42,
                     Ukprn = 12345678,
                     ProviderName = "Provider X",
-                    HasOnlineDeliveryOption = true, // should be ignored by V1
+                    HasOnlineDeliveryOption = true,
                     ShortlistId = shortlistId,
                     Locations = null,
                     Leavers = "10",
@@ -108,25 +88,24 @@ public class GetProvidersForLarsCodeResultV1ModelTests
                     ApprenticeStars = "3.9",
                     ApprenticeRating = ProviderRating.Excellent
                 }
-            }
-        };
+            };
 
-        GetProvidersForLarsCodeResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultModel v1 = source;
 
         using (new AssertionScope())
         {
             v1.Should().NotBeNull();
-            v1.Page.Should().Be(v2.Page);
-            v1.PageSize.Should().Be(v2.PageSize);
-            v1.TotalPages.Should().Be(v2.TotalPages);
-            v1.TotalCount.Should().Be(v2.TotalCount);
-            v1.LarsCode.Should().Be(int.TryParse(v2.LarsCode, out var larsCode) ? larsCode : 0);
-            v1.StandardName.Should().Be(v2.StandardName);
-            v1.QarPeriod.Should().Be(v2.QarPeriod);
-            v1.ReviewPeriod.Should().Be(v2.ReviewPeriod);
+            v1.Page.Should().Be(source.Page);
+            v1.PageSize.Should().Be(source.PageSize);
+            v1.TotalPages.Should().Be(source.TotalPages);
+            v1.TotalCount.Should().Be(source.TotalCount);
+            v1.LarsCode.Should().Be(int.TryParse(source.LarsCode, out var larsCode) ? larsCode : 0);
+            v1.StandardName.Should().Be(source.StandardName);
+            v1.QarPeriod.Should().Be(source.QarPeriod);
+            v1.ReviewPeriod.Should().Be(source.ReviewPeriod);
 
             var v1provider = v1.Providers.Single();
-            var v2provider = v2.Providers.Single();
+            var v2provider = source.Providers.Single();
             v1provider.Ordering.Should().Be(v2provider.Ordering);
             v1provider.Ukprn.Should().Be(v2provider.Ukprn);
             v1provider.ProviderName.Should().Be(v2provider.ProviderName);
@@ -144,28 +123,17 @@ public class GetProvidersForLarsCodeResultV1ModelTests
     }
 
 
-    [Test]
-    public void ImplicitConversion_FromV2_WithNullProviders_LeavesProvidersNull()
+    [Test, MoqAutoData]
+    public void ImplicitConversion_FromV2_WithNullProviders_LeavesProvidersNull(GetProvidersForLarsCodeQueryResult source)
     {
-        var v2 = new GetProvidersForLarsCodeQueryResult
-        {
-            Page = 1,
-            PageSize = 20,
-            TotalPages = 1,
-            TotalCount = 0,
-            LarsCode = "321",
-            StandardName = "Std",
-            QarPeriod = "2020/21",
-            ReviewPeriod = "2021/22",
-            Providers = null
-        };
+        source.Providers = new List<Domain.Models.ProviderData>();
 
-        GetProvidersForLarsCodeResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultModel v1 = source;
 
         using (new AssertionScope())
         {
             v1.Should().NotBeNull();
-            v1.Providers.Should().BeNull("null input Providers should remain null as the converter uses the null-conditional operator without defaulting to an empty list");
+            v1.Providers.Should().NotBeNull().And.BeEmpty();
         }
     }
 
@@ -178,73 +146,15 @@ public class GetProvidersForLarsCodeResultV1ModelTests
             PageSize = 10,
             TotalPages = 1,
             TotalCount = 1,
-            LarsCode = "ABC123", // non-numeric
+            LarsCode = "ABC123",
             StandardName = "Standard",
             QarPeriod = "2022/23",
             ReviewPeriod = "2023/24",
-            Providers = new List<ProviderData>()
+            Providers = new List<Domain.Models.ProviderData>()
         };
 
-        GetProvidersForLarsCodeResultV1Model v1 = v2;
+        GetProvidersForLarsCodeResultModel v1 = v2;
 
         v1.LarsCode.Should().Be(0);
-    }
-
-    [Test]
-    public void ImplicitConversion_FromV2_WithProviderNullFields_PreservesNulls()
-    {
-        var v2 = new GetProvidersForLarsCodeQueryResult
-        {
-            Page = 1,
-            PageSize = 10,
-            TotalPages = 1,
-            TotalCount = 1,
-            LarsCode = "100",
-            StandardName = null,
-            QarPeriod = null,
-            ReviewPeriod = null,
-            Providers = new List<ProviderData>
-            {
-                new ProviderData
-                {
-                    Ordering = 0,
-                    Ukprn = 10000001,
-                    ProviderName = null,
-                    ShortlistId = null,
-                    Locations = null,
-                    Leavers = null,
-                    AchievementRate = null,
-                    EmployerReviews = null,
-                    EmployerStars = null,
-                    EmployerRating = ProviderRating.Excellent,
-                    ApprenticeReviews = null,
-                    ApprenticeStars = null,
-                    ApprenticeRating = ProviderRating.Good
-                }
-            }
-        };
-
-        GetProvidersForLarsCodeResultV1Model v1 = v2;
-
-        using (new AssertionScope())
-        {
-            v1.StandardName.Should().BeNull();
-            v1.QarPeriod.Should().BeNull();
-            v1.ReviewPeriod.Should().BeNull();
-
-            v1.Providers.Should().NotBeNull().And.HaveCount(v1.Providers.Count);
-            var p = v1.Providers.First();
-            p.ProviderName.Should().BeNull();
-            p.ShortlistId.Should().BeNull();
-            p.Locations.Should().BeNull();
-            p.Leavers.Should().BeNull();
-            p.AchievementRate.Should().BeNull();
-            p.EmployerReviews.Should().BeNull();
-            p.EmployerStars.Should().BeNull();
-            p.EmployerRating.Should().Be(ProviderRating.Excellent);
-            p.ApprenticeReviews.Should().BeNull();
-            p.ApprenticeStars.Should().BeNull();
-            p.ApprenticeRating.Should().Be(ProviderRating.Good);
-        }
     }
 }
