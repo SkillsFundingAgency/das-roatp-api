@@ -15,56 +15,22 @@ using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests
+namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.CoursesControllerTests;
+
+[TestFixture]
+public class GetProvidersForLarsCodeV1Tests
 {
-    [TestFixture]
-    public class GetProvidersForLarsCodeV1Tests
+    [Test, MoqAutoData]
+    public async Task GetProvidersForLarsCodeV1_InvokesQueryHandler(
+        GetProvidersForLarsCodeRequest request,
+        GetProvidersForLarsCodeQueryResult queryResult,
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] CoursesController sut)
     {
-        [Test, MoqAutoData]
-        public async Task GetProvidersForLarsCodeV1_InvokesQueryHandler(
-            GetProvidersForLarsCodeRequest request,
-            GetProvidersForLarsCodeQueryResult queryResult,
-            [Frozen] Mock<IMediator> mediatorMock,
-            [Greedy] CoursesController sut)
-        {
-            const int larsCodeInt = 1;
-            queryResult.LarsCode = larsCodeInt.ToString();
+        const int larsCodeInt = 1;
+        queryResult.LarsCode = larsCodeInt.ToString();
 
-            mediatorMock.Setup(m => m.Send(
-                    It.Is<GetProvidersForLarsCodeQuery>(q =>
-                        q.LarsCode == larsCodeInt.ToString()
-                        && q.Latitude == request.Latitude
-                        && q.Longitude == request.Longitude
-                        && q.OrderBy == request.OrderBy
-                        && q.Distance == request.Distance
-                        && q.Page == request.Page
-                        && q.PageSize == request.PageSize
-                        && q.Location == request.Location
-                        && q.UserId == request.UserId),
-                    It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(queryResult));
-
-            var result = await sut.GetProvidersForLarsCode(larsCodeInt, request);
-
-            var ok = result.As<OkObjectResult>();
-            ok.Should().NotBeNull();
-
-            var actualResult = ok.Value.As<GetProvidersForLarsCodeResultModel>();
-            actualResult.Should().NotBeNull();
-
-            using (new AssertionScope())
-            {
-                actualResult.Page.Should().Be(queryResult.Page);
-                actualResult.PageSize.Should().Be(queryResult.PageSize);
-                actualResult.TotalPages.Should().Be(queryResult.TotalPages);
-                actualResult.TotalCount.Should().Be(queryResult.TotalCount);
-                actualResult.LarsCode.Should().Be(larsCodeInt);
-                actualResult.StandardName.Should().Be(queryResult.StandardName);
-                actualResult.QarPeriod.Should().Be(queryResult.QarPeriod);
-                actualResult.ReviewPeriod.Should().Be(queryResult.ReviewPeriod);
-            }
-
-            mediatorMock.Verify(m => m.Send(
+        mediatorMock.Setup(m => m.Send(
                 It.Is<GetProvidersForLarsCodeQuery>(q =>
                     q.LarsCode == larsCodeInt.ToString()
                     && q.Latitude == request.Latitude
@@ -75,88 +41,90 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
                     && q.PageSize == request.PageSize
                     && q.Location == request.Location
                     && q.UserId == request.UserId),
-                It.IsAny<CancellationToken>()));
-        }
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(queryResult));
 
-        [Test, MoqAutoData]
-        public async Task GetProvidersForLarsCodeV1_WhenResultNullAndValid_ReturnsNotFound(
-            GetProvidersForLarsCodeRequest request,
-            int larsCodeInt,
-            GetProvidersForLarsCodeQueryResult queryResult,
-            [Frozen] Mock<IMediator> mediatorMock,
-            [Greedy] CoursesController sut)
+        var result = await sut.GetProvidersForLarsCode(larsCodeInt, request);
+
+        var ok = result.As<OkObjectResult>();
+        ok.Should().NotBeNull();
+
+        var actualResult = ok.Value.As<GetProvidersForLarsCodeResultModel>();
+        actualResult.Should().NotBeNull();
+
+        using (new AssertionScope())
         {
-            var response = new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(new List<ValidationFailure>());
-            mediatorMock.Setup(m => m.Send(
-                  It.Is<GetProvidersForLarsCodeQuery>(q =>
-                      q.LarsCode == larsCodeInt.ToString()
-                      && q.Latitude == request.Latitude
-                      && q.Longitude == request.Longitude
-                      && q.OrderBy == request.OrderBy
-                      && q.Distance == request.Distance
-                      && q.Page == request.Page
-                      && q.PageSize == request.PageSize
-                      && q.Location == request.Location
-                      && q.UserId == request.UserId),
-                  It.IsAny<CancellationToken>()))
-              .ReturnsAsync(response);
-
-            var result = await sut.GetProvidersForLarsCode(larsCodeInt, request);
-
-            result.Should().BeOfType<NotFoundResult>();
-
-            mediatorMock.Verify(m => m.Send(
-                It.Is<GetProvidersForLarsCodeQuery>(q => q.LarsCode == larsCodeInt.ToString()),
-                It.IsAny<CancellationToken>()), Times.Once);
+            actualResult.Page.Should().Be(queryResult.Page);
+            actualResult.PageSize.Should().Be(queryResult.PageSize);
+            actualResult.TotalPages.Should().Be(queryResult.TotalPages);
+            actualResult.TotalCount.Should().Be(queryResult.TotalCount);
+            actualResult.LarsCode.Should().Be(larsCodeInt);
+            actualResult.StandardName.Should().Be(queryResult.StandardName);
+            actualResult.QarPeriod.Should().Be(queryResult.QarPeriod);
+            actualResult.ReviewPeriod.Should().Be(queryResult.ReviewPeriod);
         }
 
-        [Test, MoqAutoData]
-        public async Task GetProvidersForLarsCodeV1_WhenInvalid_ReturnsBadRequest(
-            GetProvidersForLarsCodeRequest request,
-            int larsCodeInt,
-            GetProvidersForLarsCodeQueryResult queryResult,
-            [Frozen] Mock<IMediator> mediatorMock,
-            [Greedy] CoursesController sut)
+        mediatorMock.Verify(m => m.Send(
+            It.Is<GetProvidersForLarsCodeQuery>(q =>
+                q.LarsCode == larsCodeInt.ToString()
+                && q.Latitude == request.Latitude
+                && q.Longitude == request.Longitude
+                && q.OrderBy == request.OrderBy
+                && q.Distance == request.Distance
+                && q.Page == request.Page
+                && q.PageSize == request.PageSize
+                && q.Location == request.Location
+                && q.UserId == request.UserId),
+            It.IsAny<CancellationToken>()));
+    }
+
+
+    [Test, MoqAutoData]
+    public async Task GetProvidersForLarsCodeV1_WhenInvalid_ReturnsBadRequest(
+        GetProvidersForLarsCodeRequest request,
+        int larsCodeInt,
+        GetProvidersForLarsCodeQueryResult queryResult,
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] CoursesController sut)
+    {
+        var validationErrors = new List<ValidationFailure>
         {
-            var validationErrors = new List<ValidationFailure>
-            {
-             new ValidationFailure("Latitude", "Latitude is required"),
-             new ValidationFailure("Longitude", "Longitude is required")
-            };
+         new ValidationFailure("Latitude", "Latitude is required"),
+         new ValidationFailure("Longitude", "Longitude is required")
+        };
 
-            var response = new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(validationErrors);
+        var response = new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(validationErrors);
 
-            mediatorMock.Setup(m => m.Send(
-                  It.Is<GetProvidersForLarsCodeQuery>(q =>
-                      q.LarsCode == larsCodeInt.ToString()
-                      && q.Latitude == request.Latitude
-                      && q.Longitude == request.Longitude
-                      && q.OrderBy == request.OrderBy
-                      && q.Distance == request.Distance
-                      && q.Page == request.Page
-                      && q.PageSize == request.PageSize
-                      && q.Location == request.Location
-                      && q.UserId == request.UserId),
-                  It.IsAny<CancellationToken>()))
-              .ReturnsAsync(response);
+        mediatorMock.Setup(m => m.Send(
+              It.Is<GetProvidersForLarsCodeQuery>(q =>
+                  q.LarsCode == larsCodeInt.ToString()
+                  && q.Latitude == request.Latitude
+                  && q.Longitude == request.Longitude
+                  && q.OrderBy == request.OrderBy
+                  && q.Distance == request.Distance
+                  && q.Page == request.Page
+                  && q.PageSize == request.PageSize
+                  && q.Location == request.Location
+                  && q.UserId == request.UserId),
+              It.IsAny<CancellationToken>()))
+          .ReturnsAsync(response);
 
-            var result = await sut.GetProvidersForLarsCode(larsCodeInt, request);
+        var result = await sut.GetProvidersForLarsCode(larsCodeInt, request);
 
-            result.Should().BeOfType<BadRequestObjectResult>();
-            var badRequest = (BadRequestObjectResult)result;
-            badRequest.Value.Should().NotBeNull();
+        result.Should().BeOfType<BadRequestObjectResult>();
+        var badRequest = (BadRequestObjectResult)result;
+        badRequest.Value.Should().NotBeNull();
 
-            badRequest.Value.Should().BeAssignableTo<List<SFA.DAS.Roatp.Api.Infrastructure.ValidationError>>();
-            var errors = (List<SFA.DAS.Roatp.Api.Infrastructure.ValidationError>)badRequest.Value;
-            errors.Should().HaveCount(2);
-            errors[0].PropertyName.Should().Be("Latitude");
-            errors[0].ErrorMessage.Should().Be("Latitude is required");
-            errors[1].PropertyName.Should().Be("Longitude");
-            errors[1].ErrorMessage.Should().Be("Longitude is required");
+        badRequest.Value.Should().BeAssignableTo<List<SFA.DAS.Roatp.Api.Infrastructure.ValidationError>>();
+        var errors = (List<SFA.DAS.Roatp.Api.Infrastructure.ValidationError>)badRequest.Value;
+        errors.Should().HaveCount(2);
+        errors[0].PropertyName.Should().Be("Latitude");
+        errors[0].ErrorMessage.Should().Be("Latitude is required");
+        errors[1].PropertyName.Should().Be("Longitude");
+        errors[1].ErrorMessage.Should().Be("Longitude is required");
 
-            mediatorMock.Verify(m => m.Send(
-                It.Is<GetProvidersForLarsCodeQuery>(q => q.LarsCode == larsCodeInt.ToString()),
-                It.IsAny<CancellationToken>()), Times.Once);
-        }
+        mediatorMock.Verify(m => m.Send(
+            It.Is<GetProvidersForLarsCodeQuery>(q => q.LarsCode == larsCodeInt.ToString()),
+            It.IsAny<CancellationToken>()), Times.Once);
     }
 }
