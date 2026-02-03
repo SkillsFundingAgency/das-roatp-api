@@ -206,7 +206,7 @@ BEGIN
 				   ELSE 1 END AtEmployer
 				  ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
 				  ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
-				  ,ISNULL(pc1.[HasOnlineDeliveryOption],0) HasOnlineDeliveryOption
+				  ,pc1.[HasOnlineDeliveryOption]
 				  ,s1.[CourseType]
 				  ,CASE [LocationType] 
 				   WHEN 0 THEN pl1.Postcode
