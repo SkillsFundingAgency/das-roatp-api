@@ -42,10 +42,13 @@ namespace SFA.DAS.Roatp.Data.Repositories
         {
             return await _roatpDataContext
                 .ProviderCourses
-                .Include(c => c.Standard)
-                .Include(c => c.Locations)
+                .Where(pc => pc.Provider.Ukprn == ukprn)
+                .Include(pc => pc.Standard)
+                .Include(pc => pc.Locations)
+                .Include(pc => pc.Provider)
+                .ThenInclude(p => p.ProviderCourseTypes)
+                .Where(pc => pc.Provider.ProviderCourseTypes.Any(pct => pct.CourseType == pc.Standard.CourseType))
                 .AsNoTracking()
-                .Where(c => c.Provider.Ukprn == ukprn)
                 .ToListAsync();
         }
     }
