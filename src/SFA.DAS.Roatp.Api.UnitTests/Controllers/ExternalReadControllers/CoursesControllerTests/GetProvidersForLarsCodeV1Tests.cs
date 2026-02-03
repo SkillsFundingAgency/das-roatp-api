@@ -23,12 +23,12 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
         [Test, MoqAutoData]
         public async Task GetProvidersForLarsCodeV1_InvokesQueryHandler(
             GetProvidersFromLarsCodeRequest request,
-            GetProvidersForLarsCodeQueryResult queryResultV2,
+            GetProvidersForLarsCodeQueryResult queryResult,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] CoursesController sut)
         {
             const int larsCodeInt = 1;
-            queryResultV2.LarsCode = larsCodeInt.ToString();
+            queryResult.LarsCode = larsCodeInt.ToString();
 
             mediatorMock.Setup(m => m.Send(
                     It.Is<GetProvidersForLarsCodeQuery>(q =>
@@ -42,7 +42,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
                         && q.Location == request.Location
                         && q.UserId == request.UserId),
                     It.IsAny<CancellationToken>()))
-                .ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(queryResultV2));
+                .ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(queryResult));
 
             var result = await sut.GetProvidersForLarsCode(larsCodeInt, request);
 
@@ -54,14 +54,14 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
 
             using (new AssertionScope())
             {
-                actualResult.Page.Should().Be(queryResultV2.Page);
-                actualResult.PageSize.Should().Be(queryResultV2.PageSize);
-                actualResult.TotalPages.Should().Be(queryResultV2.TotalPages);
-                actualResult.TotalCount.Should().Be(queryResultV2.TotalCount);
+                actualResult.Page.Should().Be(queryResult.Page);
+                actualResult.PageSize.Should().Be(queryResult.PageSize);
+                actualResult.TotalPages.Should().Be(queryResult.TotalPages);
+                actualResult.TotalCount.Should().Be(queryResult.TotalCount);
                 actualResult.LarsCode.Should().Be(larsCodeInt);
-                actualResult.StandardName.Should().Be(queryResultV2.StandardName);
-                actualResult.QarPeriod.Should().Be(queryResultV2.QarPeriod);
-                actualResult.ReviewPeriod.Should().Be(queryResultV2.ReviewPeriod);
+                actualResult.StandardName.Should().Be(queryResult.StandardName);
+                actualResult.QarPeriod.Should().Be(queryResult.QarPeriod);
+                actualResult.ReviewPeriod.Should().Be(queryResult.ReviewPeriod);
             }
 
             mediatorMock.Verify(m => m.Send(
@@ -82,7 +82,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
         public async Task GetProvidersForLarsCodeV1_WhenResultNullAndValid_ReturnsNotFound(
             GetProvidersFromLarsCodeRequest request,
             int larsCodeInt,
-            GetProvidersForLarsCodeQueryResult queryResultV2,
+            GetProvidersForLarsCodeQueryResult queryResult,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] CoursesController sut)
         {
@@ -114,7 +114,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
         public async Task GetProvidersForLarsCodeV1_WhenInvalid_ReturnsBadRequest(
             GetProvidersFromLarsCodeRequest request,
             int larsCodeInt,
-            GetProvidersForLarsCodeQueryResult queryResultV2,
+            GetProvidersForLarsCodeQueryResult queryResult,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] CoursesController sut)
         {

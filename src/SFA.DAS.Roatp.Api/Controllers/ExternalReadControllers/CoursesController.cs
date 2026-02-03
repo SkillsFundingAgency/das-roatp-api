@@ -36,10 +36,10 @@ public class CoursesController : ActionResponseControllerBase
     public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] int larsCode, [FromQuery] GetProvidersFromLarsCodeRequest request)
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
-        ValidatedResponse<GetProvidersForLarsCodeQueryResult> responseV2 = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode.ToString(), request));
-        var responseV1 = responseV2.IsValidResponse
-         ? new ValidatedResponse<GetProvidersForLarsCodeResultModel>((GetProvidersForLarsCodeResultModel)responseV2.Result)
-         : new ValidatedResponse<GetProvidersForLarsCodeResultModel>([.. responseV2.Errors]);
+        ValidatedResponse<GetProvidersForLarsCodeQueryResult> queryResult = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode.ToString(), request));
+        var responseV1 = queryResult.IsValidResponse
+         ? new ValidatedResponse<GetProvidersForLarsCodeResultModel>((GetProvidersForLarsCodeResultModel)queryResult.Result)
+         : new ValidatedResponse<GetProvidersForLarsCodeResultModel>([.. queryResult.Errors]);
         return GetResponse(responseV1);
     }
 
