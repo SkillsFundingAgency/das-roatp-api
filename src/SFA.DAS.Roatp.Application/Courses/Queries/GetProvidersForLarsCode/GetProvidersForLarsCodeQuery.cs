@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 
 public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvidersForLarsCodeQueryResult>>,
     ICoordinates, ILarsCode
@@ -42,7 +42,7 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
         IEnumerable<QarRating> QarRatings
     );
 
-    public GetProvidersForLarsCodeQuery(string larsCode, GetProvidersFromLarsCodeRequest request)
+    public GetProvidersForLarsCodeQuery(string larsCode, GetProvidersForLarsCodeRequest request)
     {
         LarsCode = larsCode;
 

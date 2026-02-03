@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -24,7 +24,7 @@ public class GetProvidersForLarsCodeQueryTests
         int? pageSize,
         Guid? userId)
     {
-        var request = new GetProvidersFromLarsCodeRequest
+        var request = new GetProvidersForLarsCodeRequest
         {
             Latitude = latitude,
             Longitude = longitude,
@@ -61,7 +61,7 @@ public class GetProvidersForLarsCodeQueryTests
     [Test, RecursiveMoqAutoData]
     public void Constructor_V2Request_EmptyCollections_ResultEmptyLists(
         string larsCode,
-        GetProvidersFromLarsCodeRequest request)
+        GetProvidersForLarsCodeRequest request)
     {
         request.DeliveryModes = new List<DeliveryMode?>();
         request.EmployerProviderRatings = new List<ProviderRating?>();
@@ -95,7 +95,7 @@ public class GetProvidersForLarsCodeQueryTests
         int? pageSize,
         Guid? userId)
     {
-        var request = new GetProvidersFromLarsCodeRequest
+        var request = new GetProvidersForLarsCodeRequest
         {
             Latitude = latitude,
             Longitude = longitude,
@@ -146,7 +146,7 @@ public class GetProvidersForLarsCodeQueryTests
         int? pageSize,
         Guid? userId)
     {
-        var request = new GetProvidersFromLarsCodeRequest
+        var request = new GetProvidersForLarsCodeRequest
         {
             Latitude = latitude,
             Longitude = longitude,

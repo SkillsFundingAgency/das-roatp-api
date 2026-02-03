@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 
 public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersForLarsCodeQuery, ValidatedResponse<GetProvidersForLarsCodeQueryResult>>
 {

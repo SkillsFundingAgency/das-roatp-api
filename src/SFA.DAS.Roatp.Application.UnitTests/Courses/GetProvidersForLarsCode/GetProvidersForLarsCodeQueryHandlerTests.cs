@@ -8,7 +8,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -26,7 +26,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         [Frozen] Mock<ILogger<GetProvidersForLarsCodeQueryHandler>> loggerMock,
         GetProvidersForLarsCodeQueryHandler sut,
         List<ProviderSearchModel> pagedProviderDetails,
-        GetProvidersFromLarsCodeRequest request,
+        GetProvidersForLarsCodeRequest request,
         string larsCode,
         CancellationToken cancellationToken)
     {
@@ -153,7 +153,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
     public async Task Handle_NoData_ReturnsExpectedResult(
     [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
     GetProvidersForLarsCodeQueryHandler sut,
-    GetProvidersFromLarsCodeRequest request,
+    GetProvidersForLarsCodeRequest request,
     CancellationToken cancellationToken)
     {
         const string larsCode = "2";
@@ -208,7 +208,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
         GetProvidersForLarsCodeQueryHandler sut,
         List<ProviderSearchModel> pagedProviderDetails,
-        GetProvidersFromLarsCodeRequest request,
+        GetProvidersForLarsCodeRequest request,
         string larsCode,
         CancellationToken cancellationToken)
     {

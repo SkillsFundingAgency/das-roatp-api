@@ -5,7 +5,7 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Models.V1;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 

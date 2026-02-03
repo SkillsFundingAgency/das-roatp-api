@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Api.Models.V1;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
@@ -33,7 +33,7 @@ public class CoursesController : ActionResponseControllerBase
     [Route("{larsCode:int}/providers")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetProvidersForLarsCodeResultModel), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] int larsCode, [FromQuery] GetProvidersFromLarsCodeRequest request)
+    public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] int larsCode, [FromQuery] GetProvidersForLarsCodeRequest request)
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
         ValidatedResponse<GetProvidersForLarsCodeQueryResult> queryResult = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode.ToString(), request));
@@ -48,7 +48,7 @@ public class CoursesController : ActionResponseControllerBase
     [Route("{larsCode}/providers")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetProvidersForLarsCodeQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] string larsCode, [FromQuery] GetProvidersFromLarsCodeRequest request)
+    public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] string larsCode, [FromQuery] GetProvidersForLarsCodeRequest request)
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
         var response = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode, request));

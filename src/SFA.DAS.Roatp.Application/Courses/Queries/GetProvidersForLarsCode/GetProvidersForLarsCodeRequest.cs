@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 
-public class GetProvidersFromLarsCodeRequest
+public class GetProvidersForLarsCodeRequest
 {
     public ProviderOrderBy? OrderBy { get; set; }
     public decimal? Distance { get; set; }

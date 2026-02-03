@@ -11,7 +11,7 @@ using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 using SFA.DAS.Roatp.Api.Models.V1;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -22,7 +22,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
     {
         [Test, MoqAutoData]
         public async Task GetProvidersForLarsCodeV1_InvokesQueryHandler(
-            GetProvidersFromLarsCodeRequest request,
+            GetProvidersForLarsCodeRequest request,
             GetProvidersForLarsCodeQueryResult queryResult,
             [Frozen] Mock<IMediator> mediatorMock,
             [Greedy] CoursesController sut)
@@ -80,7 +80,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
 
         [Test, MoqAutoData]
         public async Task GetProvidersForLarsCodeV1_WhenResultNullAndValid_ReturnsNotFound(
-            GetProvidersFromLarsCodeRequest request,
+            GetProvidersForLarsCodeRequest request,
             int larsCodeInt,
             GetProvidersForLarsCodeQueryResult queryResult,
             [Frozen] Mock<IMediator> mediatorMock,
@@ -112,7 +112,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.Course
 
         [Test, MoqAutoData]
         public async Task GetProvidersForLarsCodeV1_WhenInvalid_ReturnsBadRequest(
-            GetProvidersFromLarsCodeRequest request,
+            GetProvidersForLarsCodeRequest request,
             int larsCodeInt,
             GetProvidersForLarsCodeQueryResult queryResult,
             [Frozen] Mock<IMediator> mediatorMock,
