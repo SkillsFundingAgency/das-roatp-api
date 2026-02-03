@@ -9,10 +9,10 @@ using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Api.UnitTests.Models;
+namespace SFA.DAS.Roatp.Api.UnitTests.Models.V1;
 
 [TestFixture]
-public class GetProvidersForLarsCodeResultV1ModelTests
+public class GetProvidersForLarsCodeResultModelTests
 {
     [Test, MoqAutoData]
     public void ImplicitConversion_FromV2ToV1_MapsProvidersAndTopLevelFields(GetProvidersForLarsCodeQueryResult source)
