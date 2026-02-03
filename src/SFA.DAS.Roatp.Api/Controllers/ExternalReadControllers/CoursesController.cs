@@ -57,6 +57,35 @@ public class CoursesController : ActionResponseControllerBase
 
     [HttpGet]
     [MapToApiVersion(ApiVersionNumber.One)]
+    [Route("{larsCode:int}/providers/{ukprn:int}/details")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetCourseProviderDetailsResultModel), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCourseProviderDetails([FromRoute] int larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsRequest request)
+    {
+        ValidatedResponse<GetCourseProviderDetailsQueryResult> queryResult =
+            await _mediator.Send(
+                new GetCourseProviderDetailsQuery(
+                    ukprn,
+                    larsCode.ToString(),
+                    request.ShortlistUserId,
+                    request.Location,
+                    request.Longitude,
+                    request.Latitude
+                    )
+                );
+        if (queryResult == null)
+            return NotFound();
+
+        var responseV1 = queryResult.IsValidResponse
+            ? new ValidatedResponse<GetCourseProviderDetailsResultModel>((GetCourseProviderDetailsResultModel)queryResult.Result)
+            : new ValidatedResponse<GetCourseProviderDetailsResultModel>([.. queryResult.Errors]);
+
+        return GetResponse(responseV1);
+    }
+
+    [HttpGet]
+    [MapToApiVersion(ApiVersionNumber.Two)]
     [Route("{larsCode}/providers/{ukprn:int}/details")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
