@@ -23,5 +23,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public virtual List<ProviderContact> ProviderContacts { get; set; } = new List<ProviderContact>();
         public virtual ProviderAddress ProviderAddress { get; set; }
         public virtual ProviderRegistrationDetail ProviderRegistrationDetail { get; set; }
+        public virtual List<ProviderCourseType> ProviderCourseTypes { get; set; } = new List<ProviderCourseType>();
     }
 }
