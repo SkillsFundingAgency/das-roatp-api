@@ -26,7 +26,7 @@ namespace SFA.DAS.Roatp.Api.Models.V1
                 PageSize = source.PageSize,
                 TotalPages = source.TotalPages,
                 TotalCount = source.TotalCount,
-                LarsCode = int.TryParse(source.LarsCode, out int larsCodeValue) ? larsCodeValue : 0,
+                LarsCode = int.Parse(source.LarsCode),
                 StandardName = source.StandardName,
                 QarPeriod = source.QarPeriod,
                 ReviewPeriod = source.ReviewPeriod,

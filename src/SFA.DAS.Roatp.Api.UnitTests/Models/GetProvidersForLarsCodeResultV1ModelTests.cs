@@ -17,6 +17,7 @@ public class GetProvidersForLarsCodeResultV1ModelTests
     [Test, MoqAutoData]
     public void ImplicitConversion_FromV2ToV1_MapsProvidersAndTopLevelFields(GetProvidersForLarsCodeQueryResult source)
     {
+        source.LarsCode = "123";
         GetProvidersForLarsCodeResultModel v1 = source;
 
         using (new AssertionScope())
@@ -26,7 +27,7 @@ public class GetProvidersForLarsCodeResultV1ModelTests
             v1.PageSize.Should().Be(source.PageSize);
             v1.TotalPages.Should().Be(source.TotalPages);
             v1.TotalCount.Should().Be(source.TotalCount);
-            v1.LarsCode.Should().Be(int.TryParse(source.LarsCode, out var larsCode) ? larsCode : 0);
+            v1.LarsCode.Should().Be(int.Parse(source.LarsCode));
             v1.StandardName.Should().Be(source.StandardName);
             v1.QarPeriod.Should().Be(source.QarPeriod);
             v1.ReviewPeriod.Should().Be(source.ReviewPeriod);
@@ -67,6 +68,7 @@ public class GetProvidersForLarsCodeResultV1ModelTests
     [Test, MoqAutoData]
     public void ImplicitConversion_FromV2_MapsProviderItemFieldsCorrectly(GetProvidersForLarsCodeQueryResult source)
     {
+        source.LarsCode = "123";
         var shortlistId = Guid.NewGuid();
         source.Providers = new List<Domain.Models.ProviderData>
             {
@@ -98,7 +100,7 @@ public class GetProvidersForLarsCodeResultV1ModelTests
             v1.PageSize.Should().Be(source.PageSize);
             v1.TotalPages.Should().Be(source.TotalPages);
             v1.TotalCount.Should().Be(source.TotalCount);
-            v1.LarsCode.Should().Be(int.TryParse(source.LarsCode, out var larsCode) ? larsCode : 0);
+            v1.LarsCode.Should().Be(int.Parse(source.LarsCode));
             v1.StandardName.Should().Be(source.StandardName);
             v1.QarPeriod.Should().Be(source.QarPeriod);
             v1.ReviewPeriod.Should().Be(source.ReviewPeriod);
@@ -126,6 +128,7 @@ public class GetProvidersForLarsCodeResultV1ModelTests
     public void ImplicitConversion_FromV2_WithNullProviders_LeavesProvidersNull(GetProvidersForLarsCodeQueryResult source)
     {
         source.Providers = new List<Domain.Models.ProviderData>();
+        source.LarsCode = "123";
 
         GetProvidersForLarsCodeResultModel v1 = source;
 
@@ -134,26 +137,5 @@ public class GetProvidersForLarsCodeResultV1ModelTests
             v1.Should().NotBeNull();
             v1.Providers.Should().NotBeNull().And.BeEmpty();
         }
-    }
-
-    [Test]
-    public void ImplicitConversion_FromV2_WithNonNumericLarsCode_SetsLarsCodeToZero()
-    {
-        var v2 = new GetProvidersForLarsCodeQueryResult
-        {
-            Page = 1,
-            PageSize = 10,
-            TotalPages = 1,
-            TotalCount = 1,
-            LarsCode = "ABC123",
-            StandardName = "Standard",
-            QarPeriod = "2022/23",
-            ReviewPeriod = "2023/24",
-            Providers = new List<Domain.Models.ProviderData>()
-        };
-
-        GetProvidersForLarsCodeResultModel v1 = v2;
-
-        v1.LarsCode.Should().Be(0);
     }
 }
