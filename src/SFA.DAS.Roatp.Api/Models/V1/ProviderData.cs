@@ -10,7 +10,7 @@ public class ProviderData
     public int Ukprn { get; set; }
     public string ProviderName { get; set; }
     public Guid? ShortlistId { get; set; }
-    public List<ProviderLocationModel> Locations { get; set; }
+    public List<ProviderLocationModel> Locations { get; set; } = new();
     public string Leavers { get; set; }
     public string AchievementRate { get; set; }
     public string EmployerReviews { get; set; }

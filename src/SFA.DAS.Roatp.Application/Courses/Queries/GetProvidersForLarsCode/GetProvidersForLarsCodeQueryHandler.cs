@@ -53,7 +53,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             apprenticeProviderRatings = string.Join(',', request.ApprenticeProviderRatings);
         }
 
-        _logger.LogInformation("calling provider details for larsCode {larscode}", request.LarsCode);
+        _logger.LogInformation("calling provider details for larsCode {LarsCode}", request.LarsCode);
 
         var parameters = new GetProvidersFromLarsCodeOptionalParameters
         {

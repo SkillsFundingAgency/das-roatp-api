@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Api.Models.V1
         public string QarPeriod { get; set; }
         public string ReviewPeriod { get; set; }
 
-        public List<ProviderData> Providers { get; set; } = new List<ProviderData>();
+        public List<ProviderData> Providers { get; set; } = new();
 
         public static implicit operator GetProvidersForLarsCodeResultModel(GetProvidersForLarsCodeQueryResult source)
         {
