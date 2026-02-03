@@ -152,7 +152,7 @@ AS
                             ,ab2.Ukprn ) - (@pageSize * (@page-1)) "providers.ordering"  -- and ordered within the page of results
         ,ab2.Ukprn "providers.ukprn"
         ,ab2.LegalName "providers.providername"
-        ,CAST(MAX(CASE WHEN ISNULL(ab2.HasOnlineDeliveryOption,0)=1 THEN 1 ELSE 0 END) AS bit) HasOnlineDeliveryOption
+        ,CAST(MAX(CAST(ab2.HasOnlineDeliveryOption AS INT)) AS bit) HasOnlineDeliveryOption
         -- List of locations
         ,COUNT(*) "providers.locationsCount"
         ,STRING_AGG(LocationType,',') WITHIN GROUP (ORDER BY LocationOrdering, Distance) "providers.locations.locationType"
@@ -202,7 +202,7 @@ AS
                    WHEN 0 THEN 0 ELSE 1 END AtEmployer
                   ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
                   ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
-                  ,ISNULL(pc1.[HasOnlineDeliveryOption],0) HasOnlineDeliveryOption
+                  ,pc1.[HasOnlineDeliveryOption] 
                   ,CASE [LocationType] 
                    WHEN 0 THEN pl1.Postcode
                    WHEN 1 THEN 'National'
@@ -249,7 +249,7 @@ AS
         -- Distance filter check if requested
         AND (@Distance IS NULL OR Distance <= @Distance)
         -- Online delivery filter: when requested, only include courses that have online option
-        AND (@hasOnlineDeliveryOption = 0 OR ISNULL(HasOnlineDeliveryOption,0) = 1)
+        AND (@hasOnlineDeliveryOption = 0 OR HasOnlineDeliveryOption = 1)
         -- At apprentice's workplace and/or training at providers
         -- And at training provider for Day release and/or Block Release options
         -- Provider = 0, National = 1, Regional = 2
