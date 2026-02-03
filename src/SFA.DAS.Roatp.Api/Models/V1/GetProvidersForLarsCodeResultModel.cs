@@ -17,20 +17,20 @@ namespace SFA.DAS.Roatp.Api.Models.V1
 
         public List<ProviderData> Providers { get; set; } = new List<ProviderData>();
 
-        public static implicit operator GetProvidersForLarsCodeResultModel(GetProvidersForLarsCodeQueryResult v2)
+        public static implicit operator GetProvidersForLarsCodeResultModel(GetProvidersForLarsCodeQueryResult source)
         {
-            if (v2 == null) return null;
+            if (source == null) return null;
             return new GetProvidersForLarsCodeResultModel
             {
-                Page = v2.Page,
-                PageSize = v2.PageSize,
-                TotalPages = v2.TotalPages,
-                TotalCount = v2.TotalCount,
-                LarsCode = int.TryParse(v2.LarsCode, out int larsCodeValue) ? larsCodeValue : 0,
-                StandardName = v2.StandardName,
-                QarPeriod = v2.QarPeriod,
-                ReviewPeriod = v2.ReviewPeriod,
-                Providers = v2.Providers.Select(p => new ProviderData
+                Page = source.Page,
+                PageSize = source.PageSize,
+                TotalPages = source.TotalPages,
+                TotalCount = source.TotalCount,
+                LarsCode = int.TryParse(source.LarsCode, out int larsCodeValue) ? larsCodeValue : 0,
+                StandardName = source.StandardName,
+                QarPeriod = source.QarPeriod,
+                ReviewPeriod = source.ReviewPeriod,
+                Providers = source.Providers.Select(p => new ProviderData
                 {
                     Ordering = p.Ordering,
                     Ukprn = p.Ukprn,

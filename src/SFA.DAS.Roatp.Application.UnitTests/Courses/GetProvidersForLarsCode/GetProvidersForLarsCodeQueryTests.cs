@@ -59,14 +59,14 @@ public class GetProvidersForLarsCodeQueryTests
     }
 
     [Test, RecursiveMoqAutoData]
-    public void Constructor_V2Request_NullCollections_ResultEmptyLists(
+    public void Constructor_V2Request_EmptyCollections_ResultEmptyLists(
         string larsCode,
         GetProvidersFromLarsCodeRequest request)
     {
-        request.DeliveryModes = null;
-        request.EmployerProviderRatings = null;
-        request.ApprenticeProviderRatings = null;
-        request.Qar = null;
+        request.DeliveryModes = new List<DeliveryMode?>();
+        request.EmployerProviderRatings = new List<ProviderRating?>();
+        request.ApprenticeProviderRatings = new List<ProviderRating?>();
+        request.Qar = new List<QarRating?>();
 
         var sut = new GetProvidersForLarsCodeQuery(larsCode, request);
 
@@ -135,14 +135,14 @@ public class GetProvidersForLarsCodeQueryTests
     }
 
     [Test, RecursiveMoqAutoData]
-    public void Constructor_V1Request_NullCollections_ResultEmptyLists(
+    public void Constructor_V1Request_EmptyCollections_ResultEmptyLists(
         string larsCode,
         GetProvidersFromLarsCodeRequest request)
     {
-        request.DeliveryModes = null;
-        request.EmployerProviderRatings = null;
-        request.ApprenticeProviderRatings = null;
-        request.Qar = null;
+        request.DeliveryModes = new List<DeliveryMode?>();
+        request.EmployerProviderRatings = new List<ProviderRating?>();
+        request.ApprenticeProviderRatings = new List<ProviderRating?>();
+        request.Qar = new List<QarRating?>();
 
         var sut = new GetProvidersForLarsCodeQuery(larsCode, request);
 
