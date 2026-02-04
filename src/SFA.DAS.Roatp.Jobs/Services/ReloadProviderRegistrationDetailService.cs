@@ -53,7 +53,7 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
 
         foreach (var provider in providerRegistrationDetails)
         {
-            providerCourseTypes.AddRange(provider.AllowedCourseTypes.Select(providerCourseType => new ProviderCourseType { Ukprn = provider.Ukprn, CourseType = providerCourseType.CourseType, LearningType = providerCourseType.LearningType }));
+            providerCourseTypes.AddRange(provider.AllowedCourseTypes.Select(providerCourseType => new ProviderCourseType { Ukprn = provider.Ukprn, CourseType = providerCourseType.CourseType }));
         }
 
         _logger.LogInformation("Reloading {Count} provider course types", providerCourseTypes.Count);

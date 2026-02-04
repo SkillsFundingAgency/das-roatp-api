@@ -20,11 +20,5 @@ public class ProviderCourseTypeConfiguration : IEntityTypeConfiguration<Provider
                 v => v.ToString(),
                 v => (CourseType)Enum.Parse(typeof(CourseType), v)
             );
-
-        builder.Property(p => p.LearningType).IsRequired().HasMaxLength(20)
-            .HasConversion(
-                v => v.ToString(),
-                v => (LearningType)Enum.Parse(typeof(LearningType), v)
-            );
     }
 }
