@@ -72,7 +72,7 @@ public class ProvidersControllerV2Tests
         {
             ProviderCourseId = 2,
             LarsCode = "999",
-            CourseType = CourseType.ApprenticeshipUnit
+            CourseType = CourseType.ShortCourse
         };
 
         var handlerResult = new List<ProviderCourseModel> { apprenticeship, shortCourse };
