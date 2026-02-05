@@ -11,12 +11,12 @@ public class GetProvidersForLarsCodeRequest
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
     public string Location { get; set; }
-    public List<DeliveryMode?> DeliveryModes { get; set; } = new List<DeliveryMode?>();
+    public List<DeliveryMode> DeliveryModes { get; set; } = new List<DeliveryMode>();
 
-    public List<ProviderRating?> EmployerProviderRatings { get; set; } = new List<ProviderRating?>();
+    public List<ProviderRating> EmployerProviderRatings { get; set; } = new List<ProviderRating>();
 
-    public List<ProviderRating?> ApprenticeProviderRatings { get; set; } = new List<ProviderRating?>();
-    public List<QarRating?> Qar { get; set; }
+    public List<ProviderRating> ApprenticeProviderRatings { get; set; } = new List<ProviderRating>();
+    public List<QarRating> Qar { get; set; }
     public int? Page { get; set; }
     public int? PageSize { get; set; }
     public Guid? UserId { get; set; }

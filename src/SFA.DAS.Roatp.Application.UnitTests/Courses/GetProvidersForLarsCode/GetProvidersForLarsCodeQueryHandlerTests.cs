@@ -30,7 +30,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         string larsCode,
         CancellationToken cancellationToken)
     {
-        request.DeliveryModes = new List<DeliveryMode?>
+        request.DeliveryModes = new List<DeliveryMode>
         {
             DeliveryMode.Provider,
             DeliveryMode.BlockRelease,
@@ -212,7 +212,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         string larsCode,
         CancellationToken cancellationToken)
     {
-        request.DeliveryModes = new List<DeliveryMode?>
+        request.DeliveryModes = new List<DeliveryMode>
         {
             DeliveryMode.Provider,
             DeliveryMode.BlockRelease,

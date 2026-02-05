@@ -34,10 +34,10 @@ public class GetProvidersForLarsCodeQueryTests
             Page = page,
             PageSize = pageSize,
             UserId = userId,
-            DeliveryModes = new List<DeliveryMode?> { null, DeliveryMode.Provider, DeliveryMode.DayRelease },
-            EmployerProviderRatings = new List<ProviderRating?> { null, ProviderRating.Good },
-            ApprenticeProviderRatings = new List<ProviderRating?> { null, ProviderRating.Excellent },
-            Qar = new List<QarRating?> { null, QarRating.Good }
+            DeliveryModes = new List<DeliveryMode> { DeliveryMode.Provider, DeliveryMode.DayRelease },
+            EmployerProviderRatings = new List<ProviderRating> { ProviderRating.Good },
+            ApprenticeProviderRatings = new List<ProviderRating> { ProviderRating.Excellent },
+            Qar = new List<QarRating> { QarRating.Good }
         };
 
         var sut = new GetProvidersForLarsCodeQuery(larsCode, request);
@@ -63,10 +63,10 @@ public class GetProvidersForLarsCodeQueryTests
         string larsCode,
         GetProvidersForLarsCodeRequest request)
     {
-        request.DeliveryModes = new List<DeliveryMode?>();
-        request.EmployerProviderRatings = new List<ProviderRating?>();
-        request.ApprenticeProviderRatings = new List<ProviderRating?>();
-        request.Qar = new List<QarRating?>();
+        request.DeliveryModes = new List<DeliveryMode>();
+        request.EmployerProviderRatings = new List<ProviderRating>();
+        request.ApprenticeProviderRatings = new List<ProviderRating>();
+        request.Qar = new List<QarRating>();
 
         var sut = new GetProvidersForLarsCodeQuery(larsCode, request);
 
@@ -105,10 +105,10 @@ public class GetProvidersForLarsCodeQueryTests
             Page = page,
             PageSize = pageSize,
             UserId = userId,
-            DeliveryModes = new List<DeliveryMode?> { null, DeliveryMode.Provider, DeliveryMode.Workplace },
-            EmployerProviderRatings = new List<ProviderRating?> { null, ProviderRating.Poor },
-            ApprenticeProviderRatings = new List<ProviderRating?> { null, ProviderRating.Good },
-            Qar = new List<QarRating?> { null, QarRating.Poor }
+            DeliveryModes = new List<DeliveryMode> { DeliveryMode.Provider, DeliveryMode.Workplace },
+            EmployerProviderRatings = new List<ProviderRating> { ProviderRating.Poor },
+            ApprenticeProviderRatings = new List<ProviderRating> { ProviderRating.Good },
+            Qar = new List<QarRating> { QarRating.Poor }
         };
 
         var sut = new GetProvidersForLarsCodeQuery(larsCode, request);
