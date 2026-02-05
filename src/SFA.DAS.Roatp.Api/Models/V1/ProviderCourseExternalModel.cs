@@ -3,14 +3,14 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderC
 
 namespace SFA.DAS.Roatp.Api.Models.V1;
 
-public class ProviderCourseModelExternalModel : ProviderCourseModelBase
+public class ProviderCourseExternalModel : ProviderCourseModelBase
 {
     public int LarsCode { get; set; }
-    public static implicit operator ProviderCourseModelExternalModel(ProviderCourseModelExternal providerCourseModel)
+    public static implicit operator ProviderCourseExternalModel(ProviderCourseModelExternal providerCourseModel)
     {
         if (providerCourseModel == null) return null;
 
-        var model = new ProviderCourseModelExternalModel
+        var model = new ProviderCourseExternalModel
         {
             ProviderCourseId = providerCourseModel.ProviderCourseId,
             LarsCode = int.TryParse(providerCourseModel.LarsCode, out var l) ? l : 0,

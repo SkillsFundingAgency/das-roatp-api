@@ -263,7 +263,7 @@ public class ProvidersControllerV1Tests
         var ok = actionResult as OkObjectResult;
         ok.Should().NotBeNull();
 
-        var returned = ok.Value as IList<ProviderCourseModelExternalModel>;
+        var returned = ok.Value as IList<ProviderCourseExternalModel>;
         returned.Should().NotBeNull();
         returned.Should().HaveCount(1);
     }
@@ -287,7 +287,7 @@ public class ProvidersControllerV1Tests
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseQuery>(q => q.Ukprn == ukprn && q.LarsCode == larsCode.ToString()), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<ProviderCourseModel>(handlerResult));
         var result = await sut.GetProviderCourse(ukprn, larsCode);
 
-        var mappedResult = (ProviderCourseModelExternalModel)(ProviderCourseModelExternal)handlerResult;
+        var mappedResult = (ProviderCourseExternalModel)(ProviderCourseModelExternal)handlerResult;
         (result as OkObjectResult).Value.Should().BeEquivalentTo(mappedResult);
 
         mediatorMock.Verify(a =>

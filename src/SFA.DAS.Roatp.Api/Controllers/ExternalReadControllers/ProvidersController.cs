@@ -83,24 +83,24 @@ public class ProvidersController : ActionResponseControllerBase
     [Produces("application/json")]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(List<ProviderCourseModelExternalModel>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(List<ProviderCourseExternalModel>), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetAllProviderCourses(int ukprn)
     {
         var providersResponse = await _mediator.Send(new GetAllProviderCoursesQuery(ukprn, true, null));
         if (!providersResponse.IsValidResponse)
         {
             var errorsResponse =
-                new ValidatedResponse<List<ProviderCourseModelExternalModel>>(providersResponse.Errors.ToList());
+                new ValidatedResponse<List<ProviderCourseExternalModel>>(providersResponse.Errors.ToList());
             return GetResponse(errorsResponse);
         }
 
         _logger.LogInformation("{Count} Provider courses found for {Ukprn}:", providersResponse.Result.Count,
                 ukprn);
 
-        var v1Response = new ValidatedResponse<List<ProviderCourseModelExternalModel>>(
+        var v1Response = new ValidatedResponse<List<ProviderCourseExternalModel>>(
             providersResponse.Result
                 .Where(x => x.CourseType == CourseType.Apprenticeship)
-                .Select(x => (ProviderCourseModelExternalModel)(ProviderCourseModelExternal)x)
+                .Select(x => (ProviderCourseExternalModel)(ProviderCourseModelExternal)x)
                 .ToList());
 
         return GetResponse(v1Response);
@@ -140,22 +140,22 @@ public class ProvidersController : ActionResponseControllerBase
     [Produces("application/json")]
     [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-    [ProducesResponseType(typeof(ProviderCourseModelExternalModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ProviderCourseExternalModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProviderCourse(int ukprn, int larsCode)
     {
         var providerResponse = await _mediator.Send(new GetProviderCourseQuery(ukprn, larsCode.ToString()));
         if (!providerResponse.IsValidResponse)
         {
             var errorsResponse =
-                new ValidatedResponse<ProviderCourseModelExternalModel>(providerResponse.Errors.ToList());
+                new ValidatedResponse<ProviderCourseExternalModel>(providerResponse.Errors.ToList());
             return GetResponse(errorsResponse);
         }
 
         _logger.LogInformation("Course data found for {Ukprn} and {LarsCode}", ukprn, larsCode);
 
-        var V1Response = (ProviderCourseModelExternalModel)(ProviderCourseModelExternal)providerResponse.Result;
+        var V1Response = (ProviderCourseExternalModel)(ProviderCourseModelExternal)providerResponse.Result;
 
-        var response = new ValidatedResponse<ProviderCourseModelExternalModel>(V1Response);
+        var response = new ValidatedResponse<ProviderCourseExternalModel>(V1Response);
 
         return GetResponse(response);
     }

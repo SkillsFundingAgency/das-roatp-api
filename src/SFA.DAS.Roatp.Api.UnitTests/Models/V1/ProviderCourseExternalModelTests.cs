@@ -7,14 +7,14 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.Api.UnitTests.Models.V1;
 
 [TestFixture]
-public class ProviderCourseModelExternalModelTests
+public class ProviderCourseExternalModelTests
 {
     [Test, MoqAutoData]
     public void ImplicitConversion_WhenSourceIsNull_ReturnsNull()
     {
         ProviderCourseModelExternal source = null;
 
-        ProviderCourseModelExternalModel result = source;
+        ProviderCourseExternalModel result = source;
 
         result.Should().BeNull();
     }
@@ -33,7 +33,7 @@ public class ProviderCourseModelExternalModelTests
         {
             source.LarsCode = inputLarsCode;
 
-            ProviderCourseModelExternalModel result = source;
+            ProviderCourseExternalModel result = source;
 
             result.Should().BeEquivalentTo(source, options => options
                 .Excluding(c => c.LarsCode)
@@ -52,7 +52,7 @@ public class ProviderCourseModelExternalModelTests
         {
             source.LarsCode = inputLarsCode;
 
-            ProviderCourseModelExternalModel result = source;
+            ProviderCourseExternalModel result = source;
 
             result.Should().BeEquivalentTo(source, options => options
                  .Excluding(c => c.LarsCode)
