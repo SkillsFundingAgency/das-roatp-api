@@ -1,12 +1,12 @@
 ﻿using SFA.DAS.Roatp.Application.ProviderCourse.Queries;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
 namespace SFA.DAS.Roatp.Api.Models.V1;
 
 public class ProviderCourseExternalModel : ProviderCourseModelBase
 {
     public int LarsCode { get; set; }
-    public static implicit operator ProviderCourseExternalModel(ProviderCourseModelExternal providerCourseModel)
+    public static implicit operator ProviderCourseExternalModel(ProviderCourseModel providerCourseModel)
     {
         if (providerCourseModel == null) return null;
 

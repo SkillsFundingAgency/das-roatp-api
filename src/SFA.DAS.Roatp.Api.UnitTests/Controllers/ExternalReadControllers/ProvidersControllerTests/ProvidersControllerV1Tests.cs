@@ -12,7 +12,6 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 using SFA.DAS.Roatp.Api.Models.V1;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
@@ -289,7 +288,7 @@ public class ProvidersControllerV1Tests
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseQuery>(q => q.Ukprn == ukprn && q.LarsCode == larsCode.ToString()), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<ProviderCourseModel>(handlerResult));
         var result = await sut.GetProviderCourse(ukprn, larsCode);
 
-        var mappedResult = (ProviderCourseExternalModel)(ProviderCourseModelExternal)handlerResult;
+        var mappedResult = (ProviderCourseExternalModel)handlerResult;
         (result as OkObjectResult).Value.Should().BeEquivalentTo(mappedResult);
 
         mediatorMock.Verify(a =>

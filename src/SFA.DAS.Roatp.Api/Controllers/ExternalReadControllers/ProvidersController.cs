@@ -100,7 +100,7 @@ public class ProvidersController : ActionResponseControllerBase
         var v1Response = new ValidatedResponse<List<ProviderCourseExternalModel>>(
             providersResponse.Result
                 .Where(x => x.CourseType == CourseType.Apprenticeship)
-                .Select(x => (ProviderCourseExternalModel)(ProviderCourseModelExternal)x)
+                .Select(x => (ProviderCourseExternalModel)x)
                 .ToList());
 
         return GetResponse(v1Response);
@@ -153,7 +153,7 @@ public class ProvidersController : ActionResponseControllerBase
 
         _logger.LogInformation("Course data found for {Ukprn} and {LarsCode}", ukprn, larsCode);
 
-        var V1Response = (ProviderCourseExternalModel)(ProviderCourseModelExternal)providerResponse.Result;
+        var V1Response = (ProviderCourseExternalModel)providerResponse.Result;
 
         var response = new ValidatedResponse<ProviderCourseExternalModel>(V1Response);
 
