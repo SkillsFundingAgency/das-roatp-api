@@ -6,7 +6,7 @@ public class ProviderCourseModelBase
 {
     public int ProviderCourseId { get; set; }
     public string CourseName { get; set; }
-    public CourseType? CourseType { get; set; }
+    public CourseType CourseType { get; set; }
     public int Level { get; set; }
     public string IfateReferenceNumber { get; set; }
     public string StandardInfoUrl { get; set; }

@@ -19,7 +19,7 @@ public class ProviderCourseModel : ProviderCourseModelBase
             HasPortableFlexiJobOption = providerCourse.HasPortableFlexiJobOption,
             HasLocations = providerCourse.Locations.Count > 0,
             IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false,
-            CourseType = providerCourse.Standard?.CourseType,
+            CourseType = providerCourse.Standard.CourseType,
             HasOnlineDeliveryOption = providerCourse.HasOnlineDeliveryOption
         };
 
