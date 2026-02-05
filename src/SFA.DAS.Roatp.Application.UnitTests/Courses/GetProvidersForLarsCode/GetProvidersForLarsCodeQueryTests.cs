@@ -135,7 +135,7 @@ public class GetProvidersForLarsCodeQueryTests
     }
 
     [Test, RecursiveMoqAutoData]
-    public void Constructor_RequestWithNullCollections_LeavesListsEmpty(
+    public void Constructor_RequestWithEmptyCollections_LeavesListsEmpty(
         string larsCode,
         decimal? latitude,
         decimal? longitude,
@@ -156,10 +156,10 @@ public class GetProvidersForLarsCodeQueryTests
             Page = page,
             PageSize = pageSize,
             UserId = userId,
-            DeliveryModes = null,
-            EmployerProviderRatings = null,
-            ApprenticeProviderRatings = null,
-            Qar = null
+            DeliveryModes = new List<DeliveryMode>(),
+            EmployerProviderRatings = new List<ProviderRating>(),
+            ApprenticeProviderRatings = new List<ProviderRating>(),
+            Qar = new List<QarRating>()
         };
 
         var sut = new GetProvidersForLarsCodeQuery(larsCode, request);

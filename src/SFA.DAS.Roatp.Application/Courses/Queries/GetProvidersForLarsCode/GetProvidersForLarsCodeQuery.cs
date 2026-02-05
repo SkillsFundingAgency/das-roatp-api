@@ -27,57 +27,29 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
     public List<ProviderRating> ApprenticeProviderRatings { get; } = new();
     public List<QarRating> Qar { get; } = new();
 
-    private readonly record struct PopulateParams(
-        decimal? Latitude,
-        string Location,
-        decimal? Longitude,
-        ProviderOrderBy? OrderBy,
-        decimal? Distance,
-        int? Page,
-        int? PageSize,
-        Guid? UserId,
-        IEnumerable<DeliveryMode> DeliveryModes,
-        IEnumerable<ProviderRating> EmployerProviderRatings,
-        IEnumerable<ProviderRating> ApprenticeProviderRatings,
-        IEnumerable<QarRating> QarRatings
-    );
-
     public GetProvidersForLarsCodeQuery(string larsCode, GetProvidersForLarsCodeRequest request)
     {
         LarsCode = larsCode;
 
-        var args = new PopulateParams(
-            Latitude: request.Latitude,
-            Location: request.Location,
-            Longitude: request.Longitude,
-            OrderBy: request.OrderBy,
-            Distance: request.Distance,
-            Page: request.Page,
-            PageSize: request.PageSize,
-            UserId: request.UserId,
-            DeliveryModes: request.DeliveryModes?.OfType<DeliveryMode>(),
-            EmployerProviderRatings: request.EmployerProviderRatings?.OfType<ProviderRating>(),
-            ApprenticeProviderRatings: request.ApprenticeProviderRatings?.OfType<ProviderRating>(),
-            QarRatings: request.Qar?.OfType<QarRating>()
-        );
+        Latitude = request.Latitude;
+        Location = request.Location;
+        Longitude = request.Longitude;
+        OrderBy = request.OrderBy;
+        Distance = request.Distance;
+        Page = request.Page;
+        PageSize = request.PageSize;
+        UserId = request.UserId;
 
-        PopulateFrom(args);
-    }
+        var deliveryModes = request.DeliveryModes.OfType<DeliveryMode>();
+        if (deliveryModes != null) DeliveryModes.AddRange(deliveryModes);
 
-    private void PopulateFrom(PopulateParams args)
-    {
-        Latitude = args.Latitude;
-        Location = args.Location;
-        Longitude = args.Longitude;
-        OrderBy = args.OrderBy;
-        Distance = args.Distance;
-        Page = args.Page;
-        PageSize = args.PageSize;
-        UserId = args.UserId;
+        var employerRatings = request.EmployerProviderRatings.OfType<ProviderRating>();
+        if (employerRatings != null) EmployerProviderRatings.AddRange(employerRatings);
 
-        if (args.DeliveryModes != null) DeliveryModes.AddRange(args.DeliveryModes);
-        if (args.EmployerProviderRatings != null) EmployerProviderRatings.AddRange(args.EmployerProviderRatings);
-        if (args.ApprenticeProviderRatings != null) ApprenticeProviderRatings.AddRange(args.ApprenticeProviderRatings);
-        if (args.QarRatings != null) Qar.AddRange(args.QarRatings);
+        var apprenticeRatings = request.ApprenticeProviderRatings.OfType<ProviderRating>();
+        if (apprenticeRatings != null) ApprenticeProviderRatings.AddRange(apprenticeRatings);
+
+        var qarRatings = request.Qar.OfType<QarRating>();
+        if (qarRatings != null) Qar.AddRange(qarRatings);
     }
 }

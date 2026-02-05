@@ -16,7 +16,7 @@ public class GetProvidersForLarsCodeRequest
     public List<ProviderRating> EmployerProviderRatings { get; set; } = new List<ProviderRating>();
 
     public List<ProviderRating> ApprenticeProviderRatings { get; set; } = new List<ProviderRating>();
-    public List<QarRating> Qar { get; set; }
+    public List<QarRating> Qar { get; set; } = new List<QarRating>();
     public int? Page { get; set; }
     public int? PageSize { get; set; }
     public Guid? UserId { get; set; }
