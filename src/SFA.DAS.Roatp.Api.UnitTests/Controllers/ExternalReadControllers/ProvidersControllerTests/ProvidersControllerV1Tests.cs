@@ -246,13 +246,15 @@ public class ProvidersControllerV1Tests
         int ukprn,
         ProviderCourseModel apprenticeship)
     {
+        const string larsCode = "123";
         var shortCourse = new ProviderCourseModel
         {
             ProviderCourseId = 2,
-            LarsCode = "999",
+            LarsCode = larsCode,
             CourseType = CourseType.ShortCourse
         };
 
+        apprenticeship.LarsCode = larsCode;
         var handlerResult = new List<ProviderCourseModel> { apprenticeship, shortCourse };
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>()))

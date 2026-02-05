@@ -13,7 +13,7 @@ public class ProviderCourseExternalModel : ProviderCourseModelBase
         var model = new ProviderCourseExternalModel
         {
             ProviderCourseId = providerCourseModel.ProviderCourseId,
-            LarsCode = int.TryParse(providerCourseModel.LarsCode, out var l) ? l : 0,
+            LarsCode = int.Parse(providerCourseModel.LarsCode),
             StandardInfoUrl = providerCourseModel.StandardInfoUrl,
             ContactUsPhoneNumber = providerCourseModel.ContactUsPhoneNumber,
             ContactUsEmail = providerCourseModel.ContactUsEmail,

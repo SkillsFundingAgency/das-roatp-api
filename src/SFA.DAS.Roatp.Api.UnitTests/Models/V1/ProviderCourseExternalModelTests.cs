@@ -42,23 +42,4 @@ public class ProviderCourseExternalModelTests
             result.LarsCode.Should().Be(expected);
         }
     }
-
-    [Test, MoqAutoData]
-    public void ImplicitConversion_SetsLarsCodeToZero_WhenParseFails(ProviderCourseModelExternal source)
-    {
-        var cases = new[] { null, string.Empty, "abc", "12x" };
-
-        foreach (var inputLarsCode in cases)
-        {
-            source.LarsCode = inputLarsCode;
-
-            ProviderCourseExternalModel result = source;
-
-            result.Should().BeEquivalentTo(source, options => options
-                 .Excluding(c => c.LarsCode)
-                 .Excluding(c => c.HasNationalDeliveryOption)
-                 .Excluding(c => c.HasHundredPercentEmployerDeliveryOption));
-            result.LarsCode.Should().Be(0);
-        }
-    }
 }
