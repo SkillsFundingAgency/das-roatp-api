@@ -863,9 +863,9 @@ INSERT INTO #Standard VALUES ('ST1480_1.0','825','ST1480',2,'Insulation installa
 INSERT INTO #Standard VALUES ('ST1488_1.0','801','ST1488',2,'Food and beverage team member','1.0','',0,12,'Months','Catering and hospitality','Apprenticeship','Apprenticeship');
 INSERT INTO #Standard VALUES ('ST1498_1.1','824','ST1498',2,'Floorlayer wood based','1.1','',0,30,'Months','Construction and the built environment','Apprenticeship','Apprenticeship');
 INSERT INTO #Standard VALUES ('ST1502_1.0','823','ST1502',6,'Teacher - Undergraduate','1.0','Department for Education',1,45,'Months','Education and early years','Apprenticeship','Apprenticeship');
-INSERT INTO #Standard VALUES ('SC0001_1.0','ZSC00001','SC0001',3,'Digital Apprenticeship unit','1.0','',0,100,'Hours','Digital','ApprenticeshipUnit','ApprenticeshipUnit');
-INSERT INTO #Standard VALUES ('SC0002_1.0','ZSC00002','SC0002',4,'Teacher Assistant - Apprenticeship Unit','1.0','Department for Education',1,120,'Hours','Education and early years','ApprenticeshipUnit','ApprenticeshipUnit');
-INSERT INTO #Standard VALUES ('SC0004_1.0','ZSC00004','SC0004',4,'Nursing Apprenticeship unit','1.0','Nursing and Midwifery Council',1,120,'Hours','Health and science','ApprenticeshipUnit','ApprenticeshipUnit');
+INSERT INTO #Standard VALUES ('SC0001_1.0','ZSC00001','SC0001',3,'Digital Apprenticeship unit','1.0','',0,100,'Hours','Digital','ApprenticeshipUnit','ShortCourse');
+INSERT INTO #Standard VALUES ('SC0002_1.0','ZSC00002','SC0002',4,'Teacher Assistant - Apprenticeship Unit','1.0','Department for Education',1,120,'Hours','Education and early years','ApprenticeshipUnit','ShortCourse');
+INSERT INTO #Standard VALUES ('SC0004_1.0','ZSC00004','SC0004',4,'Nursing Apprenticeship unit','1.0','Nursing and Midwifery Council',1,120,'Hours','Health and science','ApprenticeshipUnit','ShortCourse');
 
 DELETE FROM [dbo].[Standard];
 INSERT INTO [dbo].[Standard]
@@ -1720,8 +1720,5 @@ update Standard set SectorSubjectAreaTier1 = 6 where Larscode = 'ZSC00001';
 update Standard set SectorSubjectAreaTier1 = 13 where Larscode = 'ZSC00002';
 update Standard set SectorSubjectAreaTier1 = 1 where Larscode = 'ZSC00004';
 update Standard set SectorSubjectAreaTier1 = 4 where Larscode = '1';
-
-
-
 
 -- END

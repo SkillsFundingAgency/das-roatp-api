@@ -7,5 +7,4 @@ public class ProviderCourseType
     public int Id { get; set; }
     public int Ukprn { get; set; }
     public CourseType CourseType { get; set; }
-    public LearningType LearningType { get; set; }
 }

@@ -69,7 +69,7 @@ public class CourseTypeValidatorTests
         _providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>()))
             .ReturnsAsync(new List<ProviderCourseType>
             {
-                new ProviderCourseType { CourseType = CourseType.ApprenticeshipUnit }
+                new ProviderCourseType { CourseType = CourseType.ShortCourse }
             });
 
         _sut = new CourseTypeValidator(_providerCourseTypesReadRepositoryMock.Object, _standardsReadRepositoryMock.Object);
@@ -91,7 +91,7 @@ public class CourseTypeValidatorTests
             .ReturnsAsync(new List<ProviderCourseType>
             {
                 new ProviderCourseType { CourseType = CourseType.Apprenticeship },
-                new ProviderCourseType { CourseType = CourseType.ApprenticeshipUnit }
+                new ProviderCourseType { CourseType = CourseType.ShortCourse }
             });
 
         _sut = new CourseTypeValidator(_providerCourseTypesReadRepositoryMock.Object, _standardsReadRepositoryMock.Object);

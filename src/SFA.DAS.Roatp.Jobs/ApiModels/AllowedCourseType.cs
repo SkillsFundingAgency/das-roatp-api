@@ -2,4 +2,4 @@
 
 namespace SFA.DAS.Roatp.Jobs.ApiModels;
 
-public record AllowedCourseType(int CourseTypeId, CourseType CourseType, Domain.Models.LearningType LearningType);
+public record AllowedCourseType(int CourseTypeId, CourseType CourseTypeName);

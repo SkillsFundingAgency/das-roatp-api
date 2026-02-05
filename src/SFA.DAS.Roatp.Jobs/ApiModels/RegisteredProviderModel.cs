@@ -2,6 +2,7 @@
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Jobs.ApiModels;
+
 public class RegisteredProviderModel
 {
     public int Ukprn { get; set; }

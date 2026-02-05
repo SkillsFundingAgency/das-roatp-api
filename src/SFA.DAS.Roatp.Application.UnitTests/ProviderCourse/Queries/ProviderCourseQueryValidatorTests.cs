@@ -98,7 +98,7 @@ public class ProviderCourseQueryValidatorTests
             .ReturnsAsync(new Standard { CourseType = CourseType.Apprenticeship });
 
         _providerCourseTypesReadRepositoryMock.Setup(x => x.GetProviderCourseTypesByUkprn(It.IsAny<int>()))
-            .ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { CourseType = CourseType.ApprenticeshipUnit } });
+            .ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { CourseType = CourseType.ShortCourse } });
 
         var ukprn = 10000001;
         var larsCode = "1";

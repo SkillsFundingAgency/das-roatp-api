@@ -41,10 +41,10 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries.GetAllStandards
             var expectedStandards = new List<Standard>
             {
                 new() { LarsCode = "1", Title = "standard 1", CourseType = CourseType.Apprenticeship },
-                new() { LarsCode = "2", Title = "short 1", CourseType = CourseType.ApprenticeshipUnit},
-                new() { LarsCode = "3", Title = "short 2", CourseType = CourseType.ApprenticeshipUnit}
+                new() { LarsCode = "2", Title = "short 1", CourseType = CourseType.ShortCourse},
+                new() { LarsCode = "3", Title = "short 2", CourseType = CourseType.ShortCourse}
             };
-            var courseTypeFilter = CourseType.ApprenticeshipUnit;
+            var courseTypeFilter = CourseType.ShortCourse;
 
             var repositoryMock = new Mock<IStandardsReadRepository>();
             repositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(expectedStandards);
@@ -65,7 +65,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries.GetAllStandards
                 new() { LarsCode = "1", Title = "standard 1", CourseType = CourseType.Apprenticeship },
                 new() { LarsCode = "2", Title = "standard 2", CourseType = CourseType.Apprenticeship }
             };
-            var courseTypeFilter = CourseType.ApprenticeshipUnit;
+            var courseTypeFilter = CourseType.ShortCourse;
             var repositoryMock = new Mock<IStandardsReadRepository>();
             repositoryMock.Setup(r => r.GetAllStandards()).ReturnsAsync(expectedStandards);
 

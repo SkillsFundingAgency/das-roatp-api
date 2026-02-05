@@ -188,7 +188,7 @@ public class ProviderAllCoursesQueryHandlerTests
         var courses = new List<Domain.Entities.ProviderCourse>
         {
             new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.Apprenticeship }, LarsCode = larsCodeOne},
-            new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.ApprenticeshipUnit }, LarsCode = larsCodeTwo}
+            new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.ShortCourse }, LarsCode = larsCodeTwo}
         };
 
         providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(courses);
@@ -212,14 +212,14 @@ public class ProviderAllCoursesQueryHandlerTests
         var larsCodeOne = "1";
         var larsCodeTwo = "2";
 
-        var expectedCourseType = CourseType.ApprenticeshipUnit;
+        var expectedCourseType = CourseType.ShortCourse;
 
         var query = new GetAllProviderCoursesQuery(1, false, expectedCourseType);
 
         var courses = new List<Domain.Entities.ProviderCourse>
         {
             new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.Apprenticeship }, LarsCode = larsCodeOne},
-            new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.ApprenticeshipUnit }, LarsCode = larsCodeTwo}
+            new() { ProviderId = 1, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.ShortCourse }, LarsCode = larsCodeTwo}
         };
 
         providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(courses);
@@ -246,7 +246,7 @@ public class ProviderAllCoursesQueryHandlerTests
         var courses = new List<Domain.Entities.ProviderCourse>
         {
             new() { ProviderId = ukprn, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.Apprenticeship }, LarsCode = "1" },
-            new() { ProviderId = ukprn, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.ApprenticeshipUnit }, LarsCode = "2" }
+            new() { ProviderId = ukprn, IsApprovedByRegulator = true, Standard = new Standard { IsRegulatedForProvider = false, CourseType = CourseType.ShortCourse }, LarsCode = "2" }
         };
 
         providersReadRepositoryMock.Setup(r => r.GetAllProviderCourses(ukprn)).ReturnsAsync(courses);
@@ -258,6 +258,6 @@ public class ProviderAllCoursesQueryHandlerTests
         response.Should().NotBeNull();
         response.Result.Should().HaveCount(2);
         response.Result.Should().ContainSingle(r => r.CourseType == CourseType.Apprenticeship);
-        response.Result.Should().ContainSingle(r => r.CourseType == CourseType.ApprenticeshipUnit);
+        response.Result.Should().ContainSingle(r => r.CourseType == CourseType.ShortCourse);
     }
 }
