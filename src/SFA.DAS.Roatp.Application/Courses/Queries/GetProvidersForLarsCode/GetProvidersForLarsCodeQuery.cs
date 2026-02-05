@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
@@ -40,16 +39,9 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
         PageSize = request.PageSize;
         UserId = request.UserId;
 
-        var deliveryModes = request.DeliveryModes.OfType<DeliveryMode>();
-        if (deliveryModes != null) DeliveryModes.AddRange(deliveryModes);
-
-        var employerRatings = request.EmployerProviderRatings.OfType<ProviderRating>();
-        if (employerRatings != null) EmployerProviderRatings.AddRange(employerRatings);
-
-        var apprenticeRatings = request.ApprenticeProviderRatings.OfType<ProviderRating>();
-        if (apprenticeRatings != null) ApprenticeProviderRatings.AddRange(apprenticeRatings);
-
-        var qarRatings = request.Qar.OfType<QarRating>();
-        if (qarRatings != null) Qar.AddRange(qarRatings);
+        DeliveryModes.AddRange(request.DeliveryModes);
+        EmployerProviderRatings.AddRange(request.EmployerProviderRatings);
+        ApprenticeProviderRatings.AddRange(request.ApprenticeProviderRatings);
+        Qar.AddRange(request.Qar);
     }
 }

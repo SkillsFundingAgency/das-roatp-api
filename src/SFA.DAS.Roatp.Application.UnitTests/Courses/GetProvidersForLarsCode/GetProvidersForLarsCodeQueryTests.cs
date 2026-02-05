@@ -123,9 +123,8 @@ public class GetProvidersForLarsCodeQueryTests
         sut.PageSize.Should().Be(pageSize);
         sut.UserId.Should().Be(userId);
 
-        var expectedModes = request.DeliveryModes!
-            .Where(x => x != null)
-            .Select(x => (DeliveryMode)x!)
+        var expectedModes = request.DeliveryModes
+            .Select(x => (DeliveryMode)x)
             .ToList();
 
         sut.DeliveryModes.Should().BeEquivalentTo(expectedModes);
