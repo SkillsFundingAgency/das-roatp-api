@@ -8,7 +8,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 
 public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersForLarsCodeQuery, ValidatedResponse<GetProvidersForLarsCodeQueryResult>>
 {
@@ -26,11 +26,14 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
         var isProvider = (bool?)null;
         var isBlockRelease = (bool?)null;
         var isDayRelease = (bool?)null;
+        var isOnline = (bool?)null;
 
         if (request.DeliveryModes.Contains(DeliveryMode.Workplace)) isWorkplace = true;
         if (request.DeliveryModes.Contains(DeliveryMode.Provider)) isProvider = true;
         if (request.DeliveryModes.Contains(DeliveryMode.BlockRelease)) isBlockRelease = true;
         if (request.DeliveryModes.Contains(DeliveryMode.DayRelease)) isDayRelease = true;
+        if (request.DeliveryModes.Contains(DeliveryMode.Online)) isOnline = true;
+
         string qar = null;
 
         if (request.Qar.Count > 0)
@@ -50,7 +53,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             apprenticeProviderRatings = string.Join(',', request.ApprenticeProviderRatings);
         }
 
-        _logger.LogInformation("calling provider details for larsCode {larscode}", request.LarsCode);
+        _logger.LogInformation("calling provider details for larsCode {LarsCode}", request.LarsCode);
 
         var parameters = new GetProvidersFromLarsCodeOptionalParameters
         {
@@ -60,6 +63,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             IsProvider = isProvider,
             IsBlockRelease = isBlockRelease,
             IsDayRelease = isDayRelease,
+            IsOnline = isOnline,
             Latitude = request.Latitude,
             Longitude = request.Longitude,
             Location = request.Location,
@@ -81,7 +85,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             PageSize = first.PageSize,
             TotalCount = first.TotalCount,
             TotalPages = first.TotalPages,
-            LarsCode = int.TryParse(first.LarsCode, out var l) ? l : 0,
+            LarsCode = first.LarsCode,
             StandardName = first.StandardName,
             QarPeriod = first.QarPeriod,
             ReviewPeriod = first.ReviewPeriod,
@@ -97,6 +101,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
                 Ordering = item.Ordering,
                 Ukprn = item.Ukprn,
                 ProviderName = item.ProviderName,
+                HasOnlineDeliveryOption = item.HasOnlineDeliveryOption,
                 ShortlistId = item.ShortlistId,
                 Leavers = item.Leavers,
                 AchievementRate = item.AchievementRate,

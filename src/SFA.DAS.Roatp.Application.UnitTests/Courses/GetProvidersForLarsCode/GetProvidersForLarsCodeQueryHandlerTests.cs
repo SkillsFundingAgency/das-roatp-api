@@ -8,7 +8,7 @@ using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
@@ -26,16 +26,17 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         [Frozen] Mock<ILogger<GetProvidersForLarsCodeQueryHandler>> loggerMock,
         GetProvidersForLarsCodeQueryHandler sut,
         List<ProviderSearchModel> pagedProviderDetails,
-        GetProvidersFromLarsCodeRequest request,
+        GetProvidersForLarsCodeRequest request,
         string larsCode,
         CancellationToken cancellationToken)
     {
-        request.DeliveryModes = new List<DeliveryMode?>
+        request.DeliveryModes = new List<DeliveryMode>
         {
             DeliveryMode.Provider,
             DeliveryMode.BlockRelease,
             DeliveryMode.DayRelease,
-            DeliveryMode.Workplace
+            DeliveryMode.Workplace,
+            DeliveryMode.Online
         };
 
         var isProvider = true;
@@ -152,11 +153,10 @@ public class GetProvidersForLarsCodeQueryHandlerTests
     public async Task Handle_NoData_ReturnsExpectedResult(
     [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
     GetProvidersForLarsCodeQueryHandler sut,
-    GetProvidersFromLarsCodeRequest request,
+    GetProvidersForLarsCodeRequest request,
     CancellationToken cancellationToken)
     {
-        string larsCode = "2";
-        int larsCodeValue = 2;
+        const string larsCode = "2";
         var query = new GetProvidersForLarsCodeQuery(larsCode, request);
 
         List<ProviderSearchModel> pagedProviderDetails = new()
@@ -184,7 +184,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
             PageSize = request.PageSize ?? Pagination.DefaultPageSize,
             TotalPages = 0,
             TotalCount = 0,
-            LarsCode = larsCodeValue,
+            LarsCode = larsCode,
             Providers = []
         };
 
@@ -208,11 +208,11 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
         GetProvidersForLarsCodeQueryHandler sut,
         List<ProviderSearchModel> pagedProviderDetails,
-        GetProvidersFromLarsCodeRequest request,
+        GetProvidersForLarsCodeRequest request,
         string larsCode,
         CancellationToken cancellationToken)
     {
-        request.DeliveryModes = new List<DeliveryMode?>
+        request.DeliveryModes = new List<DeliveryMode>
         {
             DeliveryMode.Provider,
             DeliveryMode.BlockRelease,

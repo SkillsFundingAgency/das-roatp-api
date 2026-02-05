@@ -10,8 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
+using SFA.DAS.Roatp.Api.Models.V1;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
-using SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetAllProviderCourses;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviders;
@@ -20,12 +20,11 @@ using SFA.DAS.Roatp.Application.Providers.Queries.GetRegisteredProvider;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers;
+namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ExternalReadControllers.ProvidersControllerTests;
 
-public class ProvidersControllerTests
+public class ProvidersControllerV1Tests
 {
-    [Test]
-    [MoqAutoData]
+    [Test, MoqAutoData]
     public async Task GetProviders_CallsMediator_WithLiveEqualsFalse(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProvidersController sut
@@ -51,8 +50,7 @@ public class ProvidersControllerTests
         (result as OkObjectResult).Value.Should().BeEquivalentTo(handlerResult);
     }
 
-    [Test]
-    [MoqAutoData]
+    [Test, MoqAutoData]
     public async Task GetProviders_CallsMediator_WithLiveEqualsTrue(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] ProvidersController sut
@@ -247,13 +245,15 @@ public class ProvidersControllerTests
         int ukprn,
         ProviderCourseModel apprenticeship)
     {
+        const string larsCode = "123";
         var shortCourse = new ProviderCourseModel
         {
             ProviderCourseId = 2,
-            LarsCode = "999",
+            LarsCode = larsCode,
             CourseType = CourseType.ShortCourse
         };
 
+        apprenticeship.LarsCode = larsCode;
         var handlerResult = new List<ProviderCourseModel> { apprenticeship, shortCourse };
 
         mediatorMock.Setup(m => m.Send(It.Is<GetAllProviderCoursesQuery>(q => q.Ukprn == ukprn), It.IsAny<CancellationToken>()))
@@ -264,7 +264,7 @@ public class ProvidersControllerTests
         var ok = actionResult as OkObjectResult;
         ok.Should().NotBeNull();
 
-        var returned = ok.Value as IList<ProviderCourseModelExternal>;
+        var returned = ok.Value as IList<ProviderCourseExternalModel>;
         returned.Should().NotBeNull();
         returned.Should().HaveCount(1);
     }
@@ -287,7 +287,8 @@ public class ProvidersControllerTests
         handlerResult.LarsCode = larsCode.ToString();
         mediatorMock.Setup(m => m.Send(It.Is<GetProviderCourseQuery>(q => q.Ukprn == ukprn && q.LarsCode == larsCode.ToString()), It.IsAny<CancellationToken>())).ReturnsAsync(new ValidatedResponse<ProviderCourseModel>(handlerResult));
         var result = await sut.GetProviderCourse(ukprn, larsCode);
-        var mappedResult = (ProviderCourseModelExternal)handlerResult;
+
+        var mappedResult = (ProviderCourseExternalModel)handlerResult;
         (result as OkObjectResult).Value.Should().BeEquivalentTo(mappedResult);
 
         mediatorMock.Verify(a =>
