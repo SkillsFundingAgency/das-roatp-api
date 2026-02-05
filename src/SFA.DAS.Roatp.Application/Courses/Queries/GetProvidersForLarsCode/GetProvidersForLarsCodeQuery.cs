@@ -20,9 +20,7 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
     public int? PageSize { get; private set; }
     public Guid? UserId { get; private set; }
     public List<DeliveryMode> DeliveryModes { get; } = new();
-
     public List<ProviderRating> EmployerProviderRatings { get; } = new();
-
     public List<ProviderRating> ApprenticeProviderRatings { get; } = new();
     public List<QarRating> Qar { get; } = new();
 
