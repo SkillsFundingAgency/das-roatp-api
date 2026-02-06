@@ -6,6 +6,5 @@
 );
 GO;
 
-CREATE NONCLUSTERED INDEX IX_ProviderCourseType_Ukprn_CourseType
-ON [dbo].[ProviderCourseType] ([Ukprn],[CourseType])
-INCLUDE ([Id]);
+CREATE UNIQUE INDEX IX_ProviderCourseType_Ukprn_CourseType
+ON [dbo].[ProviderCourseType] ([Ukprn],[CourseType]);
