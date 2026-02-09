@@ -4,7 +4,7 @@ using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 
 namespace SFA.DAS.Roatp.Api.Models.V1
 {
-    public class GetProvidersForLarsCodeResultModel
+    public class GetProvidersForLarsCodeModel
     {
         public int Page { get; set; }
         public int PageSize { get; set; }
@@ -17,10 +17,10 @@ namespace SFA.DAS.Roatp.Api.Models.V1
 
         public List<ProviderData> Providers { get; set; } = new();
 
-        public static implicit operator GetProvidersForLarsCodeResultModel(GetProvidersForLarsCodeQueryResult source)
+        public static implicit operator GetProvidersForLarsCodeModel(GetProvidersForLarsCodeQueryResult source)
         {
             if (source == null) return null;
-            return new GetProvidersForLarsCodeResultModel
+            return new GetProvidersForLarsCodeModel
             {
                 Page = source.Page,
                 PageSize = source.PageSize,

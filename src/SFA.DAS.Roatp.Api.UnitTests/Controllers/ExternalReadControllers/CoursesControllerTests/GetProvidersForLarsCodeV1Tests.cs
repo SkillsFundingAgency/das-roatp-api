@@ -49,7 +49,7 @@ public class GetProvidersForLarsCodeV1Tests
         var ok = result.As<OkObjectResult>();
         ok.Should().NotBeNull();
 
-        var actualResult = ok.Value.As<GetProvidersForLarsCodeResultModel>();
+        var actualResult = ok.Value.As<GetProvidersForLarsCodeModel>();
         actualResult.Should().NotBeNull();
 
         using (new AssertionScope())

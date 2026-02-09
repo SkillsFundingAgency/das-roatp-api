@@ -32,14 +32,14 @@ public class CoursesController : ActionResponseControllerBase
     [MapToApiVersion(ApiVersionNumber.One)]
     [Route("{larsCode:int}/providers")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(GetProvidersForLarsCodeResultModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetProvidersForLarsCodeModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] int larsCode, [FromQuery] GetProvidersForLarsCodeRequest request)
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
         ValidatedResponse<GetProvidersForLarsCodeQueryResult> queryResult = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode.ToString(), request));
         var responseV1 = queryResult.IsValidResponse
-         ? new ValidatedResponse<GetProvidersForLarsCodeResultModel>((GetProvidersForLarsCodeResultModel)queryResult.Result)
-         : new ValidatedResponse<GetProvidersForLarsCodeResultModel>([.. queryResult.Errors]);
+         ? new ValidatedResponse<GetProvidersForLarsCodeModel>((GetProvidersForLarsCodeModel)queryResult.Result)
+         : new ValidatedResponse<GetProvidersForLarsCodeModel>([.. queryResult.Errors]);
         return GetResponse(responseV1);
     }
 

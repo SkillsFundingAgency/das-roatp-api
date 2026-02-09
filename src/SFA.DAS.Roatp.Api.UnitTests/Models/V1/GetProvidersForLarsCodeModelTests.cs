@@ -12,13 +12,13 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.Api.UnitTests.Models.V1;
 
 [TestFixture]
-public class GetProvidersForLarsCodeResultModelTests
+public class GetProvidersForLarsCodeModelTests
 {
     [Test, MoqAutoData]
     public void ImplicitConversion_FromV2ToV1_MapsProvidersAndTopLevelFields(GetProvidersForLarsCodeQueryResult source)
     {
         source.LarsCode = "123";
-        GetProvidersForLarsCodeResultModel v1 = source;
+        GetProvidersForLarsCodeModel v1 = source;
 
         using (new AssertionScope())
         {
@@ -43,7 +43,7 @@ public class GetProvidersForLarsCodeResultModelTests
     {
         GetProvidersForLarsCodeQueryResult v2 = null;
 
-        GetProvidersForLarsCodeResultModel v1 = v2;
+        GetProvidersForLarsCodeModel v1 = v2;
 
         v1.Should().BeNull();
     }
@@ -55,7 +55,7 @@ public class GetProvidersForLarsCodeResultModelTests
         source.LarsCode = LarsCode;
         source.Providers = new List<Domain.Models.ProviderData>();
 
-        GetProvidersForLarsCodeResultModel v1 = source;
+        GetProvidersForLarsCodeModel v1 = source;
 
         using (new AssertionScope())
         {
@@ -91,7 +91,7 @@ public class GetProvidersForLarsCodeResultModelTests
                 }
             };
 
-        GetProvidersForLarsCodeResultModel v1 = source;
+        GetProvidersForLarsCodeModel v1 = source;
 
         using (new AssertionScope())
         {
@@ -130,7 +130,7 @@ public class GetProvidersForLarsCodeResultModelTests
         source.Providers = new List<Domain.Models.ProviderData>();
         source.LarsCode = "123";
 
-        GetProvidersForLarsCodeResultModel v1 = source;
+        GetProvidersForLarsCodeModel v1 = source;
 
         using (new AssertionScope())
         {
