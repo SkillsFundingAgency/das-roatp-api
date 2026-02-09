@@ -147,7 +147,7 @@ public class ProvidersController : ActionResponseControllerBase
         if (!providerResponse.IsValidResponse)
         {
             var errorsResponse =
-                new ValidatedResponse<ProviderCourseExternalModel>(providerResponse.Errors.ToList());
+                new ValidatedResponse<ProviderCourseExternalModel>(providerResponse.Errors);
             return GetResponse(errorsResponse);
         }
 
@@ -173,7 +173,7 @@ public class ProvidersController : ActionResponseControllerBase
         if (!providerResponse.IsValidResponse)
         {
             var errorsResponse =
-                new ValidatedResponse<ProviderCourseModelExternal>(providerResponse.Errors.ToList());
+                new ValidatedResponse<ProviderCourseModelExternal>(providerResponse.Errors);
             return GetResponse(errorsResponse);
         }
 

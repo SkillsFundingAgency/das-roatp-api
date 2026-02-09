@@ -39,7 +39,7 @@ public class CoursesController : ActionResponseControllerBase
         ValidatedResponse<GetProvidersForLarsCodeQueryResult> queryResult = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode.ToString(), request));
         var responseV1 = queryResult.IsValidResponse
          ? new ValidatedResponse<GetProvidersForLarsCodeModel>((GetProvidersForLarsCodeModel)queryResult.Result)
-         : new ValidatedResponse<GetProvidersForLarsCodeModel>([.. queryResult.Errors]);
+         : new ValidatedResponse<GetProvidersForLarsCodeModel>(queryResult.Errors);
         return GetResponse(responseV1);
     }
 
@@ -79,7 +79,7 @@ public class CoursesController : ActionResponseControllerBase
 
         var responseV1 = queryResult.IsValidResponse
             ? new ValidatedResponse<GetCourseProviderDetailsModel>((GetCourseProviderDetailsModel)queryResult.Result)
-            : new ValidatedResponse<GetCourseProviderDetailsModel>([.. queryResult.Errors]);
+            : new ValidatedResponse<GetCourseProviderDetailsModel>(queryResult.Errors);
 
         return GetResponse(responseV1);
     }
