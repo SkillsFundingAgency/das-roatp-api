@@ -137,4 +137,37 @@ public class ProvidersControllerV2Tests
             Times.Once
         );
     }
+
+    [Test, MoqAutoData]
+    public async Task GetProviderCourse_V2_InvalidRequest_ReturnsBadRequest(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Greedy] ProvidersController sut,
+        int ukprn,
+        string larsCode)
+    {
+        var response = new ValidatedResponse<ProviderCourseModel>(
+            new List<ValidationFailure>
+            {
+                new()
+                {
+                    ErrorMessage = "error message",
+                    PropertyName = "property name"
+                }
+            }
+        );
+
+        mediatorMock
+            .Setup(m => m.Send(
+                It.Is<GetProviderCourseQuery>(q => q.Ukprn == ukprn && q.LarsCode == larsCode),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(response);
+
+        var result = await sut.GetProviderCourse(ukprn, larsCode);
+
+        result.As<BadRequestObjectResult>().Should().NotBeNull();
+
+        mediatorMock.Verify(m =>
+                m.Send(It.Is<GetProviderCourseQuery>(q => q.Ukprn == ukprn && q.LarsCode == larsCode), It.IsAny<CancellationToken>()),
+            Times.Once);
+    }
 }
