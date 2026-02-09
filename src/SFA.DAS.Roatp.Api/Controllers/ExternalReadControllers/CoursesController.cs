@@ -60,7 +60,7 @@ public class CoursesController : ActionResponseControllerBase
     [Route("{larsCode:int}/providers/{ukprn:int}/details")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(GetCourseProviderDetailsResultModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(GetCourseProviderDetailsModel), StatusCodes.Status200OK)]
     public async Task<IActionResult> GetCourseProviderDetails([FromRoute] int larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsRequest request)
     {
         ValidatedResponse<GetCourseProviderDetailsQueryResult> queryResult =
@@ -78,8 +78,8 @@ public class CoursesController : ActionResponseControllerBase
             return NotFound();
 
         var responseV1 = queryResult.IsValidResponse
-            ? new ValidatedResponse<GetCourseProviderDetailsResultModel>((GetCourseProviderDetailsResultModel)queryResult.Result)
-            : new ValidatedResponse<GetCourseProviderDetailsResultModel>([.. queryResult.Errors]);
+            ? new ValidatedResponse<GetCourseProviderDetailsModel>((GetCourseProviderDetailsModel)queryResult.Result)
+            : new ValidatedResponse<GetCourseProviderDetailsModel>([.. queryResult.Errors]);
 
         return GetResponse(responseV1);
     }

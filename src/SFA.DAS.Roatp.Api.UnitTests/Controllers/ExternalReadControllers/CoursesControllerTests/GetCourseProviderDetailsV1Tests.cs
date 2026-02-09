@@ -57,7 +57,7 @@ public sealed class GetCourseProviderDetailsV1Tests
         var ok = result as OkObjectResult;
         ok.Should().NotBeNull();
 
-        var v1Model = ok!.Value as GetCourseProviderDetailsResultModel;
+        var v1Model = ok!.Value as GetCourseProviderDetailsModel;
         v1Model.Should().NotBeNull();
 
         v1Model!.Should().BeEquivalentTo(queryResult, options => options

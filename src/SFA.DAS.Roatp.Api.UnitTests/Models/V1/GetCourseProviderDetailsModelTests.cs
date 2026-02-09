@@ -8,13 +8,13 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.Api.UnitTests.Models.V1;
 
 [TestFixture]
-public class GetCourseProviderDetailsResultModelTests
+public class GetCourseProviderDetailsModelTests
 {
     [Test, MoqAutoData]
     public void ImplicitOperator_WithValidSource_MapsAllFields(
         GetCourseProviderDetailsQueryResult source)
     {
-        GetCourseProviderDetailsResultModel result = source;
+        GetCourseProviderDetailsModel result = source;
 
         result.Should().NotBeNull();
 
@@ -33,7 +33,7 @@ public class GetCourseProviderDetailsResultModelTests
     {
         GetCourseProviderDetailsQueryResult source = null;
 
-        GetCourseProviderDetailsResultModel result = source;
+        GetCourseProviderDetailsModel result = source;
 
         result.Should().BeNull();
     }
@@ -43,7 +43,7 @@ public class GetCourseProviderDetailsResultModelTests
     {
         source.LarsCode = "ABC";
 
-        GetCourseProviderDetailsResultModel result = source;
+        GetCourseProviderDetailsModel result = source;
 
         result.LarsCode.Should().Be(0);
     }
@@ -55,7 +55,7 @@ public class GetCourseProviderDetailsResultModelTests
 
         Assert.Throws<NullReferenceException>(() =>
         {
-            GetCourseProviderDetailsResultModel r = source;
+            GetCourseProviderDetailsModel r = source;
             _ = r.Address;
         });
     }
@@ -67,7 +67,7 @@ public class GetCourseProviderDetailsResultModelTests
 
         Assert.Throws<NullReferenceException>(() =>
         {
-            GetCourseProviderDetailsResultModel r = source;
+            GetCourseProviderDetailsModel r = source;
             _ = r.Contact;
         });
     }
@@ -79,7 +79,7 @@ public class GetCourseProviderDetailsResultModelTests
 
         Assert.Throws<NullReferenceException>(() =>
         {
-            GetCourseProviderDetailsResultModel r = source;
+            GetCourseProviderDetailsModel r = source;
             _ = r.QAR;
         });
     }
@@ -91,7 +91,7 @@ public class GetCourseProviderDetailsResultModelTests
 
         Assert.Throws<NullReferenceException>(() =>
         {
-            GetCourseProviderDetailsResultModel r = source;
+            GetCourseProviderDetailsModel r = source;
             _ = r.Reviews;
         });
     }

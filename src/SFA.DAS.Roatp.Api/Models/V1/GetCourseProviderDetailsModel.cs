@@ -5,7 +5,7 @@ using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Api.Models.V1;
 
-public sealed class GetCourseProviderDetailsResultModel
+public sealed class GetCourseProviderDetailsModel
 {
     public int Ukprn { get; set; }
     public string ProviderName { get; set; }
@@ -20,13 +20,13 @@ public sealed class GetCourseProviderDetailsResultModel
     public IEnumerable<LocationModel> Locations { get; set; } = [];
     public Guid? ShortlistId { get; set; }
 
-    public static implicit operator GetCourseProviderDetailsResultModel(GetCourseProviderDetailsQueryResult source)
+    public static implicit operator GetCourseProviderDetailsModel(GetCourseProviderDetailsQueryResult source)
     {
         if (source == null)
         {
             return null;
         }
-        return new GetCourseProviderDetailsResultModel
+        return new GetCourseProviderDetailsModel
         {
             Ukprn = source.Ukprn,
             ProviderName = source.ProviderName,
