@@ -16,4 +16,9 @@ public static class Constants
         public const string One = "1.0";
         public const string Two = "2.0";
     }
+
+    public static class EndpointTags
+    {
+        public const string ProviderCourses = "Provider Courses";
+    }
 }
