@@ -262,6 +262,6 @@ BEGIN
     );
     
     DROP TABLE #MainQuery;
-  SELECT REPLACE(@JSON,'\/','/');
+    SELECT REPLACE(@JSON,'\/','/');
 
 END
