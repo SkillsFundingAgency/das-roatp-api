@@ -120,6 +120,7 @@ public class CreateShortlistCommandValidatorTests
     {
         command.Ukprn = 10012001;
         providerRepoMock.Setup(r => r.GetByUkprn(command.Ukprn)).ReturnsAsync(provider);
+        prvRegRepoMock.Setup(r => r.IsMainActiveProvider(command.Ukprn, command.LarsCode)).ReturnsAsync(false);
 
         var result = await sut.TestValidateAsync(command, options => options.IncludeProperties(nameof(CreateShortlistCommand.Ukprn)));
 

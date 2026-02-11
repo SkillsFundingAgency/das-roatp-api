@@ -32,6 +32,7 @@ public class GetAllStandardsQueryResultTests
             .Excluding(s => s.ProviderCourses)
             .Excluding(s => s.Duration)
             .Excluding(s => s.DurationUnits)
+            .Excluding(s => s.ProviderCoursesTimelines)
         );
     }
 }

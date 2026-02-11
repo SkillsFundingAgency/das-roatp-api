@@ -59,6 +59,7 @@
     <Folder Include="PostDeploymentScripts" />
     <Folder Include="StoredProcedures" />
     <Folder Include="Scripts" />
+    <Folder Include="Views" />
   </ItemGroup>
   <ItemGroup>
     <PostDeploy Include="Script.PostDeployment.sql" />
@@ -104,6 +105,7 @@
     <None Include="Scripts\CSP-1970_Insert_2324_QAR.sql" />
     <Build Include="Tables\ProviderContact.sql" />
     <Build Include="Tables\ProviderCourseType.sql" />
+    <Build Include="Views\ProviderCoursesTimelineView.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
