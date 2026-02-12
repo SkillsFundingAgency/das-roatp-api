@@ -8,4 +8,5 @@ namespace SFA.DAS.Roatp.Domain.Interfaces;
 public interface IProviderCoursesTimelineRepository
 {
     Task<List<ProviderRegistrationDetail>> GetAllProviderCoursesTimelines(CancellationToken cancellationToken);
+    Task<ProviderRegistrationDetail> GetProviderCoursesTimelines(int ukprn, CancellationToken cancellationToken);
 }
