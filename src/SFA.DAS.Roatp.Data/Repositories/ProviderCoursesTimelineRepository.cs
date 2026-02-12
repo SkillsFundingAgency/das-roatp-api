@@ -17,8 +17,7 @@ internal class ProviderCoursesTimelineRepository(RoatpDataContext _roatpDataCont
     {
         return await _roatpDataContext
             .ProviderRegistrationDetails
-            .Include(t => t.Provider)
-            .ThenInclude(p => p.ProviderCourseTypes)
+            .Include(p => p.ProviderCourseTypes)
             .Include(p => p.Provider)
             .ThenInclude(p => p.ProviderCoursesTimelines)
             .ThenInclude(t => t.Standard)
@@ -28,14 +27,15 @@ internal class ProviderCoursesTimelineRepository(RoatpDataContext _roatpDataCont
 
     public async Task<ProviderRegistrationDetail> GetProviderCoursesTimelines(int ukprn, CancellationToken cancellationToken)
     {
-        return await _roatpDataContext
+        var result = await _roatpDataContext
             .ProviderRegistrationDetails
+            .Include(p => p.ProviderCourseTypes)
             .Include(t => t.Provider)
-            .ThenInclude(p => p.ProviderCourseTypes)
-            .Include(p => p.Provider)
             .ThenInclude(p => p.ProviderCoursesTimelines)
             .ThenInclude(t => t.Standard)
             .Where(r => (r.StatusId == (int)ProviderStatusType.Active || r.StatusId == (int)ProviderStatusType.ActiveNoStarts) && r.Ukprn == ukprn)
-            .FirstOrDefaultAsync(cancellationToken);
+            .ToListAsync(cancellationToken);
+
+        return result.FirstOrDefault();
     }
 }

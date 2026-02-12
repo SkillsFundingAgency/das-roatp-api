@@ -19,13 +19,12 @@ public class ProviderCoursesTimelineModel
             Ukprn = p.Ukprn,
             Status = (ProviderStatusType)p.StatusId,
             ProviderType = (ProviderType)p.ProviderTypeId,
-            CourseTypes = p.Provider?.ProviderCourseTypes
+            CourseTypes = p.ProviderCourseTypes
                 .Select(ct => new CourseTypeModel(
                     ct.CourseType,
-                    p.Provider.ProviderCoursesTimelines
+                    p.Provider?.ProviderCoursesTimelines
                         .Where(t => t.Standard.CourseType == ct.CourseType)
-                        .Select(t => new CoursesTimelineModel(t.LarsCode, t.EffectiveFrom, t.EffectiveTo))))
-                ?? []
+                        .Select(t => new CoursesTimelineModel(t.LarsCode, t.EffectiveFrom, t.EffectiveTo)) ?? []))
         };
 }
 
