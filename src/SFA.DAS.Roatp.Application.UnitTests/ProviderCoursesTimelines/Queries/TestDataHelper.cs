@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Models;
 
@@ -13,25 +12,29 @@ public static class TestDataHelper
             Ukprn = 12345678,
             StatusId = (int)ProviderStatusType.Active,
             ProviderTypeId = (int)ProviderType.Main,
-            Provider = new Domain.Entities.Provider
+            ProviderCourseTypes =
+            [
+                new ProviderCourseType
+                {
+                    CourseType = CourseType.Apprenticeship,
+                },
+                new ProviderCourseType
+                {
+                    CourseType = CourseType.ShortCourse
+                }
+            ],
+            Provider = new Provider
             {
-                ProviderCourseTypes = new List<Domain.Entities.ProviderCourseType>
+                ProviderCoursesTimelines =
+                [
+                    new ProviderCoursesTimeline
                     {
-                        new Domain.Entities.ProviderCourseType
-                        {
-                            CourseType = CourseType.Apprenticeship,
-                        }
-                    },
-                ProviderCoursesTimelines = new List<Domain.Entities.ProviderCoursesTimeline>
-                    {
-                        new Domain.Entities.ProviderCoursesTimeline
-                        {
-                            LarsCode = "LARS123",
-                            EffectiveFrom = new DateTime(2023, 1, 1, 0,0,0, DateTimeKind.Unspecified),
-                            EffectiveTo = null,
-                            Standard = new Domain.Entities.Standard { CourseType = CourseType.Apprenticeship }
-                        }
+                        LarsCode = "LARS123",
+                        EffectiveFrom = new DateTime(2023, 1, 1, 0,0,0, DateTimeKind.Unspecified),
+                        EffectiveTo = null,
+                        Standard = new Standard { CourseType = CourseType.Apprenticeship }
                     }
+                ]
             }
         };
 }
