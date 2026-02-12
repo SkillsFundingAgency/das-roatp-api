@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Domain.Entities
@@ -20,8 +21,8 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
 
-
         public virtual Provider Provider { get; set; }
+        public virtual List<ProviderCourseType> ProviderCourseTypes { get; set; } = [];
 
         public void UpdateAddress(UkrlpProviderAddress source)
         {
