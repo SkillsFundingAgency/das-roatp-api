@@ -171,6 +171,8 @@ BEGIN
 			,AtEmployer
 			,BlockRelease
 			,DayRelease
+			,HasOnlineDeliveryOption
+			,CourseType
 			,Course_Location
 			,LocationOrdering
 			,Distance
@@ -214,6 +216,8 @@ BEGIN
 				   ELSE 1 END AtEmployer
 				  ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
 				  ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
+				  ,pc1.[HasOnlineDeliveryOption]
+				  ,s1.[CourseType]
 				  ,CASE [LocationType] 
 				   WHEN 0 THEN pl1.Postcode
 				   WHEN 1 THEN 'National'
@@ -256,6 +260,8 @@ BEGIN
 			  JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
 			  JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
 			  JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
+			  JOIN [dbo].[Standard] s1 on s1.LarsCode = pc1.LarsCode
+			  JOIN [dbo].[ProviderCourseType] pct1 on pct1.Ukprn = pr1.Ukprn AND pct1.CourseType = s1.CourseType
 			  LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
 			  WHERE 
 				  -- specific Training Course 

@@ -1,6 +1,7 @@
 ﻿using System;
 
 namespace SFA.DAS.Roatp.Domain.Models;
+
 public class ProviderSearchModel
 {
     public int Page { get; set; }
@@ -14,6 +15,7 @@ public class ProviderSearchModel
     public long Ordering { get; set; }
     public int Ukprn { get; set; }
     public string ProviderName { get; set; }
+    public bool HasOnlineDeliveryOption { get; set; }
     public int LocationsCount { get; set; }
     public string LocationTypes { get; set; }
     public string CourseDistances { get; set; }

@@ -1,6 +1,7 @@
 ﻿using System;
 
 namespace SFA.DAS.Roatp.Domain.Models;
+
 public class GetProvidersFromLarsCodeOptionalParameters
 {
     public int? Page { get; set; }
@@ -9,6 +10,7 @@ public class GetProvidersFromLarsCodeOptionalParameters
     public bool? IsProvider { get; set; }
     public bool? IsBlockRelease { get; set; }
     public bool? IsDayRelease { get; set; }
+    public bool? IsOnline { get; set; }
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
     public string Location { get; set; }

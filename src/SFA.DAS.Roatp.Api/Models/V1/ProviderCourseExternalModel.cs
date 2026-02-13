@@ -1,19 +1,19 @@
-﻿using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
+﻿using SFA.DAS.Roatp.Application.ProviderCourse.Queries;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
-namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.ExternalRead.GetProviderCourse;
+namespace SFA.DAS.Roatp.Api.Models.V1;
 
-public class ProviderCourseModelExternal : ProviderCourseModelBase
+public class ProviderCourseExternalModel : ProviderCourseModelBase
 {
-    public string LarsCode { get; set; }
-
-    public static implicit operator ProviderCourseModelExternal(ProviderCourseModel providerCourseModel)
+    public int LarsCode { get; set; }
+    public static implicit operator ProviderCourseExternalModel(ProviderCourseModel providerCourseModel)
     {
         if (providerCourseModel == null) return null;
 
-        var model = new ProviderCourseModelExternal
+        var model = new ProviderCourseExternalModel
         {
             ProviderCourseId = providerCourseModel.ProviderCourseId,
-            LarsCode = providerCourseModel.LarsCode,
+            LarsCode = int.Parse(providerCourseModel.LarsCode),
             StandardInfoUrl = providerCourseModel.StandardInfoUrl,
             ContactUsPhoneNumber = providerCourseModel.ContactUsPhoneNumber,
             ContactUsEmail = providerCourseModel.ContactUsEmail,

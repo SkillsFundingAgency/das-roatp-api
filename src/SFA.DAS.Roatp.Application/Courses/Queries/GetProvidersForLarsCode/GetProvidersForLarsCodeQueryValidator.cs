@@ -2,7 +2,7 @@
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+namespace SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 
 public class GetProvidersForLarsCodeQueryValidator : AbstractValidator<GetProvidersForLarsCodeQuery>
 {
