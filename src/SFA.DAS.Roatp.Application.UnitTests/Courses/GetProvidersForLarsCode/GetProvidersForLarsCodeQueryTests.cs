@@ -1,9 +1,9 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using FluentAssertions;
-using FluentAssertions.Execution;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -13,37 +13,176 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Courses.GetProvidersForLarsCode;
 public class GetProvidersForLarsCodeQueryTests
 {
     [Test, RecursiveMoqAutoData]
-    public void Operator_PopulatesQueryFromGetProvidersFromLarsCodeRequest(string larsCode, GetProvidersFromLarsCodeRequest request)
+    public void Constructor_V2Request_MapsScalarsAndFiltersNulls(
+        string larsCode,
+        decimal? latitude,
+        decimal? longitude,
+        string location,
+        ProviderOrderBy orderBy,
+        decimal? distance,
+        int? page,
+        int? pageSize,
+        Guid? userId)
     {
-        var model = new GetProvidersForLarsCodeQuery(larsCode, request);
-        var mappedDeliveryModes = new List<DeliveryMode>();
-        mappedDeliveryModes.AddRange(from val in request.DeliveryModes where val != null select (DeliveryMode)val);
-
-        var mappedEmployerProviderRatings = new List<ProviderRating>();
-        mappedEmployerProviderRatings.AddRange(from val in request.EmployerProviderRatings where val != null select (ProviderRating)val);
-
-        var mappedApprenticeProviderRatings = new List<ProviderRating>();
-        mappedApprenticeProviderRatings.AddRange(from val in request.ApprenticeProviderRatings where val != null select (ProviderRating)val);
-
-        var mappedQarRatings = new List<QarRating>();
-        mappedQarRatings.AddRange(from val in request.Qar where val != null select (QarRating)val);
-
-        using (new AssertionScope())
+        var request = new GetProvidersForLarsCodeRequest
         {
-            model.Should().NotBeNull();
+            Latitude = latitude,
+            Longitude = longitude,
+            Location = location,
+            OrderBy = orderBy,
+            Distance = distance,
+            Page = page,
+            PageSize = pageSize,
+            UserId = userId,
+            DeliveryModes = new List<DeliveryMode> { DeliveryMode.Provider, DeliveryMode.DayRelease },
+            EmployerProviderRatings = new List<ProviderRating> { ProviderRating.Good },
+            ApprenticeProviderRatings = new List<ProviderRating> { ProviderRating.Excellent },
+            Qar = new List<QarRating> { QarRating.Good }
+        };
 
-            model.LarsCode.Should().Be(larsCode);
-            model.Latitude.Should().Be(request.Latitude);
-            model.Longitude.Should().Be(request.Longitude);
-            model.OrderBy.Should().Be(request.OrderBy);
-            model.Distance.Should().Be(request.Distance);
-            model.Page.Should().Be(request.Page);
-            model.PageSize.Should().Be(request.PageSize);
+        var sut = new GetProvidersForLarsCodeQuery(larsCode, request);
 
-            model.DeliveryModes.Should().BeEquivalentTo(mappedDeliveryModes);
-            model.EmployerProviderRatings.Should().BeEquivalentTo(mappedEmployerProviderRatings);
-            model.ApprenticeProviderRatings.Should().BeEquivalentTo(mappedApprenticeProviderRatings);
-            model.Qar.Should().BeEquivalentTo(mappedQarRatings);
-        }
+        sut.LarsCode.Should().Be(larsCode);
+        sut.Latitude.Should().Be(latitude);
+        sut.Longitude.Should().Be(longitude);
+        sut.Location.Should().Be(location);
+        sut.OrderBy.Should().Be(orderBy);
+        sut.Distance.Should().Be(distance);
+        sut.Page.Should().Be(page);
+        sut.PageSize.Should().Be(pageSize);
+        sut.UserId.Should().Be(userId);
+
+        sut.DeliveryModes.Should().BeEquivalentTo(new[] { DeliveryMode.Provider, DeliveryMode.DayRelease });
+        sut.EmployerProviderRatings.Should().BeEquivalentTo(new[] { ProviderRating.Good });
+        sut.ApprenticeProviderRatings.Should().BeEquivalentTo(new[] { ProviderRating.Excellent });
+        sut.Qar.Should().BeEquivalentTo(new[] { QarRating.Good });
+    }
+
+    [Test, RecursiveMoqAutoData]
+    public void Constructor_V2Request_EmptyCollections_ResultEmptyLists(
+        string larsCode,
+        GetProvidersForLarsCodeRequest request)
+    {
+        request.DeliveryModes = new List<DeliveryMode>();
+        request.EmployerProviderRatings = new List<ProviderRating>();
+        request.ApprenticeProviderRatings = new List<ProviderRating>();
+        request.Qar = new List<QarRating>();
+
+        var sut = new GetProvidersForLarsCodeQuery(larsCode, request);
+
+        sut.DeliveryModes.Should().NotBeNull();
+        sut.DeliveryModes.Should().BeEmpty();
+
+        sut.EmployerProviderRatings.Should().NotBeNull();
+        sut.EmployerProviderRatings.Should().BeEmpty();
+
+        sut.ApprenticeProviderRatings.Should().NotBeNull();
+        sut.ApprenticeProviderRatings.Should().BeEmpty();
+
+        sut.Qar.Should().NotBeNull();
+        sut.Qar.Should().BeEmpty();
+    }
+
+    [Test, RecursiveMoqAutoData]
+    public void Constructor_V1Request_MapsScalarsAndCastsDeliveryModes(
+        string larsCode,
+        decimal? latitude,
+        decimal? longitude,
+        string location,
+        ProviderOrderBy orderBy,
+        decimal? distance,
+        int? page,
+        int? pageSize,
+        Guid? userId)
+    {
+        var request = new GetProvidersForLarsCodeRequest
+        {
+            Latitude = latitude,
+            Longitude = longitude,
+            Location = location,
+            OrderBy = orderBy,
+            Distance = distance,
+            Page = page,
+            PageSize = pageSize,
+            UserId = userId,
+            DeliveryModes = new List<DeliveryMode> { DeliveryMode.Provider, DeliveryMode.Workplace },
+            EmployerProviderRatings = new List<ProviderRating> { ProviderRating.Poor },
+            ApprenticeProviderRatings = new List<ProviderRating> { ProviderRating.Good },
+            Qar = new List<QarRating> { QarRating.Poor }
+        };
+
+        var sut = new GetProvidersForLarsCodeQuery(larsCode, request);
+
+        sut.LarsCode.Should().Be(larsCode);
+        sut.Latitude.Should().Be(latitude);
+        sut.Longitude.Should().Be(longitude);
+        sut.Location.Should().Be(location);
+        sut.OrderBy.Should().Be(orderBy);
+        sut.Distance.Should().Be(distance);
+        sut.Page.Should().Be(page);
+        sut.PageSize.Should().Be(pageSize);
+        sut.UserId.Should().Be(userId);
+
+        var expectedModes = request.DeliveryModes
+            .Select(x => (DeliveryMode)x)
+            .ToList();
+
+        sut.DeliveryModes.Should().BeEquivalentTo(expectedModes);
+        sut.EmployerProviderRatings.Should().BeEquivalentTo(new[] { ProviderRating.Poor });
+        sut.ApprenticeProviderRatings.Should().BeEquivalentTo(new[] { ProviderRating.Good });
+        sut.Qar.Should().BeEquivalentTo(new[] { QarRating.Poor });
+    }
+
+    [Test, RecursiveMoqAutoData]
+    public void Constructor_RequestWithEmptyCollections_LeavesListsEmpty(
+        string larsCode,
+        decimal? latitude,
+        decimal? longitude,
+        string location,
+        ProviderOrderBy? orderBy,
+        decimal? distance,
+        int? page,
+        int? pageSize,
+        Guid? userId)
+    {
+        var request = new GetProvidersForLarsCodeRequest
+        {
+            Latitude = latitude,
+            Longitude = longitude,
+            Location = location,
+            OrderBy = orderBy,
+            Distance = distance,
+            Page = page,
+            PageSize = pageSize,
+            UserId = userId,
+            DeliveryModes = new List<DeliveryMode>(),
+            EmployerProviderRatings = new List<ProviderRating>(),
+            ApprenticeProviderRatings = new List<ProviderRating>(),
+            Qar = new List<QarRating>()
+        };
+
+        var sut = new GetProvidersForLarsCodeQuery(larsCode, request);
+
+        sut.LarsCode.Should().Be(larsCode);
+        sut.Latitude.Should().Be(latitude);
+        sut.Longitude.Should().Be(longitude);
+        sut.Location.Should().Be(location);
+        sut.OrderBy.Should().Be(orderBy);
+        sut.Distance.Should().Be(distance);
+        sut.Page.Should().Be(page);
+        sut.PageSize.Should().Be(pageSize);
+        sut.UserId.Should().Be(userId);
+
+        sut.DeliveryModes.Should().NotBeNull();
+        sut.DeliveryModes.Should().BeEmpty();
+
+        sut.EmployerProviderRatings.Should().NotBeNull();
+        sut.EmployerProviderRatings.Should().BeEmpty();
+
+        sut.ApprenticeProviderRatings.Should().NotBeNull();
+        sut.ApprenticeProviderRatings.Should().BeEmpty();
+
+        sut.Qar.Should().NotBeNull();
+        sut.Qar.Should().BeEmpty();
     }
 }

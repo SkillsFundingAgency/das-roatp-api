@@ -3,7 +3,7 @@ using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Models;
+using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Models;
 
@@ -61,27 +61,9 @@ public class ProviderCourseModelTests
         Assert.AreEqual(expected, model.HasLocations);
     }
 
-    [Test]
-    public void ProviderCourseModel_ImplicitConversion_WhenEntityPopulated_SetsProperties()
+    [Test, RecursiveMoqAutoData]
+    public void ProviderCourseModel_ImplicitConversion_WhenEntityPopulated_SetsProperties(Domain.Entities.ProviderCourse providerCourse)
     {
-        var providerCourse = new Domain.Entities.ProviderCourse
-        {
-            Id = 10,
-            LarsCode = "555",
-            StandardInfoUrl = "http://standard",
-            ContactUsEmail = "a@b.c",
-            ContactUsPhoneNumber = "000",
-            IsApprovedByRegulator = true,
-            IsImported = true,
-            HasPortableFlexiJobOption = true,
-            Locations = [new ProviderCourseLocation()],
-            Standard = new Standard
-            {
-                CourseType = CourseType.Apprenticeship,
-                IsRegulatedForProvider = true
-            }
-        };
-
         var model = (ProviderCourseModel)providerCourse;
 
         model.Should().NotBeNull();
@@ -92,39 +74,8 @@ public class ProviderCourseModelTests
         model.ContactUsPhoneNumber.Should().Be(providerCourse.ContactUsPhoneNumber);
         model.IsApprovedByRegulator.Should().Be(providerCourse.IsApprovedByRegulator.Value);
         model.HasPortableFlexiJobOption.Should().Be(providerCourse.HasPortableFlexiJobOption);
-        model.CourseType.Should().Be(CourseType.Apprenticeship);
+        model.CourseType.Should().Be(providerCourse.Standard.CourseType);
         model.IsRegulatedForProvider.Should().Be(providerCourse.Standard.IsRegulatedForProvider);
-    }
-
-    [Test]
-    public void ProviderCourseModel_ImplicitConversion_WhenStandardIsNull_SetsDefaults()
-    {
-        var providerCourse = new Domain.Entities.ProviderCourse
-        {
-            Id = 20,
-            LarsCode = "999",
-            StandardInfoUrl = null,
-            ContactUsEmail = null,
-            ContactUsPhoneNumber = null,
-            IsApprovedByRegulator = null,
-            IsImported = false,
-            HasPortableFlexiJobOption = false,
-            Locations = [],
-            Standard = null
-        };
-
-        var model = (ProviderCourseModel)providerCourse;
-
-        model.Should().NotBeNull();
-        model.ProviderCourseId.Should().Be(providerCourse.Id);
-        model.HasLocations.Should().BeFalse();
-        model.StandardInfoUrl.Should().BeNull();
-        model.ContactUsEmail.Should().BeNull();
-        model.ContactUsPhoneNumber.Should().BeNull();
-        model.IsApprovedByRegulator.Should().BeNull();
-        model.HasPortableFlexiJobOption.Should().Be(providerCourse.HasPortableFlexiJobOption);
-        model.CourseType.Should().BeNull();
-        model.IsRegulatedForProvider.Should().BeFalse();
     }
 
     [Test]

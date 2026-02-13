@@ -41,12 +41,12 @@ namespace SFA.DAS.Roatp.Data.Repositories
         public async Task<List<ProviderCourse>> GetAllProviderCourses(int ukprn)
         {
             return await _roatpDataContext
-                .ProviderCourses
-                .Include(c => c.Standard)
-                .Include(c => c.Locations)
-                .AsNoTracking()
-                .Where(c => c.Provider.Ukprn == ukprn)
-                .ToListAsync();
+                 .ProviderCourses
+                 .Include(pc => pc.Standard)
+                 .Include(pc => pc.Locations)
+                 .Include(pc => pc.Provider)
+                 .Where(pc => pc.Provider.Ukprn == ukprn && pc.Provider.ProviderCourseTypes.Any(pct => pct.CourseType == pc.Standard.CourseType))
+                 .AsNoTracking().ToListAsync();
         }
     }
 }

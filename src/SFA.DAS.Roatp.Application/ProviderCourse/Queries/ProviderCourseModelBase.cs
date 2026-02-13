@@ -1,9 +1,12 @@
-﻿namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries;
+﻿using SFA.DAS.Roatp.Domain.Models;
+
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries;
 
 public class ProviderCourseModelBase
 {
     public int ProviderCourseId { get; set; }
     public string CourseName { get; set; }
+    public CourseType CourseType { get; set; }
     public int Level { get; set; }
     public string IfateReferenceNumber { get; set; }
     public string StandardInfoUrl { get; set; }

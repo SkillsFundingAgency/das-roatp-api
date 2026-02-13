@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Api.Models.V1;
 using SFA.DAS.Roatp.Application.Courses.Queries.GetCourseProviderDetails;
-using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersFromLarsCode;
+using SFA.DAS.Roatp.Application.Courses.Queries.GetProvidersForLarsCode;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
@@ -28,10 +30,25 @@ public class CoursesController : ActionResponseControllerBase
 
     [HttpGet]
     [MapToApiVersion(ApiVersionNumber.One)]
+    [Route("{larsCode:int}/providers")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetProvidersForLarsCodeModel), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] int larsCode, [FromQuery] GetProvidersForLarsCodeRequest request)
+    {
+        _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
+        ValidatedResponse<GetProvidersForLarsCodeQueryResult> queryResult = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode.ToString(), request));
+        var responseV1 = queryResult.IsValidResponse
+         ? new ValidatedResponse<GetProvidersForLarsCodeModel>((GetProvidersForLarsCodeModel)queryResult.Result)
+         : new ValidatedResponse<GetProvidersForLarsCodeModel>(queryResult.Errors);
+        return GetResponse(responseV1);
+    }
+
+    [HttpGet]
+    [MapToApiVersion(ApiVersionNumber.Two)]
     [Route("{larsCode}/providers")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(GetProvidersForLarsCodeQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] string larsCode, [FromQuery] GetProvidersFromLarsCodeRequest request)
+    public async Task<IActionResult> GetProvidersForLarsCode([FromRoute] string larsCode, [FromQuery] GetProvidersForLarsCodeRequest request)
     {
         _logger.LogInformation("Received request to get list of providers for LarsCode: {LarsCode},  Latitude: {Latitude}, Longitude: {Longitude}", larsCode, request.Latitude, request.Longitude);
         var response = await _mediator.Send(new GetProvidersForLarsCodeQuery(larsCode, request));
@@ -40,6 +57,35 @@ public class CoursesController : ActionResponseControllerBase
 
     [HttpGet]
     [MapToApiVersion(ApiVersionNumber.One)]
+    [Route("{larsCode:int}/providers/{ukprn:int}/details")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(GetCourseProviderDetailsModel), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetCourseProviderDetails([FromRoute] int larsCode, [FromRoute] int ukprn, [FromQuery] GetCourseProviderDetailsRequest request)
+    {
+        ValidatedResponse<GetCourseProviderDetailsQueryResult> queryResult =
+            await _mediator.Send(
+                new GetCourseProviderDetailsQuery(
+                    ukprn,
+                    larsCode.ToString(),
+                    request.ShortlistUserId,
+                    request.Location,
+                    request.Longitude,
+                    request.Latitude
+                    )
+                );
+        if (queryResult == null)
+            return NotFound();
+
+        var responseV1 = queryResult.IsValidResponse
+            ? new ValidatedResponse<GetCourseProviderDetailsModel>((GetCourseProviderDetailsModel)queryResult.Result)
+            : new ValidatedResponse<GetCourseProviderDetailsModel>(queryResult.Errors);
+
+        return GetResponse(responseV1);
+    }
+
+    [HttpGet]
+    [MapToApiVersion(ApiVersionNumber.Two)]
     [Route("{larsCode}/providers/{ukprn:int}/details")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
