@@ -46,11 +46,12 @@ BEGIN
         ,ab2.larsCode larsCode
         ,stq.[Title]+' (level '+CONVERT(varchar,stq.[Level])+')' standardName
         ,stq.[IfateReferenceNumber]
+        ,stq.ApprenticeshipType "apprenticeshipType"
         -- Training locations
         ,DENSE_RANK() OVER (PARTITION BY stq.[Title], stq.[Level], ab2.[larsCode] 
                             ORDER BY ISNULL(ab2.[LocationDescription],' ') ) "l2.ordering"
         ,LocationDescription 
-        -- Training providers at eash location
+        -- Training providers at each location
         ,ROW_NUMBER() OVER (PARTITION BY stq.[Title], stq.[Level], ab2.[larsCode], ISNULL(ab2.[LocationDescription],' ') 
                             ORDER BY ab2.[LegalName] ) "l2.p3.ordering"
         ,ShortlistId
@@ -67,7 +68,7 @@ BEGIN
         ,ContactUsEmail email
         ,ContactUsPhoneNumber phone
         ,ContactUsPageUrl website
-        ,ISNULL(ab2.HasOnlineDeliveryOption, 0) HasOnlineDeliveryOption
+        ,HasOnlineDeliveryOption
     INTO #MainQuery        
     FROM
     (
@@ -87,9 +88,8 @@ BEGIN
             ,MAX(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) DayRelease
             ,MIN(CASE WHEN DayRelease = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) DayReleaseDistance
             ,SUM(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) DayReleaseCount
-            ,ISNULL(HasOnlineDeliveryOption,0) HasOnlineDeliveryOption
-
-            -- priority for at workplace over at provider (by ukprn and course)
+            ,MAX(CASE WHEN HasOnlineDeliveryOption = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) HasOnlineDeliveryOption
+            -- priority for online, at workplace over at provider (by ukprn and course)
             ,ROW_NUMBER() OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]
                                 ORDER BY Distance) TP_Std_Dist_Seq
         FROM
@@ -106,12 +106,12 @@ BEGIN
                   ,ISNULL(pc1.ContactUsPhoneNumber, pr1.Phone) ContactUsPhoneNumber
                   ,ISNULL(pc1.StandardInfoUrl, pr1.Website) ContactUsPageUrl
                   ,[LocationType]
-                  -- LocationType: Provider = 0, National = 1, Regional = 2
-                  ,CASE [LocationType] 
+                  -- LocationType: Provider = 0, National = 1, Regional = 2, Online = pseudo
+                  ,CASE ISNULL([LocationType],0)   -- handle At Provider and Online
                    WHEN 0 THEN 0 ELSE 1 END AtEmployer
                   ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
                   ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
-                  ,ISNULL(pc1.HasOnlineDeliveryOption,0) HasOnlineDeliveryOption
+                  ,HasOnlineDeliveryOption
                   ,CASE
                    WHEN st1.Latitude IS NULL THEN 0  -- no distance check
                    WHEN [LocationType] = 0 THEN 2  -- Provider
@@ -119,9 +119,10 @@ BEGIN
                    WHEN pl1.[RegionId] IS NOT NULL THEN 
                         (CASE WHEN pl1.[RegionId] = NearestRegionId THEN 0 -- same Region
                               WHEN AlternativeRegionid IS NOT NULL AND pl1.[RegionId] = AlternativeRegionid THEN 0 -- alternative Region
-                              ELSE 3 -- other Regions
+                              ELSE 9 -- other Regions
                               END)
-                   ELSE 3 -- other
+                   WHEN ISNULL(HasOnlineDeliveryOption,0) = 1 THEN -1  
+                   ELSE 9 -- other
                    END LocationOrdering
                    -- calculate distance 
                   ,CASE 
@@ -134,13 +135,14 @@ BEGIN
                 JOIN [dbo].[ProviderCourse] pc1 on st1.[larsCode] = pc1.[larsCode] 
                 JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId AND pr1.Ukprn = st1.[UkPrn]
                 JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
-                JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
-                JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
+                -- Left Join for Online
+                LEFT JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
+                LEFT JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
                 WHERE 1=1
                 AND [userId] = @userId
               ) ab1 
         WHERE 1=1
-        AND LocationOrdering != 3 -- exclude outside Regions
+        AND LocationOrdering != 9 -- exclude outside Regions
 
         ) ab2
     -- Standards 
@@ -183,6 +185,7 @@ BEGIN
             ,courses."ordering"
             ,courses.standardName
             ,courses.larsCode
+            ,courses.apprenticeshipType
             ,locations.ordering
             ,locations.locationDescription
             ,providers.ordering
@@ -211,7 +214,7 @@ BEGIN
         FROM (SELECT @userid "userId", @QARPeriod "qarPeriod", @ReviewPeriod "reviewPeriod", MAX(CreatedDate) maxCreatedDate
               FROM #MainQuery) toplevel
         JOIN (
-            SELECT DISTINCT @userid "userId", "ordering", larsCode,standardName 
+            SELECT DISTINCT @userid "userId", "ordering", larsCode, standardName, apprenticeshipType 
             FROM #MainQuery ) AS courses 
         ON courses."userId" = toplevel."userId"
         JOIN (
@@ -238,7 +241,7 @@ BEGIN
             ,email email
             ,phone phone
             ,website website
-            ,CAST(CASE WHEN HasOnlineDeliveryOption = 1 THEN 1 ELSE 0 END AS BIT) hasOnlineDeliveryOption
+            ,CAST(HasOnlineDeliveryOption AS BIT) hasOnlineDeliveryOption
             -- Achievement Rates
             ,ISNULL(qp1.[Leavers],'-') leavers
             ,ISNULL(qp1.[AchievementRate],'-') achievementRate
