@@ -79,7 +79,6 @@ ELSE
 -- cannot have distance with no co-ordinates
     SET @Distance = NULL;
 
-
 -- the Standards and national QAR by Standard
 WITH Standards
 AS
@@ -160,7 +159,6 @@ AS
                             ,ab2.Ukprn ) - (@pageSize * (@page-1)) "providers.ordering"  -- and ordered within the page of results
         ,ab2.Ukprn "providers.ukprn"
         ,ab2.LegalName "providers.providername"
-        ,CAST(MAX(CAST(ab2.HasOnlineDeliveryOption AS INT)) AS bit) HasOnlineDeliveryOption
         -- List of locations
         ,COUNT(*) "providers.locationsCount"
         ,STRING_AGG(LocationType,',') WITHIN GROUP (ORDER BY LocationOrdering, Distance) "providers.locations.locationType"
@@ -181,13 +179,13 @@ AS
         ,sht.[Id] "providers.shortlistId"                                     
     FROM 
         (
+
         SELECT Ukprn, LegalName
             ,Larscode
             ,LocationType
             ,AtEmployer
             ,BlockRelease
             ,DayRelease
-            ,HasOnlineDeliveryOption
             ,Course_Location
             ,LocationOrdering
             ,Distance
@@ -203,14 +201,13 @@ AS
             (
             -- Course Management Location data
             SELECT pr1.[Ukprn], pr1.LegalName
-                  ,pc1.[LarsCode]
+                  ,[LarsCode]
                   ,[LocationType]
                   -- Is at Employer ?
                   ,CASE [LocationType] 
                    WHEN 0 THEN 0 ELSE 1 END AtEmployer
                   ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
                   ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
-                  ,pc1.[HasOnlineDeliveryOption] 
                   ,CASE [LocationType] 
                    WHEN 0 THEN pl1.Postcode
                    WHEN 1 THEN 'National'
@@ -244,8 +241,6 @@ AS
               JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
               JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
               JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
-			  JOIN [dbo].[Standard] s1 on s1.LarsCode = pc1.LarsCode
-			  JOIN [dbo].[ProviderCourseType] pct1 on pct1.Ukprn = pr1.Ukprn AND pct1.CourseType = s1.CourseType
               LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
               WHERE 1=1 
               -- regulated check
@@ -312,6 +307,7 @@ AS
                         END)
                   ELSE 1
              END) = 1
+
         ) ab2
     -- Standards and QAR data
 
@@ -343,6 +339,7 @@ AS
     OFFSET @skip ROWS
     FETCH NEXT @pageSize ROWS ONLY
 )
+
 -- Main Query
 SELECT  
      @page "page"
@@ -356,7 +353,6 @@ SELECT
     ,"providers.ordering"
     ,"providers.ukprn"
     ,"providers.providername"
-    ,"HasOnlineDeliveryOption"
     ,"providers.locationsCount"
     ,"providers.locations.locationType"
     ,"providers.locations.courseDistances"
