@@ -348,6 +348,7 @@ SELECT
     ,ISNULL(totalcount,0) totalcount
     ,Standards.Larscode larscode
     ,Standards.[Title]+' (level '+CONVERT(varchar,Standards.[Level])+')' standardName
+    ,@CourseType courseType
     ,@QARPeriod qarPeriod
     ,@ReviewPeriod reviewPeriod
     ,"providers.ordering"
