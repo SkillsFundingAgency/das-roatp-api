@@ -77,7 +77,11 @@ IF @Latitude IS NOT NULL
                 .STDistance(geography::Point(@Latitude, @Longitude, 4326)), reg1.[id];
 ELSE
 -- cannot have distance with no co-ordinates
+BEGIN
     SET @Distance = NULL;
+    IF @Sortorder = 'Distance'
+        SET @Sortorder = NULL;
+END;
 
 -- the Standards and national QAR by Standard
 WITH Standards
