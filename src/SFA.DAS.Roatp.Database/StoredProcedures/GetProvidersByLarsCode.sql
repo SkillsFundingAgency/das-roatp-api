@@ -25,10 +25,11 @@ SET NOCOUNT ON
 -- used to decide whether to exclude results based on regulator approval, and approval for that course type
 DECLARE  @IsRegulatedForProvider int = 0
         ,@CourseType nvarchar(50)
+        ,@ApprenticeshipType varchar(50)
         ,@anylocationfilters int = 0;
 
 SELECT @IsRegulatedForProvider=[IsRegulatedForProvider]  
-      ,@CourseType=[CourseType]
+      ,@CourseType=[CourseType], @ApprenticeshipType=[ApprenticeshipType]
 FROM [dbo].[Standard] 
 WHERE [LarsCode] = @larscode;
 
@@ -353,6 +354,7 @@ SELECT
     ,Standards.Larscode larscode
     ,Standards.[Title]+' (level '+CONVERT(varchar,Standards.[Level])+')' standardName
     ,@CourseType courseType
+    ,@ApprenticeshipType apprenticeshipType
     ,@QARPeriod qarPeriod
     ,@ReviewPeriod reviewPeriod
     ,"providers.ordering"
