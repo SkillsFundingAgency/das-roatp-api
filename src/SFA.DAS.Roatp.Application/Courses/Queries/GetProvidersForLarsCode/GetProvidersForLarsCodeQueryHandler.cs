@@ -87,6 +87,8 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             TotalPages = first.TotalPages,
             LarsCode = first.LarsCode,
             StandardName = first.StandardName,
+            CourseType = first.CourseType,
+            ApprenticeshipType = first.ApprenticeshipType,
             QarPeriod = first.QarPeriod,
             ReviewPeriod = first.ReviewPeriod,
             Providers = new List<ProviderData>()
@@ -101,7 +103,6 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
                 Ordering = item.Ordering,
                 Ukprn = item.Ukprn,
                 ProviderName = item.ProviderName,
-                HasOnlineDeliveryOption = item.HasOnlineDeliveryOption,
                 ShortlistId = item.ShortlistId,
                 Leavers = item.Leavers,
                 AchievementRate = item.AchievementRate,
@@ -122,6 +123,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             List<bool> atEmployers = item.AtEmployers.Split(',').Select(x => int.Parse(x.Trim()) != 0).ToList();
             List<bool> dayReleases = item.DayReleases.Split(',').Select(x => int.Parse(x.Trim()) != 0).ToList();
             List<bool> blockReleases = item.BlockReleases.Split(',').Select(x => int.Parse(x.Trim()) != 0).ToList();
+
 
             for (var i = 0; i < numberOfLocations; i++)
             {
