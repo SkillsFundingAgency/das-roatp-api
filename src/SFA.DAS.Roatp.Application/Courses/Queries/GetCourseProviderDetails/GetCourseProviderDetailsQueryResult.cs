@@ -48,7 +48,6 @@ public sealed class GetCourseProviderDetailsQueryResult
             Level = source.Level,
             LarsCode = source.LarsCode,
             IFateReferenceNumber = source.IFateReferenceNumber,
-            HasOnlineDeliveryOption = source.HasOnlineDeliveryOption,
             CourseType = source.CourseType,
             QAR = new QarModel()
             {

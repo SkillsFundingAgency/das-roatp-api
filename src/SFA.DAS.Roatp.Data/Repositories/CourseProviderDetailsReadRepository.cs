@@ -88,7 +88,6 @@ public sealed class CourseProviderDetailsReadRepository : ICourseProviderDetails
                     AtEmployer = reader.GetBoolean(nameof(CourseProviderDetailsModel.AtEmployer)),
                     BlockRelease = reader.GetBoolean(nameof(CourseProviderDetailsModel.BlockRelease)),
                     DayRelease = reader.GetBoolean(nameof(CourseProviderDetailsModel.DayRelease)),
-                    HasOnlineDeliveryOption = reader.GetBoolean(nameof(CourseProviderDetailsModel.HasOnlineDeliveryOption)),
                     CourseType = Enum.Parse<CourseType>(GetReaderStringValue(nameof(CourseProviderDetailsModel.CourseType), reader)),
 
                     Ordering = reader.GetInt64(nameof(CourseProviderDetailsModel.Ordering)),
