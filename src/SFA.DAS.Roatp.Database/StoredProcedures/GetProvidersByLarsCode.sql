@@ -3,12 +3,12 @@
     @SortOrder varchar(30) = 'Distance', -- order by "Distance", "AchievementRate" or "EmployerProviderRating" , "ApprenticeProviderRating"
     @page int = 1,
     @pageSize int = 10,
-        -- FILTERS
-    @workplace bit = null, -- 0 or 1 include training at apprentice's workplace
+    -- FILTERS
+    @workplace bit = null,    -- 0 or 1 include training at apprentice's workplace
     @provider bit = null,     -- 0 or 1 include training at providers+
     @blockrelease bit = null, -- 0 or 1 include block release
     @dayrelease bit = null,   -- 0 or 1 include day release
-    @hasOnlineDeliveryOption bit = null,       
+    @onlineoption bit = null, -- 0 or 1 include online training option 
     @Latitude float = null,
     @Longitude float = null,
     @Distance int = null, -- Distance should always set when Longitude & Longitude set
@@ -22,10 +22,14 @@ as
 
 SET NOCOUNT ON
 
--- used to decide whether to exclude results based on regulator approval
-DECLARE  @IsRegulatedForProvider int = 0;
+-- used to decide whether to exclude results based on regulator approval, and approval for that course type
+DECLARE  @IsRegulatedForProvider int = 0
+        ,@CourseType nvarchar(50)
+        ,@ApprenticeshipType varchar(50)
+        ,@anylocationfilters int = 0;
 
 SELECT @IsRegulatedForProvider=[IsRegulatedForProvider]  
+      ,@CourseType=[CourseType], @ApprenticeshipType=[ApprenticeshipType]
 FROM [dbo].[Standard] 
 WHERE [LarsCode] = @larscode;
 
@@ -35,8 +39,9 @@ IF @workplace IS NULL  SET @workplace = 0;
 IF @provider  IS NULL  SET @provider  = 0;
 IF @blockrelease IS NULL  SET @blockrelease = 0;
 IF @dayrelease IS NULL  SET @dayrelease = 0;
-IF @hasOnlineDeliveryOption IS NULL  SET @hasOnlineDeliveryOption = 0;
-
+IF @onlineoption IS NULL  SET @onlineoption = 0;
+SET @anylocationfilters = CONVERT(int,@workplace) + CONVERT(int,@provider) + CONVERT(int,@onlineoption);  -- if 0 then have no location filters
+ 
 -- local working
 DECLARE @skip int = (@page - 1) * @pageSize;
 
@@ -73,8 +78,11 @@ IF @Latitude IS NOT NULL
                 .STDistance(geography::Point(@Latitude, @Longitude, 4326)), reg1.[id];
 ELSE
 -- cannot have distance with no co-ordinates
+BEGIN
     SET @Distance = NULL;
-
+    IF @Sortorder = 'Distance'
+        SET @Sortorder = NULL;
+END;
 
 -- the Standards and national QAR by Standard
 WITH Standards
@@ -119,13 +127,15 @@ AS
     SELECT 
         ab2.Larscode 
         ,COUNT(*) OVER (PARTITION BY ab2.Larscode) totalcount
-         -- Ordering calculation
+         -- Ordering calculation for Provider = 0, National = 1, Regional = 2, Online  = 3
         ,ROW_NUMBER() OVER (PARTITION BY ab2.Larscode 
                             ORDER BY 
                             -- Distance
                              CASE WHEN @SortOrder = 'Distance' THEN MIN(Course_Distance) ELSE 1 END
                             -- Distance to nearest training provider locations
-							,CASE WHEN @SortOrder = 'Distance' THEN MIN(CASE WHEN Course_Distance = 0 AND LocationType != 0 THEN 99999 ELSE Course_Distance END) ELSE 1 END
+                            ,CASE WHEN @SortOrder = 'Distance' THEN MIN(CASE WHEN Course_Distance = 0 AND LocationType != 0 THEN 99999 ELSE Course_Distance END) ELSE 1 END
+                            -- Online
+                            ,CASE WHEN @SortOrder = 'Distance' THEN MIN(CASE WHEN Course_Distance = 0 AND LocationType = 3 THEN 0 ELSE 1 END) ELSE 1 END
                             -- Achievement Rate
                             ,CASE WHEN @SortOrder = 'AchievementRate' THEN
                                  (CASE WHEN ISNULL(qp1.AchievementRate,'x') LIKE N'%[^0-9.]%' THEN 0
@@ -138,8 +148,10 @@ AS
                             ,CASE WHEN @SortOrder = 'ApprenticeProviderRating' THEN ISNULL(pas.Stars,-1) ELSE 1 END DESC
                             -- and then always by Distance
                             ,MIN(Course_Distance)
-							-- to nearest training provider location
-							,MIN(CASE WHEN Course_Distance = 0 THEN 99999 ELSE Course_Distance END)
+                            -- preference for Online
+                            ,MIN(CASE WHEN Course_Distance = 0 AND LocationType = 3 THEN 0 ELSE 1 END)
+                            -- to nearest training provider location
+                            ,MIN(CASE WHEN Course_Distance = 0 THEN 99999 ELSE Course_Distance END)
                             -- and then always by Achievement Rate
                             ,CASE WHEN ISNULL(qp1.AchievementRate,'x') LIKE N'%[^0-9.]%' THEN 0
                                   ELSE CONVERT(float,qp1.AchievementRate) END DESC
@@ -152,7 +164,6 @@ AS
                             ,ab2.Ukprn ) - (@pageSize * (@page-1)) "providers.ordering"  -- and ordered within the page of results
         ,ab2.Ukprn "providers.ukprn"
         ,ab2.LegalName "providers.providername"
-        ,CAST(MAX(CAST(ab2.HasOnlineDeliveryOption AS INT)) AS bit) HasOnlineDeliveryOption
         -- List of locations
         ,COUNT(*) "providers.locationsCount"
         ,STRING_AGG(LocationType,',') WITHIN GROUP (ORDER BY LocationOrdering, Distance) "providers.locations.locationType"
@@ -173,36 +184,35 @@ AS
         ,sht.[Id] "providers.shortlistId"                                     
     FROM 
         (
+
         SELECT Ukprn, LegalName
             ,Larscode
             ,LocationType
             ,AtEmployer
             ,BlockRelease
             ,DayRelease
-            ,HasOnlineDeliveryOption
             ,Course_Location
             ,LocationOrdering
             ,Distance
-            -- LocationType: Provider = 0, National = 1, Regional = 2
+            -- LocationType: Provider = 0, National = 1, Regional = 2, Online = 3 (pseudo location)
             ,CASE WHEN LocationType = 0 THEN Distance
-                  WHEN LocationOrdering = 3 THEN 99999
+                  WHEN LocationOrdering = 9 THEN 99999
                   ELSE 0 END Course_Distance
-            -- priority for at workplace over at provider (by ukprn and course)
+            -- priority for online, at workplace over at provider (by ukprn and course)
             ,ROW_NUMBER() OVER (PARTITION BY [Ukprn], [LarsCode], 
-                                CASE WHEN LocationType = 0 THEN 1 ELSE 0 END 
+                                CASE WHEN LocationType IN (0,3) THEN 1 ELSE 0 END 
                                 ORDER BY Distance) TP_Std_Dist_Seq
         FROM
             (
-            -- Managing Standards Course Location data
+            -- Course Management Location data
             SELECT pr1.[Ukprn], pr1.LegalName
-                  ,pc1.[LarsCode]
+                  ,[LarsCode]
                   ,[LocationType]
                   -- Is at Employer ?
                   ,CASE [LocationType] 
                    WHEN 0 THEN 0 ELSE 1 END AtEmployer
                   ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
                   ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
-                  ,pc1.[HasOnlineDeliveryOption] 
                   ,CASE [LocationType] 
                    WHEN 0 THEN pl1.Postcode
                    WHEN 1 THEN 'National'
@@ -215,9 +225,9 @@ AS
                    WHEN pl1.[RegionId] IS NOT NULL THEN 
                         (CASE WHEN pl1.[RegionId] = @NearestRegionId THEN 0 -- same Region
                               WHEN @AlternativeRegionid IS NOT NULL AND pl1.[RegionId] = @AlternativeRegionid THEN 0 -- alternative Region
-                              ELSE 3 -- other Regions
+                              ELSE 9 -- other Regions
                               END)
-                   ELSE 3 -- other
+                   ELSE 9 -- other
                    END LocationOrdering
                    -- calculate distance 
                   ,CASE 
@@ -232,33 +242,56 @@ AS
                    ELSE 0 END AS Distance
               FROM [dbo].[ProviderCourse] pc1 
               JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
+              JOIN [dbo].[ProviderCourseType] pct on pct.[Ukprn] = pr1.[Ukprn] AND pct.[CourseType] = @CourseType -- Filter on Allowed Course Types by UKPRN
               JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
               JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
               JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
-			  JOIN [dbo].[Standard] s1 on s1.LarsCode = pc1.LarsCode
-			  JOIN [dbo].[ProviderCourseType] pct1 on pct1.Ukprn = pr1.Ukprn AND pct1.CourseType = s1.CourseType
               LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
               WHERE 1=1 
               -- regulated check
-			  AND (@IsRegulatedForProvider = 0 OR (@IsRegulatedForProvider = 1 AND IsNull(pc1.[IsApprovedByRegulator],0) = 1))
+              AND (@IsRegulatedForProvider = 0 OR (@IsRegulatedForProvider = 1 AND ISNULL(pc1.[IsApprovedByRegulator],0) = 1))
+              -- specific Training Course 
+              AND pc1.[LarsCode] = @larscode
+
+            UNION ALL
+            -- Course Management Online courses data
+            SELECT pr1.[Ukprn], pr1.LegalName
+                  ,[LarsCode]
+                  ,3 [LocationType]  -- online
+                  -- Is at Employer ?
+                  ,0 AtEmployer
+                  ,0 BlockRelease
+                  ,0 DayRelease
+                  ,'Online' Course_Location
+                  ,-1 LocationOrdering
+                   -- calculate distance 
+                  ,0 Distance
+              FROM [dbo].[ProviderCourse] pc1 
+              JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
+              JOIN [dbo].[ProviderCourseType] pct on pct.[Ukprn] = pr1.[Ukprn] AND pct.[CourseType] = @CourseType -- Filter on Allowed Course Types by UKPRN
+              JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
+              WHERE 1=1 
+              -- regulated check
+              AND (@IsRegulatedForProvider = 0 OR (@IsRegulatedForProvider = 1 AND ISNULL(pc1.[IsApprovedByRegulator],0) = 1))
+              -- online check
+              AND ((@anylocationfilters = 0 OR @onlineoption = 1) AND ISNULL(pc1.HasOnlineDeliveryOption,0) = 1)
               -- specific Training Course 
               AND pc1.[LarsCode] = @larscode
               ) ab1 
         WHERE 1=1
-        AND LocationOrdering != 3 -- exclude outside Regions
+        AND LocationOrdering != 9 -- exclude outside Regions
         -- Distance filter check if requested
         AND (@Distance IS NULL OR Distance <= @Distance)
-        -- Online delivery filter: when requested, only include courses that have online option
-        AND (@hasOnlineDeliveryOption = 0 OR HasOnlineDeliveryOption = 1)
-        -- At apprentice's workplace and/or training at providers
+        -- Logic to match to Checkboxes for training locations 
+        -- At apprentice's workplace and/or training at providers and/or Online
         -- And at training provider for Day release and/or Block Release options
-        -- Provider = 0, National = 1, Regional = 2
-        AND (CASE WHEN @workplace = 0 AND @provider = 0 
+        -- Provider = 0, National = 1, Regional = 2, Online = 3 (pseudo value)
+        AND (CASE WHEN @anylocationfilters = 0 
                   THEN 1 -- no filters
-                  WHEN @workplace = 1 AND LocationType != 0 -- ('National','Regional') 
+                  WHEN @workplace = 1 AND LocationType IN (1,2) -- ('National','Regional') 
                   -- only allowed at workplace for national and regional
                   THEN 1
-                  WHEN @workplace = 0 AND LocationType != 0 -- ('National','Regional') 
+                  WHEN @workplace = 0 AND LocationType IN (1,2) -- ('National','Regional') 
                   -- only allowed at workplace for national and regional
                   THEN 0
                   WHEN @provider = 0 AND LocationType = 0
@@ -279,6 +312,7 @@ AS
                         END)
                   ELSE 1
              END) = 1
+
         ) ab2
     -- Standards and QAR data
 
@@ -297,7 +331,7 @@ AS
     -- filter QAR
     AND (@QARrange IS NULL OR ','+@QARrange+',' LIKE '%,'+ISNULL(qp1.AchievementRank,'none')+',%' )                  
     -- filter Employer Reviews
-    AND (@employerProviderRatings IS NULL OR ','+@employerProviderRatings+',' LIKE '%,'+ISNULL(pes.Rating,'NotYetReviewed')+',%' )                              
+    AND (@employerProviderRatings IS NULL OR ','+@employerProviderRatings+',' LIKE '%,'+ISNULL(pes.Rating,'NotYetReviewed')+',%' )
     --Filter Apprentice reviews
     AND (@apprenticeProviderRatings IS NULL OR ','+@apprenticeProviderRatings+',' LIKE '%,'+ISNULL(pas.Rating,'NotYetReviewed')+',%' )
 
@@ -310,6 +344,7 @@ AS
     OFFSET @skip ROWS
     FETCH NEXT @pageSize ROWS ONLY
 )
+
 -- Main Query
 SELECT  
      @page "page"
@@ -318,12 +353,13 @@ SELECT
     ,ISNULL(totalcount,0) totalcount
     ,Standards.Larscode larscode
     ,Standards.[Title]+' (level '+CONVERT(varchar,Standards.[Level])+')' standardName
+    ,@CourseType courseType
+    ,@ApprenticeshipType apprenticeshipType
     ,@QARPeriod qarPeriod
     ,@ReviewPeriod reviewPeriod
     ,"providers.ordering"
     ,"providers.ukprn"
     ,"providers.providername"
-    ,"HasOnlineDeliveryOption"
     ,"providers.locationsCount"
     ,"providers.locations.locationType"
     ,"providers.locations.courseDistances"

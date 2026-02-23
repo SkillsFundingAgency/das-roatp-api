@@ -10,12 +10,14 @@ public class ProviderSearchModel
     public int TotalCount { get; set; }
     public string LarsCode { get; set; }
     public string StandardName { get; set; }
+    public CourseType CourseType { get; set; }
+    public ApprenticeshipType ApprenticeshipType { get; set; }
+
     public string QarPeriod { get; set; }
     public string ReviewPeriod { get; set; }
     public long Ordering { get; set; }
     public int Ukprn { get; set; }
     public string ProviderName { get; set; }
-    public bool HasOnlineDeliveryOption { get; set; }
     public int LocationsCount { get; set; }
     public string LocationTypes { get; set; }
     public string CourseDistances { get; set; }

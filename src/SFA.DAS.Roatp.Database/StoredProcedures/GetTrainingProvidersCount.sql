@@ -9,13 +9,14 @@ CREATE PROCEDURE [dbo].[GetTrainingProvidersCount]
     @LarsCodes VARCHAR(2000)
 AS
 BEGIN
-    SET NOCOUNT ON;
+   SET NOCOUNT ON;
 
     DECLARE @NearestRegionId INT, 
             @AlternativeRegionId INT,
             @National INT = 1,
             @Provider INT = 0,
             @Regional INT = 2,
+            @LarsCodeJSON VARCHAR(4000),
             @EPSG_COORDINATE_SYSTEM_ID INT = 4326,
             @MetersToMilesMetric FLOAT = 0.0006213712;
    
@@ -30,13 +31,15 @@ BEGIN
     ELSE
         SET @Distance = NULL;
 
+    -- ensure that the Lars code(s) input are a list of string values
+    SET @LarsCodeJSON = '["'+REPLACE(REPLACE(@larscodes,'"',''),',','","')+'"]';
     -- get the Standards and national QAR by Standard
     WITH
     StandardsList
     AS
     (
-        SELECT CONVERT(int,[key]) +1 Ordering, std.LarsCode , std.IsRegulatedForProvider
-        FROM OPENJSON('[' + @larscodes + ']','$') js1         
+        SELECT CONVERT(int,[key]) +1 Ordering, std.LarsCode , std.IsRegulatedForProvider, std.CourseType
+        FROM OPENJSON(@LarsCodeJSON,'$') js1         
         JOIN [dbo].[Standard] std on std.LarsCode = [value]
     )
 
@@ -49,14 +52,15 @@ BEGIN
         
     FROM StandardsList st1
     LEFT JOIN (
-        -- Managing Standards Courses
+
+        -- Course Management Courses
         SELECT 
                   
              Larscode
             ,COUNT(DISTINCT(CASE 
                             WHEN @Distance IS NULL
                             THEN Ukprn
-                            WHEN LocationOrdering != 3 -- exclude outside Regions
+                            WHEN LocationOrdering != 9 -- exclude outside Regions
                              AND Distance <= @Distance
                             THEN Ukprn
                             ELSE NULL END) ) ActiveProviders 
@@ -64,7 +68,7 @@ BEGIN
                                               
         FROM
             (
-            -- Managing Standards Course Location data
+            -- Course Management Location data
             SELECT pr1.[Ukprn]
                     ,pc1.[LarsCode]
                     ,CASE
@@ -74,9 +78,9 @@ BEGIN
                      WHEN pl1.[RegionId] IS NOT NULL THEN 
                         (CASE WHEN pl1.[RegionId] = @NearestRegionId THEN 0 -- same Region
                               WHEN @AlternativeRegionid IS NOT NULL AND pl1.[RegionId] = @AlternativeRegionid THEN 0 -- alternative Region
-                              ELSE 3 -- other Regions
+                              ELSE 9 -- other Regions
                               END)
-                     ELSE 3 -- other
+                     ELSE 9 -- other
                      END LocationOrdering
                     -- calculate distance 
                     ,CASE 
@@ -88,12 +92,32 @@ BEGIN
                 JOIN StandardsList lc1 on lc1.LarsCode = pc1.LarsCode
                 JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
                 JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
+                -- ensure course type is (still) available for the provider and course
+                JOIN [dbo].[ProviderCourseType] pct on pct.Ukprn = pr1.[Ukprn] AND pct.CourseType = lc1.CourseType
                 JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
                 JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
                 LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
                 --regulated check
-				WHERE lc1.IsRegulatedForProvider = 0 OR (lc1.IsRegulatedForProvider = 1 AND IsNull(IsApprovedByRegulator, 0) = 1)
+                WHERE (lc1.IsRegulatedForProvider = 0 OR (lc1.IsRegulatedForProvider = 1 AND IsNull(IsApprovedByRegulator, 0) = 1))
+
+            UNION ALL
+            -- Course Management Online courses data
+            SELECT pr1.[Ukprn]
+                  ,pc1.[LarsCode]
+                  ,-1 LocationOrdering
+                  ,0 Distance
+            FROM [dbo].[ProviderCourse] pc1 
+                JOIN StandardsList lc1 on lc1.LarsCode = pc1.LarsCode
+                JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
+                JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
+                -- ensure course type is (still) available for the provider and course
+                JOIN [dbo].[ProviderCourseType] pct on pct.Ukprn = pr1.[Ukprn] AND pct.CourseType = lc1.CourseType
+                --regulated check
+                WHERE (lc1.IsRegulatedForProvider = 0 OR (lc1.IsRegulatedForProvider = 1 AND IsNull(IsApprovedByRegulator, 0) = 1))
+                -- online check
+                AND ISNULL(pc1.HasOnlineDeliveryOption,0) = 1
             ) ab1 
+        WHERE LocationOrdering != 9  -- exclude outside Regions
         GROUP BY Larscode
         ) ab2
     ON st1.LarsCode = ab2.LarsCode

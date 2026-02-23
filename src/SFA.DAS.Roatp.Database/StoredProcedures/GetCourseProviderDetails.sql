@@ -49,10 +49,12 @@ BEGIN
 	-- the Standards and national QAR by Standard
 	WITH StandardsAndQAR AS
 	(
-		SELECT Larscode, Title, [Level], [IsRegulatedForProvider], st1.[IfateReferenceNumber], ISNULL(qar1.[Leavers],'-') [Leavers], ISNULL(qar1.[AchievementRate],'-') [AchievementRate]
+		SELECT Larscode, Title, [Level], [IsRegulatedForProvider], st1.[IfateReferenceNumber], ISNULL(qar1.[Leavers],'-') [Leavers], ISNULL(qar1.[AchievementRate],'-') [AchievementRate], [CourseType], [ApprenticeshipType]
 		FROM (
-			SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [IsRegulatedForProvider]
-			FROM [dbo].[Standard] 
+			SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [IsRegulatedForProvider], s1.[CourseType], [ApprenticeshipType]
+			FROM [dbo].[Standard] s1
+			-- ensure course type is (still) available for the provider and course
+			JOIN [dbo].[ProviderCourseType] pct on pct.Ukprn = @Ukprn AND pct.CourseType = s1.CourseType
 			WHERE [LarsCode] = @larscode
 		) st1
 		LEFT JOIN (
@@ -87,14 +89,29 @@ BEGIN
 		FROM [dbo].[ProviderApprenticeStars] 
 		WHERE TimePeriod = @feedbackperiod
 		AND [Ukprn] = @ukprn
+	),
+
+	-- Provider address
+	ProviderAddress AS
+	(
+	SELECT tp.[Ukprn]
+		,pr1.LegalName
+		,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.AddressLine1 ELSE tp.AddressLine1 END MainAddressLine1
+		,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.AddressLine2 ELSE tp.AddressLine2 END MainAddressLine2
+		,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.AddressLine3 ELSE tp.AddressLine3 END MainAddressLine3
+		,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.AddressLine4 ELSE tp.AddressLine4 END MainAddressLine4
+		,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.Town ELSE tp.Town END MainTown
+		,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.Postcode ELSE tp.Postcode END MainPostcode
+		FROM [dbo].[Provider] pr1 
+		JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn]
+		LEFT JOIN [dbo].[ProviderAddress] pad on pad.ProviderId = pr1.Id
+		WHERE tp.[Ukprn] = @ukprn AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
 	)
 
 	-- Main query
 	SELECT 
 		 ab2.Ukprn AS 'Ukprn'
-		,ab2.LegalName AS 'ProviderName'
-		,CAST(MAX(CAST(ab2.HasOnlineDeliveryOption AS INT)) OVER (PARTITION BY ab2.Larscode, ab2.Ukprn) AS bit) HasOnlineDeliveryOption
-		,ab2.CourseType AS 'CourseType'
+		,LegalName AS 'ProviderName'
 		,MainAddressLine1 AS 'MainAddressLine1'
 		,MainAddressLine2 AS 'MainAddressLine2'
 		,MainAddressLine3 AS 'MainAddressLine3'
@@ -109,7 +126,8 @@ BEGIN
 		,stq.[Level] AS 'Level'
 		,ab2.Larscode AS 'LarsCode'
 		,stq.IfateReferenceNumber AS 'IFateReferenceNumber'
-
+		,stq.CourseType
+		,stq.ApprenticeshipType
 		-- Achievement Rates
 		,@QARPeriod AS 'Period'
 		,ISNULL(qp1.[Leavers],'-') AS 'Leavers'
@@ -147,15 +165,12 @@ BEGIN
 	FROM 
 	(
 		SELECT 
-			 Ukprn, 
-			 LegalName
+			 Ukprn 
 			,Larscode
 			,LocationType
 			,AtEmployer
 			,BlockRelease
 			,DayRelease
-			,HasOnlineDeliveryOption
-			,CourseType
 			,Course_Location
 			,LocationOrdering
 			,Distance
@@ -165,31 +180,25 @@ BEGIN
 			,Town
 			,County
 			,Postcode
-			,MainAddressLine1
-			,MainAddressLine2
-			,MainAddressLine3
-			,MainAddressLine4
-			,MainTown
-			,MainPostcode
 			,MarketingInfo
 			,ContactUsEmail
 			,ContactUsPhoneNumber
 			,ContactUsPageUrl
-			-- LocationType: Provider = 0, National = 1, Regional = 2
+			-- LocationType: Provider = 0, National = 1, Regional = 2, Online = 3 (pseudo location)
 			,CASE WHEN LocationType = 0 THEN Distance
-				  WHEN LocationOrdering = 3 THEN 0
+				  WHEN LocationOrdering = 9 THEN 0
 				  ELSE 0 END Course_Distance
-			-- priority for at workplace over at provider (by ukprn and course)
+			-- priority for online, at workplace over at provider (by ukprn and course)
 			,ROW_NUMBER() OVER (PARTITION BY [Ukprn], [LarsCode], 
-								CASE WHEN LocationType = 0 THEN 1 ELSE 0 END 
+								CASE WHEN LocationType IN (0,3) THEN 1 ELSE 0 END 
 								ORDER BY Distance) TP_Std_Dist_Seq
-			,MIN(LocationOrdering) OVER (PARTITION BY [Ukprn], [LarsCode]) Min_LocationOrdering		
+			,MIN(LocationOrdering) OVER (PARTITION BY [Ukprn], [LarsCode]) Min_LocationOrdering
 			,IsApprovedByRegulator
 		FROM
 			(
-			-- Managing Standards Course Location data
-			SELECT pr1.[Ukprn], pr1.LegalName
-				  ,pc1.[LarsCode]
+			-- Course Management Location data
+			SELECT pr1.[Ukprn]
+				  ,[LarsCode]
 				  ,[LocationType]
 				  -- Is at Employer ?
 				  ,CASE [LocationType] 
@@ -205,8 +214,6 @@ BEGIN
 				   ELSE 1 END AtEmployer
 				  ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
 				  ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
-				  ,pc1.[HasOnlineDeliveryOption]
-				  ,s1.[CourseType]
 				  ,CASE [LocationType] 
 				   WHEN 0 THEN pl1.Postcode
 				   WHEN 1 THEN 'National'
@@ -219,9 +226,9 @@ BEGIN
 				   WHEN pl1.[RegionId] IS NOT NULL THEN 
 						(CASE WHEN pl1.[RegionId] = @NearestRegionId THEN 0 -- same Region
 							  WHEN @AlternativeRegionid IS NOT NULL AND pl1.[RegionId] = @AlternativeRegionid THEN 0 -- alternative Region
-							  ELSE 3 -- other Regions
+							  ELSE 9 -- other Regions
 							  END)
-				   ELSE 3 -- other
+				   ELSE 9 -- other
 				   END LocationOrdering
 				   -- calculate distance 
 				  ,CASE 
@@ -240,12 +247,6 @@ BEGIN
 				   ,pl1.Town
 				   ,pl1.County
 				   ,pl1.Postcode
-				   ,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.AddressLine1 ELSE tp.AddressLine1 END MainAddressLine1
-				   ,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.AddressLine2 ELSE tp.AddressLine2 END MainAddressLine2
-				   ,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.AddressLine3 ELSE tp.AddressLine3 END MainAddressLine3
-				   ,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.AddressLine4 ELSE tp.AddressLine4 END MainAddressLine4
-				   ,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.Town ELSE tp.Town END MainTown
-				   ,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.Postcode ELSE tp.Postcode END MainPostcode
 				   ,pr1.MarketingInfo
 				   ,ISNULL(pc1.ContactUsEmail,pr1.Email) ContactUsEmail
 				   ,ISNULL(pc1.ContactUsPhoneNumber, pr1.Phone) ContactUsPhoneNumber
@@ -253,19 +254,52 @@ BEGIN
 				   ,pc1.[IsApprovedByRegulator]
 			  FROM [dbo].[ProviderCourse] pc1 
 			  JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
-			  JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
-			  LEFT JOIN [dbo].[ProviderAddress] pad on pad.ProviderId = pr1.Id
 			  JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
 			  JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
-			  JOIN [dbo].[Standard] s1 on s1.LarsCode = pc1.LarsCode
-			  JOIN [dbo].[ProviderCourseType] pct1 on pct1.Ukprn = pr1.Ukprn AND pct1.CourseType = s1.CourseType
 			  LEFT JOIN [dbo].[Region] rg1 on rg1.[Id] = pl1.[RegionId]
 			  WHERE 
 				  -- specific Training Course 
 				  pc1.[LarsCode] = @larscode
+				  -- specific Training Provider 
 				  AND pr1.[Ukprn] = @ukprn
-			  ) ab1 
+
+			UNION ALL
+			-- Course Management Online courses data
+			SELECT pr1.[Ukprn]
+				  ,[LarsCode]
+				  ,3 [LocationType]  -- online
+				  -- Is at Employer ?
+				  ,0 AtEmployer
+				  ,0 BlockRelease
+				  ,0 DayRelease
+				  ,'Online' Course_Location
+				  ,-1 LocationOrdering
+				   -- calculate distance 
+				  ,0 Distance
+				   ,NULL LocationName
+				   ,NULL AddressLine1
+				   ,NULL AddressLine2
+				   ,NULL Town
+				   ,NULL County
+				   ,NULL Postcode
+				   ,pr1.MarketingInfo
+				   ,ISNULL(pc1.ContactUsEmail,pr1.Email) ContactUsEmail
+				   ,ISNULL(pc1.ContactUsPhoneNumber, pr1.Phone) ContactUsPhoneNumber
+				   ,ISNULL(pc1.StandardInfoUrl, pr1.Website) ContactUsPageUrl
+				   ,pc1.[IsApprovedByRegulator]  
+			  FROM [dbo].[ProviderCourse] pc1 
+			  JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
+			  WHERE
+				  -- specific Training Course 
+					  pc1.[LarsCode] = @larscode
+				  -- specific Training Provider 
+				  AND pr1.[Ukprn] = @ukprn  
+				  -- online check
+				  AND ISNULL(pc1.HasOnlineDeliveryOption,0) = 1
+		  ) ab1 
 		) ab2
+	-- Address
+	JOIN ProviderAddress adr on adr.[Ukprn] = ab2.[Ukprn]
 	-- Standards and QAR data
 	JOIN StandardsAndQAR stq on stq.LarsCode = ab2.LarsCode
 	LEFT JOIN ProviderQARs qp1 on qp1.[Ukprn] = ab2.[Ukprn] AND qp1.[IfateReferenceNumber] = stq.[IfateReferenceNumber]
@@ -274,7 +308,7 @@ BEGIN
 	LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[userId] = @userId
 		AND ((sht.[LocationDescription] IS NULL AND @Location IS NULL) OR (sht.[LocationDescription] = @Location))
 	-- regulated check
-	WHERE stq.IsRegulatedForProvider = 0 OR (stq.IsRegulatedForProvider = 1 AND IsApprovedByRegulator = 1)
+	WHERE (stq.IsRegulatedForProvider = 0 OR (stq.IsRegulatedForProvider = 1 AND IsApprovedByRegulator = 1))
 	ORDER BY ukprn, Larscode, Ordering
 	
 END
