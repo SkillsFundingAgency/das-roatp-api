@@ -866,6 +866,15 @@ INSERT INTO #Standard VALUES ('ST1502_1.0','823','ST1502',6,'Teacher - Undergrad
 INSERT INTO #Standard VALUES ('SC0001_1.0','ZSC00001','SC0001',3,'Digital Apprenticeship unit','1.0','',0,100,'Hours','Digital','ApprenticeshipUnit','ShortCourse');
 INSERT INTO #Standard VALUES ('SC0002_1.0','ZSC00002','SC0002',4,'Teacher Assistant - Apprenticeship Unit','1.0','Department for Education',1,120,'Hours','Education and early years','ApprenticeshipUnit','ShortCourse');
 INSERT INTO #Standard VALUES ('SC0004_1.0','ZSC00004','SC0004',4,'Nursing Apprenticeship unit','1.0','Nursing and Midwifery Council',1,120,'Hours','Health and science','ApprenticeshipUnit','ShortCourse');
+---
+INSERT INTO #Standard VALUES ('SC0011_1.0','ZSC00011','SC0011',5,'Paralegal Apprenticeship unit','1.0','',0,80,'Hours','Legal, finance and accounting','ApprenticeshipUnit','ShortCourse');
+INSERT INTO #Standard VALUES ('SC0012_1.0','ZSC00012','SC0012',2,'Floorlayer Apprenticeship unit','1.0','',0,40,'Hours','Construction and the built environment','ApprenticeshipUnit','ShortCourse');
+INSERT INTO #Standard VALUES ('SC0013_1.0','ZSC00013','SC0013',4,'Forestry Apprenticeship unit','1.0','',0,110,'Hours','Agriculture, environmental and animal care','ApprenticeshipUnit','ShortCourse');
+INSERT INTO #Standard VALUES ('SC0014_1.0','ZSC00014','SC0014',3,'Recruiter Apprenticeship unit','1.0','',0,60,'Hours','Business and administration','ApprenticeshipUnit','ShortCourse');
+INSERT INTO #Standard VALUES ('SC0015_1.0','ZSC00015','SC0015',2,'Hospitality accommodation Apprenticeship unit','1.0','',0,50,'Hours','Catering and hospitality','ApprenticeshipUnit','ShortCourse');
+INSERT INTO #Standard VALUES ('SC0016_1.0','ZSC00016','SC0016',7,'Barrister Apprenticeship unit','1.0','',0,50,'Hours','Legal, finance and accounting','ApprenticeshipUnit','ShortCourse');
+INSERT INTO #Standard VALUES ('SC0017_1.0','ZSC00017','SC0017',2,'Removals operative Apprenticeship unit','1.0','',0,50,'Hours','Transport and logistics','ApprenticeshipUnit','ShortCourse');
+---
 
 DELETE FROM [dbo].[Standard];
 INSERT INTO [dbo].[Standard]
