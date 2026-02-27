@@ -8,7 +8,6 @@ public class ProviderData
     public long Ordering { get; set; }
     public int Ukprn { get; set; }
     public string ProviderName { get; set; }
-    public bool HasOnlineDeliveryOption { get; set; }
     public Guid? ShortlistId { get; set; }
     public List<ProviderLocationModel> Locations { get; set; }
     public string Leavers { get; set; }

@@ -1,9 +1,9 @@
-﻿namespace SFA.DAS.Roatp.Domain.Models
+﻿namespace SFA.DAS.Roatp.Domain.Models;
+
+public enum LocationType
 {
-    public enum LocationType
-    {
-        Provider = 0,
-        National = 1,
-        Regional = 2
-    }
+    Provider = 0,
+    National = 1,
+    Regional = 2,
+    Online = 3,
 }

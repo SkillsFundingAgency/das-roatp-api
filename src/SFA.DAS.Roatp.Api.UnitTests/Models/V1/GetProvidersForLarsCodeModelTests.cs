@@ -33,8 +33,7 @@ public class GetProvidersForLarsCodeModelTests
             v1.ReviewPeriod.Should().Be(source.ReviewPeriod);
 
             v1.Providers.Should().NotBeNull().And.HaveCount(source.Providers.Count);
-            v1.Providers.Should().BeEquivalentTo(source.Providers, options => options
-                .Excluding(p => p.HasOnlineDeliveryOption));
+            v1.Providers.Should().BeEquivalentTo(source.Providers, options => options);
         }
     }
 
@@ -77,7 +76,6 @@ public class GetProvidersForLarsCodeModelTests
                     Ordering = 42,
                     Ukprn = 12345678,
                     ProviderName = "Provider X",
-                    HasOnlineDeliveryOption = true,
                     ShortlistId = shortlistId,
                     Locations = null,
                     Leavers = "10",

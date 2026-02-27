@@ -55,7 +55,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
             command.Parameters.Add(new SqlParameter("@provider", parameters.IsProvider));
             command.Parameters.Add(new SqlParameter("@dayrelease", parameters.IsDayRelease));
             command.Parameters.Add(new SqlParameter("@blockrelease", parameters.IsBlockRelease));
-            command.Parameters.Add(new SqlParameter("@hasOnlineDeliveryOption", parameters.IsOnline));
+            command.Parameters.Add(new SqlParameter("@onlineoption", parameters.IsOnline));
             command.Parameters.Add(new SqlParameter("@Latitude", parameters.Latitude));
             command.Parameters.Add(new SqlParameter("@Longitude", parameters.Longitude));
             command.Parameters.Add(new SqlParameter("@Location", parameters.Location));
@@ -108,7 +108,8 @@ namespace SFA.DAS.Roatp.Data.Repositories
                                 Ukprn = (int)reader["providers.ukprn"],
                                 LocationsCount = (int)reader["providers.locationsCount"],
                                 ProviderName = (string)reader["providers.ProviderName"],
-                                HasOnlineDeliveryOption = (bool)reader["HasOnlineDeliveryOption"],
+                                CourseType = (CourseType)Enum.Parse(typeof(CourseType), (string)reader["courseType"]),
+                                ApprenticeshipType = (ApprenticeshipType)Enum.Parse(typeof(ApprenticeshipType), (string)reader["apprenticeshipType"]),
                                 LocationTypes = (string)reader["providers.locations.locationType"],
                                 CourseDistances = (string)reader["providers.locations.courseDistances"],
                                 AtEmployers = (string)reader["providers.locations.atEmployer"],
