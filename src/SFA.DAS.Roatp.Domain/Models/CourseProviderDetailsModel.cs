@@ -37,6 +37,7 @@ public sealed class CourseProviderDetailsModel
     public bool BlockRelease { get; set; }
     public bool DayRelease { get; set; }
     public CourseType CourseType { get; set; }
+    public ApprenticeshipType ApprenticeshipType { get; set; }
     public int LocationType { get; set; }
     public string CourseLocation { get; set; }
     public string AddressLine1 { get; set; }
