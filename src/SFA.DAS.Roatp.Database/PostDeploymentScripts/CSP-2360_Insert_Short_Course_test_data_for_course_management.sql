@@ -1729,5 +1729,13 @@ update Standard set SectorSubjectAreaTier1 = 6 where Larscode = 'ZSC00001';
 update Standard set SectorSubjectAreaTier1 = 13 where Larscode = 'ZSC00002';
 update Standard set SectorSubjectAreaTier1 = 1 where Larscode = 'ZSC00004';
 update Standard set SectorSubjectAreaTier1 = 4 where Larscode = '1';
+update Standard set SectorSubjectAreaTier1 = 1 where Larscode = 'ZSC00011';
+update Standard set SectorSubjectAreaTier1 = 1 where Larscode = 'ZSC00012';
+update Standard set SectorSubjectAreaTier1 = 1 where Larscode = 'ZSC00013';
+update Standard set SectorSubjectAreaTier1 = 1 where Larscode = 'ZSC00014';
+update Standard set SectorSubjectAreaTier1 = 1 where Larscode = 'ZSC00015';
+update Standard set SectorSubjectAreaTier1 = 1 where Larscode = 'ZSC00016';
+update Standard set SectorSubjectAreaTier1 = 1 where Larscode = 'ZSC00017';
+
 
 -- END
