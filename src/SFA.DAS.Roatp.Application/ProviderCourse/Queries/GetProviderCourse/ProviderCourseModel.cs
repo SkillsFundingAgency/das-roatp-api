@@ -20,6 +20,7 @@ public class ProviderCourseModel : ProviderCourseModelBase
             HasLocations = providerCourse.Locations.Count > 0,
             IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false,
             CourseType = providerCourse.Standard.CourseType,
+            ApprenticeshipType = providerCourse.Standard.ApprenticeshipType,
             HasOnlineDeliveryOption = providerCourse.HasOnlineDeliveryOption
         };
 
