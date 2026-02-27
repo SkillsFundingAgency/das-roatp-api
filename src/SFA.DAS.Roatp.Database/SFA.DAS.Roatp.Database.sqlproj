@@ -106,6 +106,7 @@
     <Build Include="Tables\ProviderContact.sql" />
     <Build Include="Tables\ProviderCourseType.sql" />
     <Build Include="Views\ProviderCoursesTimelineView.sql" />
+    <Build Include="Tables\ProviderAllowedCourses.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
