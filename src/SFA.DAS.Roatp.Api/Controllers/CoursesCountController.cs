@@ -12,6 +12,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
 [ApiVersion(ApiVersionNumber.One)]
+[Tags(EndpointTags.Standards)]
 [Route("courses/providers-count")]
 public class CoursesCountController(IMediator _mediator) : ActionResponseControllerBase
 {

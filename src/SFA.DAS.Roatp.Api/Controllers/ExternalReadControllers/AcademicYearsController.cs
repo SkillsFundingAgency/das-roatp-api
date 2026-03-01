@@ -11,6 +11,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 [ApiController]
 [ApiVersion(ApiVersionNumber.One)]
 [ApiVersion(ApiVersionNumber.Two)]
+[Tags(EndpointTags.Lookups)]
 [Route("/api/[controller]/")]
 public class AcademicYearsController : ControllerBase
 {

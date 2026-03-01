@@ -13,12 +13,13 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
 [ApiVersion(ApiVersionNumber.One)]
+[Tags(EndpointTags.ProviderCourses)]
 [Route("/providers/{ukprn}/course-types", Name = RouteNames.GetProviderCourseTypes)]
 public class ProviderCourseTypesController(IMediator _mediator, ILogger<ProviderCourseLocationsController> _logger) : ActionResponseControllerBase
 {
     [HttpGet]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(List<ProviderCourseTypeModel>), 200)]
     public async Task<IActionResult> GetProviderCourseTypes(int ukprn)
     {
