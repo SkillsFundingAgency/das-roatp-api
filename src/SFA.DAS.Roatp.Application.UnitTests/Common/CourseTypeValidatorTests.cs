@@ -15,6 +15,7 @@ public class CourseTypeValidatorTests
 {
     private Mock<IProviderCourseTypesReadRepository> _providerCourseTypesReadRepositoryMock;
     private Mock<IStandardsReadRepository> _standardsReadRepositoryMock;
+    private Mock<IProviderAllowedCoursesRepository> _providerAllowedCoursesRepositoryMock;
     private CourseTypeValidator _sut;
 
     const string ValidLarsCode = "321";
@@ -23,8 +24,9 @@ public class CourseTypeValidatorTests
     [SetUp]
     public void BeforeEach()
     {
-        _providerCourseTypesReadRepositoryMock = new Mock<IProviderCourseTypesReadRepository>();
-        _standardsReadRepositoryMock = new Mock<IStandardsReadRepository>();
+        _providerCourseTypesReadRepositoryMock = new();
+        _standardsReadRepositoryMock = new();
+        _providerAllowedCoursesRepositoryMock = new();
     }
 
     [Test]
@@ -33,7 +35,7 @@ public class CourseTypeValidatorTests
         _standardsReadRepositoryMock.Setup(r => r.GetStandard(It.Is<string>(s => s == ValidLarsCode)))
             .ReturnsAsync((Standard)null);
 
-        _sut = new CourseTypeValidator(_providerCourseTypesReadRepositoryMock.Object, _standardsReadRepositoryMock.Object);
+        _sut = new CourseTypeValidator(_providerCourseTypesReadRepositoryMock.Object, _standardsReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
 
         var testObj = new CourseTypeValidatorTestObject(ValidUkprn, ValidLarsCode);
 
@@ -51,7 +53,7 @@ public class CourseTypeValidatorTests
         _providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>()))
             .ReturnsAsync((List<ProviderCourseType>)null);
 
-        _sut = new CourseTypeValidator(_providerCourseTypesReadRepositoryMock.Object, _standardsReadRepositoryMock.Object);
+        _sut = new CourseTypeValidator(_providerCourseTypesReadRepositoryMock.Object, _standardsReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
 
         var testObj = new CourseTypeValidatorTestObject(ValidUkprn, ValidLarsCode);
 
@@ -72,7 +74,7 @@ public class CourseTypeValidatorTests
                 new ProviderCourseType { CourseType = CourseType.ShortCourse }
             });
 
-        _sut = new CourseTypeValidator(_providerCourseTypesReadRepositoryMock.Object, _standardsReadRepositoryMock.Object);
+        _sut = new CourseTypeValidator(_providerCourseTypesReadRepositoryMock.Object, _standardsReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
 
         var testObj = new CourseTypeValidatorTestObject(ValidUkprn, ValidLarsCode);
 
@@ -94,12 +96,51 @@ public class CourseTypeValidatorTests
                 new ProviderCourseType { CourseType = CourseType.ShortCourse }
             });
 
-        _sut = new CourseTypeValidator(_providerCourseTypesReadRepositoryMock.Object, _standardsReadRepositoryMock.Object);
+        _sut = new CourseTypeValidator(_providerCourseTypesReadRepositoryMock.Object, _standardsReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
 
         var testObj = new CourseTypeValidatorTestObject(ValidUkprn, ValidLarsCode);
 
         var result = await _sut.TestValidateAsync(testObj);
 
+        result.ShouldNotHaveValidationErrorFor(c => c.LarsCode);
+    }
+
+    [Test]
+    public async Task Validate_CourseTypeIsShortCourse_AndCourseNotInAllowedList_ShouldHaveValidationError()
+    {
+        _standardsReadRepositoryMock.Setup(r => r.GetStandard(It.Is<string>(s => s == ValidLarsCode)))
+            .ReturnsAsync(new Standard { CourseType = CourseType.ShortCourse });
+        _providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>()))
+            .ReturnsAsync(new List<ProviderCourseType>
+            {
+                new ProviderCourseType { CourseType = CourseType.ShortCourse }
+            });
+        _providerAllowedCoursesRepositoryMock.Setup(r => r.GetProviderAllowedCourses(It.IsAny<int>(), It.IsAny<CourseType>(), default))
+            .ReturnsAsync(new List<ProviderAllowedCourse>());
+        _sut = new CourseTypeValidator(_providerCourseTypesReadRepositoryMock.Object, _standardsReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
+        var testObj = new CourseTypeValidatorTestObject(ValidUkprn, ValidLarsCode);
+        var result = await _sut.TestValidateAsync(testObj);
+        result.ShouldHaveValidationErrorFor(c => c.LarsCode).WithErrorMessage(CourseTypeValidator.CourseNotAllowed);
+    }
+
+    [Test]
+    public async Task Validate_CourseTypeIsShortCourse_AndCourseInAllowedList_ShouldNotHaveValidationError()
+    {
+        _standardsReadRepositoryMock.Setup(r => r.GetStandard(It.Is<string>(s => s == ValidLarsCode)))
+            .ReturnsAsync(new Standard { CourseType = CourseType.ShortCourse });
+        _providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>()))
+            .ReturnsAsync(new List<ProviderCourseType>
+            {
+                new ProviderCourseType { CourseType = CourseType.ShortCourse }
+            });
+        _providerAllowedCoursesRepositoryMock.Setup(r => r.GetProviderAllowedCourses(It.IsAny<int>(), It.IsAny<CourseType>(), default))
+            .ReturnsAsync(new List<ProviderAllowedCourse>
+            {
+                new ProviderAllowedCourse { LarsCode = ValidLarsCode }
+            });
+        _sut = new CourseTypeValidator(_providerCourseTypesReadRepositoryMock.Object, _standardsReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
+        var testObj = new CourseTypeValidatorTestObject(ValidUkprn, ValidLarsCode);
+        var result = await _sut.TestValidateAsync(testObj);
         result.ShouldNotHaveValidationErrorFor(c => c.LarsCode);
     }
 

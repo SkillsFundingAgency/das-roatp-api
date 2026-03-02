@@ -16,6 +16,7 @@ public class ProviderCourseQueryValidatorTests
 {
     private Mock<IProviderCourseTypesReadRepository> _providerCourseTypesReadRepositoryMock;
     private Mock<IStandardsReadRepository> _standardsReadRepositoryMock;
+    private Mock<IProviderAllowedCoursesRepository> _providerAllowedCoursesRepositoryMock;
 
     [SetUp]
     public void BeforeEach()
@@ -26,6 +27,7 @@ public class ProviderCourseQueryValidatorTests
             .ReturnsAsync(new Standard { CourseType = CourseType.Apprenticeship });
         _providerCourseTypesReadRepositoryMock.Setup(x => x.GetProviderCourseTypesByUkprn(It.IsAny<int>()))
             .ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { CourseType = CourseType.Apprenticeship } });
+        _providerAllowedCoursesRepositoryMock = new();
     }
 
     [TestCase(10000001, true)]
@@ -39,7 +41,7 @@ public class ProviderCourseQueryValidatorTests
         var repoMockProvideCourse = new Mock<IProviderCoursesReadRepository>();
         repoMock.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
         repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
-        var sut = new GetProviderCourseQueryValidator(repoMock.Object, repoMockProvideCourse.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object);
+        var sut = new GetProviderCourseQueryValidator(repoMock.Object, repoMockProvideCourse.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
 
         var result = await sut.ValidateAsync(query);
 
@@ -57,7 +59,7 @@ public class ProviderCourseQueryValidatorTests
         var query = new GetProviderCourseQuery(ukprn, larsCode);
         var repoMockProvideCourse = new Mock<IProviderCoursesReadRepository>();
         var repoMock = new Mock<IProvidersReadRepository>();
-        var sut = new GetProviderCourseQueryValidator(repoMock.Object, repoMockProvideCourse.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object);
+        var sut = new GetProviderCourseQueryValidator(repoMock.Object, repoMockProvideCourse.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
 
         var result = await sut.ValidateAsync(query);
 
@@ -80,7 +82,7 @@ public class ProviderCourseQueryValidatorTests
         var repoMock = new Mock<IProvidersReadRepository>();
         repoMock.Setup(r => r.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
         repoMockProvideCourse.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync((Domain.Entities.ProviderCourse)null);
-        var sut = new GetProviderCourseQueryValidator(repoMock.Object, repoMockProvideCourse.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object);
+        var sut = new GetProviderCourseQueryValidator(repoMock.Object, repoMockProvideCourse.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
 
         var result = await sut.ValidateAsync(query);
 
@@ -110,7 +112,7 @@ public class ProviderCourseQueryValidatorTests
         var providerCoursesRepo = new Mock<IProviderCoursesReadRepository>();
         providerCoursesRepo.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
-        var sut = new GetProviderCourseQueryValidator(providersRepo.Object, providerCoursesRepo.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object);
+        var sut = new GetProviderCourseQueryValidator(providersRepo.Object, providerCoursesRepo.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
 
         // Act
         var result = await sut.ValidateAsync(query);
@@ -141,7 +143,7 @@ public class ProviderCourseQueryValidatorTests
         var providerCoursesRepo = new Mock<IProviderCoursesReadRepository>();
         providerCoursesRepo.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
-        var sut = new GetProviderCourseQueryValidator(providersRepo.Object, providerCoursesRepo.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object);
+        var sut = new GetProviderCourseQueryValidator(providersRepo.Object, providerCoursesRepo.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
 
         // Act
         var result = await sut.ValidateAsync(query);
@@ -172,7 +174,7 @@ public class ProviderCourseQueryValidatorTests
         var providerCoursesRepo = new Mock<IProviderCoursesReadRepository>();
         providerCoursesRepo.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
-        var sut = new GetProviderCourseQueryValidator(providersRepo.Object, providerCoursesRepo.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object);
+        var sut = new GetProviderCourseQueryValidator(providersRepo.Object, providerCoursesRepo.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
 
         // Act
         var result = await sut.ValidateAsync(query);
@@ -197,7 +199,7 @@ public class ProviderCourseQueryValidatorTests
         var providerCoursesRepo = new Mock<IProviderCoursesReadRepository>();
         providerCoursesRepo.Setup(x => x.GetProviderCourse(It.IsAny<int>(), It.IsAny<string>())).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
-        var sut = new GetProviderCourseQueryValidator(providersRepo.Object, providerCoursesRepo.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object);
+        var sut = new GetProviderCourseQueryValidator(providersRepo.Object, providerCoursesRepo.Object, _standardsReadRepositoryMock.Object, _providerCourseTypesReadRepositoryMock.Object, _providerAllowedCoursesRepositoryMock.Object);
 
         // Act
         var result = await sut.ValidateAsync(query);

@@ -1,8 +1,8 @@
-﻿using FluentValidation;
+﻿using System.Linq;
+using System.Threading.Tasks;
+using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 
@@ -16,13 +16,15 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
     public const string RegionIdNotFoundMessage = "At least one of the region id was not found";
     public const string LarsCodeUkprnCombinationAlreadyExistsMessage = "Ukprn and LarsCode combination already exists";
     public const string LarsCodeInvalidMessage = "Larscode must be greater than zero";
+
     public CreateProviderCourseCommandValidator(
         IProvidersReadRepository providersReadRepository,
         IStandardsReadRepository standardsReadRepository,
         IProviderCoursesReadRepository providerCoursesReadRepository,
         IProviderLocationsReadRepository providerLocationsReadRepository,
         IRegionsReadRepository regionsReadRepository,
-        IProviderCourseTypesReadRepository providerCourseTypesReadRepository)
+        IProviderCourseTypesReadRepository providerCourseTypesReadRepository,
+        IProviderAllowedCoursesRepository providerAllowedCoursesRepository)
     {
         Include(new UserInfoValidator());
 
@@ -102,10 +104,10 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
             .WithMessage(c => ValidationMessages.IsRequired(nameof(c.StandardInfoUrl)))
             .MustBeValidUrl("Website");
 
-        Include(new CourseTypeValidator(providerCourseTypesReadRepository, standardsReadRepository));
+        Include(new CourseTypeValidator(providerCourseTypesReadRepository, standardsReadRepository, providerAllowedCoursesRepository));
     }
 
-    private async Task<bool> IsStandardRegulated(string larsCode, IStandardsReadRepository standardsReadRepository)
+    private static async Task<bool> IsStandardRegulated(string larsCode, IStandardsReadRepository standardsReadRepository)
     {
         var standard = await standardsReadRepository.GetStandard(larsCode);
         var result = standard.IsRegulatedForProvider;
