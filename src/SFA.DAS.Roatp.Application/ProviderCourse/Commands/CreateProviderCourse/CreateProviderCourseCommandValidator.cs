@@ -1,8 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using FluentValidation;
+﻿using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 
@@ -11,7 +11,7 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
     public const string RegulatedStandardMustBeApprovedMessage = "The standard is regulated and you must be approved by the regulator";
     public const string RegulatorsApprovalNotRequired = "This course is not regulated, IsApprovedByRegulator should be null";
     public const string EitherNationalOrRegionalMessage = "If the national delivery option is available, then the sub-regions are not required";
-    public const string AtleastOneLocationIsRequiredMessage = "National delivery option is not set and there are no regions or provider locations either. Any one of these is required.";
+    public const string AtleastOneLocationIsRequiredMessage = "National or online delivery option is not set and there are no regions or provider locations either. Any one of these is required.";
     public const string LocationIdNotFoundMessage = "At least one of the location ids was not found";
     public const string RegionIdNotFoundMessage = "At least one of the region id was not found";
     public const string LarsCodeUkprnCombinationAlreadyExistsMessage = "Ukprn and LarsCode combination already exists";
@@ -62,7 +62,7 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
             })
             .Otherwise(() =>
             {
-                When((command) => command.SubregionIds == null || command.SubregionIds.Count == 0, () =>
+                When((command) => !command.HasOnlineDeliveryOption && command.SubregionIds.Count == 0, () =>
                     {
                         RuleFor((c) => c.ProviderLocations)
                             .NotEmpty()
