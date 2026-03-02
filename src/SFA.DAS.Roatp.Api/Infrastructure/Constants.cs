@@ -27,5 +27,6 @@ public static class Constants
         public const string ProiderCourseLocations = "Provider Course Locations";
         public const string ProviderLocations = "Provider Locations";
         public const string ProviderCoursesTimeLine = "Provider Courses Timeline";
+        public const string ProviderAllowedCourses = "Provider Allowed Courses";
     }
 }
