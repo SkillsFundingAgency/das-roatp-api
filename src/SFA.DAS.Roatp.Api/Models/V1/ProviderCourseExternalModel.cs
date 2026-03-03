@@ -27,6 +27,7 @@ public class ProviderCourseExternalModel : ProviderCourseModelBase
             CourseName = providerCourseModel.CourseName,
             ApprovalBody = providerCourseModel.ApprovalBody,
             CourseType = providerCourseModel.CourseType,
+            ApprenticeshipType = providerCourseModel.ApprenticeshipType
         };
 
         return model;
