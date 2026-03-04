@@ -76,56 +76,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 await using DbDataReader reader = await command.ExecuteReaderAsync(cancellationToken);
                 while (await reader.ReadAsync(cancellationToken))
                 {
-                    if (reader["Providers.Ordering"] == DBNull.Value)
-                    {
-                        pagedProviderDetails.Add(
-                            new ProviderSearchModel
-                            {
-                                Page = (int)reader["Page"],
-                                PageSize = (int)reader["PageSize"],
-                                TotalPages = (int)reader["TotalPages"],
-                                TotalCount = (int)reader["TotalCount"],
-                                LarsCode = (string)reader["LarsCode"],
-                                StandardName = (string)reader["StandardName"],
-                                QarPeriod = (string)reader["QarPeriod"],
-                                ReviewPeriod = (string)reader["reviewPeriod"],
-                            });
-                    }
-                    else
-                    {
-                        pagedProviderDetails.Add(
-                            new ProviderSearchModel
-                            {
-                                Page = (int)reader["Page"],
-                                PageSize = (int)reader["PageSize"],
-                                TotalPages = (int)reader["TotalPages"],
-                                TotalCount = (int)reader["TotalCount"],
-                                LarsCode = (string)reader["LarsCode"],
-                                StandardName = (string)reader["StandardName"],
-                                QarPeriod = (string)reader["QarPeriod"],
-                                ReviewPeriod = (string)reader["reviewPeriod"],
-                                Ordering = (long)reader["Providers.Ordering"],
-                                Ukprn = (int)reader["providers.ukprn"],
-                                LocationsCount = (int)reader["providers.locationsCount"],
-                                ProviderName = (string)reader["providers.ProviderName"],
-                                CourseType = (CourseType)Enum.Parse(typeof(CourseType), (string)reader["courseType"]),
-                                ApprenticeshipType = (ApprenticeshipType)Enum.Parse(typeof(ApprenticeshipType), (string)reader["apprenticeshipType"]),
-                                LocationTypes = (string)reader["providers.locations.locationType"],
-                                CourseDistances = (string)reader["providers.locations.courseDistances"],
-                                AtEmployers = (string)reader["providers.locations.atEmployer"],
-                                DayReleases = (string)reader["providers.locations.dayRelease"],
-                                BlockReleases = (string)reader["providers.locations.blockRelease"],
-                                Leavers = (string)reader["providers.leavers"],
-                                AchievementRate = (string)reader["providers.achievementRate"],
-                                EmployerReviews = (string)reader["providers.employerReviews"],
-                                EmployerStars = (string)reader["providers.employerStars"],
-                                EmployerRating = (ProviderRating)Enum.Parse(typeof(ProviderRating), (string)reader["providers.employerRating"]),
-                                ApprenticeReviews = (string)reader["providers.apprenticeReviews"],
-                                ApprenticeStars = (string)reader["providers.apprenticeStars"],
-                                ApprenticeRating = (ProviderRating)Enum.Parse(typeof(ProviderRating), (string)reader["providers.apprenticeRating"]),
-                                ShortlistId = reader["providers.ShortlistId"] != DBNull.Value ? (Guid)reader["providers.shortlistId"] : null
-                            });
-                    }
+                    pagedProviderDetails.Add(MapReaderToProviderSearchModel(reader));
                 }
             }
             finally
@@ -136,6 +87,47 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 }
             }
             return pagedProviderDetails;
+        }
+
+        private static ProviderSearchModel MapReaderToProviderSearchModel(DbDataReader reader)
+        {
+            var model = new ProviderSearchModel
+            {
+                Page = (int)reader["Page"],
+                PageSize = (int)reader["PageSize"],
+                TotalPages = (int)reader["TotalPages"],
+                TotalCount = (int)reader["TotalCount"],
+                LarsCode = (string)reader["LarsCode"],
+                StandardName = (string)reader["StandardName"],
+                CourseType = Enum.Parse<CourseType>((string)reader["courseType"]),
+                ApprenticeshipType = Enum.Parse<ApprenticeshipType>((string)reader["apprenticeshipType"]),
+                QarPeriod = (string)reader["QarPeriod"],
+                ReviewPeriod = (string)reader["reviewPeriod"]
+            };
+
+            if (reader["Providers.Ordering"] != DBNull.Value)
+            {
+                model.Ordering = (long)reader["Providers.Ordering"];
+                model.Ukprn = (int)reader["providers.ukprn"];
+                model.LocationsCount = (int)reader["providers.locationsCount"];
+                model.ProviderName = (string)reader["providers.ProviderName"];
+                model.LocationTypes = (string)reader["providers.locations.locationType"];
+                model.CourseDistances = (string)reader["providers.locations.courseDistances"];
+                model.AtEmployers = (string)reader["providers.locations.atEmployer"];
+                model.DayReleases = (string)reader["providers.locations.dayRelease"];
+                model.BlockReleases = (string)reader["providers.locations.blockRelease"];
+                model.Leavers = (string)reader["providers.leavers"];
+                model.AchievementRate = (string)reader["providers.achievementRate"];
+                model.EmployerReviews = (string)reader["providers.employerReviews"];
+                model.EmployerStars = (string)reader["providers.employerStars"];
+                model.EmployerRating = (ProviderRating)Enum.Parse(typeof(ProviderRating), (string)reader["providers.employerRating"]);
+                model.ApprenticeReviews = (string)reader["providers.apprenticeReviews"];
+                model.ApprenticeStars = (string)reader["providers.apprenticeStars"];
+                model.ApprenticeRating = (ProviderRating)Enum.Parse(typeof(ProviderRating), (string)reader["providers.apprenticeRating"]);
+                model.ShortlistId = reader["providers.ShortlistId"] != DBNull.Value ? (Guid)reader["providers.shortlistId"] : null;
+            }
+
+            return model;
         }
     }
 }
