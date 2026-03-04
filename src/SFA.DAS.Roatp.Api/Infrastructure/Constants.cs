@@ -19,6 +19,14 @@ public static class Constants
 
     public static class EndpointTags
     {
+        public const string Lookups = nameof(Lookups);
+        public const string Standards = nameof(Standards);
+        public const string Providers = nameof(Providers);
+        public const string ProviderContact = "Provider Contact";
         public const string ProviderCourses = "Provider Courses";
+        public const string ProiderCourseLocations = "Provider Course Locations";
+        public const string ProviderLocations = "Provider Locations";
+        public const string ProviderCoursesTimeLine = "Provider Courses Timeline";
+        public const string ProviderAllowedCourses = "Provider Allowed Courses";
     }
 }

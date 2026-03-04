@@ -12,53 +12,53 @@ using SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider;
 using SFA.DAS.Roatp.Domain.Models;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
-namespace SFA.DAS.Roatp.Api.Controllers
+namespace SFA.DAS.Roatp.Api.Controllers;
+
+[ApiController]
+[ApiVersion(ApiVersionNumber.One)]
+[Tags(EndpointTags.Providers)]
+[Route("/providers")]
+public class ProviderEditController : ActionResponseControllerBase
 {
-    [ApiController]
-    [ApiVersion(ApiVersionNumber.One)]
-    [Route("/providers")]
-    public class ProviderEditController : ActionResponseControllerBase
+    private readonly IMediator _mediator;
+    private readonly ILogger<ProviderEditController> _logger;
+
+    public ProviderEditController(IMediator mediator, ILogger<ProviderEditController> logger)
     {
-        private readonly IMediator _mediator;
-        private readonly ILogger<ProviderEditController> _logger;
+        _mediator = mediator;
+        _logger = logger;
+    }
 
-        public ProviderEditController(IMediator mediator, ILogger<ProviderEditController> logger)
+    [Route("{ukprn}")]
+    [HttpPatch]
+    public async Task<IActionResult> PatchProvider([FromRoute] int ukprn, [FromBody] JsonPatchDocument<PatchProvider> request, [FromQuery] string userId, [FromQuery] string userDisplayName)
+    {
+        _logger.LogInformation("Inner API: Request to patch provider for ukprn: {Ukprn}", ukprn);
+
+        await _mediator.Send(new PatchProviderCommand
         {
-            _mediator = mediator;
-            _logger = logger;
-        }
+            Ukprn = ukprn,
+            UserId = userId,
+            UserDisplayName = userDisplayName,
+            Patch = request
+        });
 
-        [Route("{ukprn}")]
-        [HttpPatch]
-        public async Task<IActionResult> PatchProvider([FromRoute] int ukprn, [FromBody] JsonPatchDocument<PatchProvider> request, [FromQuery] string userId, [FromQuery] string userDisplayName)
-        {
-            _logger.LogInformation("Inner API: Request to patch provider for ukprn: {ukprn}", ukprn);
+        return NoContent();
+    }
 
-            await _mediator.Send(new PatchProviderCommand
-            {
-                Ukprn = ukprn,
-                UserId = userId,
-                UserDisplayName = userDisplayName,
-                Patch = request
-            });
+    [HttpPost]
+    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
+    public async Task<IActionResult> CreateProvider(ProviderAddModel providerAddModel, [FromQuery] string userId, [FromQuery] string userDisplayName)
+    {
+        _logger.LogInformation("Inner API: Received command to add provider: {Ukprn}", providerAddModel.Ukprn);
 
-            return NoContent();
-        }
+        CreateProviderCommand command = providerAddModel;
+        command.UserId = userId;
+        command.UserDisplayName = userDisplayName;
 
-        [HttpPost]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status201Created)]
-        public async Task<IActionResult> CreateProvider(ProviderAddModel providerAddModel, [FromQuery] string userId, [FromQuery] string userDisplayName)
-        {
-            _logger.LogInformation("Inner API: Received command to add provider: {ukprn}", providerAddModel.Ukprn);
+        var response = await _mediator.Send(command);
 
-            CreateProviderCommand command = providerAddModel;
-            command.UserId = userId;
-            command.UserDisplayName = userDisplayName;
-
-            var response = await _mediator.Send(command);
-
-            return GetPostResponse(response, $"/providers/{providerAddModel.Ukprn}");
-        }
+        return GetPostResponse(response, $"/providers/{providerAddModel.Ukprn}");
     }
 }

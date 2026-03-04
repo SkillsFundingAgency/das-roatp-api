@@ -70,5 +70,6 @@ public static class AddRoatpDataContextExtension
         services.AddTransient<IReloadProviderCourseTypesRepository, ReloadProviderCourseTypesRepository>();
         services.AddTransient<IProviderCourseTypesReadRepository, ProviderCourseTypesReadRepository>();
         services.AddTransient<IProviderCoursesTimelineRepository, ProviderCoursesTimelineRepository>();
+        services.AddTransient<IProviderAllowedCoursesRepository, ProviderAllowedCoursesRepository>();
     }
 }

@@ -14,7 +14,8 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
 [ApiVersion(ApiVersionNumber.One)]
-[Route("[controller]")]
+[Tags(EndpointTags.ProviderCourses)]
+[Route("/providers/{ukprn}/courses")]
 public class ProviderCoursesController : ActionResponseControllerBase
 
 {
@@ -32,10 +33,9 @@ public class ProviderCoursesController : ActionResponseControllerBase
     /// <param name="excludeCoursesWithoutLocation"></param>
     /// <returns></returns>
     [HttpGet]
-    [Route("/providers/{ukprn}/courses")]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(List<ProviderCourseModel>), 200)]
     public async Task<IActionResult> GetAllCourses(int ukprn, [FromQuery] bool excludeCoursesWithoutLocation = true, [FromQuery] CourseType? courseType = null)
     {
@@ -50,10 +50,10 @@ public class ProviderCoursesController : ActionResponseControllerBase
     /// <param name="larsCode"></param>
     /// <returns></returns>
     [HttpGet]
-    [Route("/providers/{ukprn}/courses/{larsCode}")]
+    [Route("{larsCode}")]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(ProviderCourseModel), 200)]
     public async Task<IActionResult> GetCourse(int ukprn, string larsCode)
     {

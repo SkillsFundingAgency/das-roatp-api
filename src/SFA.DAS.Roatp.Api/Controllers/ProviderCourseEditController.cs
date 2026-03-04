@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Asp.Versioning;
 using MediatR;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -15,6 +16,8 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
 [ApiVersion(ApiVersionNumber.One)]
+[Tags(EndpointTags.ProviderCourses)]
+[Route("/providers/{ukprn}/courses/{larsCode}")]
 public class ProviderCourseEditController : ActionResponseControllerBase
 {
     private readonly IMediator _mediator;
@@ -26,8 +29,9 @@ public class ProviderCourseEditController : ActionResponseControllerBase
         _logger = logger;
     }
 
-    [Route("/providers/{ukprn}/courses/{larsCode}")]
     [HttpPatch]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> PatchProviderCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] JsonPatchDocument<PatchProviderCourse> request, [FromQuery] string userId, [FromQuery] string userDisplayName)
     {
         _logger.LogInformation("Inner API: Request to patch course contact details for ukprn: {Ukprn} larsCode: {LarsCode}", ukprn, larsCode);
@@ -44,8 +48,9 @@ public class ProviderCourseEditController : ActionResponseControllerBase
         return GetNoContentResponse(response);
     }
 
-    [Route("/providers/{ukprn}/courses/{larsCode}")]
     [HttpPost]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> CreateProviderCourse([FromRoute] int ukprn, [FromRoute] string larsCode, ProviderCourseAddModel providerCourseAddModel, [FromQuery] string userId, [FromQuery] string userDisplayName)
     {
         _logger.LogInformation("Inner API: Received command to add course: {LarsCode} to provider: {Ukprn}", larsCode, ukprn);

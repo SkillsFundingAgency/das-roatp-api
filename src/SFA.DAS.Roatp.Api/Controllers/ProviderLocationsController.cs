@@ -12,53 +12,53 @@ using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails;
 using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
-namespace SFA.DAS.Roatp.Api.Controllers
+namespace SFA.DAS.Roatp.Api.Controllers;
+
+[ApiController]
+[ApiVersion(ApiVersionNumber.One)]
+[Tags(EndpointTags.ProviderLocations)]
+[Route("/providers/{ukprn}/locations")]
+public class ProviderLocationsController : ActionResponseControllerBase
 {
-    [ApiController]
-    [ApiVersion(ApiVersionNumber.One)]
-    public class ProviderLocationsController : ActionResponseControllerBase
+    private readonly ILogger<ProviderLocationsController> _logger;
+    private readonly IMediator _mediator;
+
+    public ProviderLocationsController(ILogger<ProviderLocationsController> logger, IMediator mediator)
     {
-        private readonly ILogger<ProviderLocationsController> _logger;
-        private readonly IMediator _mediator;
+        _logger = logger;
+        _mediator = mediator;
+    }
 
-        public ProviderLocationsController(ILogger<ProviderLocationsController> logger, IMediator mediator)
-        {
-            _logger = logger;
-            _mediator = mediator;
-        }
+    [HttpGet]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(typeof(List<ProviderLocationModel>), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetLocations(int ukprn)
+    {
+        _logger.LogInformation("Request received to get all locations for ukprn: {Ukprn}", ukprn);
 
-        [HttpGet]
-        [Route("/providers/{ukprn}/locations")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(List<ProviderLocationModel>), 200)]
-        public async Task<IActionResult> GetLocations(int ukprn)
-        {
-            _logger.LogInformation("Request received to get all locations for ukprn: {ukprn}", ukprn);
+        var response = await _mediator.Send(new GetProviderLocationsQuery(ukprn));
 
-            var response = await _mediator.Send(new GetProviderLocationsQuery(ukprn));
+        if (response.IsValidResponse)
+            _logger.LogInformation("Found {LocationCount} locations for {Ukprn}", response.Result.Count, ukprn);
 
-            if (response.IsValidResponse)
-                _logger.LogInformation("Found {locationCount} locations for {ukprn}", response.Result.Count, ukprn);
+        return GetResponse(response);
+    }
 
-            return GetResponse(response);
-        }
+    [HttpGet]
+    [Route("{id}")]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(typeof(ProviderLocationModel), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetLocation([FromRoute] int ukprn, [FromRoute] Guid id)
+    {
+        _logger.LogInformation("Request received to get provider location details for ukprn: {Ukprn} and {Id}", ukprn, id);
 
-        [HttpGet]
-        [Route("/providers/{ukprn}/locations/{id}")]
-        [Produces("application/json")]
-        [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
-        [ProducesResponseType(typeof(ProviderLocationModel), 200)]
-        public async Task<IActionResult> GetLocation([FromRoute] int ukprn, [FromRoute] Guid id)
-        {
-            _logger.LogInformation("Request received to get provider location details for ukprn: {ukprn} and {id}", ukprn, id);
+        var response = await _mediator.Send(new GetProviderLocationDetailsQuery(ukprn, id));
 
-            var response = await _mediator.Send(new GetProviderLocationDetailsQuery(ukprn, id));
-
-            return response.Errors.Any(x => x.ErrorMessage == GetProviderLocationDetailsQueryValidator.ProviderLocationNotFoundErrorMessage) ?
-                NotFound() :
-                GetResponse(response);
-        }
+        return response.Errors.Any(x => x.ErrorMessage == GetProviderLocationDetailsQueryValidator.ProviderLocationNotFoundErrorMessage) ?
+            NotFound() :
+            GetResponse(response);
     }
 }
