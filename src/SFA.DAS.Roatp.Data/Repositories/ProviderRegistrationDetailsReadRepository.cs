@@ -84,8 +84,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
                             JOIN [dbo].[Provider] pr1 ON pr1.Id = pc1.ProviderId 
                             JOIN [dbo].[ProviderRegistrationDetail] tp 
                                 ON tp.[Ukprn] = pr1.[Ukprn] AND tp.[StatusId] = 1 AND tp.[ProviderTypeId] = 1 
-                            JOIN [dbo].[ProviderCourseLocation] pcl1 ON pcl1.ProviderCourseId = pc1.[Id]
-                            JOIN [dbo].[ProviderLocation] pl1 ON pl1.Id = pcl1.ProviderLocationId
                             JOIN [dbo].[Standard] sd1 ON sd1.LarsCode = pc1.[LarsCode]
                             WHERE pc1.[LarsCode] = @larsCode 
                             AND pr1.[Ukprn] = @ukprn",
