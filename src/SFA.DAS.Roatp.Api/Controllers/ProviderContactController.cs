@@ -13,9 +13,9 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
 [ApiVersion(ApiVersionNumber.One)]
+[Tags(EndpointTags.ProviderContact)]
 [Route("/providers/{ukprn}/contact")]
 public class ProviderContactController(IMediator _mediator) : ActionResponseControllerBase
-
 {
     /// <summary>
     /// Gets latest contact details for the given provider
@@ -24,8 +24,8 @@ public class ProviderContactController(IMediator _mediator) : ActionResponseCont
     /// <returns></returns>
     [HttpGet]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(typeof(string), StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(typeof(GetLatestProviderContactQueryResult), 200)]
     public async Task<IActionResult> GetLatestProviderContact(int ukprn)
     {
@@ -36,7 +36,7 @@ public class ProviderContactController(IMediator _mediator) : ActionResponseCont
 
     [HttpPost]
     [Produces("application/json")]
-    [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(typeof(long), 200)]
     public async Task<IActionResult> PostProviderContact(int ukprn, ProviderContactAddModel addModel)
     {

@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Api.Controllers.ExternalReadControllers;
 [Route("api/provider-courses-timeline")]
 [ApiVersion(ApiVersionNumber.Two)]
 [ApiController]
-[Tags(EndpointTags.ProviderCourses)]
+[Tags(EndpointTags.ProviderCoursesTimeLine)]
 public class ProviderCoursesTimelineController(IMediator _mediator) : ControllerBase
 {
     [HttpGet]
