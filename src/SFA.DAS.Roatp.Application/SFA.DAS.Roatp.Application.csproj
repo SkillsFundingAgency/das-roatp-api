@@ -6,6 +6,11 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Courses\Services\**" />
+    <EmbeddedResource Remove="Courses\Services\**" />
+    <None Remove="Courses\Services\**" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
     <PackageReference Include="MediatR" Version="12.4.1" />
@@ -14,8 +19,5 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Roatp.Domain\SFA.DAS.Roatp.Domain.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Courses\Services\" />
   </ItemGroup>
 </Project>

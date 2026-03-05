@@ -26,13 +26,6 @@ public class GetAllStandardsQueryResultTests
         sut.Standards.Should().HaveCount(1);
         var model = sut.Standards[0];
 
-        model.Should().BeEquivalentTo(source, c => c
-            .Excluding(s => s.Version)
-            .Excluding(s => s.SectorSubjectAreaTier1)
-            .Excluding(s => s.ProviderCourses)
-            .Excluding(s => s.Duration)
-            .Excluding(s => s.DurationUnits)
-            .Excluding(s => s.ProviderCoursesTimelines)
-        );
+        model.Should().BeEquivalentTo(source, c => c.ExcludingMissingMembers());
     }
 }

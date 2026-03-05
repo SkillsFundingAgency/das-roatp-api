@@ -13,6 +13,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
 [ApiVersion(ApiVersionNumber.One)]
+[Tags(EndpointTags.ProviderLocations)]
 [Route("/providers/{ukprn}/locations/{id}")]
 public class ProviderLocationDeleteController : ActionResponseControllerBase
 {
@@ -32,7 +33,7 @@ public class ProviderLocationDeleteController : ActionResponseControllerBase
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> DeleteProviderLocation([FromRoute] int ukprn, [FromRoute] Guid id, [FromQuery] string userId, [FromQuery] string UserDisplayName)
     {
-        _logger.LogInformation("Inner API: Request received to delete provider location ukprn: {ukprn} Id: {id} userid:{userId}", ukprn, id, userId);
+        _logger.LogInformation("Inner API: Request received to delete provider location ukprn: {Ukprn} Id: {Id} userid:{UserId}", ukprn, id, userId);
 
         var command = new DeleteProviderLocationCommand(ukprn, id, userId, UserDisplayName);
         var response = await _mediator.Send(command);
@@ -40,7 +41,7 @@ public class ProviderLocationDeleteController : ActionResponseControllerBase
         switch (response)
         {
             case { Result: false, IsValidResponse: true }:
-                _logger.LogInformation("Deleted provider location for Ukprn:{ukprn} id:{id} has no matching id", ukprn, id);
+                _logger.LogInformation("Deleted provider location for Ukprn:{Ukprn} id:{Id} has no matching id", ukprn, id);
                 return NotFound();
             default:
                 return GetNoContentResponse(response);

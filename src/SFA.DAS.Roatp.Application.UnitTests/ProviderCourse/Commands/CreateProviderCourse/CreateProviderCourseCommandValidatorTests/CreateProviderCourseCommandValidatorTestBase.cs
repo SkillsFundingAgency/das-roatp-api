@@ -6,51 +6,53 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Commands.CreateProviderCourse.CreateProviderCourseCommandValidatorTests;
+
+public abstract class CreateProviderCourseCommandValidatorTestBase
 {
-    public abstract class CreateProviderCourseCommandValidatorTestBase
+    protected Mock<IProvidersReadRepository> providersReadRepositoryMock;
+    protected Mock<IProviderCoursesReadRepository> providerCoursesReadRepositoryMock;
+    protected Mock<IStandardsReadRepository> standardsReadRepositoryMock;
+    protected Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock;
+    protected Mock<IRegionsReadRepository> regionsReadRepositoryMock;
+    protected Mock<IProviderCourseTypesReadRepository> providerCourseTypesReadRepositoryMock;
+    protected Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepositoryMock;
+    public const int ValidUkprn = 10012002;
+    protected const string ValidComboLarsCode = "321";
+    protected const string RegulatedLarsCode = "123";
+    protected const string NonRegulatedLarsCode = "111";
+    public static Guid NavigationId = new Guid("f26bac30-23a8-11ed-861d-0242ac120002");
+    protected const int ValidRegionId = 9;
+
+    protected CreateProviderCourseCommandValidator GetSut()
     {
-        protected Mock<IProvidersReadRepository> providersReadRepositoryMock;
-        protected Mock<IProviderCoursesReadRepository> providerCoursesReadRepositoryMock;
-        protected Mock<IStandardsReadRepository> standardsReadRepositoryMock;
-        protected Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock;
-        protected Mock<IRegionsReadRepository> regionsReadRepositoryMock;
-        protected Mock<IProviderCourseTypesReadRepository> providerCourseTypesReadRepositoryMock;
-        public const int ValidUkprn = 10012002;
-        protected const string ValidComboLarsCode = "321";
-        protected const string RegulatedLarsCode = "123";
-        protected const string NonRegulatedLarsCode = "111";
-        public static Guid NavigationId = new Guid("f26bac30-23a8-11ed-861d-0242ac120002");
-        protected const int ValidRegionId = 9;
+        providersReadRepositoryMock = new Mock<IProvidersReadRepository>();
+        providersReadRepositoryMock.Setup(p => p.GetByUkprn(ValidUkprn)).ReturnsAsync(new Provider { Ukprn = ValidUkprn });
 
-        protected CreateProviderCourseCommandValidator GetSut()
-        {
-            providersReadRepositoryMock = new Mock<IProvidersReadRepository>();
-            providersReadRepositoryMock.Setup(p => p.GetByUkprn(ValidUkprn)).ReturnsAsync(new Provider { Ukprn = ValidUkprn });
+        standardsReadRepositoryMock = new Mock<IStandardsReadRepository>();
+        standardsReadRepositoryMock
+            .Setup(r => r.GetStandard(It.IsAny<string>()))
+            .ReturnsAsync(new Standard { IsRegulatedForProvider = false });
+        standardsReadRepositoryMock
+            .Setup(r => r.GetStandard(It.Is<string>(i => i == ValidComboLarsCode || i == NonRegulatedLarsCode)))
+            .ReturnsAsync(new Standard { IsRegulatedForProvider = false });
+        standardsReadRepositoryMock
+            .Setup(r => r.GetStandard(It.Is<string>(i => i == RegulatedLarsCode)))
+            .ReturnsAsync(new Standard { IsRegulatedForProvider = true });
 
-            standardsReadRepositoryMock = new Mock<IStandardsReadRepository>();
-            standardsReadRepositoryMock
-                .Setup(r => r.GetStandard(It.IsAny<string>()))
-                .ReturnsAsync(new Standard { IsRegulatedForProvider = false });
-            standardsReadRepositoryMock
-                .Setup(r => r.GetStandard(It.Is<string>(i => i == ValidComboLarsCode || i == NonRegulatedLarsCode)))
-                .ReturnsAsync(new Standard { IsRegulatedForProvider = false });
-            standardsReadRepositoryMock
-                .Setup(r => r.GetStandard(It.Is<string>(i => i == RegulatedLarsCode)))
-                .ReturnsAsync(new Standard { IsRegulatedForProvider = true });
+        providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
+        providerCoursesReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(ValidUkprn, ValidComboLarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
 
-            providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
-            providerCoursesReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(ValidUkprn, ValidComboLarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
+        providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
+        providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(ValidUkprn)).ReturnsAsync(new List<ProviderLocation> { new ProviderLocation { NavigationId = NavigationId } });
+        regionsReadRepositoryMock = new Mock<IRegionsReadRepository>();
+        regionsReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(new List<Region> { new Region { Id = ValidRegionId } });
 
-            providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
-            providerLocationsReadRepositoryMock.Setup(r => r.GetAllProviderLocations(ValidUkprn)).ReturnsAsync(new List<ProviderLocation> { new ProviderLocation { NavigationId = NavigationId } });
-            regionsReadRepositoryMock = new Mock<IRegionsReadRepository>();
-            regionsReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(new List<Region> { new Region { Id = ValidRegionId } });
+        providerCourseTypesReadRepositoryMock = new Mock<IProviderCourseTypesReadRepository>();
+        providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>())).ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { Id = 1, CourseType = CourseType.Apprenticeship, Ukprn = ValidUkprn } });
 
-            providerCourseTypesReadRepositoryMock = new Mock<IProviderCourseTypesReadRepository>();
-            providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>())).ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { Id = 1, CourseType = CourseType.Apprenticeship, Ukprn = ValidUkprn } });
+        providerAllowedCoursesRepositoryMock = new();
 
-            return new CreateProviderCourseCommandValidator(providersReadRepositoryMock.Object, standardsReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, regionsReadRepositoryMock.Object, providerCourseTypesReadRepositoryMock.Object);
-        }
+        return new CreateProviderCourseCommandValidator(providersReadRepositoryMock.Object, standardsReadRepositoryMock.Object, providerCoursesReadRepositoryMock.Object, providerLocationsReadRepositoryMock.Object, regionsReadRepositoryMock.Object, providerCourseTypesReadRepositoryMock.Object, providerAllowedCoursesRepositoryMock.Object);
     }
 }
