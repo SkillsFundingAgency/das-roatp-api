@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -18,12 +19,11 @@ internal class ProviderCourseTypesReadRepository : IProviderCourseTypesReadRepos
         _roatpDataContext = roatpDataContext;
     }
 
-    public async Task<List<ProviderCourseType>> GetProviderCourseTypesByUkprn(int ukprn)
+    public async Task<List<ProviderCourseType>> GetProviderCourseTypesByUkprn(int ukprn, CancellationToken cancellationToken = default)
     {
         return await _roatpDataContext
             .ProviderCoursesTypes
             .Where(p => p.Ukprn == ukprn)
-            .AsNoTracking()
-            .ToListAsync();
+            .ToListAsync(cancellationToken);
     }
 }
