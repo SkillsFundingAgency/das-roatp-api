@@ -71,6 +71,9 @@ public sealed class CourseProviderDetailsReadRepository : ICourseProviderDetails
                     Level = reader.GetInt32(nameof(CourseProviderDetailsModel.Level)),
                     LarsCode = GetReaderStringValue(nameof(CourseProviderDetailsModel.LarsCode), reader),
                     IFateReferenceNumber = GetReaderStringValue(nameof(CourseProviderDetailsModel.IFateReferenceNumber), reader),
+                    CourseType = Enum.Parse<CourseType>(GetReaderStringValue(nameof(CourseProviderDetailsModel.CourseType), reader)),
+                    ApprenticeshipType = Enum.Parse<ApprenticeshipType>(GetReaderStringValue(nameof(CourseProviderDetailsModel.ApprenticeshipType), reader)),
+
                     Period = GetReaderStringValue(nameof(CourseProviderDetailsModel.Period), reader),
                     Leavers = GetReaderStringValue(nameof(CourseProviderDetailsModel.Leavers), reader),
                     AchievementRate = GetReaderStringValue(nameof(CourseProviderDetailsModel.AchievementRate), reader),
@@ -88,7 +91,6 @@ public sealed class CourseProviderDetailsReadRepository : ICourseProviderDetails
                     AtEmployer = reader.GetBoolean(nameof(CourseProviderDetailsModel.AtEmployer)),
                     BlockRelease = reader.GetBoolean(nameof(CourseProviderDetailsModel.BlockRelease)),
                     DayRelease = reader.GetBoolean(nameof(CourseProviderDetailsModel.DayRelease)),
-                    CourseType = Enum.Parse<CourseType>(GetReaderStringValue(nameof(CourseProviderDetailsModel.CourseType), reader)),
 
                     Ordering = reader.GetInt64(nameof(CourseProviderDetailsModel.Ordering)),
                     LocationType = reader.GetInt32(nameof(CourseProviderDetailsModel.LocationType)),
