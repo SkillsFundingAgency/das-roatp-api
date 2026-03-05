@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
@@ -25,7 +26,7 @@ public class ProviderCourseQueryValidatorTests
         _standardsReadRepositoryMock = new Mock<IStandardsReadRepository>();
         _standardsReadRepositoryMock.Setup(x => x.GetStandard(It.IsAny<string>()))
             .ReturnsAsync(new Standard { CourseType = CourseType.Apprenticeship });
-        _providerCourseTypesReadRepositoryMock.Setup(x => x.GetProviderCourseTypesByUkprn(It.IsAny<int>()))
+        _providerCourseTypesReadRepositoryMock.Setup(x => x.GetProviderCourseTypesByUkprn(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { CourseType = CourseType.Apprenticeship } });
         _providerAllowedCoursesRepositoryMock = new();
     }
@@ -99,7 +100,7 @@ public class ProviderCourseQueryValidatorTests
         _standardsReadRepositoryMock.Setup(x => x.GetStandard(It.IsAny<string>()))
             .ReturnsAsync(new Standard { CourseType = CourseType.Apprenticeship });
 
-        _providerCourseTypesReadRepositoryMock.Setup(x => x.GetProviderCourseTypesByUkprn(It.IsAny<int>()))
+        _providerCourseTypesReadRepositoryMock.Setup(x => x.GetProviderCourseTypesByUkprn(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { CourseType = CourseType.ShortCourse } });
 
         var ukprn = 10000001;
@@ -130,7 +131,7 @@ public class ProviderCourseQueryValidatorTests
         _standardsReadRepositoryMock.Setup(x => x.GetStandard(It.IsAny<string>()))
             .ReturnsAsync((Standard)null);
 
-        _providerCourseTypesReadRepositoryMock.Setup(x => x.GetProviderCourseTypesByUkprn(It.IsAny<int>()))
+        _providerCourseTypesReadRepositoryMock.Setup(x => x.GetProviderCourseTypesByUkprn(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { CourseType = CourseType.Apprenticeship } });
 
         var ukprn = 10000001;
@@ -158,7 +159,7 @@ public class ProviderCourseQueryValidatorTests
     public async Task Validate_ProviderCourseTypesRepoReturnsNull_ShouldBeInvalid()
     {
         // Arrange - provider course types repo returns null
-        _providerCourseTypesReadRepositoryMock.Setup(x => x.GetProviderCourseTypesByUkprn(It.IsAny<int>()))
+        _providerCourseTypesReadRepositoryMock.Setup(x => x.GetProviderCourseTypesByUkprn(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((List<ProviderCourseType>)null);
 
         _standardsReadRepositoryMock.Setup(x => x.GetStandard(It.IsAny<string>()))

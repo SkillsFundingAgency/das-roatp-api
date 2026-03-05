@@ -24,7 +24,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Queries
             GetProviderCourseTypesQueryHandler sut,
             CancellationToken cancellationToken)
         {
-            repo.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>())).ReturnsAsync(providerCourseTypes);
+            repo.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseTypes);
 
             var response = await sut.Handle(query, cancellationToken);
 
@@ -43,7 +43,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Queries
             CancellationToken cancellationToken)
         {
             List<ProviderCourseType> providerCourseTypes = new List<ProviderCourseType>();
-            repo.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>())).ReturnsAsync(providerCourseTypes);
+            repo.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(providerCourseTypes);
 
             var response = await sut.Handle(query, cancellationToken);
 

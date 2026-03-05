@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Moq;
 using SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -49,7 +50,7 @@ public abstract class CreateProviderCourseCommandValidatorTestBase
         regionsReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(new List<Region> { new Region { Id = ValidRegionId } });
 
         providerCourseTypesReadRepositoryMock = new Mock<IProviderCourseTypesReadRepository>();
-        providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>())).ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { Id = 1, CourseType = CourseType.Apprenticeship, Ukprn = ValidUkprn } });
+        providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { Id = 1, CourseType = CourseType.Apprenticeship, Ukprn = ValidUkprn } });
 
         providerAllowedCoursesRepositoryMock = new();
 

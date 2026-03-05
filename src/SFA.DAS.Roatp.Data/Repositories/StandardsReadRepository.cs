@@ -30,7 +30,6 @@ namespace SFA.DAS.Roatp.Data.Repositories
         {
             return await _roatpDataContext
                 .Standards
-                .AsNoTracking()
                 .SingleOrDefaultAsync(c => c.LarsCode == larsCode);
         }
         public async Task<int> GetStandardsCount()

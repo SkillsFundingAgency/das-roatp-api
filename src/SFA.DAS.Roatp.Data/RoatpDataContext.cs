@@ -34,6 +34,10 @@ namespace SFA.DAS.Roatp.Data
 
         public DbSet<ProviderAllowedCourse> ProviderAllowedCourses { get; set; }
 
+        public DbSet<ProviderCourseForecast> ProviderCourseForecasts { get; set; }
+
+        public DbSet<ForecastQuarter> ForecastQuarters { get; set; }
+
         public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
