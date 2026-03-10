@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
@@ -9,14 +10,34 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories;
 
-[ExcludeFromCodeCoverage]
 internal class ProviderCourseForecastRepository(RoatpDataContext _context) : IProviderCourseForecastRepository
 {
+    [ExcludeFromCodeCoverage]
     public async Task<List<ProviderCourseForecast>> GetProviderCourseForecasts(int ukprn, string larsCode, CancellationToken cancellationToken)
     {
         return await _context.ProviderCourseForecasts
             .Where(pcf => pcf.Ukprn == ukprn && pcf.LarsCode == larsCode)
             .AsNoTracking()
             .ToListAsync(cancellationToken);
+    }
+
+    public async Task UpsertProviderCourseForecasts(IEnumerable<ProviderCourseForecast> forecasts, CancellationToken cancellationToken)
+    {
+        foreach (var forecast in forecasts)
+        {
+            var existingForecast = await _context.ProviderCourseForecasts
+                .FirstOrDefaultAsync(pcf => pcf.Ukprn == forecast.Ukprn && pcf.LarsCode == forecast.LarsCode && pcf.TimePeriod == forecast.TimePeriod && pcf.Quarter == forecast.Quarter, cancellationToken);
+            if (existingForecast != null)
+            {
+                existingForecast.EstimatedLearners = forecast.EstimatedLearners;
+                existingForecast.UpdatedDate = DateTime.UtcNow;
+                _context.ProviderCourseForecasts.Update(existingForecast);
+            }
+            else
+            {
+                await _context.ProviderCourseForecasts.AddAsync(forecast, cancellationToken);
+            }
+        }
+        await _context.SaveChangesAsync(cancellationToken);
     }
 }
