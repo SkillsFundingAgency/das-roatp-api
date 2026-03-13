@@ -7,8 +7,9 @@ namespace SFA.DAS.Roatp.Application.Common;
 
 public static class ShortCourseValidator
 {
-    public const string MustBeAShortCourseTypeValidationMessage = "LARS code must be for a short course";
-    public const string MustBeAllowedToDeliverTheShortCourseValidationMessage = "The provider should be allowed to deliver ShortCourses and the given ShortCourse";
+    public const string MustBeAShortCourseTypeValidationMessage = "LARS code must be a valid short course";
+    public const string MustBeAllowedToDeliverTheShortCourseValidationMessage = "Either the provider is not allowed to deliver ShortCourse or is not allowed to deliver the Course";
+    public const string MustBeAddedToTheProviderProfileValidationMessage = "The course must be added to the provider profile";
 
     public static IRuleBuilderOptions<T, string> MustBeAShortCourseType<T>(this IRuleBuilder<T, string> ruleBuilder, IStandardsReadRepository standardsReadRepository) where T : ILarsCode
     {
@@ -34,5 +35,15 @@ public static class ShortCourseValidator
 
             return courseTypes.Any(ct => ct.CourseType == standard.CourseType) && allowedCourses.Any(ac => ac.LarsCode == larsCode);
         }).WithMessage(MustBeAllowedToDeliverTheShortCourseValidationMessage);
+    }
+
+    public static IRuleBuilderOptions<T, string> MustBeAddedToTheProviderProfile<T>(this IRuleBuilder<T, string> ruleBuilder, IProviderCoursesReadRepository providerCoursesReadRepository) where T : ILarsCodeUkprn
+    {
+        return ruleBuilder.MustAsync(async (context, larsCode, cancellation) =>
+        {
+            var providerCourse = await providerCoursesReadRepository.GetProviderCourseByUkprn(context.Ukprn, larsCode);
+
+            return providerCourse != null;
+        }).WithMessage(MustBeAddedToTheProviderProfileValidationMessage);
     }
 }

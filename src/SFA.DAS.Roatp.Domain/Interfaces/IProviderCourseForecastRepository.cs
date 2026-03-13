@@ -8,4 +8,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces;
 public interface IProviderCourseForecastRepository
 {
     Task<List<ProviderCourseForecast>> GetProviderCourseForecasts(int ukprn, string larsCode, CancellationToken cancellationToken);
+
+    Task UpsertProviderCourseForecasts(IEnumerable<ProviderCourseForecast> forecasts, CancellationToken cancellationToken);
 }

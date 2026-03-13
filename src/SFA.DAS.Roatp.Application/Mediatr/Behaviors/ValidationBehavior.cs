@@ -44,6 +44,10 @@ public class ValidationBehavior<TRequest, TResponse> : IPipelineBehavior<TReques
                     return invalidResponse;
                 }
             }
+            else
+            {
+                return new ValidatedResponse(result.Errors) as TResponse;
+            }
         }
 
         _logger.LogTrace("Validation passed");
