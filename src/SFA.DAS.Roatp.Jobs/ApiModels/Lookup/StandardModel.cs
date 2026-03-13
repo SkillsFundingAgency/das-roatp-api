@@ -1,4 +1,6 @@
-﻿namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
+﻿using SFA.DAS.Roatp.Domain.Models;
+
+namespace SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 
 public class StandardModel
 {
@@ -6,11 +8,15 @@ public class StandardModel
     public string LarsCode { get; set; }
     public string IfateReferenceNumber { get; set; }
     public int Level { get; set; }
+    public ApprenticeshipType ApprenticeshipType { get; set; }
     public string Version { get; set; }
     public string Title { get; set; }
     public string ApprovalBody { get; set; }
     public int SectorSubjectAreaTier1 { get; set; }
     public bool IsRegulatedForProvider { get; set; }
+    public CourseType CourseType { get; set; }
+    public DurationUnits DurationUnits { get; set; }
+    public int Duration { get; set; }
 
     public static implicit operator Domain.Entities.Standard(StandardModel standard) =>
         new Domain.Entities.Standard
@@ -23,6 +29,10 @@ public class StandardModel
             Level = standard.Level,
             ApprovalBody = string.IsNullOrWhiteSpace(standard.ApprovalBody) ? null : standard.ApprovalBody,
             SectorSubjectAreaTier1 = standard.SectorSubjectAreaTier1,
-            IsRegulatedForProvider = standard.IsRegulatedForProvider
+            IsRegulatedForProvider = standard.IsRegulatedForProvider,
+            ApprenticeshipType = standard.ApprenticeshipType,
+            CourseType = standard.CourseType,
+            DurationUnits = standard.DurationUnits,
+            Duration = standard.Duration
         };
 }
