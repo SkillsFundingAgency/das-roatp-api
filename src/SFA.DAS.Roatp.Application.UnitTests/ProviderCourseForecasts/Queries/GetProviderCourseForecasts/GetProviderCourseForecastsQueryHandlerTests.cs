@@ -19,115 +19,121 @@ public class GetProviderCourseForecastsQueryHandlerTests
     private const int ExpectedQuarter = 4;
     private const string ExpectedTimePeriod = "AY2324";
     private const int ExpectedEstimatedLearners = 10;
-    private static readonly GetProviderCourseForecastsQuery Query = new(10012002, "ZSC10001");
+    private const string LarsCode = "ZSC10001";
+    private const int Ukprn = 10012002;
+    private static readonly GetProviderCourseForecastsQuery Query = new(Ukprn, LarsCode);
     private static DateTime GetDate(int year, int month) => new DateTime(year, month, 1, 0, 0, 0, DateTimeKind.Unspecified);
 
     private ProviderCourseForecast _pastForecast;
     private ProviderCourseForecast _currentForecast;
+
+    private static List<ForecastQuarter> GetForecastQuarters()
+    => [
+            new ForecastQuarter { Quarter = 2, TimePeriod = "AY2223", StartDate = GetDate(2023, 5), EndDate = GetDate(2023, 7) },
+            new ForecastQuarter { Quarter = 3, TimePeriod = "AY2324", StartDate = GetDate(2023, 8), EndDate = GetDate(2023, 10) },
+            new ForecastQuarter { Quarter = ExpectedQuarter, TimePeriod = ExpectedTimePeriod, StartDate = GetDate(2023, 11), EndDate = GetDate(2024, 1) },
+            new ForecastQuarter { Quarter = 1, TimePeriod = "AY2324", StartDate = GetDate(2024, 2), EndDate = GetDate(2024, 4) }
+    ];
+
+    private Mock<IStandardsReadRepository> _standardsReadRepositoryMock;
+    private Mock<IProviderCourseForecastRepository> _providerCourseForecastRepositoryMock;
+    private Mock<IProviderCourseTypesReadRepository> _providerCourseTypesReadRepositoryMock;
+    private Mock<IForecastQuartersRepository> _forecastQuartersRepositoryMock;
+    GetProviderCourseForecastsQueryHandler _sut;
 
     [SetUp]
     public void Before_Each_Test()
     {
         _pastForecast = new() { LarsCode = Query.LarsCode, Ukprn = Query.Ukprn, EstimatedLearners = 100, Quarter = ExpectedQuarter, TimePeriod = "AY2223", UpdatedDate = GetDate(2023, 4) };
         _currentForecast = new() { LarsCode = Query.LarsCode, Ukprn = Query.Ukprn, EstimatedLearners = ExpectedEstimatedLearners, Quarter = ExpectedQuarter, TimePeriod = ExpectedTimePeriod, UpdatedDate = GetDate(2023, 12) };
-    }
 
-    private static List<ForecastQuarter> GetForecastQuarters()
-        => [
-            new ForecastQuarter { Quarter = 2, TimePeriod = "AY2223", StartDate = GetDate(2023, 5), EndDate = GetDate(2023, 7) },
-            new ForecastQuarter { Quarter = 3, TimePeriod = "AY2324", StartDate = GetDate(2023, 8), EndDate = GetDate(2023, 10) },
-            new ForecastQuarter { Quarter = ExpectedQuarter, TimePeriod = ExpectedTimePeriod, StartDate = GetDate(2023, 11), EndDate = GetDate(2024, 1) },
-            new ForecastQuarter { Quarter = 1, TimePeriod = "AY2324", StartDate = GetDate(2024, 2), EndDate = GetDate(2024, 4) }
-        ];
+        _standardsReadRepositoryMock = new();
+        _standardsReadRepositoryMock.Setup(r => r.GetStandard(It.IsAny<string>())).ReturnsAsync(new Standard { LarsCode = LarsCode, Title = "Test Course", Level = 2, CourseType = CourseType.ShortCourse });
 
-    [Test, MoqAutoData]
-    public async Task Handler_ForecastsFound_GetForecastsForProviderCourseWithEstimatedLearners(
-        [Frozen] Mock<IForecastQuartersRepository> forecastQuartersRepositoryMock,
-        [Frozen] Mock<IProviderCourseForecastRepository> providerCourseForecastRepositoryMock,
-        [Frozen] Mock<IProviderCourseTypesReadRepository> providerCourseTypesReadRepositoryMock,
-        GetProviderCourseForecastsQueryHandler sut,
-        CancellationToken cancellationToken)
-    {
-        providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(Query.Ukprn, cancellationToken)).ReturnsAsync(
+        _providerCourseTypesReadRepositoryMock = new();
+        _providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(Query.Ukprn, It.IsAny<CancellationToken>())).ReturnsAsync(
         [
             new ProviderCourseType { Ukprn = Query.Ukprn, CourseType = CourseType.ShortCourse }
         ]);
-        forecastQuartersRepositoryMock.Setup(r => r.GetForecastQuarters(cancellationToken)).ReturnsAsync(GetForecastQuarters());
-        providerCourseForecastRepositoryMock.Setup(r => r.GetProviderCourseForecasts(Query.Ukprn, Query.LarsCode, cancellationToken)).ReturnsAsync(
-        [_currentForecast]);
 
-        var result = await sut.Handle(Query, cancellationToken);
+        _forecastQuartersRepositoryMock = new();
+        _forecastQuartersRepositoryMock.Setup(r => r.GetForecastQuarters(It.IsAny<CancellationToken>())).ReturnsAsync(GetForecastQuarters());
+
+        _providerCourseForecastRepositoryMock = new();
+
+        _sut = new GetProviderCourseForecastsQueryHandler(_providerCourseTypesReadRepositoryMock.Object, _providerCourseForecastRepositoryMock.Object, _forecastQuartersRepositoryMock.Object, _standardsReadRepositoryMock.Object);
+    }
+
+    [Test]
+    public async Task Handler_ForecastsFound_GetForecastsForProviderCourseWithEstimatedLearners()
+    {
+        _providerCourseForecastRepositoryMock.Setup(r => r.GetProviderCourseForecasts(Query.Ukprn, Query.LarsCode, It.IsAny<CancellationToken>())).ReturnsAsync([_currentForecast]);
+
+        var result = await _sut.Handle(Query, default);
 
         result.Result.Forecasts.Should().HaveCount(4);
         result.Result.Forecasts.Should().Contain(r => r.Quarter == ExpectedQuarter && r.EstimatedLearners == ExpectedEstimatedLearners);
         result.Result.Forecasts.Should().Contain(r => r.Quarter != ExpectedQuarter && r.EstimatedLearners == null);
     }
 
-    [Test, MoqAutoData]
-    public async Task Handler_NoForecastsFound_GetsEmptyForecastsForProviderCourse(
-        [Frozen] Mock<IForecastQuartersRepository> forecastQuartersRepositoryMock,
-        [Frozen] Mock<IProviderCourseForecastRepository> providerCourseForecastRepositoryMock,
-        [Frozen] Mock<IProviderCourseTypesReadRepository> providerCourseTypesReadRepositoryMock,
-        GetProviderCourseForecastsQueryHandler sut,
-        int expectedLearners,
-        CancellationToken cancellationToken)
+    [Test, AutoData]
+    public async Task Handler_NoForecastsFound_GetsEmptyForecastsForProviderCourse(int expectedLearners, CancellationToken cancellationToken)
     {
-        providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(Query.Ukprn, cancellationToken)).ReturnsAsync(
-        [
-            new ProviderCourseType { Ukprn = Query.Ukprn, CourseType = CourseType.ShortCourse }
-        ]);
-        forecastQuartersRepositoryMock.Setup(r => r.GetForecastQuarters(cancellationToken)).ReturnsAsync(GetForecastQuarters());
-        providerCourseForecastRepositoryMock.Setup(r => r.GetProviderCourseForecasts(Query.Ukprn, Query.LarsCode, cancellationToken)).ReturnsAsync([]);
+        _providerCourseForecastRepositoryMock.Setup(r => r.GetProviderCourseForecasts(Query.Ukprn, Query.LarsCode, cancellationToken)).ReturnsAsync([]);
 
-        var result = await sut.Handle(Query, cancellationToken);
+        var result = await _sut.Handle(Query, cancellationToken);
 
         result.Result.Forecasts.Should().HaveCount(4);
         result.Result.Forecasts.Should().Contain(r => r.Quarter == ExpectedQuarter && r.EstimatedLearners == null);
     }
 
 
-    [Test, MoqAutoData]
+    [Test, AutoData]
     public async Task Handler_OlderForecastsFound_GetsCurrentForecastsForProviderCourse(
-        [Frozen] Mock<IForecastQuartersRepository> forecastQuartersRepositoryMock,
-        [Frozen] Mock<IProviderCourseForecastRepository> providerCourseForecastRepositoryMock,
-        [Frozen] Mock<IProviderCourseTypesReadRepository> providerCourseTypesReadRepositoryMock,
-        GetProviderCourseForecastsQueryHandler sut,
         int expectedLearners,
         CancellationToken cancellationToken)
     {
-        providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(Query.Ukprn, cancellationToken)).ReturnsAsync(
-        [
-            new ProviderCourseType { Ukprn = Query.Ukprn, CourseType = CourseType.ShortCourse }
-        ]);
-        forecastQuartersRepositoryMock.Setup(r => r.GetForecastQuarters(cancellationToken)).ReturnsAsync(GetForecastQuarters());
-        providerCourseForecastRepositoryMock.Setup(r => r.GetProviderCourseForecasts(Query.Ukprn, Query.LarsCode, cancellationToken)).ReturnsAsync([_pastForecast, _currentForecast]);
+        _providerCourseForecastRepositoryMock.Setup(r => r.GetProviderCourseForecasts(Query.Ukprn, Query.LarsCode, cancellationToken)).ReturnsAsync([_pastForecast, _currentForecast]);
 
-        var result = await sut.Handle(Query, cancellationToken);
+        var result = await _sut.Handle(Query, cancellationToken);
 
         result.Result.Forecasts.Should().HaveCount(4);
         result.Result.Forecasts.Should().Contain(r => r.TimePeriod == ExpectedTimePeriod && r.Quarter == ExpectedQuarter && r.EstimatedLearners == ExpectedEstimatedLearners);
         result.Result.Forecasts.Should().NotContain(r => r.EstimatedLearners == _pastForecast.EstimatedLearners);
     }
 
-    [Test, MoqAutoData]
+    [Test, AutoData]
     public async Task Handler_ShortCourseTypeNotAllowed_RetursNull(
-        [Frozen] Mock<IForecastQuartersRepository> forecastQuartersRepositoryMock,
-        [Frozen] Mock<IProviderCourseForecastRepository> providerCourseForecastRepositoryMock,
-        [Frozen] Mock<IProviderCourseTypesReadRepository> providerCourseTypesReadRepositoryMock,
-        GetProviderCourseForecastsQueryHandler sut,
         int expectedLearners,
         CancellationToken cancellationToken)
     {
-        providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(Query.Ukprn, cancellationToken)).ReturnsAsync(
+        _providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(Query.Ukprn, It.IsAny<CancellationToken>())).ReturnsAsync(
         [
             new ProviderCourseType { Ukprn = Query.Ukprn, CourseType = CourseType.Apprenticeship }
         ]);
 
-        var result = await sut.Handle(Query, cancellationToken);
+        var result = await _sut.Handle(Query, cancellationToken);
 
         result.Result.Should().BeNull();
         result.IsValidResponse.Should().BeTrue();
-        forecastQuartersRepositoryMock.Verify(r => r.GetForecastQuarters(It.IsAny<CancellationToken>()), Times.Never);
-        providerCourseForecastRepositoryMock.Verify(r => r.GetProviderCourseForecasts(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+        _forecastQuartersRepositoryMock.Verify(r => r.GetForecastQuarters(It.IsAny<CancellationToken>()), Times.Never);
+        _providerCourseForecastRepositoryMock.Verify(r => r.GetProviderCourseForecasts(It.IsAny<int>(), It.IsAny<string>(), It.IsAny<CancellationToken>()), Times.Never);
+    }
+
+    [Test, RecursiveMoqAutoData]
+    public async Task Handler_ReturnsStandardDetails(
+        int expectedLearners,
+        Standard standard,
+        CancellationToken cancellationToken)
+    {
+        _providerCourseForecastRepositoryMock.Setup(r => r.GetProviderCourseForecasts(Query.Ukprn, Query.LarsCode, It.IsAny<CancellationToken>())).ReturnsAsync([_currentForecast]);
+
+        _standardsReadRepositoryMock.Setup(r => r.GetStandard(It.IsAny<string>())).ReturnsAsync(standard);
+
+        var result = await _sut.Handle(Query, cancellationToken);
+
+        result.Result.LarsCode.Should().Be(standard.LarsCode);
+        result.Result.CourseName.Should().Be(standard.Title);
+        result.Result.CourseLevel.Should().Be(standard.Level);
     }
 }
