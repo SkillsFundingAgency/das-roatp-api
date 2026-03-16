@@ -45,7 +45,7 @@ public class GetProviderCourseForecastsQueryHandlerTests
     public void Before_Each_Test()
     {
         _pastForecast = new() { LarsCode = Query.LarsCode, Ukprn = Query.Ukprn, EstimatedLearners = 100, Quarter = ExpectedQuarter, TimePeriod = "AY2223", UpdatedDate = GetDate(2023, 4) };
-        _currentForecast = new() { LarsCode = Query.LarsCode, Ukprn = Query.Ukprn, EstimatedLearners = ExpectedEstimatedLearners, Quarter = ExpectedQuarter, TimePeriod = ExpectedTimePeriod, UpdatedDate = GetDate(2023, 12) };
+        _currentForecast = new() { LarsCode = Query.LarsCode, Ukprn = Query.Ukprn, EstimatedLearners = ExpectedEstimatedLearners, Quarter = ExpectedQuarter, TimePeriod = ExpectedTimePeriod, UpdatedDate = GetDate(2023, 12), CreatedDate = GetDate(2023, 10) };
 
         _standardsReadRepositoryMock = new();
         _standardsReadRepositoryMock.Setup(r => r.GetStandard(It.IsAny<string>())).ReturnsAsync(new Standard { LarsCode = LarsCode, Title = "Test Course", Level = 2, CourseType = CourseType.ShortCourse });
@@ -72,7 +72,20 @@ public class GetProviderCourseForecastsQueryHandlerTests
         var result = await _sut.Handle(Query, default);
 
         result.Result.Forecasts.Should().HaveCount(4);
-        result.Result.Forecasts.Should().Contain(r => r.Quarter == ExpectedQuarter && r.EstimatedLearners == ExpectedEstimatedLearners);
+        result.Result.Forecasts.Should().Contain(r => r.Quarter == ExpectedQuarter && r.EstimatedLearners == ExpectedEstimatedLearners && r.UpdatedDate == _currentForecast.UpdatedDate);
+        result.Result.Forecasts.Should().Contain(r => r.Quarter != ExpectedQuarter && r.EstimatedLearners == null);
+    }
+
+    [Test]
+    public async Task Handler_ForecastsFound_UsesCreatedDateForUpdateDate()
+    {
+        _currentForecast.UpdatedDate = null;
+        _providerCourseForecastRepositoryMock.Setup(r => r.GetProviderCourseForecasts(Query.Ukprn, Query.LarsCode, It.IsAny<CancellationToken>())).ReturnsAsync([_currentForecast]);
+
+        var result = await _sut.Handle(Query, default);
+
+        result.Result.Forecasts.Should().HaveCount(4);
+        result.Result.Forecasts.Should().Contain(r => r.Quarter == ExpectedQuarter && r.EstimatedLearners == ExpectedEstimatedLearners && r.UpdatedDate == _currentForecast.CreatedDate);
         result.Result.Forecasts.Should().Contain(r => r.Quarter != ExpectedQuarter && r.EstimatedLearners == null);
     }
 
@@ -84,7 +97,7 @@ public class GetProviderCourseForecastsQueryHandlerTests
         var result = await _sut.Handle(Query, cancellationToken);
 
         result.Result.Forecasts.Should().HaveCount(4);
-        result.Result.Forecasts.Should().Contain(r => r.Quarter == ExpectedQuarter && r.EstimatedLearners == null);
+        result.Result.Forecasts.Should().Contain(r => r.Quarter == ExpectedQuarter && r.EstimatedLearners == null && r.UpdatedDate == null);
     }
 
 

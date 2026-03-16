@@ -42,7 +42,7 @@ public class GetProviderCourseForecastsQueryHandler(
                     TimePeriod = quarter.TimePeriod,
                     Quarter = quarter.Quarter,
                     EstimatedLearners = forecast?.EstimatedLearners,
-                    UpdatedDate = forecast?.UpdatedDate,
+                    UpdatedDate = forecast?.UpdatedDate ?? forecast?.CreatedDate,
                     StartDate = quarter.StartDate,
                     EndDate = quarter.EndDate
                 };
