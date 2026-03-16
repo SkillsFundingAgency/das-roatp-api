@@ -1,5 +1,4 @@
-﻿using Microsoft.Extensions.Logging;
-using Moq;
+﻿using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Data.Repositories;
 using SFA.DAS.Roatp.Data.UnitTests.Setup;
@@ -167,7 +166,7 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
     {
         return new ProviderRegistrationDetailsReadRepository(
             _inMemoryContext,
-            Mock.Of<ILogger<ProviderRegistrationDetailsReadRepository>>()
+            NullLogger<ProviderRegistrationDetailsReadRepository>.Instance
         );
     }
 

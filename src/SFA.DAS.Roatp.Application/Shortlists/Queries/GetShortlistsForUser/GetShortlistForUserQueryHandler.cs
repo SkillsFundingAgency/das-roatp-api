@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -9,7 +10,7 @@ namespace SFA.DAS.Roatp.Application.Shortlists.Queries.GetShortlistsForUser;
 
 public class GetShortlistForUserQueryHandler(IShortlistsRepository _shortlistsRepository) : IRequestHandler<GetShortlistsForUserQuery, ValidatedResponse<GetShortlistsForUserQueryResult>>
 {
-    public static readonly JsonSerializerOptions SerializerOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+    public static readonly JsonSerializerOptions SerializerOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase, Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, true) } };
 
     public async Task<ValidatedResponse<GetShortlistsForUserQueryResult>> Handle(GetShortlistsForUserQuery request, CancellationToken cancellationToken)
     {
