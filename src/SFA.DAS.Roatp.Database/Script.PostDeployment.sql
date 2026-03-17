@@ -16,4 +16,3 @@ ALTER TABLE [dbo].[ProviderLocation] DROP CONSTRAINT [UK_ProviderLocation_Provid
 GO
 
 :r .\PostDeploymentScripts\PopulateRegionData.sql
-:r .\PostDeploymentScripts\CSP-2360_Insert_Short_Course_test_data_for_course_management.sql
