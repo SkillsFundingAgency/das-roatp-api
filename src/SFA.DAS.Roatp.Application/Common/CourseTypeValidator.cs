@@ -35,7 +35,7 @@ public class CourseTypeValidator : AbstractValidator<ICourseType>
                 if (standard == null || standard.CourseType == CourseType.Apprenticeship) return true;
 
                 List<ProviderAllowedCourse> allowedCourses = await providerAllowedCoursesRepository.GetProviderAllowedCourses(course.Ukprn, standard.CourseType, default);
-                return allowedCourses.Any(a => a.LarsCode == larsCode);
+                return allowedCourses.Any(a => a.LarsCode == standard.LarsCode);
             })
             .WithMessage(CourseNotAllowed);
     }
