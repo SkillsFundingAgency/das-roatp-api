@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using FluentValidation;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
@@ -33,7 +34,7 @@ public static class ShortCourseValidator
             var courseTypes = await providerCourseTypesReadRepository.GetProviderCourseTypesByUkprn(context.Ukprn, cancellation);
             var allowedCourses = await providerAllowedCoursesRepository.GetProviderAllowedCourses(context.Ukprn, CourseType.ShortCourse, cancellation);
 
-            return courseTypes.Any(ct => ct.CourseType == standard.CourseType) && allowedCourses.Any(ac => ac.LarsCode == larsCode);
+            return courseTypes.Any(ct => ct.CourseType == standard.CourseType) && allowedCourses.Any(ac => ac.LarsCode.Equals(larsCode, StringComparison.OrdinalIgnoreCase));
         }).WithMessage(MustBeAllowedToDeliverTheShortCourseValidationMessage);
     }
 

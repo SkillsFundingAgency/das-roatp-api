@@ -128,7 +128,7 @@ public class CourseTypeValidatorTests
     public async Task Validate_CourseTypeIsShortCourse_AndCourseInAllowedList_ShouldNotHaveValidationError()
     {
         _standardsReadRepositoryMock.Setup(r => r.GetStandard(It.Is<string>(s => s == ValidLarsCode)))
-            .ReturnsAsync(new Standard { CourseType = CourseType.ShortCourse });
+            .ReturnsAsync(new Standard { CourseType = CourseType.ShortCourse, LarsCode = ValidLarsCode });
         _providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new List<ProviderCourseType>
             {
