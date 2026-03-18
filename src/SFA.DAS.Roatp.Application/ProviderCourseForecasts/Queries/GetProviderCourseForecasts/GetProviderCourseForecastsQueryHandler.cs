@@ -13,7 +13,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseForecasts.Queries.GetProviderC
 public class GetProviderCourseForecastsQueryHandler(
     IProviderCourseTypesReadRepository _providerCourseTypesReadRepository,
     IProviderCourseForecastRepository _providerCourseForecastRepository,
-    IForecastQuartersRepository _forecastQuartersRepository)
+    IForecastQuartersRepository _forecastQuartersRepository,
+    IStandardsReadRepository _standardsReadRepository)
     : IRequestHandler<GetProviderCourseForecastsQuery, ValidatedResponse<GetProviderCourseForecastsQueryResult>>
 {
     public async Task<ValidatedResponse<GetProviderCourseForecastsQueryResult>> Handle(GetProviderCourseForecastsQuery request, CancellationToken cancellationToken)
@@ -26,9 +27,13 @@ public class GetProviderCourseForecastsQueryHandler(
 
         List<ForecastQuarter> quarters = await _forecastQuartersRepository.GetForecastQuarters(cancellationToken);
         List<ProviderCourseForecast> providerCourseForecasts = await _providerCourseForecastRepository.GetProviderCourseForecasts(request.Ukprn, request.LarsCode, cancellationToken);
+        Standard standard = await _standardsReadRepository.GetStandard(request.LarsCode);
 
         var result = new GetProviderCourseForecastsQueryResult
         {
+            LarsCode = standard.LarsCode,
+            CourseName = standard.Title,
+            CourseLevel = standard.Level,
             Forecasts = quarters.ConvertAll(quarter =>
             {
                 var forecast = providerCourseForecasts.Find(q => q.Quarter == quarter.Quarter && q.TimePeriod == quarter.TimePeriod);
@@ -37,7 +42,7 @@ public class GetProviderCourseForecastsQueryHandler(
                     TimePeriod = quarter.TimePeriod,
                     Quarter = quarter.Quarter,
                     EstimatedLearners = forecast?.EstimatedLearners,
-                    UpdatedDate = forecast?.UpdatedDate,
+                    UpdatedDate = forecast?.UpdatedDate ?? forecast?.CreatedDate,
                     StartDate = quarter.StartDate,
                     EndDate = quarter.EndDate
                 };
