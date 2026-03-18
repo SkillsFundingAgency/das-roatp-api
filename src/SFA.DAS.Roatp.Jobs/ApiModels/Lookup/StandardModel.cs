@@ -15,6 +15,7 @@ public class StandardModel
     public int SectorSubjectAreaTier1 { get; set; }
     public bool IsRegulatedForProvider { get; set; }
     public CourseType CourseType { get; set; }
+    public string Route { get; set; }
     public DurationUnits DurationUnits { get; set; }
     public int Duration { get; set; }
 
@@ -30,6 +31,7 @@ public class StandardModel
             ApprovalBody = string.IsNullOrWhiteSpace(standard.ApprovalBody) ? null : standard.ApprovalBody,
             SectorSubjectAreaTier1 = standard.SectorSubjectAreaTier1,
             IsRegulatedForProvider = standard.IsRegulatedForProvider,
+            Route = standard.Route,
             ApprenticeshipType = standard.ApprenticeshipType,
             CourseType = standard.CourseType,
             DurationUnits = standard.DurationUnits,
