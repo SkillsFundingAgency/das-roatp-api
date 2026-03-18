@@ -18,7 +18,7 @@ public class StandardConfiguration : IEntityTypeConfiguration<Standard>
         builder.Property(p => p.IfateReferenceNumber).IsRequired().HasMaxLength(10);
         builder.Property(p => p.Level).IsRequired();
         builder.Property(p => p.Title).IsRequired().HasMaxLength(1000);
-        builder.Property(p => p.Version).IsRequired();
+        builder.Property(p => p.Version);
         builder.Property(e => e.CourseType).HasConversion(
             v => v.ToString(),
             v => (CourseType)Enum.Parse(typeof(CourseType), v));
