@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace SFA.DAS.Roatp.Domain.Entities;
 
@@ -15,6 +16,7 @@ public class ProviderCourse
     public bool IsImported { get; set; } = false;
     public bool HasPortableFlexiJobOption { get; set; }
     public bool HasOnlineDeliveryOption { get; set; }
+    public DateTime CreatedDate { get; set; }
     public virtual Provider Provider { get; set; }
     public virtual Standard Standard { get; set; }
     public virtual List<ProviderCourseLocation> Locations { get; set; } = new List<ProviderCourseLocation>();
