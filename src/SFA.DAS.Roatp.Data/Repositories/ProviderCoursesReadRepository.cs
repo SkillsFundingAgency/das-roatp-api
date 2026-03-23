@@ -55,6 +55,7 @@ internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
     {
         return await _roatpDataContext
             .ProviderCourses
+            .Include(pc => pc.Provider)
             .Include(pc => pc.Standard)
             .Where(pc => pc.CreatedDate.Date == dateTime.Date && pc.Standard.CourseType == Domain.Models.CourseType.ShortCourse)
             .AsNoTracking()

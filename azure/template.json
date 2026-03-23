@@ -147,6 +147,7 @@
     "updateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
     "deleteExpiredShortlistsSchedule": "0 0 2 * * *",
     "importAnnualFeedbackSummariesFunctionSchedule": "0 0 4 1-10 8 *",
+    "sendInitialForecastEmailsFuntionSchedule": "0 0 3 * * *",
     "reloadStandardsCacheFunctionDisabled": true,
     "routeTableId": {
       "id": "[resourceId(subscription().subscriptionId, parameters('sharedEnvResourceGroup'), 'Microsoft.Network/routeTables', parameters('SharedRouteTableName'))]"
@@ -625,7 +626,12 @@
                 {
                   "name": "AzureWebJobs.ReloadStandardsCacheFunction.Disabled",
                   "value": "[variables('reloadStandardsCacheFunctionDisabled')]"
+                },
+                {
+                  "name": "SendInitialForecastEmailsFuntionSchedule",
+                  "value": "[variables('sendInitialForecastEmailsFuntionSchedule')]"
                 }
+
               ]
             }
           },

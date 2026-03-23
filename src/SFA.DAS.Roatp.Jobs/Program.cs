@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Data.Extensions;
+using SFA.DAS.Roatp.Jobs.Configuration;
 using SFA.DAS.Roatp.Jobs.Extensions;
 
 var host = new HostBuilder()
@@ -15,6 +16,7 @@ var host = new HostBuilder()
             .ConfigureFunctionsApplicationInsights()
             .AddRoatpDataContext(context.Configuration)
             .AddServiceRegistrations(context.Configuration);
+        services.Configure<ForecastEmailConfiguration>(context.Configuration.GetSection(nameof(ForecastEmailConfiguration)));
     })
     .ConfigureLogging(logging =>
     {
