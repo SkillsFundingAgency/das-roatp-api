@@ -62,7 +62,7 @@ public class ProviderCourseForecastRepositoryTests
         await sut.UpsertProviderCourseForecasts([forecast], CancellationToken.None);
 
         dataContext.ProviderCourseForecasts.Count().Should().Be(1);
-        dataContext.ProviderCourseForecasts.Should().Contain(f => f.Quarter == forecast.Quarter && f.EstimatedLearners == forecast.EstimatedLearners && f.UpdatedDate.GetValueOrDefault().Date == DateTime.UtcNow.Date);
+        dataContext.ProviderCourseForecasts.Should().Contain(f => f.Quarter == forecast.Quarter && f.EstimatedLearners == forecast.EstimatedLearners && f.UpdatedDate.Date == DateTime.UtcNow.Date);
     }
 
     private void AddForecastsData(RoatpDataContext dataContext)

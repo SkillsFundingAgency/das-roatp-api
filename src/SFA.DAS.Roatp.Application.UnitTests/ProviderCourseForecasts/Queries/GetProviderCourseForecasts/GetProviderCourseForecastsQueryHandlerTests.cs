@@ -76,19 +76,6 @@ public class GetProviderCourseForecastsQueryHandlerTests
         result.Result.Forecasts.Should().Contain(r => r.Quarter != ExpectedQuarter && r.EstimatedLearners == null);
     }
 
-    [Test]
-    public async Task Handler_ForecastsFound_UsesCreatedDateForUpdateDate()
-    {
-        _currentForecast.UpdatedDate = null;
-        _providerCourseForecastRepositoryMock.Setup(r => r.GetProviderCourseForecasts(Query.Ukprn, Query.LarsCode, It.IsAny<CancellationToken>())).ReturnsAsync([_currentForecast]);
-
-        var result = await _sut.Handle(Query, default);
-
-        result.Result.Forecasts.Should().HaveCount(4);
-        result.Result.Forecasts.Should().Contain(r => r.Quarter == ExpectedQuarter && r.EstimatedLearners == ExpectedEstimatedLearners && r.UpdatedDate == _currentForecast.CreatedDate);
-        result.Result.Forecasts.Should().Contain(r => r.Quarter != ExpectedQuarter && r.EstimatedLearners == null);
-    }
-
     [Test, AutoData]
     public async Task Handler_NoForecastsFound_GetsEmptyForecastsForProviderCourse(int expectedLearners, CancellationToken cancellationToken)
     {

@@ -11,5 +11,5 @@ public class ProviderCourseForecast
     public int Quarter { get; set; }
     public int? EstimatedLearners { get; set; }
     public DateTime CreatedDate { get; set; }
-    public DateTime? UpdatedDate { get; set; }
+    public DateTime UpdatedDate { get; set; }
 }
