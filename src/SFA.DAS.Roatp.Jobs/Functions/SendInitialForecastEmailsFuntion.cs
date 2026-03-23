@@ -34,10 +34,17 @@ public class SendInitialForecastEmailsFuntion
             _logger.LogInformation("Next timer schedule at: {NextSchedule}", myTimer.ScheduleStatus.Next);
         }
 
-        var shortCourses = await _providerCoursesReadRepository.GetShortCoursesAddedOnDate(DateTime.UtcNow.AddDays(-1).Date, cancellationToken);
+        List<ProviderCourse> shortCourses = await _providerCoursesReadRepository.GetShortCoursesAddedOnDate(DateTime.UtcNow.AddDays(-1).Date, cancellationToken);
 
+        var batches = shortCourses.Chunk(10);
+
+        foreach (var batch in batches) await ProcessBatch(batch);
+    }
+
+    private async Task ProcessBatch(IEnumerable<ProviderCourse> shortCourses)
+    {
         IEnumerable<Task> tasks = shortCourses.Select(course => _courseManagementOuterApiClient.Post<ProviderEmailModel, object>($"providers/{course.Provider.Ukprn}/email", ConvertToEmailModel(course, _forecastEmailConfiguration)));
-
+        tasks = tasks.Append(Task.Delay(1000));
         await Task.WhenAll(tasks);
     }
 
