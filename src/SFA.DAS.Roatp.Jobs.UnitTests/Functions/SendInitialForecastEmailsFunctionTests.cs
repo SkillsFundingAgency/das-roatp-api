@@ -22,7 +22,6 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions;
 public class SendInitialForecastEmailsFunctionTests
 {
     private Fixture _fixture;
-    private Mock<ILoggerFactory> _loggerFactoryMock;
     private Mock<IProviderCoursesReadRepository> _providerCoursesReadRepositoryMock;
     private List<ProviderCourse> _courses = new();
     private Mock<ICourseManagementOuterApiClient> _courseManagementOuterApiClientMock;
@@ -35,9 +34,6 @@ public class SendInitialForecastEmailsFunctionTests
         _fixture = new Fixture();
         _fixture.Behaviors.Remove(new ThrowingRecursionBehavior());
         _fixture.Behaviors.Add(new OmitOnRecursionBehavior());
-
-        _loggerFactoryMock = new Mock<ILoggerFactory>();
-        _loggerFactoryMock.Setup(l => l.CreateLogger(It.IsAny<string>())).Returns(Mock.Of<ILogger<SendInitialForecastEmailsFuntion>>());
 
         _providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
         _courses = _fixture.CreateMany<ProviderCourse>().ToList();
@@ -53,7 +49,7 @@ public class SendInitialForecastEmailsFunctionTests
     [Test]
     public async Task SendInitialForecastEmails_RetrievesProviderCourses()
     {
-        var sut = new SendInitialForecastEmailsFuntion(_loggerFactoryMock.Object, _providerCoursesReadRepositoryMock.Object, _courseManagementOuterApiClientMock.Object, _forecastEmailConfigurationMock.Object);
+        var sut = new SendInitialForecastEmailsFuntion(Mock.Of<ILogger<SendInitialForecastEmailsFuntion>>(), _providerCoursesReadRepositoryMock.Object, _courseManagementOuterApiClientMock.Object, _forecastEmailConfigurationMock.Object);
 
         await sut.Run(new TimerInfo(), CancellationToken.None);
 
@@ -68,7 +64,7 @@ public class SendInitialForecastEmailsFunctionTests
             .Setup(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()))
             .ReturnsAsync((true, (object)null));
 
-        var sut = new SendInitialForecastEmailsFuntion(_loggerFactoryMock.Object, _providerCoursesReadRepositoryMock.Object, _courseManagementOuterApiClientMock.Object, _forecastEmailConfigurationMock.Object);
+        var sut = new SendInitialForecastEmailsFuntion(Mock.Of<ILogger<SendInitialForecastEmailsFuntion>>(), _providerCoursesReadRepositoryMock.Object, _courseManagementOuterApiClientMock.Object, _forecastEmailConfigurationMock.Object);
 
         // Act
         await sut.Run(new TimerInfo(), CancellationToken.None);
@@ -90,7 +86,7 @@ public class SendInitialForecastEmailsFunctionTests
             .Setup(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()))
             .ReturnsAsync((true, (object)null));
 
-        var sut = new SendInitialForecastEmailsFuntion(_loggerFactoryMock.Object, _providerCoursesReadRepositoryMock.Object, _courseManagementOuterApiClientMock.Object, _forecastEmailConfigurationMock.Object);
+        var sut = new SendInitialForecastEmailsFuntion(Mock.Of<ILogger<SendInitialForecastEmailsFuntion>>(), _providerCoursesReadRepositoryMock.Object, _courseManagementOuterApiClientMock.Object, _forecastEmailConfigurationMock.Object);
 
         // Act
         await sut.Run(new TimerInfo(), CancellationToken.None);
@@ -114,7 +110,7 @@ public class SendInitialForecastEmailsFunctionTests
                 return Task.FromResult((true, (object)null));
             });
 
-        var sut = new SendInitialForecastEmailsFuntion(_loggerFactoryMock.Object, _providerCoursesReadRepositoryMock.Object, _courseManagementOuterApiClientMock.Object, _forecastEmailConfigurationMock.Object);
+        var sut = new SendInitialForecastEmailsFuntion(Mock.Of<ILogger<SendInitialForecastEmailsFuntion>>(), _providerCoursesReadRepositoryMock.Object, _courseManagementOuterApiClientMock.Object, _forecastEmailConfigurationMock.Object);
 
         // Act
         var sw = System.Diagnostics.Stopwatch.StartNew();

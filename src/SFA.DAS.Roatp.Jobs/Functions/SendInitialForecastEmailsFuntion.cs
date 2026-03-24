@@ -11,21 +11,21 @@ namespace SFA.DAS.Roatp.Jobs.Functions;
 
 public class SendInitialForecastEmailsFuntion
 {
-    private readonly ILogger _logger;
+    private readonly ILogger<SendInitialForecastEmailsFuntion> _logger;
     private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
     private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
     private readonly ForecastEmailConfiguration _forecastEmailConfiguration;
 
-    public SendInitialForecastEmailsFuntion(ILoggerFactory loggerFactory, IProviderCoursesReadRepository providerCoursesReadRepository, ICourseManagementOuterApiClient courseManagementOuterApiClient, IOptions<ForecastEmailConfiguration> forecastEmailConfiguration)
+    public SendInitialForecastEmailsFuntion(ILogger<SendInitialForecastEmailsFuntion> logger, IProviderCoursesReadRepository providerCoursesReadRepository, ICourseManagementOuterApiClient courseManagementOuterApiClient, IOptions<ForecastEmailConfiguration> forecastEmailConfiguration)
     {
-        _logger = loggerFactory.CreateLogger<SendInitialForecastEmailsFuntion>();
+        _logger = logger;
         _providerCoursesReadRepository = providerCoursesReadRepository;
         _courseManagementOuterApiClient = courseManagementOuterApiClient;
         _forecastEmailConfiguration = forecastEmailConfiguration.Value;
     }
 
     [Function(nameof(SendInitialForecastEmailsFuntion))]
-    public async Task Run([TimerTrigger("%SendInitialForecastEmailsFuntionSchedule%", RunOnStartup = true)] TimerInfo myTimer, CancellationToken cancellationToken)
+    public async Task Run([TimerTrigger("%SendInitialForecastEmailsFuntionSchedule%", RunOnStartup = false)] TimerInfo myTimer, CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# Timer trigger function executed at: {ExecutionTime}", DateTime.Now);
 
@@ -50,7 +50,6 @@ public class SendInitialForecastEmailsFuntion
 
     internal static ProviderEmailModel ConvertToEmailModel(ProviderCourse providerCourse, ForecastEmailConfiguration configuration)
     {
-        var initialForecastEmailTemplateId = configuration.InitialForecastEmailTemplateId;
         Dictionary<string, string> tokens = new()
         {
             { "larscode", providerCourse.Standard.LarsCode },
@@ -60,6 +59,6 @@ public class SendInitialForecastEmailsFuntion
             { "provideraccountsweb", configuration.ProviderAccountsWebUrl }
         };
 
-        return new(initialForecastEmailTemplateId, tokens);
+        return new(configuration.InitialForecastEmailTemplateId, tokens);
     }
 }
