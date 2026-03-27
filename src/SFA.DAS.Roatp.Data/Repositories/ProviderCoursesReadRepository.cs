@@ -7,10 +7,10 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Data.Repositories;
 
-[ExcludeFromCodeCoverage]
 internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
 {
     private readonly RoatpDataContext _roatpDataContext;
@@ -20,6 +20,7 @@ internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
         _roatpDataContext = roatpDataContext;
     }
 
+    [ExcludeFromCodeCoverage]
     public async Task<ProviderCourse> GetProviderCourse(int providerId, string larsCode)
     {
         return await _roatpDataContext
@@ -29,6 +30,7 @@ internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
             .SingleOrDefaultAsync();
     }
 
+    [ExcludeFromCodeCoverage]
     public async Task<ProviderCourse> GetProviderCourseByUkprn(int ukprn, string larsCode)
     {
         return await _roatpDataContext
@@ -40,6 +42,7 @@ internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
             .SingleOrDefaultAsync();
     }
 
+    [ExcludeFromCodeCoverage]
     public async Task<List<ProviderCourse>> GetAllProviderCourses(int ukprn)
     {
         return await _roatpDataContext
@@ -57,8 +60,19 @@ internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
             .ProviderCourses
             .Include(pc => pc.Provider)
             .Include(pc => pc.Standard)
-            .Where(pc => pc.CreatedDate.Date == dateTime.Date && pc.Standard.CourseType == Domain.Models.CourseType.ShortCourse)
+            .Where(pc => pc.CreatedDate.Date == dateTime.Date && pc.Standard.CourseType == CourseType.ShortCourse)
             .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<ProviderCourseModel>> GetAllShortCourses(CancellationToken cancellationToken)
+    {
+        return await _roatpDataContext
+            .ProviderCourses
+            .Include(pc => pc.Provider)
+            .Where(pc => pc.Standard.CourseType == CourseType.ShortCourse)
+            .AsNoTracking()
+            .Select(s => new ProviderCourseModel(s.Provider.Ukprn, s.LarsCode))
             .ToListAsync(cancellationToken);
     }
 }

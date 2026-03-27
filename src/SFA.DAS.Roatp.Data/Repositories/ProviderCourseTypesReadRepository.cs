@@ -26,4 +26,13 @@ internal class ProviderCourseTypesReadRepository : IProviderCourseTypesReadRepos
             .Where(p => p.Ukprn == ukprn)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<List<int>> GetAllProvidersWithShortCourses(CancellationToken cancellationToken = default)
+    {
+        return await _roatpDataContext
+            .ProviderCoursesTypes
+            .Where(p => p.CourseType == Domain.Models.CourseType.ShortCourse)
+            .Select(p => p.Ukprn)
+            .ToListAsync(cancellationToken);
+    }
 }

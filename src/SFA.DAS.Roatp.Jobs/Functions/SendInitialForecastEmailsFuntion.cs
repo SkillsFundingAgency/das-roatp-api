@@ -29,11 +29,6 @@ public class SendInitialForecastEmailsFuntion
     {
         _logger.LogInformation("C# Timer trigger function executed at: {ExecutionTime}", DateTime.Now);
 
-        if (myTimer.ScheduleStatus is not null)
-        {
-            _logger.LogInformation("Next timer schedule at: {NextSchedule}", myTimer.ScheduleStatus.Next);
-        }
-
         List<ProviderCourse> shortCourses = await _providerCoursesReadRepository.GetShortCoursesAddedOnDate(DateTime.UtcNow.AddDays(-1).Date, cancellationToken);
 
         var batches = shortCourses.Chunk(10);

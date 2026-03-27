@@ -14,7 +14,7 @@ public class GetShortCoursesAddedOnDateTests
     public async Task GetShortCoursesAddedAfterDate_ReturnsExpectedResult()
     {
         var forDate = DateTime.Today.AddDays(-1);
-        var dataContext = RoatpDataContextFactory.CreateInMemoryContext();
+        using var dataContext = RoatpDataContextFactory.CreateInMemoryContext();
         AddProviderCourses(dataContext, forDate);
 
         ProviderCoursesReadRepository sut = new(dataContext);
@@ -29,7 +29,7 @@ public class GetShortCoursesAddedOnDateTests
     public async Task GetShortCoursesAddedAfterDate_ReturnsShortCoursesOnly()
     {
         var forDate = DateTime.Today.AddDays(-1);
-        var dataContext = RoatpDataContextFactory.CreateInMemoryContext();
+        using var dataContext = RoatpDataContextFactory.CreateInMemoryContext();
         AddProviderCourses(dataContext, forDate);
 
         ProviderCoursesReadRepository sut = new(dataContext);
