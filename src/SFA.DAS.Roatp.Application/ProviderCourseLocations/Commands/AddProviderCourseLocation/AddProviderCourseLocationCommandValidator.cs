@@ -9,10 +9,9 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
         public const string LocationNavigationIdErrorMessage = "Location id is invalid or not found";
         public const string LocationAlreadyExistsErrorMessage = "Location already exists on Provider course";
         public const string TrainingVenueErrorMessage = "Venue must be provided";
-        public const string DeliveryMethodErrorMessage = "Delivery method must be provided";
         public AddProviderCourseLocationCommandValidator
-            (IProvidersReadRepository providersReadRepository, 
-             IProviderCoursesReadRepository providerCoursesReadRepository, 
+            (IProvidersReadRepository providersReadRepository,
+             IProviderCoursesReadRepository providerCoursesReadRepository,
              IProviderLocationsReadRepository providerLocationsReadRepository,
              IProviderCourseLocationsReadRepository providerCourseLocationsReadRepository)
         {
@@ -39,11 +38,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.AddProvider
                     return !providerCourseLocations.Exists(l => l.ProviderLocationId == providerLocation.Id);
                 })
                 .WithMessage(LocationAlreadyExistsErrorMessage);
-
-            RuleFor(x => x.HasDayReleaseDeliveryOption).Equal(true)
-               .When(a => a.HasBlockReleaseDeliveryOption.HasValue && a.HasBlockReleaseDeliveryOption == false)
-               .WithMessage(DeliveryMethodErrorMessage);
-
         }
     }
 }

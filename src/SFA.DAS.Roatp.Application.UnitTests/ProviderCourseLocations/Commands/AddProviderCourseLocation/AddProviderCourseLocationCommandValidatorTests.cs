@@ -137,34 +137,5 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Commands.A
 
             result.ShouldNotHaveValidationErrorFor(c => c.LocationNavigationId);
         }
-
-        [TestCase(true, true)]
-        [TestCase(true, false)]
-        [TestCase(false, true)]
-        public async Task ValidateHasDayReleaseDeliveryOption_SelectedDeliveryOption_ReturnsNoError(bool? hasDayReleaseDeliveryOption, bool? hasBlockReleaseDeliveryOption)
-        {
-            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, userDisplayName, Guid.NewGuid(), hasDayReleaseDeliveryOption, hasBlockReleaseDeliveryOption);
-
-            var sut = new AddProviderCourseLocationCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, _providerLocationsReadRepositoryMock.Object, _providerCourseLocationsReadRepositoryMock.Object);
-
-            var result = await sut.TestValidateAsync(_command);
-
-            result.ShouldNotHaveValidationErrorFor(c => c.HasDayReleaseDeliveryOption);
-        }
-
-        [TestCase(false, false)]
-        [TestCase(null, null)]
-        [TestCase(false, null)]
-        [TestCase(null, false)]
-        public async Task ValidateHasDayReleaseDeliveryOption_NotSelected_ReturnsError(bool hasDayReleaseDeliveryOption, bool hasBlockReleaseDeliveryOption)
-        {
-            _command = new AddProviderCourseLocationCommand(ukprn, larsCode, userId, userDisplayName, Guid.NewGuid(), hasDayReleaseDeliveryOption, hasBlockReleaseDeliveryOption);
-
-            var sut = new AddProviderCourseLocationCommandValidator(_providersReadRepositoryMock.Object, _providerCoursesReadRepositoryMock.Object, _providerLocationsReadRepositoryMock.Object, _providerCourseLocationsReadRepositoryMock.Object);
-
-            var result = await sut.TestValidateAsync(_command);
-
-            result.ShouldHaveValidationErrorFor(c => c.HasDayReleaseDeliveryOption);
-        }
     }
 }
