@@ -66,9 +66,9 @@ public class SendForecastsReminderEmailsFunctionTests
             .Setup(r => r.GetAllProvidersWithShortCourses(It.IsAny<CancellationToken>()))
             .ReturnsAsync(allowedProviders);
 
-        List<ProviderCourseModel> allShortCourses =
+        List<UkprnLarsCodeModel> allShortCourses =
         [
-            new ProviderCourseModel ( ukprn, larsCode )
+            new UkprnLarsCodeModel ( ukprn, larsCode )
         ];
 
         _providerCoursesReadRepository
@@ -104,12 +104,12 @@ public class SendForecastsReminderEmailsFunctionTests
 
         _courseManagementOuterApiClient.Setup(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>())).ReturnsAsync((true, null));
 
-        List<ProviderCourseModel> allShortCourses =
+        List<UkprnLarsCodeModel> allShortCourses =
         [
-            new ProviderCourseModel (1001, "L1" ),
-            new ProviderCourseModel (1001, "L2" ),
-            new ProviderCourseModel (1002, "L3" ),
-            new ProviderCourseModel (1002, "L2" )
+            new UkprnLarsCodeModel (1001, "L1" ),
+            new UkprnLarsCodeModel (1001, "L2" ),
+            new UkprnLarsCodeModel (1002, "L3" ),
+            new UkprnLarsCodeModel (1002, "L2" )
         ];
         _providerCoursesReadRepository
             .Setup(r => r.GetAllShortCourses(It.IsAny<CancellationToken>()))
@@ -143,12 +143,12 @@ public class SendForecastsReminderEmailsFunctionTests
             .Setup(r => r.GetAllProvidersWithShortCourses(It.IsAny<CancellationToken>()))
             .ReturnsAsync([ukprnDoesNotRequireReminder, ukprnRequiresReminder]);
 
-        List<ProviderCourseModel> allShortCourses =
+        List<UkprnLarsCodeModel> allShortCourses =
         [
-            new ProviderCourseModel (ukprnRequiresReminder, larsCode1 ),
-            new ProviderCourseModel (ukprnRequiresReminder, larsCode2 ),
-            new ProviderCourseModel (ukprnDoesNotRequireReminder, larsCode1 ),
-            new ProviderCourseModel (ukprnDoesNotRequireReminder, larsCode2 ),
+            new UkprnLarsCodeModel (ukprnRequiresReminder, larsCode1 ),
+            new UkprnLarsCodeModel (ukprnRequiresReminder, larsCode2 ),
+            new UkprnLarsCodeModel (ukprnDoesNotRequireReminder, larsCode1 ),
+            new UkprnLarsCodeModel (ukprnDoesNotRequireReminder, larsCode2 ),
         ];
         _providerCoursesReadRepository
             .Setup(r => r.GetAllShortCourses(It.IsAny<CancellationToken>()))

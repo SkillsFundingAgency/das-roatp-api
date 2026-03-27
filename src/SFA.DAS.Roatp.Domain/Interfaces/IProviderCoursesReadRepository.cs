@@ -13,5 +13,5 @@ public interface IProviderCoursesReadRepository
     Task<ProviderCourse> GetProviderCourseByUkprn(int ukprn, string larsCode);
     Task<List<ProviderCourse>> GetAllProviderCourses(int ukprn);
     Task<List<ProviderCourse>> GetShortCoursesAddedOnDate(DateTime dateTime, CancellationToken cancellationToken);
-    Task<List<ProviderCourseModel>> GetAllShortCourses(CancellationToken cancellationToken);
+    Task<List<UkprnLarsCodeModel>> GetAllShortCourses(CancellationToken cancellationToken);
 }

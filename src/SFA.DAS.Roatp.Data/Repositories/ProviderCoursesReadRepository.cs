@@ -65,14 +65,14 @@ internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
             .ToListAsync(cancellationToken);
     }
 
-    public async Task<List<ProviderCourseModel>> GetAllShortCourses(CancellationToken cancellationToken)
+    public async Task<List<UkprnLarsCodeModel>> GetAllShortCourses(CancellationToken cancellationToken)
     {
         return await _roatpDataContext
             .ProviderCourses
             .Include(pc => pc.Provider)
             .Where(pc => pc.Standard.CourseType == CourseType.ShortCourse)
             .AsNoTracking()
-            .Select(s => new ProviderCourseModel(s.Provider.Ukprn, s.LarsCode))
+            .Select(s => new UkprnLarsCodeModel(s.Provider.Ukprn, s.LarsCode))
             .ToListAsync(cancellationToken);
     }
 }

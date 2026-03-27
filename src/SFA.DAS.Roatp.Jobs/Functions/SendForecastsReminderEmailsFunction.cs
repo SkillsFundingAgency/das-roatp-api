@@ -39,7 +39,7 @@ public class SendForecastsReminderEmailsFunction
     {
         _logger.LogInformation("C# Timer trigger function executed at: {ExecutionTime}", DateTime.Now);
         List<int> allowedProviders = await _providerCourseTypesReadRepository.GetAllProvidersWithShortCourses(cancellationToken);
-        List<ProviderCourseModel> allShortCoursesCourses = await _providerCoursesReadRepository.GetAllShortCourses(cancellationToken);
+        List<UkprnLarsCodeModel> allShortCoursesCourses = await _providerCoursesReadRepository.GetAllShortCourses(cancellationToken);
         List<ProviderCourseWithLastForecastDate> providerCoursesWithUpToDateForecasts = await _providerCourseForecastRepository.GetProviderCoursesWithRecentForecasts(DateTime.UtcNow.Date.AddDays(ForecastEmailConfiguration.ForecastGraceDays), cancellationToken);
 
         // build lookup of (Ukprn, LarsCode) for courses that already have up-to-date forecasts
