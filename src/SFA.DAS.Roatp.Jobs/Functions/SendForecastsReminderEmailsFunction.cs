@@ -3,9 +3,9 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
-using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.ApiModels;
 using SFA.DAS.Roatp.Jobs.Configuration;
+using SFA.DAS.Roatp.Jobs.Services;
 
 namespace SFA.DAS.Roatp.Jobs.Functions;
 
@@ -15,21 +15,21 @@ public class SendForecastsReminderEmailsFunction
     private readonly IProviderCourseTypesReadRepository _providerCourseTypesReadRepository;
     private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
     private readonly IProviderCourseForecastRepository _providerCourseForecastRepository;
-    private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
+    private readonly IProviderEmailProcessingService _providerEmailProcessingService;
     private readonly ForecastEmailConfiguration _forecastEmailConfiguration;
 
     public SendForecastsReminderEmailsFunction(
         ILogger<SendForecastsReminderEmailsFunction> logger,
         IProviderCoursesReadRepository providerCoursesReadRepository,
         IProviderCourseForecastRepository providerCourseForecastRepository,
-        ICourseManagementOuterApiClient courseManagementOuterApiClient,
+        IProviderEmailProcessingService providerEmailProcessingService,
         IOptions<ForecastEmailConfiguration> forecastEmailConfiguration,
         IProviderCourseTypesReadRepository providerCourseTypesReadRepository)
     {
         _logger = logger;
         _providerCoursesReadRepository = providerCoursesReadRepository;
         _providerCourseForecastRepository = providerCourseForecastRepository;
-        _courseManagementOuterApiClient = courseManagementOuterApiClient;
+        _providerEmailProcessingService = providerEmailProcessingService;
         _forecastEmailConfiguration = forecastEmailConfiguration.Value;
         _providerCourseTypesReadRepository = providerCourseTypesReadRepository;
     }
@@ -53,33 +53,19 @@ public class SendForecastsReminderEmailsFunction
             .Select(c => c.Ukprn)
             .Distinct();
 
-        var batches = providersNeedingReminder.Chunk(ForecastEmailConfiguration.BatchSize);
-
-        foreach (var batch in batches) await ProcessBatch(batch);
+        IEnumerable<ProviderEmailModel> models = providersNeedingReminder.Select(ukprn => ConvertToEmailModel(ukprn));
+        if (models.Any()) await _providerEmailProcessingService.SendEmailsInBatches(models);
     }
 
-    private async Task ProcessBatch(IEnumerable<int> ukprns)
-    {
-        List<Task> tasks = [];
-        foreach (var ukprn in ukprns)
-        {
-            var model = ConvertToEmailModel(ukprn, _forecastEmailConfiguration);
-            tasks.Add(_courseManagementOuterApiClient.Post($"providers/{ukprn}/emails", model));
-        }
-
-        tasks.Add(Task.Delay(ForecastEmailConfiguration.EmailThrottlingInSeconds));
-        await Task.WhenAll(tasks);
-    }
-
-    internal static ProviderEmailModel ConvertToEmailModel(int ukprn, ForecastEmailConfiguration configuration)
+    private ProviderEmailModel ConvertToEmailModel(int ukprn)
     {
         Dictionary<string, string> tokens = new()
         {
-            { "ukprn", ukprn.ToString() },
-            { "providercmweb", configuration.CourseManagementWebUrl },
-            { "provideraccountsweb", configuration.ProviderAccountsWebUrl }
+            { ProviderEmailTokens.Ukprn, ukprn.ToString() },
+            { ProviderEmailTokens.CourseManagementWebUrl, _forecastEmailConfiguration.CourseManagementWebUrl },
+            { ProviderEmailTokens.ProviderAccountWebUrl, _forecastEmailConfiguration.ProviderAccountsWebUrl }
         };
 
-        return new(configuration.ForecastPeriodicalReminderEmailTemplateId, tokens);
+        return new(_forecastEmailConfiguration.ForecastPeriodicalReminderEmailTemplateId, tokens);
     }
 }

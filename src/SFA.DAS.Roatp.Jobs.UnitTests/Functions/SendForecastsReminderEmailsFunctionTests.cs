@@ -4,17 +4,17 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
-using FluentAssertions;
+using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
-using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.ApiModels;
 using SFA.DAS.Roatp.Jobs.Configuration;
 using SFA.DAS.Roatp.Jobs.Functions;
+using SFA.DAS.Roatp.Jobs.Services;
 
 namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions;
 
@@ -22,47 +22,43 @@ public class SendForecastsReminderEmailsFunctionTests
 {
     private Fixture _fixture;
     private Mock<ILogger<SendForecastsReminderEmailsFunction>> _loggerMock;
-    private Mock<IProviderCourseTypesReadRepository> _providerCourseTypesReadRepository;
-    private Mock<IProviderCoursesReadRepository> _providerCoursesReadRepository;
-    private Mock<IProviderCourseForecastRepository> _providerCourseForecastRepository;
-    private Mock<ICourseManagementOuterApiClient> _courseManagementOuterApiClient;
-    private IOptions<ForecastEmailConfiguration> _options;
+    private Mock<IProviderCourseTypesReadRepository> _providerCourseTypesReadRepositoryMock;
+    private Mock<IProviderCoursesReadRepository> _providerCoursesReadRepositoryMock;
+    private Mock<IProviderCourseForecastRepository> _providerCourseForecastRepositoryMock;
+    private Mock<IProviderEmailProcessingService> _providerEmailProcessingServiceMock;
+    private ForecastEmailConfiguration _forecastEmailConfiguration;
     private SendForecastsReminderEmailsFunction _sut;
 
     [SetUp]
     public void SetUp()
     {
-        _loggerMock = new Mock<ILogger<SendForecastsReminderEmailsFunction>>();
-        _providerCourseTypesReadRepository = new Mock<IProviderCourseTypesReadRepository>();
-        _providerCoursesReadRepository = new Mock<IProviderCoursesReadRepository>();
-        _providerCourseForecastRepository = new Mock<IProviderCourseForecastRepository>();
-        _courseManagementOuterApiClient = new Mock<ICourseManagementOuterApiClient>();
+        _loggerMock = new();
+        _providerCourseTypesReadRepositoryMock = new();
+        _providerCoursesReadRepositoryMock = new();
+        _providerCourseForecastRepositoryMock = new();
+        _providerEmailProcessingServiceMock = new();
 
         _fixture = new();
 
-        var cfg = _fixture.Create<ForecastEmailConfiguration>();
-        _options = Options.Create(cfg);
-
-        // default API client behaviour
-        _courseManagementOuterApiClient.Setup(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>())).ReturnsAsync(true);
+        _forecastEmailConfiguration = _fixture.Create<ForecastEmailConfiguration>();
 
         _sut = new SendForecastsReminderEmailsFunction(
             _loggerMock.Object,
-            _providerCoursesReadRepository.Object,
-            _providerCourseForecastRepository.Object,
-            _courseManagementOuterApiClient.Object,
-            _options,
-            _providerCourseTypesReadRepository.Object);
+            _providerCoursesReadRepositoryMock.Object,
+            _providerCourseForecastRepositoryMock.Object,
+            _providerEmailProcessingServiceMock.Object,
+            Options.Create(_forecastEmailConfiguration),
+            _providerCourseTypesReadRepositoryMock.Object);
     }
 
     [Test]
-    public async Task Run_ProviderHasUpToDateForecast_EmailNotSent()
+    public async Task SendForecastsReminderEmailsFunction_ProviderHasUpToDateForecast_EmailNotSent()
     {
         const int ukprn = 10012002;
         const string larsCode = "ZSC00001";
         // Arrange
         var allowedProviders = new List<int> { ukprn };
-        _providerCourseTypesReadRepository
+        _providerCourseTypesReadRepositoryMock
             .Setup(r => r.GetAllProvidersWithShortCourses(It.IsAny<CancellationToken>()))
             .ReturnsAsync(allowedProviders);
 
@@ -71,7 +67,7 @@ public class SendForecastsReminderEmailsFunctionTests
             new UkprnLarsCodeModel ( ukprn, larsCode )
         ];
 
-        _providerCoursesReadRepository
+        _providerCoursesReadRepositoryMock
             .Setup(r => r.GetAllShortCourses(It.IsAny<CancellationToken>()))
             .ReturnsAsync(allShortCourses);
 
@@ -80,23 +76,23 @@ public class SendForecastsReminderEmailsFunctionTests
             new ProviderCourseWithLastForecastDate(ukprn, larsCode, DateTime.UtcNow)
         };
 
-        _providerCourseForecastRepository
+        _providerCourseForecastRepositoryMock
             .Setup(r => r.GetProviderCoursesWithRecentForecasts(It.IsAny<DateTime>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(recentlyUpdatedForecast);
 
         // Act
-        await _sut.Run(null!, CancellationToken.None);
+        await _sut.Run(new TimerInfo(), CancellationToken.None);
 
         // Assert
-        _courseManagementOuterApiClient.Verify(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Never);
+        _providerEmailProcessingServiceMock.Verify(c => c.SendEmailsInBatches(It.IsAny<IEnumerable<ProviderEmailModel>>()), Times.Never);
     }
 
     [Test]
-    public async Task Run_ProvidersNeedingReminderForMultipleCourses_SendsOneEmailPerProvider()
+    public async Task SendForecastsReminderEmailsFunction_ProvidersNeedingReminderForMultipleCourses_SendsOneEmailPerProvider()
     {
         // Arrange
         var allowedProviders = new List<int> { 1001, 1002, 1003 };
-        _providerCourseTypesReadRepository
+        _providerCourseTypesReadRepositoryMock
             .Setup(r => r.GetAllProvidersWithShortCourses(It.IsAny<CancellationToken>()))
             .ReturnsAsync(allowedProviders);
 
@@ -107,25 +103,27 @@ public class SendForecastsReminderEmailsFunctionTests
             new UkprnLarsCodeModel (1002, "L3" ),
             new UkprnLarsCodeModel (1002, "L2" )
         ];
-        _providerCoursesReadRepository
+        _providerCoursesReadRepositoryMock
             .Setup(r => r.GetAllShortCourses(It.IsAny<CancellationToken>()))
             .ReturnsAsync(allShortCourses);
 
 
-        _providerCourseForecastRepository
+        _providerCourseForecastRepositoryMock
             .Setup(r => r.GetProviderCoursesWithRecentForecasts(It.IsAny<DateTime>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
         // Act
-        await _sut.Run(null!, CancellationToken.None);
+        await _sut.Run(new TimerInfo(), CancellationToken.None);
 
-        _courseManagementOuterApiClient.Verify(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Exactly(2));
-        _courseManagementOuterApiClient.Verify(c => c.Post(It.Is<string>(s => s.Equals("providers/1001/emails")), It.IsAny<ProviderEmailModel>()), Times.Once);
-        _courseManagementOuterApiClient.Verify(c => c.Post(It.Is<string>(s => s.Equals("providers/1002/emails")), It.IsAny<ProviderEmailModel>()), Times.Once);
+        _providerEmailProcessingServiceMock.Verify(c => c.SendEmailsInBatches(It.Is<IEnumerable<ProviderEmailModel>>(models => models.Count() == 2)), Times.Once);
+        _providerEmailProcessingServiceMock.Verify(c => c.SendEmailsInBatches(It.Is<IEnumerable<ProviderEmailModel>>(models => VerifyProviderEmailModelsIncludesUkprns(models, "1001", "1002"))), Times.Once);
     }
 
+    private static bool VerifyProviderEmailModelsIncludesUkprns(IEnumerable<ProviderEmailModel> models, params string[] ukprns)
+        => models.All(m => ukprns.Contains(m.Tokens[ProviderEmailTokens.Ukprn]));
+
     [Test]
-    public async Task Run_ProvidersHasMultipleCourses_WithAtLeastOneOverdue_ReminderEmailIsSent()
+    public async Task SendForecastsReminderEmailsFunction_ProvidersHasMultipleCourses_WithAtLeastOneOverdue_ReminderEmailIsSent()
     {
         const int ukprnDoesNotRequireReminder = 10012001;
         const int ukprnRequiresReminder = 10012002;
@@ -133,7 +131,7 @@ public class SendForecastsReminderEmailsFunctionTests
         const string larsCode2 = "ZSC00002";
 
         // Arrange
-        _providerCourseTypesReadRepository
+        _providerCourseTypesReadRepositoryMock
             .Setup(r => r.GetAllProvidersWithShortCourses(It.IsAny<CancellationToken>()))
             .ReturnsAsync([ukprnDoesNotRequireReminder, ukprnRequiresReminder]);
 
@@ -144,7 +142,7 @@ public class SendForecastsReminderEmailsFunctionTests
             new UkprnLarsCodeModel (ukprnDoesNotRequireReminder, larsCode1 ),
             new UkprnLarsCodeModel (ukprnDoesNotRequireReminder, larsCode2 ),
         ];
-        _providerCoursesReadRepository
+        _providerCoursesReadRepositoryMock
             .Setup(r => r.GetAllShortCourses(It.IsAny<CancellationToken>()))
             .ReturnsAsync(allShortCourses);
 
@@ -154,54 +152,47 @@ public class SendForecastsReminderEmailsFunctionTests
             new ProviderCourseWithLastForecastDate(ukprnDoesNotRequireReminder, larsCode2, DateTime.UtcNow),
             new ProviderCourseWithLastForecastDate(ukprnRequiresReminder, larsCode1, DateTime.UtcNow)
         ];
-        _providerCourseForecastRepository
+        _providerCourseForecastRepositoryMock
             .Setup(r => r.GetProviderCoursesWithRecentForecasts(It.IsAny<DateTime>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(upToDateForecast);
 
         // Act
-        await _sut.Run(null!, CancellationToken.None);
+        await _sut.Run(new TimerInfo(), CancellationToken.None);
 
-        _courseManagementOuterApiClient.Verify(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Once);
-        _courseManagementOuterApiClient.Verify(c => c.Post(It.Is<string>(s => s.Equals("providers/10012002/emails")), It.IsAny<ProviderEmailModel>()), Times.Once);
+        _providerEmailProcessingServiceMock.Verify(c => c.SendEmailsInBatches(It.Is<IEnumerable<ProviderEmailModel>>(models => models.Count() == 1)), Times.Once);
+        _providerEmailProcessingServiceMock.Verify(c => c.SendEmailsInBatches(It.Is<IEnumerable<ProviderEmailModel>>(models => VerifyProviderEmailModelsIncludesUkprns(models, ukprnRequiresReminder.ToString()))), Times.Once);
     }
 
     [Test]
-    public async Task Run_ProcessesBatches_WithDelayBetweenBatches()
+    public async Task SendForecastsReminderEmailsFunction_ConvertProviderCourseToEmailModel()
     {
-        const string larsCode = "ZSC00001";
+        const int ukprnRequiresReminder = 10012002;
+        const string larsCode1 = "ZSC00001";
 
-        List<int> ukprns = [.. Enumerable.Range(10011001, ForecastEmailConfiguration.BatchSize + 1)];
-        _providerCourseTypesReadRepository
+        // Arrange
+        _providerCourseTypesReadRepositoryMock
             .Setup(r => r.GetAllProvidersWithShortCourses(It.IsAny<CancellationToken>()))
-            .ReturnsAsync(ukprns);
+            .ReturnsAsync([ukprnRequiresReminder]);
 
-        _providerCoursesReadRepository
-                   .Setup(r => r.GetAllShortCourses(It.IsAny<CancellationToken>()))
-                   .ReturnsAsync([.. ukprns.Select(u => new UkprnLarsCodeModel(u, larsCode))]);
+        _providerCoursesReadRepositoryMock
+            .Setup(r => r.GetAllShortCourses(It.IsAny<CancellationToken>()))
+            .ReturnsAsync([new UkprnLarsCodeModel(ukprnRequiresReminder, larsCode1)]);
 
-        _providerCourseForecastRepository
+        _providerCourseForecastRepositoryMock
             .Setup(r => r.GetProviderCoursesWithRecentForecasts(It.IsAny<DateTime>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync([]);
 
-        var postCallTimes = new List<DateTime>();
-        _courseManagementOuterApiClient
-            .Setup(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()))
-            .Returns<string, ProviderEmailModel>((uri, model) =>
-            {
-                postCallTimes.Add(DateTime.UtcNow);
-                return Task.FromResult(true);
-            });
-
         // Act
-        var sw = System.Diagnostics.Stopwatch.StartNew();
-        await _sut.Run(null!, CancellationToken.None);
-        sw.Stop();
+        await _sut.Run(new TimerInfo(), CancellationToken.None);
 
-        // Assert - ensure all posts happened
-        _courseManagementOuterApiClient.Verify(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Exactly(ukprns.Count));
-        postCallTimes.Should().HaveCount((ukprns.Count));
-        // There should be a delay between the last call of the first batch (index of batch size -1) and the first call of the second batch (index of batch size )
-        var gap = (postCallTimes[ForecastEmailConfiguration.BatchSize] - postCallTimes[ForecastEmailConfiguration.BatchSize - 1]).TotalMilliseconds;
-        Assert.That(gap, Is.GreaterThanOrEqualTo(ForecastEmailConfiguration.EmailThrottlingInSeconds - 100), $"Expected gap >= 900ms between batches but was {gap}ms");
+        _providerEmailProcessingServiceMock.Verify(c => c.SendEmailsInBatches(It.Is<IEnumerable<ProviderEmailModel>>(models => models.Count() == 1)), Times.Once);
+        _providerEmailProcessingServiceMock.Verify(c => c.SendEmailsInBatches(It.Is<IEnumerable<ProviderEmailModel>>(models => VerifyModel(models.First(), ukprnRequiresReminder.ToString()))), Times.Once);
     }
+
+
+    private bool VerifyModel(ProviderEmailModel model, string ukprn)
+        => model.TemplateId == _forecastEmailConfiguration.ForecastPeriodicalReminderEmailTemplateId
+        && model.Tokens[ProviderEmailTokens.Ukprn] == ukprn
+        && model.Tokens[ProviderEmailTokens.CourseManagementWebUrl] == _forecastEmailConfiguration.CourseManagementWebUrl
+        && model.Tokens[ProviderEmailTokens.ProviderAccountWebUrl] == _forecastEmailConfiguration.ProviderAccountsWebUrl;
 }

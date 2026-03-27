@@ -1,10 +1,13 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.Configuration;
 using SFA.DAS.Roatp.Jobs.Services;
 
 namespace SFA.DAS.Roatp.Jobs.Extensions;
+
+[ExcludeFromCodeCoverage]
 public static class AddApplicationRegistrationsExtension
 {
     public static IServiceCollection AddServiceRegistrations(this IServiceCollection services, IConfiguration configuration)
@@ -19,6 +22,7 @@ public static class AddApplicationRegistrationsExtension
 
         services.AddTransient<IImportAnnualFeedbackSummariesService, ImportAnnualFeedbackSummariesService>();
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
+        services.AddTransient<IProviderEmailProcessingService, ProviderEmailProcessingService>();
 
         RegisterHttpClient(services, configuration);
 
