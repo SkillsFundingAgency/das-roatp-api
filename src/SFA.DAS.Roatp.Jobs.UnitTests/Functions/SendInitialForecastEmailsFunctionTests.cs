@@ -44,6 +44,8 @@ public class SendInitialForecastEmailsFunctionTests
         _forecastEmailConfigurationMock.Setup(m => m.Value).Returns(_forecastEmailConfiguration);
 
         _courseManagementOuterApiClientMock = new Mock<ICourseManagementOuterApiClient>();
+
+        _courseManagementOuterApiClientMock.Setup(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>())).ReturnsAsync(true);
     }
 
     [Test]
@@ -59,20 +61,14 @@ public class SendInitialForecastEmailsFunctionTests
     [Test]
     public async Task SendInitialForecastEmails_CallsOuterApiForEachShortCourse()
     {
-        // Arrange - ensure Post returns success so processing continues
-        _courseManagementOuterApiClientMock
-            .Setup(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()))
-            .ReturnsAsync((true, (object)null));
-
         var sut = new SendInitialForecastEmailsFuntion(Mock.Of<ILogger<SendInitialForecastEmailsFuntion>>(), _providerCoursesReadRepositoryMock.Object, _courseManagementOuterApiClientMock.Object, _forecastEmailConfigurationMock.Object);
 
         // Act
         await sut.Run(new TimerInfo(), CancellationToken.None);
 
-        // Assert
         foreach (var course in _courses)
         {
-            _courseManagementOuterApiClientMock.Verify(c => c.Post<ProviderEmailModel, object>($"providers/{course.Provider.Ukprn}/email", It.Is<ProviderEmailModel>(m => VerifyModel(m, course))), Times.Once);
+            _courseManagementOuterApiClientMock.Verify(c => c.Post<ProviderEmailModel>($"providers/{course.Provider.Ukprn}/emails", It.Is<ProviderEmailModel>(m => VerifyModel(m, course))), Times.Once);
         }
     }
 
@@ -82,32 +78,28 @@ public class SendInitialForecastEmailsFunctionTests
         var courses = _fixture.CreateMany<ProviderCourse>(25).ToList(); // 3 batches (10,10,5)
         _providerCoursesReadRepositoryMock.Setup(r => r.GetShortCoursesAddedOnDate(It.IsAny<DateTime>(), It.IsAny<CancellationToken>())).ReturnsAsync(courses);
 
-        _courseManagementOuterApiClientMock
-            .Setup(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()))
-            .ReturnsAsync((true, (object)null));
-
         var sut = new SendInitialForecastEmailsFuntion(Mock.Of<ILogger<SendInitialForecastEmailsFuntion>>(), _providerCoursesReadRepositoryMock.Object, _courseManagementOuterApiClientMock.Object, _forecastEmailConfigurationMock.Object);
 
         // Act
         await sut.Run(new TimerInfo(), CancellationToken.None);
 
         // Assert
-        _courseManagementOuterApiClientMock.Verify(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Exactly(courses.Count));
+        _courseManagementOuterApiClientMock.Verify(c => c.Post<ProviderEmailModel>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Exactly(courses.Count));
     }
 
     [Test]
     public async Task Run_ProcessesBatches_WithDelayBetweenBatches()
     {
-        var courses = _fixture.CreateMany<ProviderCourse>(12).ToList(); // 2 batches (10,2)
+        var courses = _fixture.CreateMany<ProviderCourse>(ForecastEmailConfiguration.BatchSize + 2).ToList(); // 2 batches (10,2)
         _providerCoursesReadRepositoryMock.Setup(r => r.GetShortCoursesAddedOnDate(It.IsAny<DateTime>(), It.IsAny<CancellationToken>())).ReturnsAsync(courses);
 
         var postCallTimes = new List<DateTime>();
         _courseManagementOuterApiClientMock
-            .Setup(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()))
+            .Setup(c => c.Post<ProviderEmailModel>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()))
             .Returns<string, ProviderEmailModel>((uri, model) =>
             {
                 postCallTimes.Add(DateTime.UtcNow);
-                return Task.FromResult((true, (object)null));
+                return Task.FromResult(true);
             });
 
         var sut = new SendInitialForecastEmailsFuntion(Mock.Of<ILogger<SendInitialForecastEmailsFuntion>>(), _providerCoursesReadRepositoryMock.Object, _courseManagementOuterApiClientMock.Object, _forecastEmailConfigurationMock.Object);
@@ -118,11 +110,11 @@ public class SendInitialForecastEmailsFunctionTests
         sw.Stop();
 
         // Assert - ensure all posts happened
-        _courseManagementOuterApiClientMock.Verify(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Exactly(courses.Count));
+        _courseManagementOuterApiClientMock.Verify(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Exactly(courses.Count));
         postCallTimes.Should().HaveCount((courses.Count));
-        // There should be a delay between the last call of the first batch (index 9) and the first call of the second batch (index 10)
-        var gap = (postCallTimes[10] - postCallTimes[9]).TotalMilliseconds;
-        Assert.That(gap, Is.GreaterThanOrEqualTo(900), $"Expected gap >= 900ms between batches but was {gap}ms");
+        // There should be a delay between the last call of the first batch (index of batch size -1) and the first call of the second batch (index of batch size )
+        var gap = (postCallTimes[ForecastEmailConfiguration.BatchSize] - postCallTimes[ForecastEmailConfiguration.BatchSize - 1]).TotalMilliseconds;
+        Assert.That(gap, Is.GreaterThanOrEqualTo(ForecastEmailConfiguration.EmailThrottlingInSeconds), $"Expected gap >= 900ms between batches but was {gap}ms");
     }
 
     private bool VerifyModel(ProviderEmailModel model, ProviderCourse course)

@@ -35,7 +35,7 @@ public class SendForecastsReminderEmailsFunction
     }
 
     [Function(nameof(SendForecastsReminderEmailsFunction))]
-    public async Task Run([TimerTrigger("%SendForecastsReminderEmailsFunctionSchedule%", RunOnStartup = false)] TimerInfo myTimer, CancellationToken cancellationToken)
+    public async Task Run([TimerTrigger("%SendForecastsReminderEmailsFunctionSchedule%", RunOnStartup = true)] TimerInfo myTimer, CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# Timer trigger function executed at: {ExecutionTime}", DateTime.Now);
         List<int> allowedProviders = await _providerCourseTypesReadRepository.GetAllProvidersWithShortCourses(cancellationToken);
@@ -53,7 +53,7 @@ public class SendForecastsReminderEmailsFunction
             .Select(c => c.Ukprn)
             .Distinct();
 
-        var batches = providersNeedingReminder.Chunk(10);
+        var batches = providersNeedingReminder.Chunk(ForecastEmailConfiguration.BatchSize);
 
         foreach (var batch in batches) await ProcessBatch(batch);
     }
@@ -64,10 +64,10 @@ public class SendForecastsReminderEmailsFunction
         foreach (var ukprn in ukprns)
         {
             var model = ConvertToEmailModel(ukprn, _forecastEmailConfiguration);
-            tasks.Add(_courseManagementOuterApiClient.Post<ProviderEmailModel, object>($"providers/{ukprn}/email", model));
+            tasks.Add(_courseManagementOuterApiClient.Post($"providers/{ukprn}/emails", model));
         }
 
-        tasks.Add(Task.Delay(1000));
+        tasks.Add(Task.Delay(ForecastEmailConfiguration.EmailThrottlingInSeconds));
         await Task.WhenAll(tasks);
     }
 

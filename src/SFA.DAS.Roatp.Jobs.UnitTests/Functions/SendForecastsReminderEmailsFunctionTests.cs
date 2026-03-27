@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Moq;
@@ -42,9 +44,7 @@ public class SendForecastsReminderEmailsFunctionTests
         _options = Options.Create(cfg);
 
         // default API client behaviour
-        _courseManagementOuterApiClient
-            .Setup(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()))
-            .ReturnsAsync(null);
+        _courseManagementOuterApiClient.Setup(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>())).ReturnsAsync(true);
 
         _sut = new SendForecastsReminderEmailsFunction(
             _loggerMock.Object,
@@ -88,9 +88,7 @@ public class SendForecastsReminderEmailsFunctionTests
         await _sut.Run(null!, CancellationToken.None);
 
         // Assert
-        _courseManagementOuterApiClient.Verify(
-            c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()),
-            Times.Never);
+        _courseManagementOuterApiClient.Verify(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Never);
     }
 
     [Test]
@@ -101,8 +99,6 @@ public class SendForecastsReminderEmailsFunctionTests
         _providerCourseTypesReadRepository
             .Setup(r => r.GetAllProvidersWithShortCourses(It.IsAny<CancellationToken>()))
             .ReturnsAsync(allowedProviders);
-
-        _courseManagementOuterApiClient.Setup(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>())).ReturnsAsync((true, null));
 
         List<UkprnLarsCodeModel> allShortCourses =
         [
@@ -123,9 +119,9 @@ public class SendForecastsReminderEmailsFunctionTests
         // Act
         await _sut.Run(null!, CancellationToken.None);
 
-        _courseManagementOuterApiClient.Verify(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Exactly(2));
-        _courseManagementOuterApiClient.Verify(c => c.Post<ProviderEmailModel, object>(It.Is<string>(s => s.Equals("providers/1001/email")), It.IsAny<ProviderEmailModel>()), Times.Once);
-        _courseManagementOuterApiClient.Verify(c => c.Post<ProviderEmailModel, object>(It.Is<string>(s => s.Equals("providers/1002/email")), It.IsAny<ProviderEmailModel>()), Times.Once);
+        _courseManagementOuterApiClient.Verify(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Exactly(2));
+        _courseManagementOuterApiClient.Verify(c => c.Post(It.Is<string>(s => s.Equals("providers/1001/emails")), It.IsAny<ProviderEmailModel>()), Times.Once);
+        _courseManagementOuterApiClient.Verify(c => c.Post(It.Is<string>(s => s.Equals("providers/1002/emails")), It.IsAny<ProviderEmailModel>()), Times.Once);
     }
 
     [Test]
@@ -137,8 +133,6 @@ public class SendForecastsReminderEmailsFunctionTests
         const string larsCode2 = "ZSC00002";
 
         // Arrange
-        _courseManagementOuterApiClient.Setup(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>())).ReturnsAsync((true, null));
-
         _providerCourseTypesReadRepository
             .Setup(r => r.GetAllProvidersWithShortCourses(It.IsAny<CancellationToken>()))
             .ReturnsAsync([ukprnDoesNotRequireReminder, ukprnRequiresReminder]);
@@ -167,7 +161,47 @@ public class SendForecastsReminderEmailsFunctionTests
         // Act
         await _sut.Run(null!, CancellationToken.None);
 
-        _courseManagementOuterApiClient.Verify(c => c.Post<ProviderEmailModel, object>(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Once);
-        _courseManagementOuterApiClient.Verify(c => c.Post<ProviderEmailModel, object>(It.Is<string>(s => s.Equals("providers/10012002/email")), It.IsAny<ProviderEmailModel>()), Times.Once);
+        _courseManagementOuterApiClient.Verify(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Once);
+        _courseManagementOuterApiClient.Verify(c => c.Post(It.Is<string>(s => s.Equals("providers/10012002/emails")), It.IsAny<ProviderEmailModel>()), Times.Once);
+    }
+
+    [Test]
+    public async Task Run_ProcessesBatches_WithDelayBetweenBatches()
+    {
+        const string larsCode = "ZSC00001";
+
+        List<int> ukprns = [.. Enumerable.Range(10011001, ForecastEmailConfiguration.BatchSize + 1)];
+        _providerCourseTypesReadRepository
+            .Setup(r => r.GetAllProvidersWithShortCourses(It.IsAny<CancellationToken>()))
+            .ReturnsAsync(ukprns);
+
+        _providerCoursesReadRepository
+                   .Setup(r => r.GetAllShortCourses(It.IsAny<CancellationToken>()))
+                   .ReturnsAsync([.. ukprns.Select(u => new UkprnLarsCodeModel(u, larsCode))]);
+
+        _providerCourseForecastRepository
+            .Setup(r => r.GetProviderCoursesWithRecentForecasts(It.IsAny<DateTime>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
+
+        var postCallTimes = new List<DateTime>();
+        _courseManagementOuterApiClient
+            .Setup(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()))
+            .Returns<string, ProviderEmailModel>((uri, model) =>
+            {
+                postCallTimes.Add(DateTime.UtcNow);
+                return Task.FromResult(true);
+            });
+
+        // Act
+        var sw = System.Diagnostics.Stopwatch.StartNew();
+        await _sut.Run(null!, CancellationToken.None);
+        sw.Stop();
+
+        // Assert - ensure all posts happened
+        _courseManagementOuterApiClient.Verify(c => c.Post(It.IsAny<string>(), It.IsAny<ProviderEmailModel>()), Times.Exactly(ukprns.Count));
+        postCallTimes.Should().HaveCount((ukprns.Count));
+        // There should be a delay between the last call of the first batch (index of batch size -1) and the first call of the second batch (index of batch size )
+        var gap = (postCallTimes[ForecastEmailConfiguration.BatchSize] - postCallTimes[ForecastEmailConfiguration.BatchSize - 1]).TotalMilliseconds;
+        Assert.That(gap, Is.GreaterThanOrEqualTo(ForecastEmailConfiguration.EmailThrottlingInSeconds - 100), $"Expected gap >= 900ms between batches but was {gap}ms");
     }
 }

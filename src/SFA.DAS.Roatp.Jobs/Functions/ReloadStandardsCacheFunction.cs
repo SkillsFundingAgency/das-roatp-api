@@ -7,7 +7,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions;
 public class ReloadStandardsCacheFunction(IReloadStandardsCacheService _reloadStandardsCacheService, ILogger<ReloadStandardsCacheFunction> _logger)
 {
     [Function(nameof(ReloadStandardsCacheFunction))]
-    public async Task Run([TimerTrigger("%ReloadStandardsCacheSchedule%", RunOnStartup = true)] TimerInfo myTimer)
+    public async Task Run([TimerTrigger("%ReloadStandardsCacheSchedule%", RunOnStartup = false)] TimerInfo myTimer)
     {
         _logger.LogInformation("ReloadStandardsCacheFunction function started");
 
