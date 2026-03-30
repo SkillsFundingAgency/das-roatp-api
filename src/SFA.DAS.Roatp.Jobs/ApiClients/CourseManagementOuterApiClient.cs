@@ -113,6 +113,7 @@ public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
 
     private async Task LogErrorIfUnsuccessfulResponse(HttpResponseMessage response)
     {
+        if (response.IsSuccessStatusCode) return;
         var callingMethod = new System.Diagnostics.StackFrame(1).GetMethod().Name;
 
         var httpMethod = response.RequestMessage.Method.ToString();

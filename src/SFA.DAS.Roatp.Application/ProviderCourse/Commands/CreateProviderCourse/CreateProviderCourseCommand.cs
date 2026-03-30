@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
@@ -31,6 +32,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                 HasPortableFlexiJobOption = false,
                 IsImported = false,
                 HasOnlineDeliveryOption = source.HasOnlineDeliveryOption,
+                CreatedDate = DateTime.UtcNow
             };
     }
 }
