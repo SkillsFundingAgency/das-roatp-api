@@ -31,7 +31,7 @@ public class SendInitialForecastEmailsFunction
     [Function(nameof(SendInitialForecastEmailsFunction))]
     public async Task Run([TimerTrigger("%SendInitialForecastEmailsFunctionSchedule%", RunOnStartup = true)] TimerInfo myTimer, CancellationToken cancellationToken)
     {
-        _logger.LogInformation("C# Timer trigger function executed at: {ExecutionTime}", DateTime.Now);
+        _logger.LogInformation("C# Timer trigger function executing at: {ExecutionTime}", DateTime.Now);
 
         List<ProviderCourse> shortCourses = await _providerCoursesReadRepository.GetShortCoursesAddedOnDate(DateTime.UtcNow.AddDays(-1).Date, cancellationToken);
 
