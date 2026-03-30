@@ -4,9 +4,9 @@ using SFA.DAS.Roatp.Data.Repositories;
 using SFA.DAS.Roatp.Data.UnitTests.Setup;
 using SFA.DAS.Roatp.Domain.Entities;
 
-namespace SFA.DAS.Roatp.Data.UnitTests.Repositories;
+namespace SFA.DAS.Roatp.Data.UnitTests.Repositories.ProviderCourseForecastRepositoryTests;
 
-public class ProviderCourseForecastRepositoryTests
+public class UpsertProviderCourseForecastsTests
 {
     private readonly ProviderCourseForecast ExistingForecast = new()
     {
@@ -22,7 +22,7 @@ public class ProviderCourseForecastRepositoryTests
     [Test]
     public async Task UpsertProviderCourseForecasts_InsertsNewForecasts()
     {
-        var dataContext = RoatpDataContextFactory.CreateInMemoryContext();
+        using var dataContext = RoatpDataContextFactory.CreateInMemoryContext();
         AddForecastsData(dataContext);
         ProviderCourseForecastRepository sut = new(dataContext);
 
@@ -46,7 +46,7 @@ public class ProviderCourseForecastRepositoryTests
     [Test]
     public async Task UpsertProviderCourseForecasts_UpdatesExistingForecast()
     {
-        var dataContext = RoatpDataContextFactory.CreateInMemoryContext();
+        using var dataContext = RoatpDataContextFactory.CreateInMemoryContext();
         AddForecastsData(dataContext);
         ProviderCourseForecastRepository sut = new(dataContext);
 
