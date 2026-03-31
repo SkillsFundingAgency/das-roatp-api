@@ -89,6 +89,8 @@ You will need following on your local:
     "UpdateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
     "DeleteExpiredShortlistsSchedule": "0 0 2 * * *",
     "ImportAnnualFeedbackSummariesFunctionSchedule": "0 0 4 1-10 8 *",
+    "SendInitialForecastEmailsFunctionSchedule": "0 0 3 * * *",
+    "SendForecastsReminderEmailsFunctionSchedule": "0 0 0 15 */3,6,9,12 *",
     "AzureWebJobs.DeleteExpiredShortlistsFunction.Disabled": true,
     "AzureWebJobs.ImportAchievementRatesFunction.Disabled": true,
     "AzureWebJobs.LoadAllProviderAddressesFunction.Disabled": true,
@@ -96,7 +98,9 @@ You will need following on your local:
     "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": true,
     "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": true,
     "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true,
-    "AzureWebJobs.ImportAnnualFeedbackSummariesFunction.Disabled": true
+    "AzureWebJobs.ImportAnnualFeedbackSummariesFunction.Disabled": true,
+    "AzureWebJobs.SendInitialForecastEmailsFunction.Disabled": true,
+    "AzureWebJobs.SendForecastsReminderEmailsFunction.Disabled": true
   }
 }
 ```

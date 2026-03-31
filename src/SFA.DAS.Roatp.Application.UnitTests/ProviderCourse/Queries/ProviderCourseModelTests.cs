@@ -12,18 +12,9 @@ public class ProviderCourseModelTests
     public void Operator_PopulatesModelFromEntity(Domain.Entities.ProviderCourse course, string larsCode)
     {
         course.LarsCode = larsCode;
-        var model = (ProviderCourseModel)course;
+        ProviderCourseModel model = course;
 
-        model.Should().BeEquivalentTo(course, c => c
-            .Excluding(s => s.Id)
-            .Excluding(s => s.ProviderId)
-            .Excluding(s => s.Locations)
-            .Excluding(s => s.Provider)
-            .Excluding(s => s.Versions)
-            .Excluding(s => s.Standard)
-            .Excluding(s => s.LarsCode)
-            .Excluding(s => s.IsImported)
-        );
+        model.Should().BeEquivalentTo(course, c => c.ExcludingMissingMembers());
 
         model.LarsCode.Should().Be(course.LarsCode);
     }

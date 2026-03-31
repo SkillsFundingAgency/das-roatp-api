@@ -1,15 +1,15 @@
-﻿using MediatR;
-using Microsoft.Extensions.Logging;
-using SFA.DAS.Roatp.Domain.Constants;
-using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Domain.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MediatR;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
+using SFA.DAS.Roatp.Domain.Constants;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 {
@@ -39,7 +39,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         {
             var provider = await _providersReadRepository.GetByUkprn(request.Ukprn);
 
-            _logger.LogInformation("Adding course: {larscode} to provider: {ukprn} with id:{providerid}", request.LarsCode, request.Ukprn, provider.Id);
+            _logger.LogInformation("Adding course: {Larscode} to provider: {Ukprn} with id:{Providerid}", request.LarsCode, request.Ukprn, provider.Id);
 
             Domain.Entities.ProviderCourse providerCourse = request;
             providerCourse.ProviderId = provider.Id;
@@ -51,7 +51,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
             }
 
             //It is assumed here that HasNationalDeliveryOption is false otherwise the validator will throw exception
-            if(request.SubregionIds != null && request.SubregionIds.Count > 0)
+            if (request.SubregionIds != null && request.SubregionIds.Count > 0)
             {
                 await AddRegionalLocationsToProviderCourse(request, provider.Id, allProviderLocations, providerCourse);
             }
@@ -60,7 +60,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 
             await _providerCoursesWriteRepository.CreateProviderCourse(providerCourse, request.Ukprn, request.UserId, request.UserDisplayName, AuditEventTypes.CreateProviderCourse);
 
-            _logger.LogInformation("Added course:{larscode} with id:{providercourseid} for provider: {ukprn}", request.LarsCode, providerCourse.Id, request.Ukprn);
+            _logger.LogInformation("Added course:{Larscode} with id:{Providercourseid} for provider: {Ukprn}", request.LarsCode, providerCourse.Id, request.Ukprn);
             return new ValidatedResponse<int>(providerCourse.Id);
         }
 
@@ -68,7 +68,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
         {
             var allRegions = await _regionsReadRepository.GetAllRegions();
 
-            request.SubregionIds.ForEach(regionId => 
+            request.SubregionIds.ForEach(regionId =>
             {
                 var providerLocation = allProviderLocations.FirstOrDefault(l => l.RegionId == regionId);
                 if (providerLocation == null)
@@ -89,13 +89,13 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
             var nationalLocation = allProviderLocations.FirstOrDefault(l => l.LocationType == LocationType.National);
             if (nationalLocation == null)
             {
-                _logger.LogInformation("Provider:{ukprn} delivers course:{larscode} nationally, there is no national location, creating a new one", request.Ukprn, request.LarsCode);
+                _logger.LogInformation("Provider:{Ukprn} delivers course:{LarsCode} nationally, there is no national location, creating a new one", request.Ukprn, request.LarsCode);
                 nationalLocation = ProviderLocation.CreateNationalLocation(provider.Id);
                 providerCourse.Locations.Add(new ProviderCourseLocation { NavigationId = Guid.NewGuid(), Location = nationalLocation });
             }
             else
             {
-                _logger.LogInformation("Provider:{ukprn} delivers course:{larscode} nationally, existing national location id:{providerlocationid} will be used", request.Ukprn, request.LarsCode, nationalLocation.Id);
+                _logger.LogInformation("Provider:{Ukprn} delivers course:{LarsCode} nationally, existing national location id:{Providerlocationid} will be used", request.Ukprn, request.LarsCode, nationalLocation.Id);
                 providerCourse.Locations.Add(new ProviderCourseLocation { NavigationId = Guid.NewGuid(), ProviderLocationId = nationalLocation.Id });
             }
         }
@@ -112,7 +112,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                         allProviderLocations.First(x => x.NavigationId == providerLocation.ProviderLocationId);
                     providerCourse.Locations.Add(new ProviderCourseLocation
                     {
-                        NavigationId = Guid.NewGuid(), 
+                        NavigationId = Guid.NewGuid(),
                         ProviderLocationId = providerLocationToAdd.Id,
                         HasBlockReleaseDeliveryOption = providerLocation.HasBlockReleaseDeliveryOption,
                         HasDayReleaseDeliveryOption = providerLocation.HasDayReleaseDeliveryOption

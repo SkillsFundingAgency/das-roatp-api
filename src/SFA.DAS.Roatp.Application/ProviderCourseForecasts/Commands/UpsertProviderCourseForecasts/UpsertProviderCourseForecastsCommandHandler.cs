@@ -31,7 +31,8 @@ public class UpsertProviderCourseForecastsCommandHandler(
                     TimePeriod = quarter.TimePeriod,
                     Quarter = quarter.Quarter,
                     EstimatedLearners = matchingForecast.EstimatedLearners,
-                    CreatedDate = DateTime.UtcNow
+                    CreatedDate = DateTime.UtcNow,
+                    UpdatedDate = DateTime.UtcNow
                 });
             }
         }

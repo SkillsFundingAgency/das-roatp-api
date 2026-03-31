@@ -54,6 +54,27 @@ public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
         }
     }
 
+    public async Task<bool> Post<TModel>(string uri, TModel model)
+    {
+        var serializeObject = JsonConvert.SerializeObject(model);
+
+        try
+        {
+            using (HttpResponseMessage response = await _httpClient.PostAsync(new Uri(uri, UriKind.Relative),
+                       new StringContent(serializeObject, Encoding.UTF8,
+                           _contentType)))
+            {
+                await LogErrorIfUnsuccessfulResponse(response);
+                return (response.IsSuccessStatusCode);
+            }
+        }
+        catch (HttpRequestException ex)
+        {
+            _logger.LogError(ex, "Error when processing request: Post - {Uri}", uri);
+            throw;
+        }
+    }
+
     public async Task<(bool, U)> Post<T, U>(string uri, T model)
     {
         var serializeObject = JsonConvert.SerializeObject(model);
@@ -92,6 +113,7 @@ public class CourseManagementOuterApiClient : ICourseManagementOuterApiClient
 
     private async Task LogErrorIfUnsuccessfulResponse(HttpResponseMessage response)
     {
+        if (response.IsSuccessStatusCode) return;
         var callingMethod = new System.Diagnostics.StackFrame(1).GetMethod().Name;
 
         var httpMethod = response.RequestMessage.Method.ToString();
