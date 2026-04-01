@@ -131,6 +131,7 @@ stages:
   variables:
   - group: MO Management Resources
   - group: MO Shared Resources
+  - group: MO das-roatp-api
   jobs:
   - template: pipeline-templates/job/deploy.yml
     parameters:
