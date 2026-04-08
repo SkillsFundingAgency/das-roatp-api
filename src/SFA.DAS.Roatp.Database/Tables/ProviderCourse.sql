@@ -9,7 +9,7 @@
     [IsApprovedByRegulator] BIT NULL,
     [IsImported] BIT NOT NULL DEFAULT 0,
     [HasPortableFlexiJobOption] BIT NOT NULL DEFAULT 0, 
-    [CreatedDate] DATETIME2 DEFAULT GETUTCDATE(),
+    [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [HasOnlineDeliveryOption] Bit DEFAULT 0 NOT NULL,
     CONSTRAINT PK_ProviderCourse PRIMARY KEY (Id),
     CONSTRAINT UK_ProviderCourse_ProviderId_LarsCode UNIQUE (ProviderId, LarsCode),
