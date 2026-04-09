@@ -125,4 +125,3 @@ BEGIN
     ON st1.LarsCode = ab2.LarsCode
     ORDER BY Ordering;
 END
-GO
