@@ -202,6 +202,7 @@ AS
             ,ROW_NUMBER() OVER (PARTITION BY [Ukprn], [LarsCode], 
                                 CASE WHEN LocationType IN (0,3) THEN 1 ELSE 0 END 
                                 ORDER BY Distance) TP_Std_Dist_Seq
+            ,MAX(LocationOrdering) OVER (PARTITION BY Ukprn, Larscode) Max_LocationOrdering
         FROM
             (
             -- Course Management Location data
@@ -274,7 +275,7 @@ AS
               -- regulated check
               AND (@IsRegulatedForProvider = 0 OR (@IsRegulatedForProvider = 1 AND ISNULL(pc1.[IsApprovedByRegulator],0) = 1))
               -- online check
-              AND ((@anylocationfilters = 0 OR @onlineoption = 1) AND ISNULL(pc1.HasOnlineDeliveryOption,0) = 1)
+              AND ISNULL(pc1.HasOnlineDeliveryOption,0) = 1
               -- specific Training Course 
               AND pc1.[LarsCode] = @larscode
               ) ab1 
@@ -334,7 +335,8 @@ AS
     AND (@employerProviderRatings IS NULL OR ','+@employerProviderRatings+',' LIKE '%,'+ISNULL(pes.Rating,'NotYetReviewed')+',%' )
     --Filter Apprentice reviews
     AND (@apprenticeProviderRatings IS NULL OR ','+@apprenticeProviderRatings+',' LIKE '%,'+ISNULL(pas.Rating,'NotYetReviewed')+',%' )
-
+    -- Online can be shown with other delivery options if not in filtered option
+    AND (@anylocationfilters = 0 OR @onlineoption = 1 OR Max_LocationOrdering >= 0)
     GROUP BY ab2.Ukprn ,ab2.LarsCode, ab2.LegalName
     , qp1.[Leavers], qp1.[AchievementRate]
     , pes.ReviewCount, pes.Stars, pes.Rating
