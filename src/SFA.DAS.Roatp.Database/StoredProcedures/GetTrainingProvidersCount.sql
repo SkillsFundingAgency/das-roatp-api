@@ -60,8 +60,6 @@ BEGIN
             ,COUNT(DISTINCT(CASE 
                             WHEN @Distance IS NULL
                             THEN Ukprn
-                            WHEN LocationOrdering = -1 -- Online courses - not restricted by distance
-                            THEN Ukprn
                             WHEN LocationOrdering != 9 -- exclude outside Regions
                              AND Distance <= @Distance
                             THEN Ukprn
@@ -106,7 +104,7 @@ BEGIN
             -- Course Management Online courses data
             SELECT pr1.[Ukprn]
                   ,pc1.[LarsCode]
-                  ,-1 LocationOrdering -- Online indicator
+                  ,-1 LocationOrdering
                   ,0 Distance
             FROM [dbo].[ProviderCourse] pc1 
                 JOIN StandardsList lc1 on lc1.LarsCode = pc1.LarsCode
@@ -119,7 +117,7 @@ BEGIN
                 -- online check
                 AND ISNULL(pc1.HasOnlineDeliveryOption,0) = 1
             ) ab1 
-        WHERE LocationOrdering != 9  -- exclude outside Regions (but include online with -1)
+        WHERE LocationOrdering != 9  -- exclude outside Regions
         GROUP BY Larscode
         ) ab2
     ON st1.LarsCode = ab2.LarsCode
