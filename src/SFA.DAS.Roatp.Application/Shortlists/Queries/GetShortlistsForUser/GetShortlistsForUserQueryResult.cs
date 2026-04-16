@@ -49,6 +49,8 @@ public class ShortlistProviderModel
     public decimal? DayReleaseDistance { get; set; }
     public int DayReleaseCount { get; set; }
     public bool HasOnlineDeliveryOption { get; set; }
+    public bool AtProvider { get; set; }
+    public decimal? ProviderDistance { get; set; }
     public string Email { get; set; }
     public string Phone { get; set; }
     public string Website { get; set; }
