@@ -84,8 +84,8 @@ BEGIN
             ,ContactUsPhoneNumber 
             ,ContactUsPageUrl
             ,larsCode
-            ,CASE WHEN AtEmployer = 1 THEN 1 ELSE 0 END AtEmployer
-            ,AtProvider
+            ,MAX(CASE WHEN AtEmployer = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) AtEmployer
+            ,MAX(CASE WHEN AtProvider = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) AtProvider
             ,MIN(CASE WHEN AtProvider = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) ProviderDistance
             ,MAX(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) BlockRelease
             ,MIN(CASE WHEN BlockRelease = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) BlockReleaseDistance
