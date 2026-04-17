@@ -60,6 +60,8 @@ BEGIN
         ,ab2.Ukprn
         ,ab2.LegalName providerName
         ,AtEmployer
+        ,AtProvider
+        ,ProviderDistance
         ,BlockRelease
         ,BlockReleaseDistance
         ,BlockReleaseCount
@@ -82,7 +84,9 @@ BEGIN
             ,ContactUsPhoneNumber 
             ,ContactUsPageUrl
             ,larsCode
-            ,CASE WHEN AtEmployer = 1 THEN 1 ELSE 0 END AtEmployer
+            ,MAX(CASE WHEN AtEmployer = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) AtEmployer
+            ,MAX(CASE WHEN AtProvider = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) AtProvider
+            ,MIN(CASE WHEN AtProvider = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) ProviderDistance
             ,MAX(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) BlockRelease
             ,MIN(CASE WHEN BlockRelease = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) BlockReleaseDistance
             ,SUM(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [larsCode]) BlockReleaseCount
@@ -110,6 +114,7 @@ BEGIN
                   -- LocationType: Provider = 0, National = 1, Regional = 2, Online = pseudo
                   ,CASE ISNULL([LocationType],0)   -- handle At Provider and Online
                    WHEN 0 THEN 0 ELSE 1 END AtEmployer
+                  ,CASE WHEN [LocationType] = 0 THEN 1 ELSE 0 END AtProvider
                   ,ISNULL(HasBlockReleaseDeliveryOption,0) BlockRelease
                   ,ISNULL(HasDayReleaseDeliveryOption,0) DayRelease
                   ,HasOnlineDeliveryOption
@@ -195,6 +200,8 @@ BEGIN
             ,providers.ukprn
             ,providers.providerName
             ,providers.atEmployer
+            ,providers.atProvider
+            ,providers.providerDistance
             ,providers.hasBlockRelease
             ,providers.blockReleaseDistance
             ,providers.blockReleaseCount
@@ -230,6 +237,10 @@ BEGIN
             ,MainQuery.ukprn ukprn
             ,providerName providerName
             ,CAST(CASE WHEN AtEmployer = 1 THEN 1 ELSE 0 END AS BIT) atEmployer
+            ,CAST(CASE WHEN AtProvider = 1 THEN 1 ELSE 0 END AS BIT) atProvider
+            ,CASE WHEN LocationDescription IS NULL 
+                  THEN null
+                  ELSE CONVERT(DECIMAL(6,1),ProviderDistance) END providerDistance
             ,CAST(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END AS BIT) hasBlockRelease
             ,ISNULL(BlockReleaseCount,0) blockReleaseCount                                             
             ,CASE WHEN LocationDescription IS NULL 
@@ -264,7 +275,7 @@ BEGIN
         ORDER BY courses.ordering, locations.ordering, providers.ordering
         FOR JSON AUTO, INCLUDE_NULL_VALUES, WITHOUT_ARRAY_WRAPPER
     );
-    
+
     DROP TABLE #MainQuery;
     SELECT REPLACE(@JSON,'\/','/');
 
