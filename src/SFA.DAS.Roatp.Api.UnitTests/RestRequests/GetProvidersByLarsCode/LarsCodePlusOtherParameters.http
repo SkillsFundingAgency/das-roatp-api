@@ -21,12 +21,14 @@
 @Longitude181 = 181
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}
+X-Version: 1
 
  # expect to work returning page 1, 10 (or less results), ordered by distance
 
 ### 
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers
+X-Version: 1
 
 # expect validation error as OrderBy is mandatory
 #  [
@@ -38,6 +40,7 @@ GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers
 ### 
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCodeInvalid}}/providers?OrderBy={{OrderByDistance}}
+X-Version: 1
 
 # expect validation error as LarsCode is invalid
 # [
@@ -49,6 +52,7 @@ GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCodeInvalid}}/providers?
 ###
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByInvalidValue}}
+X-Version: 1
 
 # expect validation error as OrderBy value is not acceptable
 # {
@@ -65,6 +69,7 @@ GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy
 ###
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCodeNoResults}}/providers?OrderBy={{OrderByDistance}}
+X-Version: 1
 
  # expect to work returning no providers, page 1, pagesize 1, totalPages 0, totalCount 0, the standard name,
  # and the qarPeriod and reviewPeriod
@@ -72,18 +77,21 @@ GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCodeNoResults}}/provider
  ###
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByAchievementRate}}
+X-Version: 1
 
  # expect to work returning page 1, 10 (or less results), ordered by achievement rate
 
   ###
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByEmployerProviderRating}}
+X-Version: 1
 
  # expect to work returning page 1, 10 (or less results), ordered by employer provider rating
 
   ###
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByApprenticeProviderRating}}
+X-Version: 1
 
  # expect to work returning page 1, 10 (or less results), ordered by apprentice provider rating
 
@@ -91,18 +99,21 @@ GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy
  ###
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCodeNoResults}}/providers?OrderBy={{OrderByDistance}}
+X-Version: 1
 
  # expect to work returning no providers, page 1, pagesize 1, totalPages 0, totalCount 0, the standard name,
  # and the qarPeriod and reviewPeriod
 
 ### 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&DeliveryModes={{DeliveryModesValidValue}}
+X-Version: 1
 
  # expect to work returning page 1, 10 (or less results), ordered by distance, for given delivery mode
 
 ### 
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&DeliveryModes={{DeliveryModesInvalidValue}}
+X-Version: 1
 
 # expect validation error as DeliveryModes value  is not acceptable
 #  {
@@ -119,12 +130,14 @@ GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy
 ###
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&EmployerProviderRatings={{ProviderRatingsValidValue}}
+X-Version: 1
 
  # expect to work returning page 1, 10 (or less results), ordered by distance, for given employer provider ratings
 
 ### 
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&EmployerProviderRatings={{ProviderRatingsInvalidValue}}
+X-Version: 1
 
 # expect validation error as EmployerProviderRatings value  is not acceptable
 #  {
@@ -141,12 +154,14 @@ GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy
 ###
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&ApprenticeProviderRatings={{ProviderRatingsValidValue}}
+X-Version: 1
 
  # expect to work returning page 1, 10 (or less results), ordered by distance, for given apprentice provider ratings
 
 ### 
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&ApprenticeProviderRatings={{ProviderRatingsInvalidValue}}
+X-Version: 1
 
 # expect validation error as ApprentieProviderRatings value  is not acceptable
 #  {
@@ -163,12 +178,14 @@ GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy
 ###
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Qar={{QarValidValue}}
+X-Version: 1
 
  # expect to work returning page 1, 10 (or less results), ordered by distance, for given QAR
 
 ### 
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Qar={{QarInvalidValue}}
+X-Version: 1
 
 # expect validation error as Qar value  is not acceptable
 #  {
@@ -185,12 +202,14 @@ GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy
 ###
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Distance={{Distance100}}
+X-Version: 1
 
  # expect to work returning page 1, 10 (or less results), ordered by distance
 
 ### 
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Distance={{DistanceZero}}
+X-Version: 1
 
 # expect validation error as Distance is 0
 # [
@@ -203,6 +222,7 @@ GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy
 ### 
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Distance=-{{Distance100}}
+X-Version: 1
 
 # expect validation error as Distance is -negative
 # [
@@ -214,12 +234,14 @@ GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy
 ### 
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Distance={{Distance100}}&Latitude={{LatitudeValid}}&Longitude={{LongitudeValid}}
+X-Version: 1
 
  # expect to work returning page 1, 10 (or less results), ordered by distance,mith distance <= 100 miles included in response
  
  ### 
 
 GET {{SFA.DAS.Roatp.Api_HostAddress}}/api/courses/{{LarsCode}}/providers?OrderBy={{OrderByDistance}}&Latitude={{Latitude91}}&Longitude={{Longitude181}}
+X-Version: 1
 
  # expect error as latitude and longitude are both out of range
 #  [
