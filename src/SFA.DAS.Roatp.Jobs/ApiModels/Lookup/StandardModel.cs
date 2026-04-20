@@ -18,6 +18,7 @@ public class StandardModel
     public string Route { get; set; }
     public DurationUnits DurationUnits { get; set; }
     public int Duration { get; set; }
+    public bool IsActive { get; set; }
 
     public static implicit operator Domain.Entities.Standard(StandardModel standard) =>
         new Domain.Entities.Standard
@@ -34,6 +35,7 @@ public class StandardModel
             Route = standard.Route,
             ApprenticeshipType = standard.ApprenticeshipType,
             CourseType = standard.CourseType,
+            IsActive = standard.IsActive,
             DurationUnits = standard.DurationUnits,
             Duration = standard.Duration
         };

@@ -29,6 +29,7 @@ public class StandardModel
     public string Route { get; set; }
     public ApprenticeshipType ApprenticeshipType { get; set; }
     public CourseType CourseType { get; set; }
+    public bool IsActive { get; set; }
 
     public static implicit operator StandardModel(Standard standard) =>
         new()
@@ -42,6 +43,7 @@ public class StandardModel
             IsRegulatedForProvider = standard.IsRegulatedForProvider,
             Route = standard.Route,
             ApprenticeshipType = standard.ApprenticeshipType,
-            CourseType = standard.CourseType
+            CourseType = standard.CourseType,
+            IsActive = standard.IsActive
         };
 }
