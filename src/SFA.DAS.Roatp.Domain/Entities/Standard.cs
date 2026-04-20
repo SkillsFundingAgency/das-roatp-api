@@ -19,7 +19,7 @@ public class Standard
     public string Route { get; set; }
     public ApprenticeshipType ApprenticeshipType { get; set; }
     public CourseType CourseType { get; set; }
-    public bool IsActive { get; set; }
+    public bool IsActiveAvailable { get; set; }
     public virtual List<ProviderCourse> ProviderCourses { get; set; }
     public virtual List<ProviderCoursesTimeline> ProviderCoursesTimelines { get; set; }
     public virtual List<ProviderAllowedCourse> ProviderAllowedCourses { get; set; }

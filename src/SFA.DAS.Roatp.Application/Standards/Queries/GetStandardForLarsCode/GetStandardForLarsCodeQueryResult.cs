@@ -18,7 +18,7 @@ public class GetStandardForLarsCodeQueryResult
     public string Route { get; set; }
     public ApprenticeshipType ApprenticeshipType { get; set; }
     public CourseType CourseType { get; set; }
-    public bool IsActive { get; set; }
+    public bool IsActiveAvailable { get; set; }
 
 
     public static implicit operator GetStandardForLarsCodeQueryResult(Standard standard)
@@ -40,7 +40,7 @@ public class GetStandardForLarsCodeQueryResult
             DurationUnits = standard.DurationUnits,
             ApprenticeshipType = standard.ApprenticeshipType,
             CourseType = standard.CourseType,
-            IsActive = standard.IsActive,
+            IsActiveAvailable = standard.IsActiveAvailable,
         };
     }
 }
