@@ -213,7 +213,8 @@ AS
                   ELSE 0 END Course_Distance
             -- priority for online, at workplace over at provider (by ukprn and course)
             ,ROW_NUMBER() OVER (PARTITION BY [Ukprn], [LarsCode],
-                                CASE WHEN LocationType IN (0,3) THEN 1 ELSE 0 END
+                                CASE WHEN LocationType = 3 THEN 1 ELSE 0 END,
+                                CASE WHEN LocationType = 0 THEN 1 ELSE 0 END
                                 ORDER BY Distance) TP_Std_Dist_Seq
             ,Max_LocationOrdering
             ,HasOnlineOption
