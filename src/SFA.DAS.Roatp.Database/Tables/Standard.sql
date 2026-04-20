@@ -15,5 +15,6 @@
     [Route] VARCHAR(500) NULL,
     [ApprenticeshipType] Varchar(50) NULL,
     [CourseType] NVarchar(50) NULL,
+    [IsActiveAvailable] BIT NOT NULL DEFAULT 0,
     CONSTRAINT PK_Standard PRIMARY KEY (StandardUId)
 )
