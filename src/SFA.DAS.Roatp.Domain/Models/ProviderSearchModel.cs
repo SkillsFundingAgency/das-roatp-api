@@ -2,19 +2,8 @@
 
 namespace SFA.DAS.Roatp.Domain.Models;
 
-public class ProviderSearchModel
+public class ProviderSearchModel : ProviderSearchResultSummary
 {
-    public int Page { get; set; }
-    public int PageSize { get; set; }
-    public int TotalPages { get; set; }
-    public int TotalCount { get; set; }
-    public string LarsCode { get; set; }
-    public string StandardName { get; set; }
-    public CourseType CourseType { get; set; }
-    public ApprenticeshipType ApprenticeshipType { get; set; }
-    public bool IsActiveAvailable { get; set; }
-    public string QarPeriod { get; set; }
-    public string ReviewPeriod { get; set; }
     public long Ordering { get; set; }
     public int Ukprn { get; set; }
     public string ProviderName { get; set; }
