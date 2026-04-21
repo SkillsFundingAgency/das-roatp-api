@@ -26,10 +26,11 @@ SET NOCOUNT ON
 DECLARE  @IsRegulatedForProvider int = 0
         ,@CourseType nvarchar(50)
         ,@ApprenticeshipType varchar(50)
-        ,@anylocationfilters int = 0;
+        ,@anylocationfilters int = 0
+        ,@IsActiveAvailable int = 0;
 
 SELECT @IsRegulatedForProvider=[IsRegulatedForProvider]  
-      ,@CourseType=[CourseType], @ApprenticeshipType=[ApprenticeshipType]
+      ,@CourseType=[CourseType], @ApprenticeshipType=[ApprenticeshipType], @IsActiveAvailable=[IsActiveAvailable]
 FROM [dbo].[Standard] 
 WHERE [LarsCode] = @larscode;
 
@@ -355,6 +356,7 @@ SELECT
     ,Standards.[Title]+' (level '+CONVERT(varchar,Standards.[Level])+')' standardName
     ,@CourseType courseType
     ,@ApprenticeshipType apprenticeshipType
+    ,@IsActiveAvailable isActiveAvailable
     ,@QARPeriod qarPeriod
     ,@ReviewPeriod reviewPeriod
     ,"providers.ordering"
