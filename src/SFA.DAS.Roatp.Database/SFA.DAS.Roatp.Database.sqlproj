@@ -77,10 +77,6 @@
     <Build Include="Tables\ProvderRegistrationDetail.sql" />
     <Build Include="Tables\ImportAudit.sql" />
     <Build Include="Tables\ProviderAddress.sql" />
-    <Build Include="Tables\NationalAchievementRate.sql" />
-    <Build Include="Tables\NationalAchievementRateImport.sql" />
-    <Build Include="Tables\NationalAchievementRateOverall.sql" />
-    <Build Include="Tables\NationalAchievementRateOverallImport.sql" />
     <Build Include="Tables\Audit.sql" />
     <Build Include="Tables\StandardQAR.sql" />
     <Build Include="Tables\StandardProviderQAR.sql" />

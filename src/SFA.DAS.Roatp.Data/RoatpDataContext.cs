@@ -18,10 +18,6 @@ namespace SFA.DAS.Roatp.Data
         public DbSet<ProviderCourseVersion> ProviderCoursesVersions { get; set; }
         public DbSet<ProviderRegistrationDetail> ProviderRegistrationDetails { get; set; }
         public DbSet<Region> Regions { get; set; }
-        public DbSet<NationalAchievementRate> NationalAchievementRates { get; set; }
-        public DbSet<NationalAchievementRateImport> NationalAchievementRateImports { get; set; }
-        public DbSet<NationalAchievementRateOverall> NationalAchievementRateOverall { get; set; }
-        public DbSet<NationalAchievementRateOverallImport> NationalAchievementRateOverallImports { get; set; }
         public DbSet<ProviderAddress> ProviderAddresses { get; set; }
         public DbSet<NationalQar> NationalQars { get; set; }
         public DbSet<Shortlist> Shortlists { get; set; }
