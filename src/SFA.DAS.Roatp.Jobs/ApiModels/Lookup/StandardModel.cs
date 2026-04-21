@@ -12,7 +12,6 @@ public class StandardModel
     public string Version { get; set; }
     public string Title { get; set; }
     public string ApprovalBody { get; set; }
-    public int SectorSubjectAreaTier1 { get; set; }
     public bool IsRegulatedForProvider { get; set; }
     public CourseType CourseType { get; set; }
     public string Route { get; set; }
@@ -29,7 +28,6 @@ public class StandardModel
             Version = standard.Version,
             Level = standard.Level,
             ApprovalBody = string.IsNullOrWhiteSpace(standard.ApprovalBody) ? null : standard.ApprovalBody,
-            SectorSubjectAreaTier1 = standard.SectorSubjectAreaTier1,
             IsRegulatedForProvider = standard.IsRegulatedForProvider,
             Route = standard.Route,
             ApprenticeshipType = standard.ApprenticeshipType,
