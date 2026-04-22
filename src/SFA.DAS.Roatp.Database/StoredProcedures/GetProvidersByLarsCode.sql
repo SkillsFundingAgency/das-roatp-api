@@ -85,15 +85,35 @@ BEGIN
         SET @Sortorder = NULL;
 END;
 
--- the Standards and national QAR by Standard
-WITH Standards
-AS
-(
-    SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level] 
-    FROM [dbo].[Standard] 
-    WHERE [LarsCode] = @larscode
-)
-,
+-- the Standards
+SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [CourseType], [ApprenticeshipType], [IsRegulatedForProvider], [IsActiveAvailable]
+INTO #Standard
+FROM [dbo].[Standard]
+WHERE [LarsCode] = @larscode;
+
+-- Providers for the Course
+SELECT pc1.[Id]
+      ,pr1.[Ukprn]
+      ,pr1.[LegalName]
+      ,pc1.[LarsCode]
+      ,st1.[IfateReferenceNumber]
+      ,st1.[Title], [Level]
+      ,pc1.[HasOnlineDeliveryOption]
+      ,st1.[CourseType]
+      ,st1.[ApprenticeshipType]
+      ,st1.[IsActiveAvailable]
+INTO #ProviderAndCourse
+FROM [dbo].[ProviderCourse] pc1
+JOIN #Standard st1 on st1.LarsCode = pc1.LarsCode
+JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
+JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
+-- ensure course type is (still) available for the provider and course
+JOIN [dbo].[ProviderCourseType] pct on pct.Ukprn = pr1.[Ukprn] AND pct.CourseType = st1.CourseType
+--regulated check
+WHERE (st1.IsRegulatedForProvider = 0 OR (st1.IsRegulatedForProvider = 1 AND IsNull(pc1.IsApprovedByRegulator, 0) = 1));
+
+
+WITH
 -- the Standards and Provider QAR by Standard
 ProviderQARs
 AS
@@ -354,9 +374,9 @@ SELECT
     ,ISNULL(totalcount,0) totalcount
     ,Standards.Larscode larscode
     ,Standards.[Title]+' (level '+CONVERT(varchar,Standards.[Level])+')' standardName
-    ,@CourseType courseType
-    ,@ApprenticeshipType apprenticeshipType
-    ,@IsActiveAvailable isActiveAvailable
+    ,Standards.CourseType courseType
+    ,Standards.ApprenticeshipType apprenticeshipType
+    ,Standards.IsActiveAvailable isActiveAvailable
     ,@QARPeriod qarPeriod
     ,@ReviewPeriod reviewPeriod
     ,"providers.ordering"
