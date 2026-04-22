@@ -8,10 +8,10 @@
     [Version] VARCHAR(10) NULL,
     [ApprovalBody] VARCHAR(1000) NULL,
     [IsRegulatedForProvider] BIT NOT NULL DEFAULT 0,
-    [Duration] INT NULL,
-    [DurationUnits] VARCHAR(6) NULL,
-    [Route] VARCHAR(500) NULL,
-    [ApprenticeshipType] Varchar(50) NULL,
-    [CourseType] NVarchar(50) NULL,
+    [Duration] INT NOT NULL,
+    [DurationUnits] VARCHAR(6) NOT NULL,
+    [Route] VARCHAR(500) NOT NULL,
+    [ApprenticeshipType] Varchar(50) NOT NULL,
+    [CourseType] NVarchar(50) NOT NULL,
     CONSTRAINT PK_Standard PRIMARY KEY (StandardUId)
 )

@@ -21,3 +21,7 @@ CREATE UNIQUE INDEX IXU_StandardProviderQAR_TimePeriod ON [dbo].[StandardProvide
 ( [TimePeriod], [Ukprn], [IfateReferenceNumber] ) INCLUDE ( [Leavers], [AchievementRate], [AchievementRank] );
 GO
 
+CREATE NONCLUSTERED INDEX [IX_StandardProviderQAR_Reference_Timeperiod] 
+  ON [dbo].[StandardProviderQAR] ([IfateReferenceNumber], [TimePeriod]) 
+  INCLUDE ([AchievementRank], [AchievementRate], [Leavers], [Ukprn]);
+  GO
