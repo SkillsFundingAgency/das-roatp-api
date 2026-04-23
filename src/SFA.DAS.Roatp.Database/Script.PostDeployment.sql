@@ -11,6 +11,31 @@ Post-Deployment Script Template
 */
 
 GO
+
+IF OBJECT_ID(N'[dbo].[NationalAchievementRateImport]', N'U') IS NOT NULL
+BEGIN
+    DROP TABLE [dbo].[NationalAchievementRateImport];
+END
+GO
+
+IF OBJECT_ID(N'[dbo].[NationalAchievementRateOverallImport]', N'U') IS NOT NULL
+BEGIN
+    DROP TABLE [dbo].[NationalAchievementRateOverallImport];
+END
+GO
+
+IF OBJECT_ID(N'[dbo].[NationalAchievementRateOverall]', N'U') IS NOT NULL
+BEGIN
+    DROP TABLE [dbo].[NationalAchievementRateOverall];
+END
+GO
+
+IF OBJECT_ID(N'[dbo].[NationalAchievementRate]', N'U') IS NOT NULL
+BEGIN
+    DROP TABLE [dbo].[NationalAchievementRate];
+END
+GO
+
 IF Exists(SELECT * from sys.indexes where name = 'UK_ProviderLocation_ProviderId_LocationName')
 ALTER TABLE [dbo].[ProviderLocation] DROP CONSTRAINT [UK_ProviderLocation_ProviderId_LocationName]
 GO
