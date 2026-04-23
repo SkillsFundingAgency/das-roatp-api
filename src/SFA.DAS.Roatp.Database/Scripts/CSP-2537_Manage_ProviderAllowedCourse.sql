@@ -1,4 +1,4 @@
--- Script to add new providers to add or remove courses allowed for providers 
+-- Script to add new providers for short courses, and to add or remove courses allowed for providers to das-prd-roatpv2-db
 -- Will only add a course for a provider where the provider is authorised for the CourseType 
 --
 BEGIN TRANSACTION PAC;
@@ -20,11 +20,38 @@ INSERT INTO  #ProviderAndCourse VALUES
 (10000020,'ZSC00002',1),
 (10000028,'ZSC00001',1),
 (10000488,'ZSC00002',1),
-(10000239,'ZSC00004',0)
+(10000239,'ZSC00004',0),
+(10000020,'ZSC00009',1),
+(10000028,'ZSC00009',1),
+(10000488,'ZSC00009',1),
+(10002111,'ZSC00009',1),
+(10090480,'ZSC00009',1),
+(10000427,'ZSC00007',1);
+
 ----------------------------------------------------------------------------
 -- EXAMPLES
 ----------------------------------------------------------------------------
 ;
+
+SELECT COUNT(*) 'Before: Providers Approved for Short Courses ' FROM [dbo].[ProviderCourseType] WHERE [CourseType] = 'ShortCourse';
+SELECT * FROM [dbo].[ProviderCourseType] WHERE [CourseType] = 'ShortCourse'  ORDER BY 1;
+
+
+-- Add any new Approved providers for shortcourses
+INSERT INTO [dbo].[ProviderCourseType] ([Ukprn],[CourseType])
+SELECT DISTINCT tmp.[Ukprn], 'ShortCourse'
+FROM #ProviderAndCourse tmp
+WHERE 1=1
+AND NOT EXISTS (SELECT null FROM  [dbo].[ProviderCourseType] WHERE [ukprn] = tmp.[Ukprn] AND [CourseType] = 'ShortCourse')
+;
+
+SELECT COUNT(*) 'After: Providers Approved for Short Courses ' FROM [dbo].[ProviderCourseType] WHERE [CourseType] = 'ShortCourse';
+SELECT * FROM [dbo].[ProviderCourseType] WHERE [CourseType] = 'ShortCourse' ORDER BY 1;
+
+
+SELECT COUNT(*) 'Before: Provider Courses Allowed for Apprenticeship Units ' FROM [dbo].[ProviderAllowedCourse];
+SELECT * FROM [dbo].[ProviderAllowedCourse];
+
 
 -- Add any new Allowed providers and courses
 MERGE INTO [dbo].[ProviderAllowedCourse] pac
@@ -56,6 +83,7 @@ DELETE
 
 DROP TABLE #ProviderAndCourse;
 
+SELECT COUNT(*) 'After: Provider Courses Allowed for Apprenticeship Units ' FROM [dbo].[ProviderAllowedCourse];
 SELECT * FROM [dbo].[ProviderAllowedCourse];
 
 COMMIT TRANSACTION PAC;
