@@ -141,7 +141,7 @@
     "qarTimePeriod": "202223",
     "qarOverallImportFileName": "app-narts-subject-and-level-detailed.csv",
     "qarProviderLevelImportFileName": "app-narts-provider-level-fwk-std.csv",
-    "reloadStandardsCacheSchedule": "0 0 20 * * 1-5",
+    "reloadStandardsCacheSchedule": "0 0 5 * * 1-5",
     "reloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
     "updateUkrlpDataSchedule": "0 0 23 * * 1-5",
     "updateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
@@ -636,7 +636,6 @@
                   "name": "SendForecastsReminderEmailsFunctionSchedule",
                   "value": "[variables('sendForecastsReminderEmailsFunctionSchedule')]"
                 }
-
               ]
             }
           },
