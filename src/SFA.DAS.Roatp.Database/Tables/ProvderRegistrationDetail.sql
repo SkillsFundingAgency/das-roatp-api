@@ -13,7 +13,8 @@
     [Town] VARCHAR(250) NULL,
     [Postcode] VARCHAR(25) NULL,
     [Latitude] FLOAT NULL,
-    [Longitude] FLOAT NULL
+    [Longitude] FLOAT NULL,
+    TradingName NVARCHAR(200) NULL
 );
 GO
 

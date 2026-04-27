@@ -5,4 +5,5 @@ public interface IReloadProviderRegistrationDetailService
     Task ReloadProviderRegistrationDetails();
     Task ReloadAllAddresses();
     Task ReloadAllCoordinates();
+    Task ReloadProviderDetails();
 }

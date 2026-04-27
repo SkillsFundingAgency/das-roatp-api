@@ -9,26 +9,31 @@ using SFA.DAS.Roatp.Jobs.Requests;
 
 namespace SFA.DAS.Roatp.Jobs.Services;
 
-public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrationDetailService
+public class ReloadProviderRegistrationDetail : IReloadProviderRegistrationDetailService
 {
     private readonly IReloadProviderRegistrationDetailsRepository _reloadProviderRegistrationDetailsRepository;
     private readonly IReloadProviderCourseTypesRepository _reloadProviderCourseTypesRepository;
     private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
-    private readonly ILogger<ReloadProviderRegistrationDetailService> _logger;
+    private readonly ILogger<ReloadProviderRegistrationDetail> _logger;
     private readonly IProviderRegistrationDetailsWriteRepository _providerRegistrationDetailsWriteRepository;
+    private readonly IReloadProvidersRepository _reloadProvidersRepository;
+    private readonly IProvidersReadRepository _providersReadRepository;
 
-    public ReloadProviderRegistrationDetailService(
+    public ReloadProviderRegistrationDetail(
         IReloadProviderRegistrationDetailsRepository reloadProviderRegistrationDetailsRepository,
         ICourseManagementOuterApiClient courseManagementOuterApiClient,
-        ILogger<ReloadProviderRegistrationDetailService> logger,
+        ILogger<ReloadProviderRegistrationDetail> logger,
         IProviderRegistrationDetailsWriteRepository providerRegistrationDetailsWriteRepository,
-        IReloadProviderCourseTypesRepository reloadProviderCourseTypesRepository)
+        IReloadProviderCourseTypesRepository reloadProviderCourseTypesRepository,
+        IReloadProvidersRepository reloadProvidersRepository, IProvidersReadRepository providersReadRepository)
     {
         _reloadProviderRegistrationDetailsRepository = reloadProviderRegistrationDetailsRepository;
         _courseManagementOuterApiClient = courseManagementOuterApiClient;
         _logger = logger;
         _providerRegistrationDetailsWriteRepository = providerRegistrationDetailsWriteRepository;
         _reloadProviderCourseTypesRepository = reloadProviderCourseTypesRepository;
+        _reloadProvidersRepository = reloadProvidersRepository;
+        _providersReadRepository = providersReadRepository;
     }
 
     public async Task ReloadProviderRegistrationDetails()
@@ -130,5 +135,37 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
         }
 
         await _providerRegistrationDetailsWriteRepository.UpdateProviders(timeStarted, providers.Count, ImportType.ProviderRegistrationAddressCoordinates);
+    }
+
+    public async Task ReloadProviderDetails()
+    {
+        var timeStarted = DateTime.UtcNow;
+
+        var (success, providerRegistrationDetails) =
+            await _courseManagementOuterApiClient.Get<List<RegisteredProviderModel>>("lookup/registered-providers");
+
+        if (!success)
+        {
+            const string errorMessage =
+                "Unexpected response when trying to get provider registration details from the outer api.";
+            _logger.LogError(errorMessage);
+            throw new InvalidOperationException(errorMessage);
+        }
+
+        var providers = await _providersReadRepository.GetAllProviders();
+
+        foreach (var provider in providers)
+        {
+            var providerDetails = providerRegistrationDetails.FirstOrDefault(x => x.Ukprn == provider.Ukprn);
+            if (providerDetails != null)
+            {
+                provider.TradingName = providerDetails.TradingName;
+                provider.LegalName = providerDetails.LegalName;
+            }
+        }
+
+        _logger.LogInformation("Reloading {Count} provider details", providers.Count);
+
+        await _reloadProvidersRepository.ReloadProviders(timeStarted, providers);
     }
 }

@@ -23,6 +23,10 @@ public class ReloadProviderRegistrationDetailsFunction(IReloadProviderRegistrati
         await _service.ReloadAllCoordinates();
         _logger.LogInformation("Reload register provider address coordinates completed in {TotalMilliseconds} ms", stopwatch.ElapsedMilliseconds);
 
+        stopwatch.Restart();
+        await _service.ReloadProviderDetails();
+        _logger.LogInformation("Reload providers completed in {TotalMilliseconds} ms", stopwatch.ElapsedMilliseconds);
+
         _logger.LogInformation("ReloadProviderRegistrationDetailsFunction function finished");
     }
 }

@@ -13,7 +13,7 @@ public static class AddApplicationRegistrationsExtension
     public static IServiceCollection AddServiceRegistrations(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddTransient<IReloadStandardsCacheService, ReloadStandardsCacheService>();
-        services.AddTransient<IReloadProviderRegistrationDetailService, ReloadProviderRegistrationDetailService>();
+        services.AddTransient<IReloadProviderRegistrationDetailService, ReloadProviderRegistrationDetail>();
         services.AddTransient<ILoadUkrlpAddressesService, LoadUkrlpAddressesService>();
         services.AddTransient<IUpdateProviderAddressCoordinatesService, UpdateProviderAddressCoordinatesService>();
         services.AddTransient<IDataExtractorService, DataExtractorService>();
