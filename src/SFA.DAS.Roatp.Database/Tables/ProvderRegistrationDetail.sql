@@ -18,7 +18,7 @@
 GO
 
 CREATE NONCLUSTERED INDEX IX_ProviderRegistrationDetail_StatusId_ProviderTypeId
-ON [dbo].[ProviderRegistrationDetail] ([Ukprn],[StatusId],[ProviderTypeId])
-INCLUDE ([LegalName]);
+ON [dbo].[ProviderRegistrationDetail] ([StatusId],[ProviderTypeId])
+INCLUDE ([Ukprn],[LegalName]);
 GO
 
