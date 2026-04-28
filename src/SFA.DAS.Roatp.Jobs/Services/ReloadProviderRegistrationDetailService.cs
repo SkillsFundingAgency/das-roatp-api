@@ -9,20 +9,20 @@ using SFA.DAS.Roatp.Jobs.Requests;
 
 namespace SFA.DAS.Roatp.Jobs.Services;
 
-public class ReloadProviderRegistrationDetail : IReloadProviderRegistrationDetailService
+public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrationDetailService
 {
     private readonly IReloadProviderRegistrationDetailsRepository _reloadProviderRegistrationDetailsRepository;
     private readonly IReloadProviderCourseTypesRepository _reloadProviderCourseTypesRepository;
     private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
-    private readonly ILogger<ReloadProviderRegistrationDetail> _logger;
+    private readonly ILogger<ReloadProviderRegistrationDetailService> _logger;
     private readonly IProviderRegistrationDetailsWriteRepository _providerRegistrationDetailsWriteRepository;
     private readonly IReloadProvidersRepository _reloadProvidersRepository;
     private readonly IProvidersReadRepository _providersReadRepository;
 
-    public ReloadProviderRegistrationDetail(
+    public ReloadProviderRegistrationDetailService(
         IReloadProviderRegistrationDetailsRepository reloadProviderRegistrationDetailsRepository,
         ICourseManagementOuterApiClient courseManagementOuterApiClient,
-        ILogger<ReloadProviderRegistrationDetail> logger,
+        ILogger<ReloadProviderRegistrationDetailService> logger,
         IProviderRegistrationDetailsWriteRepository providerRegistrationDetailsWriteRepository,
         IReloadProviderCourseTypesRepository reloadProviderCourseTypesRepository,
         IReloadProvidersRepository reloadProvidersRepository, IProvidersReadRepository providersReadRepository)

@@ -22,7 +22,7 @@ public class ReloadProviderRegistrationDetailTests
     public async Task ReloadProviderRegistrationDetails_OnApiError_ThrowsInvalidOperationException(
         [Frozen] Mock<IReloadProviderRegistrationDetailsRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetail sut)
+        [Greedy] ReloadProviderRegistrationDetailService sut)
     {
         apiClientMock.Setup(a => a.Get<List<ProviderRegistrationDetail>>("lookup/registered-providers")).ReturnsAsync((false, null));
 
@@ -36,7 +36,7 @@ public class ReloadProviderRegistrationDetailTests
     public async Task ReloadProviderRegistrationDetails_OnApiSuccess_CallsRepositoryReloadRegisteredProviders(
         [Frozen] Mock<IReloadProviderRegistrationDetailsRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetail sut,
+        [Greedy] ReloadProviderRegistrationDetailService sut,
         List<RegisteredProviderModel> data)
     {
         apiClientMock.Setup(a => a.Get<List<RegisteredProviderModel>>("lookup/registered-providers")).ReturnsAsync((true, data));
@@ -51,7 +51,7 @@ public class ReloadProviderRegistrationDetailTests
     public async Task ReloadProviderRegistrationDetails_OnApiSuccess_CallsRepositoryReloadProviderCourseTypes(
         [Frozen] Mock<IReloadProviderCourseTypesRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetail sut,
+        [Greedy] ReloadProviderRegistrationDetailService sut,
         List<RegisteredProviderModel> data)
     {
         apiClientMock.Setup(a => a.Get<List<RegisteredProviderModel>>("lookup/registered-providers")).ReturnsAsync((true, data));

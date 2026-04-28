@@ -28,7 +28,7 @@ public class ReloadAllAddressesTests
     public async Task ReloadAllAddresses_OnApiError_ReturnsWithoutWritingToRepository(
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetail sut)
+        [Greedy] ReloadProviderRegistrationDetailService sut)
     {
         List<ProviderRegistrationDetail> providerRegistrationDetails = [new(), new()];
         repositoryMock.Setup(x => x.GetActiveProviders()).ReturnsAsync(providerRegistrationDetails);
@@ -51,7 +51,7 @@ public class ReloadAllAddressesTests
     public async Task ReloadAllAddresses_NoUkrlpResponse_ReturnsWithoutWritingToRepository(
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetail sut)
+        [Greedy] ReloadProviderRegistrationDetailService sut)
     {
         List<ProviderRegistrationDetail> providerRegistrationDetails = [new(), new()];
         repositoryMock.Setup(x => x.GetActiveProviders()).ReturnsAsync(providerRegistrationDetails);
@@ -75,7 +75,7 @@ public class ReloadAllAddressesTests
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
         List<UkrlpProviderAddress> ukrlpResponse,
-        [Greedy] ReloadProviderRegistrationDetail sut)
+        [Greedy] ReloadProviderRegistrationDetailService sut)
     {
         List<ProviderRegistrationDetail> providerRegistrationDetails = new List<ProviderRegistrationDetail>
         {
@@ -125,7 +125,7 @@ public class ReloadAllAddressesTests
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
         List<UkrlpProviderAddress> ukrlpResponse,
-        [Greedy] ReloadProviderRegistrationDetail sut)
+        [Greedy] ReloadProviderRegistrationDetailService sut)
     {
         List<ProviderRegistrationDetail> providerRegistrationDetails = [new(), new()];
         repositoryMock.Setup(x => x.GetActiveProviders()).ReturnsAsync(providerRegistrationDetails);

@@ -24,7 +24,7 @@ public class ReloadAllCoordinatesTests
     public async Task ReloadAllCoordinates_NoActiveProviders_DoesNotCallApi(
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetail sut)
+        [Greedy] ReloadProviderRegistrationDetailService sut)
     {
         repositoryMock.Setup(x => x.GetActiveProviders()).ReturnsAsync(new List<ProviderRegistrationDetail>());
 
@@ -38,7 +38,7 @@ public class ReloadAllCoordinatesTests
     public async Task ReloadAllCoordinates_NoPostcode_DoesNotUpdateCoordinates(
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetail sut,
+        [Greedy] ReloadProviderRegistrationDetailService sut,
         double? latitude,
         double? longitude)
     {
@@ -81,7 +81,7 @@ public class ReloadAllCoordinatesTests
     public async Task ReloadAllCoordinates_OnApiError_DoesNotUpdateCoordinates(
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetail sut,
+        [Greedy] ReloadProviderRegistrationDetailService sut,
         double? latitude,
         double? longitude)
     {
@@ -124,7 +124,7 @@ public class ReloadAllCoordinatesTests
     public async Task ReloadAllCoordinates_ApiResponseContainsNoLocations_DoesNotUpdateCoordinates(
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetail sut,
+        [Greedy] ReloadProviderRegistrationDetailService sut,
         double? latitude,
         double? longitude)
     {
@@ -164,7 +164,7 @@ public class ReloadAllCoordinatesTests
     public async Task ReloadAllCoordinates_UpdatesCoordinates(
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetail sut,
+        [Greedy] ReloadProviderRegistrationDetailService sut,
         double? latitude1,
         double? longitude1,
         double? latitude2,
@@ -209,7 +209,7 @@ public class ReloadAllCoordinatesTests
     public async Task ReloadAllCoordinates_WritesToRepository(
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetail sut,
+        [Greedy] ReloadProviderRegistrationDetailService sut,
         double? latitude1,
         double? longitude1)
     {

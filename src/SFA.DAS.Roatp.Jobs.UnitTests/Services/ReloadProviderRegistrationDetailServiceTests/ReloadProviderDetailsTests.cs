@@ -26,7 +26,7 @@ public class ReloadProviderDetailsTests
         [Frozen] Mock<IReloadProvidersRepository> reloadProvidersRepositoryMock,
         [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetail sut)
+        [Greedy] ReloadProviderRegistrationDetailService sut)
     {
         apiClientMock.Setup(x =>
             x.Get<List<RegisteredProviderModel>>("lookup/registered-providers")).ReturnsAsync((false, null));
@@ -44,7 +44,7 @@ public class ReloadProviderDetailsTests
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
         string existingTradingName,
         string existingLegalName,
-        [Greedy] ReloadProviderRegistrationDetail sut)
+        [Greedy] ReloadProviderRegistrationDetailService sut)
     {
         var registeredProviders = new List<RegisteredProviderModel>
         {
@@ -76,7 +76,7 @@ public class ReloadProviderDetailsTests
         string existingLegalName,
         string newLegalName,
         string newTradingName,
-        [Greedy] ReloadProviderRegistrationDetail sut)
+        [Greedy] ReloadProviderRegistrationDetailService sut)
     {
         var registeredProviders = new List<RegisteredProviderModel>
         {
