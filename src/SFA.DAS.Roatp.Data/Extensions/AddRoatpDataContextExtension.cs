@@ -49,17 +49,9 @@ public static class AddRoatpDataContextExtension
         services.AddTransient<IProviderCourseLocationsWriteRepository, ProviderCourseLocationsWriteRepository>();
         services.AddTransient<IImportAuditWriteRepository, ImportAuditWriteRepository>();
         services.AddTransient<IImportAuditReadRepository, ImportAuditReadRepository>();
-        services.AddTransient<INationalAchievementRatesImportWriteRepository, NationalAchievementRatesImportWriteRepository>();
-        services.AddTransient<INationalAchievementRatesImportReadRepository, NationalAchievementRatesImportReadRepository>();
-        services.AddTransient<INationalAchievementRatesWriteRepository, NationalAchievementRatesWriteRepository>();
-        services.AddTransient<INationalAchievementRatesOverallImportWriteRepository, NationalAchievementRatesOverallImportWriteRepository>();
-        services.AddTransient<INationalAchievementRatesOverallImportReadRepository, NationalAchievementRatesOverallImportReadRepository>();
-        services.AddTransient<INationalAchievementRatesOverallWriteRepository, NationalAchievementRatesOverallWriteRepository>();
-        services.AddTransient<INationalAchievementRatesOverallReadRepository, NationalAchievementRatesOverallReadRepository>();
         services.AddTransient<IReloadProviderAddressesRepository, ReloadProviderAddressesRepository>();
         services.AddTransient<IProviderAddressReadRepository, ProviderAddressReadRepository>();
         services.AddTransient<IProviderAddressWriteRepository, ProviderAddressWriteRepository>();
-        services.AddTransient<INationalAchievementRatesReadRepository, NationalAchievementRatesReadRepository>();
         services.AddTransient<IProvidersCountReadRepository, ProvidersCountReadRepository>();
         services.AddTransient<IShortlistsRepository, ShortlistsRepository>();
         services.AddTransient<INationalQarReadRepository, NationalQarReadRepository>();

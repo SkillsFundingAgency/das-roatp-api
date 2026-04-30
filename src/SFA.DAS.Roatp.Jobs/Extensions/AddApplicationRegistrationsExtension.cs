@@ -17,8 +17,6 @@ public static class AddApplicationRegistrationsExtension
         services.AddTransient<ILoadUkrlpAddressesService, LoadUkrlpAddressesService>();
         services.AddTransient<IUpdateProviderAddressCoordinatesService, UpdateProviderAddressCoordinatesService>();
         services.AddTransient<IDataExtractorService, DataExtractorService>();
-        services.AddTransient<IImportNationalAchievementRateOverallService, ImportNationalAchievementRateOverallService>();
-        services.AddTransient<IImportNationalAchievementRateService, ImportNationalAchievementRateService>();
 
         services.AddTransient<IImportAnnualFeedbackSummariesService, ImportAnnualFeedbackSummariesService>();
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
