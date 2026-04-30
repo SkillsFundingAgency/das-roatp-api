@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit3;
 using FluentAssertions;
@@ -22,37 +23,21 @@ public class ReloadProviderDetailsTests
 {
     [Test]
     [MoqAutoData]
-    public async Task ReloadProviderDetails_OnApiError_ThrowsInvalidOperationException(
-        [Frozen] Mock<IReloadProvidersRepository> reloadProvidersRepositoryMock,
-        [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
-        [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetailService sut)
-    {
-        apiClientMock.Setup(x =>
-            x.Get<List<RegisteredProviderModel>>("lookup/registered-providers")).ReturnsAsync((false, null));
-
-        Func<Task> action = () => sut.ReloadProviderDetails();
-
-        await action.Should().ThrowAsync<InvalidOperationException>();
-    }
-
-    [Test]
-    [MoqAutoData]
     public async Task ReloadProviderDetails_NoProvidersToReload_DoesNotUpdateProviderDetails(
         [Frozen] Mock<IReloadProvidersRepository> reloadProvidersRepositoryMock,
         [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
-        [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
+        [Frozen] Mock<IProviderRegistrationDetailsReadRepository> providerRegistrationDetailsReadRepository,
         string existingTradingName,
         string existingLegalName,
         [Greedy] ReloadProviderRegistrationDetailService sut)
     {
-        var registeredProviders = new List<RegisteredProviderModel>
+        var providerRegistrationDetail = new List<ProviderRegistrationDetail>
         {
             new () { Ukprn = 12345678, TradingName = "NonMatchingTradingName", LegalName = "NonMatchingLegalName"}
         };
 
-        apiClientMock.Setup(x =>
-            x.Get<List<RegisteredProviderModel>>("lookup/registered-providers")).ReturnsAsync((true, registeredProviders));
+        providerRegistrationDetailsReadRepository.Setup(x =>
+            x.GetActiveProviderRegistrations(CancellationToken.None)).ReturnsAsync(providerRegistrationDetail);
 
         var providers = new List<Provider> { new() { Ukprn = 11223344, TradingName = existingTradingName, LegalName = existingLegalName } };
 
@@ -71,20 +56,20 @@ public class ReloadProviderDetailsTests
     public async Task ReloadProviderDetails_UpdatesProviderDetails(
         [Frozen] Mock<IReloadProvidersRepository> reloadProvidersRepositoryMock,
         [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
-        [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
+        [Frozen] Mock<IProviderRegistrationDetailsReadRepository> providerRegistrationDetailsReadRepository,
         string existingTradingName,
         string existingLegalName,
         string newLegalName,
         string newTradingName,
         [Greedy] ReloadProviderRegistrationDetailService sut)
     {
-        var registeredProviders = new List<RegisteredProviderModel>
+        var providerRegistrationDetail = new List<ProviderRegistrationDetail>
         {
             new () { Ukprn = 12345678, TradingName = newTradingName, LegalName = newLegalName}
         };
 
-        apiClientMock.Setup(x =>
-            x.Get<List<RegisteredProviderModel>>("lookup/registered-providers")).ReturnsAsync((true, registeredProviders));
+        providerRegistrationDetailsReadRepository.Setup(x =>
+            x.GetActiveProviderRegistrations(CancellationToken.None)).ReturnsAsync(providerRegistrationDetail);
 
         var providers = new List<Provider> { new() { Ukprn = 12345678, TradingName = existingTradingName, LegalName = existingLegalName } };
 

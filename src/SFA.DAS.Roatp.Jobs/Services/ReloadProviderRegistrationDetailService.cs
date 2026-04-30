@@ -16,6 +16,7 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
     private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
     private readonly ILogger<ReloadProviderRegistrationDetailService> _logger;
     private readonly IProviderRegistrationDetailsWriteRepository _providerRegistrationDetailsWriteRepository;
+    private readonly IProviderRegistrationDetailsReadRepository _providerRegistrationDetailsReadRepository;
     private readonly IReloadProvidersRepository _reloadProvidersRepository;
     private readonly IProvidersReadRepository _providersReadRepository;
 
@@ -24,6 +25,7 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
         ICourseManagementOuterApiClient courseManagementOuterApiClient,
         ILogger<ReloadProviderRegistrationDetailService> logger,
         IProviderRegistrationDetailsWriteRepository providerRegistrationDetailsWriteRepository,
+        IProviderRegistrationDetailsReadRepository providerRegistrationDetailsReadRepository,
         IReloadProviderCourseTypesRepository reloadProviderCourseTypesRepository,
         IReloadProvidersRepository reloadProvidersRepository, IProvidersReadRepository providersReadRepository)
     {
@@ -31,6 +33,7 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
         _courseManagementOuterApiClient = courseManagementOuterApiClient;
         _logger = logger;
         _providerRegistrationDetailsWriteRepository = providerRegistrationDetailsWriteRepository;
+        _providerRegistrationDetailsReadRepository = providerRegistrationDetailsReadRepository;
         _reloadProviderCourseTypesRepository = reloadProviderCourseTypesRepository;
         _reloadProvidersRepository = reloadProvidersRepository;
         _providersReadRepository = providersReadRepository;
@@ -141,26 +144,18 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
     {
         var timeStarted = DateTime.UtcNow;
 
-        var (success, providerRegistrationDetails) =
-            await _courseManagementOuterApiClient.Get<List<RegisteredProviderModel>>("lookup/registered-providers");
-
-        if (!success)
-        {
-            const string errorMessage =
-                "Unexpected response when trying to get provider registration details from the outer api.";
-            _logger.LogError(errorMessage);
-            throw new InvalidOperationException(errorMessage);
-        }
+        var providerRegistrationDetails = await _providerRegistrationDetailsReadRepository.GetActiveProviderRegistrations(CancellationToken.None);
 
         var providers = await _providersReadRepository.GetAllProviders();
 
         foreach (var provider in providers)
         {
-            var providerDetails = providerRegistrationDetails.FirstOrDefault(x => x.Ukprn == provider.Ukprn);
-            if (providerDetails != null)
+            var providerRegistrationDetail = providerRegistrationDetails.FirstOrDefault(x => x.Ukprn == provider.Ukprn);
+
+            if (providerRegistrationDetail != null)
             {
-                provider.TradingName = providerDetails.TradingName;
-                provider.LegalName = providerDetails.LegalName;
+                provider.LegalName = providerRegistrationDetail.LegalName;
+                provider.TradingName = providerRegistrationDetail.TradingName;
             }
         }
 
