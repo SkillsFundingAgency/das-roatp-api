@@ -95,7 +95,7 @@ internal class ProviderCoursesWriteRepository : IProviderCoursesWriteRepository
             {
                 var providerCourse = await _roatpDataContext.ProviderCourses
                 .Where(l => l.LarsCode == larscode && l.Provider.Ukprn == ukprn)
-                .Include(l => l.Locations).Include(l => l.Versions)
+                .Include(l => l.Locations)
                 .SingleAsync();
 
                 Audit audit = new(typeof(ProviderCourse).Name, providerCourse.Id.ToString(), userId, userDisplayName, userAction, providerCourse, null);
