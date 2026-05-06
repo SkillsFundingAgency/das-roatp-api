@@ -10,7 +10,6 @@ public class GetStandardForLarsCodeQueryResult
     public string IfateReferenceNumber { get; set; }
     public int Level { get; set; }
     public string Title { get; set; }
-    public string Version { get; set; }
     public string ApprovalBody { get; set; }
     public bool IsRegulatedForProvider { get; set; }
     public int Duration { get; set; }
@@ -32,7 +31,6 @@ public class GetStandardForLarsCodeQueryResult
             IfateReferenceNumber = standard.IfateReferenceNumber,
             Level = standard.Level,
             Title = standard.Title,
-            Version = standard.Version,
             ApprovalBody = standard.ApprovalBody,
             IsRegulatedForProvider = standard.IsRegulatedForProvider,
             Route = standard.Route,
