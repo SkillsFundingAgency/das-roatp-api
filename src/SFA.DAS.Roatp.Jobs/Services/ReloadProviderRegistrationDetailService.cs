@@ -17,8 +17,7 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
     private readonly ILogger<ReloadProviderRegistrationDetailService> _logger;
     private readonly IProviderRegistrationDetailsWriteRepository _providerRegistrationDetailsWriteRepository;
     private readonly IProviderRegistrationDetailsReadRepository _providerRegistrationDetailsReadRepository;
-    private readonly IReloadProvidersRepository _reloadProvidersRepository;
-    private readonly IProvidersReadRepository _providersReadRepository;
+    private readonly IProvidersWriteRepository _providersWriteRepository;
 
     public ReloadProviderRegistrationDetailService(
         IReloadProviderRegistrationDetailsRepository reloadProviderRegistrationDetailsRepository,
@@ -27,7 +26,7 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
         IProviderRegistrationDetailsWriteRepository providerRegistrationDetailsWriteRepository,
         IProviderRegistrationDetailsReadRepository providerRegistrationDetailsReadRepository,
         IReloadProviderCourseTypesRepository reloadProviderCourseTypesRepository,
-        IReloadProvidersRepository reloadProvidersRepository, IProvidersReadRepository providersReadRepository)
+        IProvidersWriteRepository providersWriteRepository)
     {
         _reloadProviderRegistrationDetailsRepository = reloadProviderRegistrationDetailsRepository;
         _courseManagementOuterApiClient = courseManagementOuterApiClient;
@@ -35,8 +34,7 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
         _providerRegistrationDetailsWriteRepository = providerRegistrationDetailsWriteRepository;
         _providerRegistrationDetailsReadRepository = providerRegistrationDetailsReadRepository;
         _reloadProviderCourseTypesRepository = reloadProviderCourseTypesRepository;
-        _reloadProvidersRepository = reloadProvidersRepository;
-        _providersReadRepository = providersReadRepository;
+        _providersWriteRepository = providersWriteRepository;
     }
 
     public async Task ReloadProviderRegistrationDetails()
@@ -146,7 +144,7 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
 
         var providerRegistrationDetails = await _providerRegistrationDetailsReadRepository.GetActiveProviderRegistrations(CancellationToken.None);
 
-        var providers = await _providersReadRepository.GetAllProviders();
+        var providers = await _providersWriteRepository.GetAllProviders();
 
         foreach (var provider in providers)
         {
@@ -161,6 +159,6 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
 
         _logger.LogInformation("Reloading {Count} provider details", providers.Count);
 
-        await _reloadProvidersRepository.ReloadProviders(timeStarted, providers);
+        await _providersWriteRepository.UpdateProviders(timeStarted, providers.Count, ImportType.Providers);
     }
 }

@@ -24,8 +24,7 @@ public class ReloadProviderDetailsTests
     [Test]
     [MoqAutoData]
     public async Task ReloadProviderDetails_NoProvidersToReload_DoesNotUpdateProviderDetails(
-        [Frozen] Mock<IReloadProvidersRepository> reloadProvidersRepositoryMock,
-        [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
+        [Frozen] Mock<IProvidersWriteRepository> providersWriteRepositoryMock,
         [Frozen] Mock<IProviderRegistrationDetailsReadRepository> providerRegistrationDetailsReadRepository,
         string existingTradingName,
         string existingLegalName,
@@ -41,9 +40,7 @@ public class ReloadProviderDetailsTests
 
         var providers = new List<Provider> { new() { Ukprn = 11223344, TradingName = existingTradingName, LegalName = existingLegalName } };
 
-        providersReadRepositoryMock.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
-
-        Func<Task> action = () => sut.ReloadProviderDetails();
+        providersWriteRepositoryMock.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
 
         await sut.ReloadProviderDetails();
 
@@ -54,8 +51,7 @@ public class ReloadProviderDetailsTests
     [Test]
     [MoqAutoData]
     public async Task ReloadProviderDetails_UpdatesProviderDetails(
-        [Frozen] Mock<IReloadProvidersRepository> reloadProvidersRepositoryMock,
-        [Frozen] Mock<IProvidersReadRepository> providersReadRepositoryMock,
+        [Frozen] Mock<IProvidersWriteRepository> providersWriteRepositoryMock,
         [Frozen] Mock<IProviderRegistrationDetailsReadRepository> providerRegistrationDetailsReadRepository,
         string existingTradingName,
         string existingLegalName,
@@ -73,13 +69,14 @@ public class ReloadProviderDetailsTests
 
         var providers = new List<Provider> { new() { Ukprn = 12345678, TradingName = existingTradingName, LegalName = existingLegalName } };
 
-        providersReadRepositoryMock.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
-
-        Func<Task> action = () => sut.ReloadProviderDetails();
+        providersWriteRepositoryMock.Setup(x => x.GetAllProviders()).ReturnsAsync(providers);
 
         await sut.ReloadProviderDetails();
 
         providers[0].TradingName.Should().Be(newTradingName);
         providers[0].LegalName.Should().Be(newLegalName);
+
+        providersWriteRepositoryMock.Verify(x => x.UpdateProviders
+            (It.IsAny<DateTime>(), providers.Count, ImportType.Providers), Times.Once);
     }
 }
