@@ -104,6 +104,5 @@ public class GetAllShortCoursesTests
         .With(pc => pc.Provider, provider)
         .With(pc => pc.Standard, course)
         .Without(pc => pc.Locations)
-        .Without(pc => pc.Versions)
         .Create();
 }
