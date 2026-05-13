@@ -101,6 +101,7 @@ namespace SFA.DAS.Roatp.Data.Repositories
                 StandardName = (string)reader["StandardName"],
                 CourseType = Enum.Parse<CourseType>((string)reader["courseType"]),
                 ApprenticeshipType = Enum.Parse<ApprenticeshipType>((string)reader["apprenticeshipType"]),
+                IsActiveAvailable = Convert.ToBoolean(reader["IsActiveAvailable"]),
                 QarPeriod = (string)reader["QarPeriod"],
                 ReviewPeriod = (string)reader["reviewPeriod"]
             };

@@ -49,9 +49,9 @@ BEGIN
 	-- the Standards and national QAR by Standard
 	WITH StandardsAndQAR AS
 	(
-		SELECT Larscode, Title, [Level], [IsRegulatedForProvider], st1.[IfateReferenceNumber], ISNULL(qar1.[Leavers],'-') [Leavers], ISNULL(qar1.[AchievementRate],'-') [AchievementRate], [CourseType], [ApprenticeshipType]
+		SELECT Larscode, Title, [Level], [IsRegulatedForProvider], st1.[IfateReferenceNumber], ISNULL(qar1.[Leavers],'-') [Leavers], ISNULL(qar1.[AchievementRate],'-') [AchievementRate], [CourseType], [ApprenticeshipType], [IsActiveAvailable]
 		FROM (
-			SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [IsRegulatedForProvider], s1.[CourseType], [ApprenticeshipType]
+			SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [IsRegulatedForProvider], s1.[CourseType], [ApprenticeshipType], [IsActiveAvailable]
 			FROM [dbo].[Standard] s1
 			-- ensure course type is (still) available for the provider and course
 			JOIN [dbo].[ProviderCourseType] pct on pct.Ukprn = @Ukprn AND pct.CourseType = s1.CourseType
@@ -128,6 +128,7 @@ BEGIN
 		,stq.IfateReferenceNumber AS 'IFateReferenceNumber'
 		,stq.CourseType
 		,stq.ApprenticeshipType
+		,stq.IsActiveAvailable
 		-- Achievement Rates
 		,@QARPeriod AS 'Period'
 		,ISNULL(qp1.[Leavers],'-') AS 'Leavers'
