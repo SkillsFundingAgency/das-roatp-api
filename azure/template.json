@@ -142,7 +142,7 @@
     "qarOverallImportFileName": "app-narts-subject-and-level-detailed.csv",
     "qarProviderLevelImportFileName": "app-narts-provider-level-fwk-std.csv",
     "reloadStandardsCacheSchedule": "0 0 5 * * 1-5",
-    "reloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
+    "reloadProviderRegistrationDetailsSchedule": "0 0 3 * * 1-5",
     "updateUkrlpDataSchedule": "0 0 23 * * 1-5",
     "updateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
     "deleteExpiredShortlistsSchedule": "0 0 2 * * *",
