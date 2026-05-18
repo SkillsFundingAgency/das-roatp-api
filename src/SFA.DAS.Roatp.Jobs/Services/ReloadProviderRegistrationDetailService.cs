@@ -16,19 +16,25 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
     private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
     private readonly ILogger<ReloadProviderRegistrationDetailService> _logger;
     private readonly IProviderRegistrationDetailsWriteRepository _providerRegistrationDetailsWriteRepository;
+    private readonly IProviderRegistrationDetailsReadRepository _providerRegistrationDetailsReadRepository;
+    private readonly IProvidersWriteRepository _providersWriteRepository;
 
     public ReloadProviderRegistrationDetailService(
         IReloadProviderRegistrationDetailsRepository reloadProviderRegistrationDetailsRepository,
         ICourseManagementOuterApiClient courseManagementOuterApiClient,
         ILogger<ReloadProviderRegistrationDetailService> logger,
         IProviderRegistrationDetailsWriteRepository providerRegistrationDetailsWriteRepository,
-        IReloadProviderCourseTypesRepository reloadProviderCourseTypesRepository)
+        IProviderRegistrationDetailsReadRepository providerRegistrationDetailsReadRepository,
+        IReloadProviderCourseTypesRepository reloadProviderCourseTypesRepository,
+        IProvidersWriteRepository providersWriteRepository)
     {
         _reloadProviderRegistrationDetailsRepository = reloadProviderRegistrationDetailsRepository;
         _courseManagementOuterApiClient = courseManagementOuterApiClient;
         _logger = logger;
         _providerRegistrationDetailsWriteRepository = providerRegistrationDetailsWriteRepository;
+        _providerRegistrationDetailsReadRepository = providerRegistrationDetailsReadRepository;
         _reloadProviderCourseTypesRepository = reloadProviderCourseTypesRepository;
+        _providersWriteRepository = providersWriteRepository;
     }
 
     public async Task ReloadProviderRegistrationDetails()
@@ -130,5 +136,29 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
         }
 
         await _providerRegistrationDetailsWriteRepository.UpdateProviders(timeStarted, providers.Count, ImportType.ProviderRegistrationAddressCoordinates);
+    }
+
+    public async Task ReloadProviderDetails()
+    {
+        var timeStarted = DateTime.UtcNow;
+
+        var providerRegistrationDetails = await _providerRegistrationDetailsReadRepository.GetActiveProviderRegistrations(CancellationToken.None);
+
+        var providers = await _providersWriteRepository.GetAllProviders();
+
+        foreach (var provider in providers)
+        {
+            var providerRegistrationDetail = providerRegistrationDetails.FirstOrDefault(x => x.Ukprn == provider.Ukprn);
+
+            if (providerRegistrationDetail != null)
+            {
+                provider.LegalName = providerRegistrationDetail.LegalName;
+                provider.TradingName = providerRegistrationDetail.TradingName;
+            }
+        }
+
+        _logger.LogInformation("Reloading {Count} provider details", providers.Count);
+
+        await _providersWriteRepository.UpdateProviders(timeStarted, providers.Count, ImportType.Providers);
     }
 }

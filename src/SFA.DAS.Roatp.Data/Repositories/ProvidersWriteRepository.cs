@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -78,5 +79,20 @@ internal class ProvidersWriteRepository : IProvidersWriteRepository
             }
         });
         return provider;
+    }
+
+    public async Task<List<Provider>> GetAllProviders()
+    {
+        return await _roatpDataContext.Providers
+            .Include(p => p.ProviderAddress)
+            .ToListAsync();
+    }
+
+    public async Task UpdateProviders(DateTime timeStarted, int providerCount, ImportType importType)
+    {
+        // since the entities were retrieved with tracking on, it is assumed that when the call is made the tracked entities are already updated
+        // hence just need to add the audit entity and commit the changes here
+        _roatpDataContext.ImportAudits.Add(new ImportAudit(timeStarted, providerCount, importType));
+        await _roatpDataContext.SaveChangesAsync();
     }
 }

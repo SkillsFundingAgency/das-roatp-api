@@ -12,10 +12,10 @@ using SFA.DAS.Roatp.Jobs.ApiModels;
 using SFA.DAS.Roatp.Jobs.Services;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Jobs.UnitTests.Services;
+namespace SFA.DAS.Roatp.Jobs.UnitTests.Services.ReloadProviderRegistrationDetailServiceTests;
 
 [TestFixture]
-public class ReloadProviderRegistrationDetailServiceTests
+public class ReloadProviderRegistrationDetailTests
 {
     [Test]
     [MoqAutoData]
@@ -33,7 +33,7 @@ public class ReloadProviderRegistrationDetailServiceTests
 
     [Test]
     [RecursiveMoqAutoData]
-    public async Task ReloadProviderRegistrationDetails_OnApiSuccess_CallsRepositoryReloadMethod(
+    public async Task ReloadProviderRegistrationDetails_OnApiSuccess_CallsRepositoryReloadRegisteredProviders(
         [Frozen] Mock<IReloadProviderRegistrationDetailsRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
         [Greedy] ReloadProviderRegistrationDetailService sut,
@@ -44,5 +44,20 @@ public class ReloadProviderRegistrationDetailServiceTests
         await sut.ReloadProviderRegistrationDetails();
 
         repositoryMock.Verify(r => r.ReloadRegisteredProviders(It.Is<List<ProviderRegistrationDetail>>(c => c.Count == data.Count), It.IsAny<DateTime>()));
+    }
+
+    [Test]
+    [RecursiveMoqAutoData]
+    public async Task ReloadProviderRegistrationDetails_OnApiSuccess_CallsRepositoryReloadProviderCourseTypes(
+        [Frozen] Mock<IReloadProviderCourseTypesRepository> repositoryMock,
+        [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
+        [Greedy] ReloadProviderRegistrationDetailService sut,
+        List<RegisteredProviderModel> data)
+    {
+        apiClientMock.Setup(a => a.Get<List<RegisteredProviderModel>>("lookup/registered-providers")).ReturnsAsync((true, data));
+
+        await sut.ReloadProviderRegistrationDetails();
+
+        repositoryMock.Verify(r => r.ReloadProviderCourseTypes(It.IsAny<List<ProviderCourseType>>(), It.IsAny<DateTime>()));
     }
 }

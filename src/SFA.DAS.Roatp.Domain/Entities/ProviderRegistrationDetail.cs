@@ -12,6 +12,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public int OrganisationTypeId { get; set; }
         public int ProviderTypeId { get; set; }
         public string LegalName { get; set; }
+        public string TradingName { get; set; }
         public string AddressLine1 { get; set; }
         public string AddressLine2 { get; set; }
         public string AddressLine3 { get; set; }

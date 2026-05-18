@@ -31,6 +31,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         ProviderAddressesLatLong,
         ProviderApprenticeStars,
         ProviderEmployerStars,
-        ProviderCourseTypes
+        ProviderCourseTypes,
+        Providers
     }
 }

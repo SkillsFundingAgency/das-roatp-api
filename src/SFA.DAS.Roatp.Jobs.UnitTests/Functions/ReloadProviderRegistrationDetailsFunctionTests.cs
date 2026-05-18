@@ -11,7 +11,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Functions;
 public class ReloadProviderRegistrationDetailsFunctionTests
 {
     [Test]
-    public async Task Run_InvokesService()
+    public async Task Run_InvokesService_ReloadsProviderRegistrationDetails()
     {
         var serviceMock = new Mock<IReloadProviderRegistrationDetailService>();
         var sut = new ReloadProviderRegistrationDetailsFunction(serviceMock.Object, Mock.Of<ILogger<ReloadProviderRegistrationDetailsFunction>>());
@@ -19,5 +19,38 @@ public class ReloadProviderRegistrationDetailsFunctionTests
         await sut.Run(default);
 
         serviceMock.Verify(s => s.ReloadProviderRegistrationDetails());
+    }
+
+    [Test]
+    public async Task Run_InvokesService_ReloadsAllAddresses()
+    {
+        var serviceMock = new Mock<IReloadProviderRegistrationDetailService>();
+        var sut = new ReloadProviderRegistrationDetailsFunction(serviceMock.Object, Mock.Of<ILogger<ReloadProviderRegistrationDetailsFunction>>());
+
+        await sut.Run(default);
+
+        serviceMock.Verify(s => s.ReloadAllAddresses());
+    }
+
+    [Test]
+    public async Task Run_InvokesService_ReloadsAllCoordinates()
+    {
+        var serviceMock = new Mock<IReloadProviderRegistrationDetailService>();
+        var sut = new ReloadProviderRegistrationDetailsFunction(serviceMock.Object, Mock.Of<ILogger<ReloadProviderRegistrationDetailsFunction>>());
+
+        await sut.Run(default);
+
+        serviceMock.Verify(s => s.ReloadAllCoordinates());
+    }
+
+    [Test]
+    public async Task Run_InvokesService_ReloadsProviderDetails()
+    {
+        var serviceMock = new Mock<IReloadProviderRegistrationDetailService>();
+        var sut = new ReloadProviderRegistrationDetailsFunction(serviceMock.Object, Mock.Of<ILogger<ReloadProviderRegistrationDetailsFunction>>());
+
+        await sut.Run(default);
+
+        serviceMock.Verify(s => s.ReloadProviderDetails());
     }
 }
