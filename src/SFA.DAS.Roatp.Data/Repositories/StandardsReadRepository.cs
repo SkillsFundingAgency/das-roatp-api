@@ -6,36 +6,35 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Data.Repositories
-{
-    [ExcludeFromCodeCoverage]
-    internal class StandardsReadRepository : IStandardsReadRepository
-    {
-        private readonly RoatpDataContext _roatpDataContext;
-        private readonly ILogger<StandardsReadRepository> _logger;
+namespace SFA.DAS.Roatp.Data.Repositories;
 
-        public StandardsReadRepository(RoatpDataContext roatpDataContext, ILogger<StandardsReadRepository> logger)
-        {
-            _roatpDataContext = roatpDataContext;
-            _logger = logger;
-        }
-        public async Task<List<Standard>> GetAllStandards()
-        {
-            return await _roatpDataContext
-                .Standards
-                .AsNoTracking()
-                .ToListAsync();
-        }
-        public async Task<Standard> GetStandard(string larsCode)
-        {
-            return await _roatpDataContext
-                .Standards
-                .SingleOrDefaultAsync(c => c.LarsCode == larsCode);
-        }
-        public async Task<int> GetStandardsCount()
-        {
-            _logger.LogInformation("GetStandardsCount invoked");
-            return await _roatpDataContext.Standards.CountAsync();
-        }
+[ExcludeFromCodeCoverage]
+internal class StandardsReadRepository : IStandardsReadRepository
+{
+    private readonly RoatpDataContext _roatpDataContext;
+    private readonly ILogger<StandardsReadRepository> _logger;
+
+    public StandardsReadRepository(RoatpDataContext roatpDataContext, ILogger<StandardsReadRepository> logger)
+    {
+        _roatpDataContext = roatpDataContext;
+        _logger = logger;
+    }
+    public async Task<List<Standard>> GetAllStandards()
+    {
+        return await _roatpDataContext
+            .Standards
+            .AsNoTracking()
+            .ToListAsync();
+    }
+    public async Task<Standard> GetStandard(string larsCode)
+    {
+        return await _roatpDataContext
+            .Standards
+            .SingleOrDefaultAsync(c => c.LarsCode == larsCode);
+    }
+    public async Task<int> GetStandardsCount()
+    {
+        _logger.LogInformation("GetStandardsCount invoked");
+        return await _roatpDataContext.Standards.CountAsync();
     }
 }

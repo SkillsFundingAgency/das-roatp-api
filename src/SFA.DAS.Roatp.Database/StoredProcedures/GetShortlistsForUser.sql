@@ -47,7 +47,7 @@ BEGIN
         ,stq.[Title]+' (level '+CONVERT(varchar,stq.[Level])+')' standardName
         ,stq.[IfateReferenceNumber]
         ,stq.[CourseType] "courseType"
-        ,stq.ApprenticeshipType "apprenticeshipType"
+        ,stq.[LearningType] "learningType"
         -- Training locations
         ,DENSE_RANK() OVER (PARTITION BY stq.[Title], stq.[Level], ab2.[larsCode] 
                             ORDER BY ISNULL(ab2.[LocationDescription],' ') ) "l2.ordering"
@@ -192,7 +192,7 @@ BEGIN
             ,courses.standardName
             ,courses.larsCode
             ,courses.courseType
-            ,courses.apprenticeshipType
+            ,courses.learningType
             ,locations.ordering
             ,locations.locationDescription
             ,providers.ordering
@@ -223,7 +223,7 @@ BEGIN
         FROM (SELECT @userid "userId", @QARPeriod "qarPeriod", @ReviewPeriod "reviewPeriod", MAX(CreatedDate) maxCreatedDate
               FROM #MainQuery) toplevel
         JOIN (
-            SELECT DISTINCT @userid "userId", "ordering", larsCode, standardName, courseType, apprenticeshipType 
+            SELECT DISTINCT @userid "userId", "ordering", larsCode, standardName, courseType, learningType 
             FROM #MainQuery ) AS courses 
         ON courses."userId" = toplevel."userId"
         JOIN (

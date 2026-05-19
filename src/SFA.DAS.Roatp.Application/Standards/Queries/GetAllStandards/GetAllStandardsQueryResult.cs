@@ -27,7 +27,7 @@ public class StandardModel
     public string ApprovalBody { get; set; }
     public bool IsRegulatedForProvider { get; set; }
     public string Route { get; set; }
-    public ApprenticeshipType ApprenticeshipType { get; set; }
+    public LearningType LearningType { get; set; }
     public CourseType CourseType { get; set; }
     public bool IsActiveAvailable { get; set; }
 
@@ -42,7 +42,7 @@ public class StandardModel
             ApprovalBody = standard.ApprovalBody,
             IsRegulatedForProvider = standard.IsRegulatedForProvider,
             Route = standard.Route,
-            ApprenticeshipType = standard.ApprenticeshipType,
+            LearningType = standard.LearningType,
             CourseType = standard.CourseType,
             IsActiveAvailable = standard.IsActiveAvailable
         };

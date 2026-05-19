@@ -1,6 +1,6 @@
 ﻿namespace SFA.DAS.Roatp.Domain.Models;
 
-public enum ApprenticeshipType
+public enum LearningType
 {
     Apprenticeship,
     FoundationApprenticeship,
