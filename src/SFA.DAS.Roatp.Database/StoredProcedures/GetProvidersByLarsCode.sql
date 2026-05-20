@@ -1,6 +1,6 @@
 ﻿CREATE procedure [dbo].[GetProvidersByLarsCode]
 
-    @larscode nvarchar(10),   -- Standard by LarsCode - must be set
+    @Larscode nvarchar(10),   -- Standard by LarsCode - must be set
     @SortOrder varchar(30) = 'Distance', -- order by "Distance", "AchievementRate" or "EmployerProviderRating" , "ApprenticeProviderRating"
     @page int = 1,
     @pageSize int = 10,
@@ -64,11 +64,11 @@ DECLARE @NearestRegionId int,
 
 IF @Latitude IS NOT NULL
 -- match to nearest region (which may have an alternative with same co-ordinates)
-    SELECT TOP 1 @NearestRegionId = reg1.[Id] , @AlternativeRegionid = reg2.[id]
+    SELECT TOP 1 @NearestRegionId = reg1.[Id] , @AlternativeRegionId = reg2.[Id]
     FROM [dbo].[Region] reg1
-    LEFT JOIN [dbo].[Region] reg2 ON reg1.[Latitude] = reg2.[Latitude] AND reg1.[Longitude]= reg2.[Longitude] AND reg1.[Id] != reg2.[id]
+    LEFT JOIN [dbo].[Region] reg2 ON reg1.[Latitude] = reg2.[Latitude] AND reg1.[Longitude]= reg2.[Longitude] AND reg1.[Id] != reg2.[Id]
         ORDER BY geography::Point(reg1.Latitude, reg1.Longitude, 4326)
-                .STDistance(geography::Point(@Latitude, @Longitude, 4326)), reg1.[id];
+                .STDistance(geography::Point(@Latitude, @Longitude, 4326)), reg1.[Id];
 ELSE
 -- cannot have distance with no co-ordinates
 BEGIN
@@ -78,16 +78,16 @@ BEGIN
 END;
 
 -- the Standards
-SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [CourseType], [ApprenticeshipType], [IsRegulatedForProvider], [IsActiveAvailable]
+SELECT [Larscode], [IfateReferenceNumber], [Title], [Level], [CourseType], [ApprenticeshipType], [IsRegulatedForProvider], [IsActiveAvailable]
 INTO #Standard
 FROM [dbo].[Standard]
-WHERE [LarsCode] = @larscode;
+WHERE [Larscode] = @Larscode;
 
 -- Providers for the Course
 SELECT pc1.[Id]
       ,pr1.[Ukprn]
       ,pr1.[LegalName]
-      ,pc1.[LarsCode]
+      ,pc1.[Larscode]
       ,st1.[IfateReferenceNumber]
       ,st1.[Title], [Level]
       ,pc1.[HasOnlineDeliveryOption]
@@ -96,7 +96,7 @@ SELECT pc1.[Id]
       ,st1.[IsActiveAvailable]
 INTO #ProviderAndCourse
 FROM [dbo].[ProviderCourse] pc1
-JOIN #Standard st1 on st1.LarsCode = pc1.LarsCode
+JOIN #Standard st1 on st1.Larscode = pc1.Larscode
 JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
 JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[StatusId] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
 -- ensure course type is (still) available for the provider and course
@@ -213,13 +213,13 @@ AS
                   WHEN LocationOrdering = 9 THEN 99999
                   ELSE 0 END Course_Distance
             -- priority for online, at workplace over at provider (by ukprn and course)
-            ,ROW_NUMBER() OVER (PARTITION BY [Ukprn], [LarsCode],
+            ,ROW_NUMBER() OVER (PARTITION BY [Ukprn], [Larscode],
                                 CASE WHEN LocationType = 3 THEN 1 ELSE 0 END,
                                 CASE WHEN LocationType = 0 THEN 1 ELSE 0 END
                                 ORDER BY Distance) TP_Std_Dist_Seq
             ,Max_LocationOrdering
             ,HasOnlineOption
-            ,COUNT(*) OVER (PARTITION BY [Ukprn], [LarsCode]) LocationRows
+            ,COUNT(*) OVER (PARTITION BY [Ukprn], [Larscode]) LocationRows
         FROM
         (
         SELECT *
@@ -230,7 +230,7 @@ AS
             -- Course Management Location data
             SELECT pac.[Ukprn]
                   ,pac.[LegalName]
-                  ,pac.[LarsCode]
+                  ,pac.[Larscode]
                   ,[LocationType]
                   -- Is at Employer ?
                   ,CASE [LocationType]
@@ -248,7 +248,7 @@ AS
                    WHEN [LocationType] = 1 THEN 1  -- National
                    WHEN pl1.[RegionId] IS NOT NULL THEN
                         (CASE WHEN pl1.[RegionId] = @NearestRegionId THEN 0 -- same Region
-                              WHEN @AlternativeRegionid IS NOT NULL AND pl1.[RegionId] = @AlternativeRegionid THEN 0 -- alternative Region
+                              WHEN @AlternativeRegionId IS NOT NULL AND pl1.[RegionId] = @AlternativeRegionId THEN 0 -- alternative Region
                               ELSE 9 -- other Regions
                               END)
                    ELSE 9 -- other
@@ -274,7 +274,7 @@ AS
             -- Course Management Online courses data
             SELECT pac.[Ukprn]
                   ,pac.[LegalName]
-                  ,pac.[LarsCode]
+                  ,pac.[Larscode]
                   ,3 [LocationType]  -- online
                   -- Is at Employer ?
                   ,0 AtEmployer
@@ -337,7 +337,7 @@ AS
 
     LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = ab2.[Ukprn]
 
-    LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[UserId] = @userId
+    LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.Larscode AND sht.[UserId] = @userId
     AND ISNULL(sht.[LocationDescription],'') = ISNULL(@Location,'')
 
     WHERE 1=1
@@ -353,7 +353,7 @@ AS
     AND (@anylocationfilters = 0 OR @onlineoption = 1 OR Max_LocationOrdering >= 0)
     -- Do not include Online if provider does not have other locations that matched.
     AND NOT (@anylocationfilters > 0 AND @onlineoption = 0 AND LocationRows = 1 AND LocationType = 3)
-    GROUP BY ab2.Ukprn ,ab2.LarsCode, ab2.LegalName
+    GROUP BY ab2.Ukprn ,ab2.Larscode, ab2.LegalName
     , qp1.[Leavers], qp1.[AchievementRate]
     , pes.ReviewCount, pes.Stars, pes.Rating
     , pas.ReviewCount, pas.Stars, pas.Rating

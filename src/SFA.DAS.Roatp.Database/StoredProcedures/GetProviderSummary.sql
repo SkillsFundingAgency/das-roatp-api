@@ -113,7 +113,7 @@ BEGIN
 				,pr1.Email 
 				,pr1.Phone 
 				,pr1.Website 
-				,tp.[Statusid]
+				,tp.[StatusId]
 				,tp.[ProviderTypeId]
 				,CASE WHEN tp.[ProviderTypeId] in (@PROVIDER_TYPE_MAIN, @PROVIDER_TYPE_EMPLOYER) AND 
 				           tp.[StatusId] IN (@STATUS_ACTIVE, @STATUS_ACTIVE_BUT_NOT_TAKING_ON_APPRENTICES, @STATUS_ONBOARDING) 
