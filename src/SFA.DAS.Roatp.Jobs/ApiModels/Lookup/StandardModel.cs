@@ -9,7 +9,6 @@ public class StandardModel
     public string IfateReferenceNumber { get; set; }
     public int Level { get; set; }
     public ApprenticeshipType ApprenticeshipType { get; set; }
-    public string Version { get; set; }
     public string Title { get; set; }
     public string ApprovalBody { get; set; }
     public bool IsRegulatedForProvider { get; set; }
@@ -26,7 +25,6 @@ public class StandardModel
             IfateReferenceNumber = standard.IfateReferenceNumber,
             LarsCode = standard.LarsCode,
             Title = standard.Title,
-            Version = standard.Version,
             Level = standard.Level,
             ApprovalBody = string.IsNullOrWhiteSpace(standard.ApprovalBody) ? null : standard.ApprovalBody,
             IsRegulatedForProvider = standard.IsRegulatedForProvider,
