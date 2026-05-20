@@ -17,7 +17,7 @@
     @employerProviderRatings varchar(100) = null, -- any combo of 'Excellent', 'Good', 'Poor', 'VeryPoor' and 'NotYetReviewed' , or NULL
     @apprenticeProviderRatings varchar(100) = null, -- any combo of 'Excellent', 'Good', 'Poor', 'VeryPoor' and 'NotYetReviewed' , or NULL
     @Location varchar(200) = null,
-    @userid uniqueidentifier = null
+    @userId uniqueidentifier = null
 
 as
 
@@ -98,7 +98,7 @@ INTO #ProviderAndCourse
 FROM [dbo].[ProviderCourse] pc1
 JOIN #Standard st1 on st1.LarsCode = pc1.LarsCode
 JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
-JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
+JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[StatusId] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
 -- ensure course type is (still) available for the provider and course
 JOIN [dbo].[ProviderCourseType] pct on pct.Ukprn = pr1.[Ukprn] AND pct.CourseType = st1.CourseType
 --regulated check

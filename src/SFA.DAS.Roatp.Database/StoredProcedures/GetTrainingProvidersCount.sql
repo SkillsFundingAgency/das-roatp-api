@@ -32,7 +32,7 @@ BEGIN
         SET @Distance = NULL;
 
     -- ensure that the Lars code(s) input are a list of string values
-    SET @LarsCodeJSON = '["'+REPLACE(REPLACE(@larscodes,'"',''),',','","')+'"]';
+    SET @LarsCodeJSON = '["'+REPLACE(REPLACE(@LarsCodes,'"',''),',','","')+'"]';
     -- get the Standards and national QAR by Standard
     SELECT CONVERT(int,[key]) +1 Ordering, std.LarsCode, std.IsRegulatedForProvider, std.CourseType
     INTO #StandardsList

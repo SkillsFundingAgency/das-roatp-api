@@ -28,7 +28,7 @@ BEGIN
     (
         SELECT ShortlistId, NearestRegionId, AlternativeRegionid
         FROM (
-            SELECT st1.[Id] ShortlistId, st1.locationDescription, reg1.[Id] NearestRegionId,  reg2.[id] AlternativeRegionid, 
+            SELECT st1.[Id] ShortlistId, st1.LocationDescription, reg1.[Id] NearestRegionId,  reg2.[id] AlternativeRegionid, 
             ROW_NUMBER() OVER (PARTITION BY st1.[Id] ORDER BY
                                geography::Point(reg1.Latitude, reg1.Longitude, 4326)
                                .STDistance(geography::Point(convert(float,st1.Latitude), convert(float,st1.Longitude), 4326)) ) seqn
@@ -194,7 +194,7 @@ BEGIN
             ,courses.courseType
             ,courses.apprenticeshipType
             ,locations.ordering
-            ,locations.locationDescription
+            ,locations.LocationDescription
             ,providers.ordering
             ,providers.shortlistId
             ,providers.ukprn

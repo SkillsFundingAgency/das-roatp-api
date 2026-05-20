@@ -38,11 +38,11 @@ BEGIN
 	IF @Latitude IS NOT NULL 
 
 	-- match to nearest region (which may have an alternative with same co-ordinates)
-		SELECT TOP 1 @NearestRegionId = reg1.[Id] , @NearestRegion = reg1.SubregionName + ' ('+reg1.RegionName+')' , @AlternativeRegionid = reg2.[id]
+		SELECT TOP 1 @NearestRegionId = reg1.[Id] , @NearestRegion = reg1.SubregionName + ' ('+reg1.RegionName+')' , @AlternativeRegionid = reg2.[Id]
 		FROM [dbo].[Region] reg1
-		LEFT JOIN [dbo].[Region] reg2 ON reg1.[Latitude] = reg2.[Latitude] AND reg1.[Longitude]= reg2.[Longitude] AND reg1.[Id] != reg2.[id]
+		LEFT JOIN [dbo].[Region] reg2 ON reg1.[Latitude] = reg2.[Latitude] AND reg1.[Longitude]= reg2.[Longitude] AND reg1.[Id] != reg2.[Id]
 			ORDER BY geography::Point(reg1.Latitude, reg1.Longitude, 4326)
-					.STDistance(geography::Point(@Latitude, @Longitude, 4326)), reg1.[id];
+					.STDistance(geography::Point(@Latitude, @Longitude, 4326)), reg1.[Id];
 	ELSE
 	-- cannot have longitude with no latitude
 		SET @Longitude = NULL;
@@ -105,7 +105,7 @@ BEGIN
 		FROM [dbo].[Provider] pr1 
 		JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn]
 		LEFT JOIN [dbo].[ProviderAddress] pad on pad.ProviderId = pr1.Id
-		WHERE tp.[Ukprn] = @ukprn AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
+		WHERE tp.[Ukprn] = @ukprn AND tp.[StatusId] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
 	)
 
 	-- Main query
@@ -306,7 +306,7 @@ BEGIN
 	LEFT JOIN ProviderQARs qp1 on qp1.[Ukprn] = ab2.[Ukprn] AND qp1.[IfateReferenceNumber] = stq.[IfateReferenceNumber]
 	LEFT JOIN EmployerStars pes on pes.[Ukprn] = ab2.[Ukprn] 
 	LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = ab2.[Ukprn] 
-	LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[userId] = @userId
+	LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[UserId] = @UserId
 		AND ((sht.[LocationDescription] IS NULL AND @Location IS NULL) OR (sht.[LocationDescription] = @Location))
 	-- regulated check
 	WHERE (stq.IsRegulatedForProvider = 0 OR (stq.IsRegulatedForProvider = 1 AND IsApprovedByRegulator = 1))
