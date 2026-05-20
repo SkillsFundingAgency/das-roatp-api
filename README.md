@@ -2,8 +2,9 @@
 
 <img src="https://avatars.githubusercontent.com/u/9841374?s=200&v=4" align="right" alt="UK Government logo">
 
-[![Build Status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_apis/build/status%2FApprenticeships%20Providers%2Fdas-roatp-api?repoName=SkillsFundingAgency%2Fdas-roatp-api&branchName=refs%2Fpull%2F167%2Fmerge)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build/latest?definitionId=2798&repoName=SkillsFundingAgency%2Fdas-roatp-api&branchName=refs%2Fpull%2F167%2Fmerge)
+[![Build Status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_apis/build/status%2FApprenticeships%20Providers%2Fdas-roatp-api?repoName=SkillsFundingAgency%2Fdas-roatp-api&branchName=main)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build/latest?definitionId=2798&repoName=SkillsFundingAgency%2Fdas-roatp-api&branchName=main)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SkillsFundingAgency_das-roatp-api&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=SkillsFundingAgency_das-roatp-api)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg?longCache=true&style=flat-square)](https://en.wikipedia.org/wiki/MIT_License)
 
 ## About
 The API encapsulates ROATP course management data which is mainly for managing the courses delivery details for all the providers. This solution has two main projects: 
@@ -21,11 +22,11 @@ The SFA.DAS.Roatp.Jobs project that contains functions to reload standards, relo
 ### Pre-requisites
 
 You will need following on your local:
-* .Net 8.0 SDK
+* A clone of this repository
+* Visual studio or similar IDE 
+* .Net 10.0 SDK
 * Azurite or similar local storage emulator
 * SQL Database
-* Visual studio or similar IDE 
-* A clone of this repository
 
 ### Dependencies
 * Setup `RoatpCourseManagement` outer api solution in `das-apim-endpoints`. This has its own dependencies which will be required to be setup as well, see its [readme](https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/RoatpCourseManagement) for further instructions.
@@ -43,7 +44,7 @@ You will need following on your local:
   - PartitionKey: LOCAL
   - RowKey: SFA.DAS.Roatp.Jobs_1.0
   - Data: {The contents of the `SFA.DAS.Roatp.Jobs.json` file}
-  - 
+  
 - In the `SFA.DAS.Roatp.Api` project, add `appSettings.Development.json` file with following content:
 ```json
 {
