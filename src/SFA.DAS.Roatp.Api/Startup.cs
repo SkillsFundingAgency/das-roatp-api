@@ -81,7 +81,7 @@ public class Startup
             .AddDbContextCheck<RoatpDataContext>()
             .AddCheck<StandardsHealthCheck>(StandardsHealthCheck.HealthCheckResultDescription,
                 failureStatus: HealthStatus.Unhealthy,
-                tags: new[] { "ready" });
+                tags: ["ready"]);
 
         services.AddRoatpDataContext(Configuration);
 

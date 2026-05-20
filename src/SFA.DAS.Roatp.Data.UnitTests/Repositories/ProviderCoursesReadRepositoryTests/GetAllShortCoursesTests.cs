@@ -49,13 +49,13 @@ public class GetAllShortCoursesTests
         // assert
         Assert.That(result, Is.Not.Null);
         Assert.That(result.Count, Is.EqualTo(2));
-        CollectionAssert.AreEquivalent(
-        new[]
-        {
+        Assert.That(
+            result.Select(r => (r.Ukprn, r.LarsCode)).ToArray(),
+            Is.EquivalentTo(new[]
+            {
                 (Ukprn: 1001, Lars: shortCourse1.LarsCode),
                 (Ukprn: 1001, Lars: shortCourse2.LarsCode)
-        },
-        result.Select(r => (r.Ukprn, r.LarsCode)).ToArray());
+            }));
     }
 
     [Test]
