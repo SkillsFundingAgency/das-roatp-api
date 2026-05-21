@@ -1,6 +1,6 @@
 ﻿CREATE procedure [dbo].[GetProvidersByLarsCode]
 
-    @Larscode nvarchar(10),   -- Standard by LarsCode - must be set
+    @LarsCode nvarchar(10),   -- Standard by LarsCode - must be set
     @SortOrder varchar(30) = 'Distance', -- order by "Distance", "AchievementRate" or "EmployerProviderRating" , "ApprenticeProviderRating"
     @page int = 1,
     @pageSize int = 10,
@@ -73,21 +73,21 @@ ELSE
 -- cannot have distance with no co-ordinates
 BEGIN
     SET @Distance = NULL;
-    IF @Sortorder = 'Distance'
-        SET @Sortorder = NULL;
+    IF @SortOrder = 'Distance'
+        SET @SortOrder = NULL;
 END;
 
 -- the Standards
-SELECT [Larscode], [IfateReferenceNumber], [Title], [Level], [CourseType], [ApprenticeshipType], [IsRegulatedForProvider], [IsActiveAvailable]
+SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [CourseType], [ApprenticeshipType], [IsRegulatedForProvider], [IsActiveAvailable]
 INTO #Standard
 FROM [dbo].[Standard]
-WHERE [Larscode] = @Larscode;
+WHERE [LarsCode] = @LarsCode;
 
 -- Providers for the Course
 SELECT pc1.[Id]
       ,pr1.[Ukprn]
       ,pr1.[LegalName]
-      ,pc1.[Larscode]
+      ,pc1.[LarsCode]
       ,st1.[IfateReferenceNumber]
       ,st1.[Title], [Level]
       ,pc1.[HasOnlineDeliveryOption]
@@ -96,7 +96,7 @@ SELECT pc1.[Id]
       ,st1.[IsActiveAvailable]
 INTO #ProviderAndCourse
 FROM [dbo].[ProviderCourse] pc1
-JOIN #Standard st1 on st1.Larscode = pc1.Larscode
+JOIN #Standard st1 on st1.LarsCode = pc1.LarsCode
 JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
 JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[StatusId] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
 -- ensure course type is (still) available for the provider and course
@@ -138,10 +138,10 @@ Results
 AS
 (
     SELECT
-        ab2.Larscode
-        ,COUNT(*) OVER (PARTITION BY ab2.Larscode) totalcount
+        ab2.LarsCode
+        ,COUNT(*) OVER (PARTITION BY ab2.LarsCode) totalcount
          -- Ordering calculation for Provider = 0, National = 1, Regional = 2, Online  = 3
-        ,ROW_NUMBER() OVER (PARTITION BY ab2.Larscode
+        ,ROW_NUMBER() OVER (PARTITION BY ab2.LarsCode
                             ORDER BY
                             -- Distance
                              CASE WHEN @SortOrder = 'Distance' THEN MIN(Course_Distance) ELSE 1 END
@@ -200,7 +200,7 @@ AS
 
         SELECT Ukprn
             ,LegalName
-            ,Larscode
+            ,LarsCode
             ,LocationType
             ,AtEmployer
             ,BlockRelease
@@ -213,24 +213,24 @@ AS
                   WHEN LocationOrdering = 9 THEN 99999
                   ELSE 0 END Course_Distance
             -- priority for online, at workplace over at provider (by ukprn and course)
-            ,ROW_NUMBER() OVER (PARTITION BY [Ukprn], [Larscode],
+            ,ROW_NUMBER() OVER (PARTITION BY [Ukprn], [LarsCode],
                                 CASE WHEN LocationType = 3 THEN 1 ELSE 0 END,
                                 CASE WHEN LocationType = 0 THEN 1 ELSE 0 END
                                 ORDER BY Distance) TP_Std_Dist_Seq
             ,Max_LocationOrdering
             ,HasOnlineOption
-            ,COUNT(*) OVER (PARTITION BY [Ukprn], [Larscode]) LocationRows
+            ,COUNT(*) OVER (PARTITION BY [Ukprn], [LarsCode]) LocationRows
         FROM
         (
         SELECT *
-        ,MAX(LocationOrdering) OVER (PARTITION BY Ukprn, Larscode) Max_LocationOrdering
-        ,MAX(CASE WHEN HasOnlineDeliveryOption = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY Ukprn, Larscode) HasOnlineOption
+        ,MAX(LocationOrdering) OVER (PARTITION BY Ukprn, LarsCode) Max_LocationOrdering
+        ,MAX(CASE WHEN HasOnlineDeliveryOption = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY Ukprn, LarsCode) HasOnlineOption
         FROM
             (
             -- Course Management Location data
             SELECT pac.[Ukprn]
                   ,pac.[LegalName]
-                  ,pac.[Larscode]
+                  ,pac.[LarsCode]
                   ,[LocationType]
                   -- Is at Employer ?
                   ,CASE [LocationType]
@@ -274,7 +274,7 @@ AS
             -- Course Management Online courses data
             SELECT pac.[Ukprn]
                   ,pac.[LegalName]
-                  ,pac.[Larscode]
+                  ,pac.[LarsCode]
                   ,3 [LocationType]  -- online
                   -- Is at Employer ?
                   ,0 AtEmployer
@@ -337,7 +337,7 @@ AS
 
     LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = ab2.[Ukprn]
 
-    LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.Larscode AND sht.[UserId] = @userId
+    LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[UserId] = @userId
     AND ISNULL(sht.[LocationDescription],'') = ISNULL(@Location,'')
 
     WHERE 1=1
@@ -353,7 +353,7 @@ AS
     AND (@anylocationfilters = 0 OR @onlineoption = 1 OR Max_LocationOrdering >= 0)
     -- Do not include Online if provider does not have other locations that matched.
     AND NOT (@anylocationfilters > 0 AND @onlineoption = 0 AND LocationRows = 1 AND LocationType = 3)
-    GROUP BY ab2.Ukprn ,ab2.Larscode, ab2.LegalName
+    GROUP BY ab2.Ukprn ,ab2.LarsCode, ab2.LegalName
     , qp1.[Leavers], qp1.[AchievementRate]
     , pes.ReviewCount, pes.Stars, pes.Rating
     , pas.ReviewCount, pas.Stars, pas.Rating
@@ -369,7 +369,7 @@ SELECT
     ,@pageSize "pagesize"
     ,CONVERT(int,ROUND(((@pageSize/2.0-0.5)+isnull(totalcount,0))/@pagesize,0)) "totalpages"
     ,ISNULL(totalcount,0) totalcount
-    ,Standards.Larscode larscode
+    ,Standards.LarsCode larscode
     ,Standards.[Title]+' (level '+CONVERT(varchar,Standards.[Level])+')' standardName
     ,Standards.CourseType courseType
     ,Standards.ApprenticeshipType apprenticeshipType
@@ -395,7 +395,7 @@ SELECT
     ,"providers.apprenticeRating"
     ,"providers.shortlistId"
 FROM #Standard Standards
-LEFT JOIN Results on Results.Larscode = Standards.Larscode
+LEFT JOIN Results on Results.LarsCode = Standards.LarsCode
 ;
 
 DROP TABLE #Standard;

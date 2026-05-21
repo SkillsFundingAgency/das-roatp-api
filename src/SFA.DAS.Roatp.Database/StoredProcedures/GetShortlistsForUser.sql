@@ -1,4 +1,4 @@
-﻿CREATE PROCEDURE GetShortListsForUser ( @UserId uniqueidentifier )
+﻿CREATE PROCEDURE GetShortListsForUser ( @userId uniqueidentifier )
 AS
 BEGIN
 
@@ -36,7 +36,7 @@ BEGIN
             FROM [dbo].[Region] reg1
             JOIN [dbo].[Shortlist] st1 ON st1.Latitude IS NOT NULL
             LEFT JOIN [dbo].[Region] reg2 ON reg1.[Latitude] = reg2.[Latitude] AND reg1.[Longitude]= reg2.[Longitude] AND reg1.[Id] != reg2.[Id]
-            WHERE st1.[UserId] = @UserId
+            WHERE st1.[UserId] = @userId
         ) shtreg
         WHERE seqn = 1
     )
@@ -83,19 +83,19 @@ BEGIN
             ,ContactUsEmail 
             ,ContactUsPhoneNumber 
             ,ContactUsPageUrl
-            ,Larscode
-            ,MAX(CASE WHEN AtEmployer = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [Larscode]) AtEmployer
-            ,MAX(CASE WHEN AtProvider = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [Larscode]) AtProvider
-            ,MIN(CASE WHEN AtProvider = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [Larscode]) ProviderDistance
-            ,MAX(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [Larscode]) BlockRelease
-            ,MIN(CASE WHEN BlockRelease = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [Larscode]) BlockReleaseDistance
-            ,SUM(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [Larscode]) BlockReleaseCount
-            ,MAX(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [Larscode]) DayRelease
-            ,MIN(CASE WHEN DayRelease = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [Larscode]) DayReleaseDistance
-            ,SUM(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [Larscode]) DayReleaseCount
-            ,MAX(CASE WHEN HasOnlineDeliveryOption = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [Larscode]) HasOnlineDeliveryOption
+            ,LarsCode
+            ,MAX(CASE WHEN AtEmployer = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) AtEmployer
+            ,MAX(CASE WHEN AtProvider = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) AtProvider
+            ,MIN(CASE WHEN AtProvider = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) ProviderDistance
+            ,MAX(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) BlockRelease
+            ,MIN(CASE WHEN BlockRelease = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) BlockReleaseDistance
+            ,SUM(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) BlockReleaseCount
+            ,MAX(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) DayRelease
+            ,MIN(CASE WHEN DayRelease = 1 THEN Distance ELSE NULL END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) DayReleaseDistance
+            ,SUM(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) DayReleaseCount
+            ,MAX(CASE WHEN HasOnlineDeliveryOption = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]) HasOnlineDeliveryOption
             -- priority for online, at workplace over at provider (by ukprn and course)
-            ,ROW_NUMBER() OVER (PARTITION BY ShortlistId, [Ukprn], [Larscode]
+            ,ROW_NUMBER() OVER (PARTITION BY ShortlistId, [Ukprn], [LarsCode]
                                 ORDER BY Distance) TP_Std_Dist_Seq
         FROM
             (
@@ -103,7 +103,7 @@ BEGIN
             SELECT st1.[Id] ShortlistId
                   ,st1.CreatedDate
                   ,st1.[UserId]
-                  ,st1.[Larscode]
+                  ,st1.[LarsCode]
                   ,st1.[Ukprn]
                   ,st1.LocationDescription 
                   ,pr1.LegalName
@@ -138,14 +138,14 @@ BEGIN
                    ELSE 0 END AS Distance
               FROM [dbo].[Shortlist] st1
                 LEFT JOIN ShortlistedRegions slr on slr.[ShortlistId] = st1.[Id]
-                JOIN [dbo].[ProviderCourse] pc1 on st1.[Larscode] = pc1.[Larscode] 
+                JOIN [dbo].[ProviderCourse] pc1 on st1.[Larscode] = pc1.[LarsCode] 
                 JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId AND pr1.Ukprn = st1.[Ukprn]
                 JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[StatusId] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
                 -- Left Join for Online
                 LEFT JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
                 LEFT JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
                 WHERE 1=1
-                AND [UserId] = @UserId
+                AND [UserId] = @userId
               ) ab1 
         WHERE 1=1
         AND LocationOrdering != 9 -- exclude outside Regions
@@ -220,18 +220,18 @@ BEGIN
             ,providers.apprenticeReviews
             ,providers.apprenticeStars
             ,providers.apprenticeRating
-        FROM (SELECT @userid "userId", @QARPeriod "qarPeriod", @ReviewPeriod "reviewPeriod", MAX(CreatedDate) maxCreatedDate
+        FROM (SELECT @userId "userId", @QARPeriod "qarPeriod", @ReviewPeriod "reviewPeriod", MAX(CreatedDate) maxCreatedDate
               FROM #MainQuery) toplevel
         JOIN (
-            SELECT DISTINCT @userid "userId", "ordering", larsCode, standardName, courseType, apprenticeshipType 
+            SELECT DISTINCT @userId "userId", "ordering", Larscode, standardName, courseType, apprenticeshipType 
             FROM #MainQuery ) AS courses 
         ON courses."userId" = toplevel."userId"
         JOIN (
-            SELECT DISTINCT larsCode, "l2.ordering" ordering, locationDescription 
+            SELECT DISTINCT Larscode, "l2.ordering" ordering, LocationDescription 
             FROM #MainQuery ) AS locations 
-        ON courses.larsCode = locations.larsCode
+        ON courses.Larscode = locations.Larscode
         JOIN (
-            SELECT larsCode, "l2.ordering" 
+            SELECT Larscode, "l2.ordering" 
             ,"l2.p3.ordering" ordering
             ,shortlistId shortlistId
             ,MainQuery.ukprn ukprn
