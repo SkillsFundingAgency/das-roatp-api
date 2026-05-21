@@ -103,7 +103,7 @@ BEGIN
             SELECT st1.[Id] ShortlistId
                   ,st1.CreatedDate
                   ,st1.[UserId]
-                  ,st1.[LarsCode]
+                  ,st1.[Larscode]
                   ,st1.[Ukprn]
                   ,st1.LocationDescription 
                   ,pr1.LegalName
@@ -152,7 +152,7 @@ BEGIN
 
         ) ab2
     -- Standards 
-    JOIN [dbo].[Standard] stq on stq.Larscode = ab2.Larscode
+    JOIN [dbo].[Standard] stq on stq.LarsCode = ab2.Larscode
     WHERE 1=1
     AND TP_Std_Dist_Seq = 1 -- just one row of result per shortlistId
     ;
@@ -233,8 +233,8 @@ BEGIN
         JOIN (
             SELECT Larscode, "l2.ordering" 
             ,"l2.p3.ordering" ordering
-            ,shortlistId shortlistId
-            ,MainQuery.ukprn ukprn
+            ,ShortlistId shortlistId
+            ,MainQuery.Ukprn ukprn
             ,providerName providerName
             ,CAST(CASE WHEN AtEmployer = 1 THEN 1 ELSE 0 END AS BIT) atEmployer
             ,CAST(CASE WHEN AtProvider = 1 THEN 1 ELSE 0 END AS BIT) atProvider
@@ -267,9 +267,9 @@ BEGIN
             ,ISNULL(pas.Rating,'NotYetReviewed') apprenticeRating
 
             FROM #MainQuery MainQuery 
-            LEFT JOIN ProviderQARs qp1 on qp1.[Ukprn] = MainQuery.ukprn AND qp1.[IfateReferenceNumber] = MainQuery.[IfateReferenceNumber]
-            LEFT JOIN EmployerStars pes on pes.[Ukprn] = MainQuery.ukprn 
-            LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = MainQuery.ukprn
+            LEFT JOIN ProviderQARs qp1 on qp1.[Ukprn] = MainQuery.Ukprn AND qp1.[IfateReferenceNumber] = MainQuery.[IfateReferenceNumber]
+            LEFT JOIN EmployerStars pes on pes.[Ukprn] = MainQuery.Ukprn 
+            LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = MainQuery.Ukprn
         ) AS providers
         ON locations.larsCode = providers.larsCode AND locations.ordering = providers."l2.ordering"
         ORDER BY courses.ordering, locations.ordering, providers.ordering
