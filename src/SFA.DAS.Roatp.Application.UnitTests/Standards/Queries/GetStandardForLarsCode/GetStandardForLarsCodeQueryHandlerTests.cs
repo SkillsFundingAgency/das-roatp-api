@@ -57,20 +57,4 @@ public class GetStandardForLarsCodeQueryHandlerTests
 
         repositoryMock.Verify(r => r.GetStandard(larsCode), Times.Once);
     }
-
-    [Test, RecursiveMoqAutoData()]
-    public async Task Handle_WhenStandardExists_VerifyLogger(
-        string larsCode,
-        [Frozen] Mock<IStandardsReadRepository> repositoryMock,
-        [Frozen] Mock<ILogger<GetStandardForLarsCodeQueryHandler>> loggerMock,
-        GetStandardForLarsCodeQueryHandler sut)
-    {
-        var expectedStandard = new Standard { LarsCode = larsCode };
-        repositoryMock.Setup(r => r.GetStandard(It.Is<string>(s => s == larsCode)))
-            .ReturnsAsync(expectedStandard);
-
-        var query = new GetStandardForLarsCodeQuery(larsCode);
-
-        var response = await sut.Handle(query, CancellationToken.None);
-    }
 }
