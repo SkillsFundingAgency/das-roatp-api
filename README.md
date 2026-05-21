@@ -19,6 +19,17 @@ There are two sets of endpoints:
 ### Jobs
 The SFA.DAS.Roatp.Jobs project that contains functions to reload standards, reload provider details, update provider address and coordinates and import provider achievement rates. 
 
+#### Functions summary
+- `DeleteExpiredShortlistsFunction`: Removes expired shortlists via the outer API.
+- `ImportAnnualFeedbackSummariesFunction`: Imports annual apprentice and employer feedback summaries when data for the configured period is not already present.
+- `LoadAllProviderAddressesFunction`: Load and persist addresses for all providers.
+- `LoadProvidersAddressFunction`: Load provider addresses updated since the last run.
+- `ReloadProviderRegistrationDetailsFunction`: Reloads provider registration details, addresses, coordinates, and provider details from course api.
+- `ReloadStandardsCacheFunction`: Refreshes the standards cache from course api.
+- `SendInitialForecastEmailsFunction`: Sends initial forecast reminder emails for recently added short courses.
+- `SendForecastsReminderEmailsFunction`: Sends periodic forecast reminder emails to providers with short courses that have missing or out-of-date forecasts.
+- `UpdateProviderAddressCoordinatesFunction`: Updates stored provider address coordinates.
+
 ## Developer Setup
 
 ### Pre-requisites
@@ -108,7 +119,7 @@ You will need following on your local:
 ```
 
 ### Initializing the data
-- Publish the database project SFA.DAS.RoATP.Database to your local SQL Server instance.
+- Publish the database project `SFA.DAS.RoATP.Database` to your local SQL Server instance.
 - Seed following tables via manual scripts or by running respective jobs 
 1) __Standard__: run job `ReloadStandardsCacheFunction`
 2) __ProviderRegistrationDetail__: run jobs in this order `ReloadProviderRegistrationDetailsFunction`, `LoadAllProviderAddressesFunction`
