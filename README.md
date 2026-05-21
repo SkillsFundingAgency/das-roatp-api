@@ -11,7 +11,9 @@ The API encapsulates ROATP course management data which is mainly for managing t
 
 ### API
 There are two sets of endpoints: 
-* Management: These endpoints are used by the course management web solution (https://github.com/SkillsFundingAgency/das-roatp-coursemanagement-web) which communicates with it via the outer api layer (https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/RoatpCourseManagement). 
+* Management: These endpoints are used by 
+   -  `course management web` solution (https://github.com/SkillsFundingAgency/das-roatp-coursemanagement-web) which communicates with it via the outer api layer (https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/RoatpCourseManagement)
+   -  `find apprenticeship training web` solution (https://github.com/SkillsFundingAgency/das-findapprenticeshiptraining) which communicates with it via the outer api layer (https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/FindApprenticeshipTraining)
 * Integration: These endpoint are used by other services for integration purpose
 
 ### Jobs
@@ -84,24 +86,23 @@ You will need following on your local:
     "QarTimePeriod": "202223",
     "QarOverallImportFileName": "app-narts-subject-and-level-detailed.csv",
     "QarProviderLevelImportFileName": "app-narts-provider-level-fwk-std.csv",
-    "ReloadStandardsCacheSchedule": "0 0 20 * * 1-5",
-    "ReloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
-    "UpdateUkrlpDataSchedule": "0 0 23 * * 1-5",
-    "UpdateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
     "DeleteExpiredShortlistsSchedule": "0 0 2 * * *",
     "ImportAnnualFeedbackSummariesFunctionSchedule": "0 0 4 1-10 8 *",
+    "UpdateUkrlpDataSchedule": "0 0 23 * * 1-5",
+    "ReloadStandardsCacheSchedule": "0 0 20 * * 1-5",
+    "ReloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
     "SendInitialForecastEmailsFunctionSchedule": "0 0 3 * * *",
     "SendForecastsReminderEmailsFunctionSchedule": "0 0 0 15 */3,6,9,12 *",
+    "UpdateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
     "AzureWebJobs.DeleteExpiredShortlistsFunction.Disabled": true,
-    "AzureWebJobs.ImportAchievementRatesFunction.Disabled": true,
+    "AzureWebJobs.ImportAnnualFeedbackSummariesFunction.Disabled": true,
     "AzureWebJobs.LoadAllProviderAddressesFunction.Disabled": true,
     "AzureWebJobs.LoadProvidersAddressFunction.Disabled": true,
     "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": true,
     "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": true,
-    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true,
-    "AzureWebJobs.ImportAnnualFeedbackSummariesFunction.Disabled": true,
     "AzureWebJobs.SendInitialForecastEmailsFunction.Disabled": true,
-    "AzureWebJobs.SendForecastsReminderEmailsFunction.Disabled": true
+    "AzureWebJobs.SendForecastsReminderEmailsFunction.Disabled": true,
+    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true,
   }
 }
 ```
