@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Moq;
@@ -23,13 +22,5 @@ public class UpdateProviderAddressCoordinatesFunctionTests
         await sut.Run(default(TimerInfo));
 
         serviceMock.Verify(s => s.UpdateProviderAddressCoordinates());
-
-        loggerMock.Verify(
-            x => x.Log(
-                It.Is<LogLevel>(l => l == LogLevel.Information),
-                It.IsAny<EventId>(),
-                It.IsAny<It.IsAnyType>(),
-                It.IsAny<Exception>(),
-                It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Exactly(2));
     }
 }

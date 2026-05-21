@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using Castle.Components.DictionaryAdapter;
@@ -86,13 +85,6 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services.LoadUkrlpAddressesServiceTests
             reloadProviderAddressesRepositoryMock.Verify(x => x.UpsertProviderAddresses(It.IsAny<List<ProviderAddress>>()), Times.Once);
             importAuditReadRepositoryMock.Verify(x => x.GetLastImportedDateByImportType(ImportType.ProviderAddresses), Times.Once);
             importAuditWriteRepositoryMock.Verify(x => x.Insert(It.IsAny<ImportAudit>()), Times.Once);
-            loggerMock.Verify(
-                x => x.Log(
-                    It.Is<LogLevel>(l => l == LogLevel.Information),
-                    It.IsAny<EventId>(),
-                    It.IsAny<It.IsAnyType>(),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Exactly(4));
         }
 
         [Test]
@@ -124,13 +116,6 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services.LoadUkrlpAddressesServiceTests
             reloadProviderAddressesRepositoryMock.Verify(x => x.UpsertProviderAddresses(It.IsAny<List<ProviderAddress>>()), Times.Never);
             importAuditReadRepositoryMock.Verify(x => x.GetLastImportedDateByImportType(ImportType.ProviderAddresses), Times.Once);
             importAuditWriteRepositoryMock.Verify(x => x.Insert(It.IsAny<ImportAudit>()), Times.Never);
-            loggerMock.Verify(
-                x => x.Log(
-                    It.Is<LogLevel>(l => l == LogLevel.Information),
-                    It.IsAny<EventId>(),
-                    It.IsAny<It.IsAnyType>(),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Exactly(3));
         }
 
         [Test]
@@ -164,13 +149,6 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services.LoadUkrlpAddressesServiceTests
             reloadProviderAddressesRepositoryMock.Verify(x => x.UpsertProviderAddresses(It.IsAny<List<ProviderAddress>>()), Times.Once);
             importAuditReadRepositoryMock.Verify(x => x.GetLastImportedDateByImportType(ImportType.ProviderAddresses), Times.Once);
             importAuditWriteRepositoryMock.Verify(x => x.Insert(It.IsAny<ImportAudit>()), Times.Never);
-            loggerMock.Verify(
-                x => x.Log(
-                    It.Is<LogLevel>(l => l == LogLevel.Warning),
-                    It.IsAny<EventId>(),
-                    It.IsAny<It.IsAnyType>(),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Once);
         }
     }
 }

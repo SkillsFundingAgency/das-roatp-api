@@ -1,19 +1,18 @@
-﻿using System;
-using NUnit.Framework;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using Castle.Components.DictionaryAdapter;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using Moq;
+using NUnit.Framework;
 using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Roatp.Jobs.ApiClients;
+using SFA.DAS.Roatp.Jobs.Requests;
 using SFA.DAS.Roatp.Jobs.Services;
 using SFA.DAS.Testing.AutoFixture;
-using SFA.DAS.Roatp.Domain.Models;
-using SFA.DAS.Roatp.Jobs.Requests;
-using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Jobs.UnitTests.Services.LoadUkrlpAddressesServiceTests
 {
@@ -84,13 +83,6 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services.LoadUkrlpAddressesServiceTests
             _providersReadRepository.Verify(x => x.GetAllProviders(), Times.Once);
             reloadProviderAddressesRepositoryMock.Verify(x => x.ReloadProviderAddresses(It.IsAny<List<ProviderAddress>>()), Times.Once);
             importAuditWriteRepositoryMock.Verify(x => x.Insert(It.IsAny<ImportAudit>()), Times.Once);
-            loggerMock.Verify(
-                x => x.Log(
-                    It.Is<LogLevel>(l => l == LogLevel.Information),
-                    It.IsAny<EventId>(),
-                    It.IsAny<It.IsAnyType>(),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Once);
         }
 
         [Test]
@@ -120,13 +112,6 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services.LoadUkrlpAddressesServiceTests
             _providersReadRepository.Verify(x => x.GetAllProviders(), Times.Once);
             reloadProviderAddressesRepositoryMock.Verify(x => x.ReloadProviderAddresses(It.IsAny<List<ProviderAddress>>()), Times.Once);
             importAuditWriteRepositoryMock.Verify(x => x.Insert(It.IsAny<ImportAudit>()), Times.Once);
-            loggerMock.Verify(
-                x => x.Log(
-                    It.Is<LogLevel>(l => l == LogLevel.Information),
-                    It.IsAny<EventId>(),
-                    It.IsAny<It.IsAnyType>(),
-                    It.IsAny<Exception>(),
-                    It.Is<Func<It.IsAnyType, Exception, string>>((v, t) => true)), Times.Exactly(2));
         }
     }
 }

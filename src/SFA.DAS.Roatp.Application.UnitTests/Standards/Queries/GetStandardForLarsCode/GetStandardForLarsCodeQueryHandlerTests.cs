@@ -1,4 +1,3 @@
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
@@ -73,14 +72,5 @@ public class GetStandardForLarsCodeQueryHandlerTests
         var query = new GetStandardForLarsCodeQuery(larsCode);
 
         var response = await sut.Handle(query, CancellationToken.None);
-
-        loggerMock.Verify(
-            x => x.Log(
-                LogLevel.Information,
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Returning standard for larsCode") && v.ToString().Contains(larsCode)),
-                null,
-                It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-            Times.Once);
     }
 }

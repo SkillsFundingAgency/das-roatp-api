@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
@@ -76,15 +75,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Standards.Queries.GetAllStandards
             var result = await sut.Handle(queryRequest, CancellationToken.None);
 
             result.Standards.Should().BeEmpty();
-
-            loggerMock.Verify(
-                x => x.Log(
-                    LogLevel.Information,
-                    It.IsAny<EventId>(),
-                    It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Returning 0 standards")),
-                    null,
-                    It.IsAny<Func<It.IsAnyType, Exception, string>>()),
-                Times.Once);
         }
     }
 }

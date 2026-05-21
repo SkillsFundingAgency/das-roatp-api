@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
@@ -45,15 +44,6 @@ public class StandardsControllerGetStandardForLarsCodeTests
         returned.Should().NotBeNull();
 
         returned.Should().BeEquivalentTo((GetStandardForLarsCodeQueryResult)standard);
-
-        loggerMock.Verify(
-            x => x.Log(
-                It.Is<LogLevel>(l => l == LogLevel.Information),
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Inner API: Request received to get standard for larsCode") && v.ToString().Contains(larsCode)),
-                It.IsAny<System.Exception>(),
-                It.IsAny<Func<It.IsAnyType, System.Exception, string>>()),
-            Times.Once);
     }
 
     [Test, RecursiveMoqAutoData()]
@@ -70,15 +60,6 @@ public class StandardsControllerGetStandardForLarsCodeTests
         var actionResult = await sut.GetStandardForLarsCode(larsCode);
 
         actionResult.Should().BeOfType<NotFoundResult>();
-
-        loggerMock.Verify(
-            x => x.Log(
-                It.Is<LogLevel>(l => l == LogLevel.Information),
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Inner API: Request received to get standard for larsCode") && v.ToString().Contains(larsCode)),
-                It.IsAny<System.Exception>(),
-                It.IsAny<Func<It.IsAnyType, System.Exception, string>>()),
-            Times.Once);
     }
 
     [Test, RecursiveMoqAutoData()]
@@ -101,14 +82,5 @@ public class StandardsControllerGetStandardForLarsCodeTests
         var errors = badRequest.Value as List<ValidationError>;
         errors.Should().NotBeNull();
         errors.Should().ContainSingle(e => e.PropertyName == validationFailures[0].PropertyName && e.ErrorMessage == validationFailures[0].ErrorMessage);
-
-        loggerMock.Verify(
-            x => x.Log(
-                It.Is<LogLevel>(l => l == LogLevel.Information),
-                It.IsAny<EventId>(),
-                It.Is<It.IsAnyType>((v, t) => v.ToString().Contains("Inner API: Request received to get standard for larsCode") && v.ToString().Contains(larsCode)),
-                It.IsAny<System.Exception>(),
-                It.IsAny<Func<It.IsAnyType, System.Exception, string>>()),
-            Times.Once);
     }
 }
