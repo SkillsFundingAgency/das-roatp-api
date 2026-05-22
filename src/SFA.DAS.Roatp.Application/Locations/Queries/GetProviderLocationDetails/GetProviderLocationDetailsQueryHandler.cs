@@ -1,12 +1,12 @@
-﻿using MediatR;
+﻿using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
+using MediatR;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using ProviderLocationModel = SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations.ProviderLocationModel;
 
 namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails
@@ -41,6 +41,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails
                 standardModel.Title = matchedStandard.Title;
                 standardModel.LarsCode = matchedStandard.LarsCode;
                 standardModel.Level = matchedStandard.Level;
+                standardModel.LearningType = matchedStandard.ApprenticeshipType;
 
                 var providerCourse = location.Provider.Courses.FirstOrDefault(c => c.LarsCode == matchedStandard.LarsCode);
 
