@@ -2,30 +2,44 @@
 
 <img src="https://avatars.githubusercontent.com/u/9841374?s=200&v=4" align="right" alt="UK Government logo">
 
-[![Build Status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_apis/build/status%2FApprenticeships%20Providers%2Fdas-roatp-api?repoName=SkillsFundingAgency%2Fdas-roatp-api&branchName=refs%2Fpull%2F167%2Fmerge)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build/latest?definitionId=2798&repoName=SkillsFundingAgency%2Fdas-roatp-api&branchName=refs%2Fpull%2F167%2Fmerge)
+[![Build Status](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_apis/build/status%2FApprenticeships%20Providers%2Fdas-roatp-api?repoName=SkillsFundingAgency%2Fdas-roatp-api&branchName=main)](https://sfa-gov-uk.visualstudio.com/Digital%20Apprenticeship%20Service/_build/latest?definitionId=2798&repoName=SkillsFundingAgency%2Fdas-roatp-api&branchName=main)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SkillsFundingAgency_das-roatp-api&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=SkillsFundingAgency_das-roatp-api)
+[![License](https://img.shields.io/badge/license-MIT-lightgrey.svg?longCache=true&style=flat-square)](https://en.wikipedia.org/wiki/MIT_License)
 
 ## About
 The API encapsulates ROATP course management data which is mainly for managing the courses delivery details for all the providers. This solution has two main projects: 
 
 ### API
 There are two sets of endpoints: 
-* Management: These endpoints are used by the course management web solution (https://github.com/SkillsFundingAgency/das-roatp-coursemanagement-web) which communicates with it via the outer api layer (https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/RoatpCourseManagement). 
+* Management: These endpoints are used by 
+   -  `course management web` solution (https://github.com/SkillsFundingAgency/das-roatp-coursemanagement-web) which communicates with it via the outer api layer (https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/RoatpCourseManagement)
+   -  `find apprenticeship training web` solution (https://github.com/SkillsFundingAgency/das-findapprenticeshiptraining) which communicates with it via the outer api layer (https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/FindApprenticeshipTraining)
 * Integration: These endpoint are used by other services for integration purpose
 
 ### Jobs
 The SFA.DAS.Roatp.Jobs project that contains functions to reload standards, reload provider details, update provider address and coordinates and import provider achievement rates. 
+
+#### Functions summary
+- `DeleteExpiredShortlistsFunction`: Removes expired shortlists via the outer API.
+- `ImportAnnualFeedbackSummariesFunction`: Imports annual apprentice and employer feedback summaries when data for the configured period is not already present.
+- `LoadAllProviderAddressesFunction`: Load and persist addresses for all providers.
+- `LoadProvidersAddressFunction`: Load provider addresses updated since the last run.
+- `ReloadProviderRegistrationDetailsFunction`: Reloads provider registration details, addresses, coordinates, and provider details from course api.
+- `ReloadStandardsCacheFunction`: Refreshes the standards cache from course api.
+- `SendInitialForecastEmailsFunction`: Sends initial forecast reminder emails for recently added short courses.
+- `SendForecastsReminderEmailsFunction`: Sends periodic forecast reminder emails to providers with short courses that have missing or out-of-date forecasts.
+- `UpdateProviderAddressCoordinatesFunction`: Updates stored provider address coordinates.
 
 ## Developer Setup
 
 ### Pre-requisites
 
 You will need following on your local:
-* .Net 8.0 SDK
+* A clone of this repository
+* Visual studio or similar IDE 
+* .Net 10.0 SDK
 * Azurite or similar local storage emulator
 * SQL Database
-* Visual studio or similar IDE 
-* A clone of this repository
 
 ### Dependencies
 * Setup `RoatpCourseManagement` outer api solution in `das-apim-endpoints`. This has its own dependencies which will be required to be setup as well, see its [readme](https://github.com/SkillsFundingAgency/das-apim-endpoints/tree/master/src/RoatpCourseManagement) for further instructions.
@@ -43,7 +57,7 @@ You will need following on your local:
   - PartitionKey: LOCAL
   - RowKey: SFA.DAS.Roatp.Jobs_1.0
   - Data: {The contents of the `SFA.DAS.Roatp.Jobs.json` file}
-  - 
+  
 - In the `SFA.DAS.Roatp.Api` project, add `appSettings.Development.json` file with following content:
 ```json
 {
@@ -83,30 +97,29 @@ You will need following on your local:
     "QarTimePeriod": "202223",
     "QarOverallImportFileName": "app-narts-subject-and-level-detailed.csv",
     "QarProviderLevelImportFileName": "app-narts-provider-level-fwk-std.csv",
-    "ReloadStandardsCacheSchedule": "0 0 20 * * 1-5",
-    "ReloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
-    "UpdateUkrlpDataSchedule": "0 0 23 * * 1-5",
-    "UpdateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
     "DeleteExpiredShortlistsSchedule": "0 0 2 * * *",
     "ImportAnnualFeedbackSummariesFunctionSchedule": "0 0 4 1-10 8 *",
+    "UpdateUkrlpDataSchedule": "0 0 23 * * 1-5",
+    "ReloadStandardsCacheSchedule": "0 0 20 * * 1-5",
+    "ReloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
     "SendInitialForecastEmailsFunctionSchedule": "0 0 3 * * *",
     "SendForecastsReminderEmailsFunctionSchedule": "0 0 0 15 */3,6,9,12 *",
+    "UpdateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
     "AzureWebJobs.DeleteExpiredShortlistsFunction.Disabled": true,
-    "AzureWebJobs.ImportAchievementRatesFunction.Disabled": true,
+    "AzureWebJobs.ImportAnnualFeedbackSummariesFunction.Disabled": true,
     "AzureWebJobs.LoadAllProviderAddressesFunction.Disabled": true,
     "AzureWebJobs.LoadProvidersAddressFunction.Disabled": true,
     "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": true,
     "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": true,
-    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true,
-    "AzureWebJobs.ImportAnnualFeedbackSummariesFunction.Disabled": true,
     "AzureWebJobs.SendInitialForecastEmailsFunction.Disabled": true,
-    "AzureWebJobs.SendForecastsReminderEmailsFunction.Disabled": true
+    "AzureWebJobs.SendForecastsReminderEmailsFunction.Disabled": true,
+    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true,
   }
 }
 ```
 
 ### Initializing the data
-- Publish the database project SFA.DAS.RoATP.Database to your local SQL Server instance.
+- Publish the database project `SFA.DAS.RoATP.Database` to your local SQL Server instance.
 - Seed following tables via manual scripts or by running respective jobs 
 1) __Standard__: run job `ReloadStandardsCacheFunction`
 2) __ProviderRegistrationDetail__: run jobs in this order `ReloadProviderRegistrationDetailsFunction`, `LoadAllProviderAddressesFunction`

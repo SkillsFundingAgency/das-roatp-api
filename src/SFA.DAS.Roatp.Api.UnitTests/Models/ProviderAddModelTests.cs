@@ -1,4 +1,4 @@
-﻿using AutoFixture.NUnit3;
+﻿using AutoFixture.NUnit4;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Models;
 using FluentAssertions;

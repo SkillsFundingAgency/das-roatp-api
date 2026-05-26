@@ -1,6 +1,6 @@
 ﻿CREATE procedure [dbo].[GetProvidersByLarsCode]
 
-    @larscode nvarchar(10),   -- Standard by LarsCode - must be set
+    @LarsCode nvarchar(10),   -- Standard by LarsCode - must be set
     @SortOrder varchar(30) = 'Distance', -- order by "Distance", "AchievementRate" or "EmployerProviderRating" , "ApprenticeProviderRating"
     @page int = 1,
     @pageSize int = 10,
@@ -17,7 +17,7 @@
     @employerProviderRatings varchar(100) = null, -- any combo of 'Excellent', 'Good', 'Poor', 'VeryPoor' and 'NotYetReviewed' , or NULL
     @apprenticeProviderRatings varchar(100) = null, -- any combo of 'Excellent', 'Good', 'Poor', 'VeryPoor' and 'NotYetReviewed' , or NULL
     @Location varchar(200) = null,
-    @userid uniqueidentifier = null
+    @userId uniqueidentifier = null
 
 as
 
@@ -64,24 +64,24 @@ DECLARE @NearestRegionId int,
 
 IF @Latitude IS NOT NULL
 -- match to nearest region (which may have an alternative with same co-ordinates)
-    SELECT TOP 1 @NearestRegionId = reg1.[Id] , @AlternativeRegionid = reg2.[id]
+    SELECT TOP 1 @NearestRegionId = reg1.[Id] , @AlternativeRegionId = reg2.[Id]
     FROM [dbo].[Region] reg1
-    LEFT JOIN [dbo].[Region] reg2 ON reg1.[Latitude] = reg2.[Latitude] AND reg1.[Longitude]= reg2.[Longitude] AND reg1.[Id] != reg2.[id]
+    LEFT JOIN [dbo].[Region] reg2 ON reg1.[Latitude] = reg2.[Latitude] AND reg1.[Longitude]= reg2.[Longitude] AND reg1.[Id] != reg2.[Id]
         ORDER BY geography::Point(reg1.Latitude, reg1.Longitude, 4326)
-                .STDistance(geography::Point(@Latitude, @Longitude, 4326)), reg1.[id];
+                .STDistance(geography::Point(@Latitude, @Longitude, 4326)), reg1.[Id];
 ELSE
 -- cannot have distance with no co-ordinates
 BEGIN
     SET @Distance = NULL;
-    IF @Sortorder = 'Distance'
-        SET @Sortorder = NULL;
+    IF @SortOrder = 'Distance'
+        SET @SortOrder = NULL;
 END;
 
 -- the Standards
 SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [CourseType], [LearningType], [IsRegulatedForProvider], [IsActiveAvailable]
 INTO #Standard
 FROM [dbo].[Standard]
-WHERE [LarsCode] = @larscode;
+WHERE [LarsCode] = @LarsCode;
 
 -- Providers for the Course
 SELECT pc1.[Id]
@@ -98,7 +98,7 @@ INTO #ProviderAndCourse
 FROM [dbo].[ProviderCourse] pc1
 JOIN #Standard st1 on st1.LarsCode = pc1.LarsCode
 JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
-JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
+JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[StatusId] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
 -- ensure course type is (still) available for the provider and course
 JOIN [dbo].[ProviderCourseType] pct on pct.Ukprn = pr1.[Ukprn] AND pct.CourseType = st1.CourseType
 --regulated check
@@ -138,10 +138,10 @@ Results
 AS
 (
     SELECT
-        ab2.Larscode
-        ,COUNT(*) OVER (PARTITION BY ab2.Larscode) totalcount
+        ab2.LarsCode
+        ,COUNT(*) OVER (PARTITION BY ab2.LarsCode) totalcount
          -- Ordering calculation for Provider = 0, National = 1, Regional = 2, Online  = 3
-        ,ROW_NUMBER() OVER (PARTITION BY ab2.Larscode
+        ,ROW_NUMBER() OVER (PARTITION BY ab2.LarsCode
                             ORDER BY
                             -- Distance
                              CASE WHEN @SortOrder = 'Distance' THEN MIN(Course_Distance) ELSE 1 END
@@ -200,7 +200,7 @@ AS
 
         SELECT Ukprn
             ,LegalName
-            ,Larscode
+            ,LarsCode
             ,LocationType
             ,AtEmployer
             ,BlockRelease
@@ -223,8 +223,8 @@ AS
         FROM
         (
         SELECT *
-        ,MAX(LocationOrdering) OVER (PARTITION BY Ukprn, Larscode) Max_LocationOrdering
-        ,MAX(CASE WHEN HasOnlineDeliveryOption = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY Ukprn, Larscode) HasOnlineOption
+        ,MAX(LocationOrdering) OVER (PARTITION BY Ukprn, LarsCode) Max_LocationOrdering
+        ,MAX(CASE WHEN HasOnlineDeliveryOption = 1 THEN 1 ELSE 0 END) OVER (PARTITION BY Ukprn, LarsCode) HasOnlineOption
         FROM
             (
             -- Course Management Location data
@@ -248,7 +248,7 @@ AS
                    WHEN [LocationType] = 1 THEN 1  -- National
                    WHEN pl1.[RegionId] IS NOT NULL THEN
                         (CASE WHEN pl1.[RegionId] = @NearestRegionId THEN 0 -- same Region
-                              WHEN @AlternativeRegionid IS NOT NULL AND pl1.[RegionId] = @AlternativeRegionid THEN 0 -- alternative Region
+                              WHEN @AlternativeRegionId IS NOT NULL AND pl1.[RegionId] = @AlternativeRegionId THEN 0 -- alternative Region
                               ELSE 9 -- other Regions
                               END)
                    ELSE 9 -- other
@@ -369,7 +369,7 @@ SELECT
     ,@pageSize "pagesize"
     ,CONVERT(int,ROUND(((@pageSize/2.0-0.5)+isnull(totalcount,0))/@pagesize,0)) "totalpages"
     ,ISNULL(totalcount,0) totalcount
-    ,Standards.Larscode larscode
+    ,Standards.LarsCode larscode
     ,Standards.[Title]+' (level '+CONVERT(varchar,Standards.[Level])+')' standardName
     ,Standards.CourseType courseType
     ,Standards.LearningType learningType
@@ -395,7 +395,7 @@ SELECT
     ,"providers.apprenticeRating"
     ,"providers.shortlistId"
 FROM #Standard Standards
-LEFT JOIN Results on Results.Larscode = Standards.Larscode
+LEFT JOIN Results on Results.LarsCode = Standards.LarsCode
 ;
 
 DROP TABLE #Standard;
