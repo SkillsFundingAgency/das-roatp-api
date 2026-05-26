@@ -68,7 +68,6 @@
     <Build Include="Tables\Provider.sql" />
     <Build Include="Tables\ProviderLocation.sql" />
     <Build Include="Tables\ProviderCourse.sql" />
-    <Build Include="Tables\ProviderCourseVersion.sql" />
     <Build Include="Tables\ProviderCourseLocation.sql" />
     <Build Include="Tables\Standard.sql" />
     <Build Include="Tables\Region.sql" />

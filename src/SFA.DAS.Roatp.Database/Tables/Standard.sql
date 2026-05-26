@@ -5,7 +5,6 @@
     [IfateReferenceNumber] VARCHAR(10) NOT NULL,
     [Level] INT NOT NULL,
     [Title] VARCHAR(1000) NOT NULL,
-    [Version] VARCHAR(10) NULL,
     [ApprovalBody] VARCHAR(1000) NULL,
     [IsRegulatedForProvider] BIT NOT NULL DEFAULT 0,
     [Duration] INT NOT NULL,

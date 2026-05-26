@@ -36,6 +36,12 @@ BEGIN
 END
 GO
 
+IF OBJECT_ID(N'[dbo].[ProviderCourseVersion]', N'U') IS NOT NULL
+BEGIN
+    DROP TABLE [dbo].[ProviderCourseVersion];
+END
+GO
+
 IF Exists(SELECT * from sys.indexes where name = 'UK_ProviderLocation_ProviderId_LocationName')
 ALTER TABLE [dbo].[ProviderLocation] DROP CONSTRAINT [UK_ProviderLocation_ProviderId_LocationName]
 GO
