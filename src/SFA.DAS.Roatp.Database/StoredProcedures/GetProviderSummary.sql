@@ -45,7 +45,7 @@ BEGIN
 		SELECT [Ukprn], [Leavers], [AchievementRate]
 			FROM [dbo].[ProviderQAR] 
 		WHERE [TimePeriod] = @QARPeriod AND 
-		      [Ukprn] = @ukprn
+		      [Ukprn] = @Ukprn
 	),
 
 	-- ENPLOYER FEEDBACK
@@ -54,7 +54,7 @@ BEGIN
 		SELECT [Ukprn], [ReviewCount], [Stars], [Rating]
 			FROM [dbo].[ProviderEmployerStars] 
 		WHERE [TimePeriod] = @feedbackperiod AND 
-		      [Ukprn] = @ukprn
+		      [Ukprn] = @Ukprn
 	),
 
 	-- APPRENTICE FEEDBACK
@@ -63,7 +63,7 @@ BEGIN
 		SELECT [Ukprn], [ReviewCount], [Stars], [Rating]
 		FROM [dbo].[ProviderApprenticeStars] 
 			WHERE TimePeriod = @feedbackperiod AND 
-			      [Ukprn] = @ukprn
+			      [Ukprn] = @Ukprn	
 	)
 
 	-- MAIN QUERY
@@ -113,7 +113,7 @@ BEGIN
 				,pr1.Email 
 				,pr1.Phone 
 				,pr1.Website 
-				,tp.[Statusid]
+				,tp.[StatusId]
 				,tp.[ProviderTypeId]
 				,CASE WHEN tp.[ProviderTypeId] in (@PROVIDER_TYPE_MAIN, @PROVIDER_TYPE_EMPLOYER) AND 
 				           tp.[StatusId] IN (@STATUS_ACTIVE, @STATUS_ACTIVE_BUT_NOT_TAKING_ON_APPRENTICES, @STATUS_ONBOARDING) 
@@ -122,7 +122,7 @@ BEGIN
 			FROM [dbo].[Provider] pr1 
 			JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] 
 			LEFT JOIN [dbo].[ProviderAddress] pad on pad.ProviderId = pr1.Id
-			WHERE pr1.[Ukprn] = @ukprn
+			WHERE pr1.[Ukprn] = @Ukprn
 		) ab1 
 	LEFT JOIN ProviderQAR qp1 on qp1.[Ukprn] = ab1.[Ukprn] 
 	LEFT JOIN EmployerStars pes on pes.[Ukprn] = ab1.[Ukprn] 

@@ -23,16 +23,16 @@ BEGIN
 
     IF @Latitude IS NOT NULL 
     -- match to nearest region (which may have an alternative with same co-ordinates)
-        SELECT TOP 1 @NearestRegionId = reg1.[Id] , @AlternativeRegionid = reg2.[id]
+        SELECT TOP 1 @NearestRegionId = reg1.[Id] , @AlternativeRegionId = reg2.[Id]
         FROM [dbo].[Region] reg1
         LEFT JOIN [dbo].[Region] reg2 ON reg1.[Latitude] = reg2.[Latitude] AND reg1.[Longitude]= reg2.[Longitude] AND reg1.[Id] != reg2.[Id]
             ORDER BY geography::Point(reg1.Latitude, reg1.Longitude, @EPSG_COORDINATE_SYSTEM_ID)
-                    .STDistance(geography::Point(@Latitude, @Longitude, @EPSG_COORDINATE_SYSTEM_ID)), reg1.[id];
+                    .STDistance(geography::Point(@Latitude, @Longitude, @EPSG_COORDINATE_SYSTEM_ID)), reg1.[Id];
     ELSE
         SET @Distance = NULL;
 
     -- ensure that the Lars code(s) input are a list of string values
-    SET @LarsCodeJSON = '["'+REPLACE(REPLACE(@larscodes,'"',''),',','","')+'"]';
+    SET @LarsCodeJSON = '["'+REPLACE(REPLACE(@LarsCodes,'"',''),',','","')+'"]';
     -- get the Standards and national QAR by Standard
     SELECT CONVERT(int,[key]) +1 Ordering, std.LarsCode, std.IsRegulatedForProvider, std.CourseType
     INTO #StandardsList
@@ -48,7 +48,7 @@ BEGIN
     FROM [dbo].[ProviderCourse] pc1 
     JOIN #StandardsList lc1 on lc1.LarsCode = pc1.LarsCode
     JOIN [dbo].[Provider] pr1 on pr1.Id = pc1.ProviderId
-    JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[Statusid] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
+    JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[StatusId] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
     -- ensure course type is (still) available for the provider and course
     JOIN [dbo].[ProviderCourseType] pct on pct.Ukprn = pr1.[Ukprn] AND pct.CourseType = lc1.CourseType
     --regulated check

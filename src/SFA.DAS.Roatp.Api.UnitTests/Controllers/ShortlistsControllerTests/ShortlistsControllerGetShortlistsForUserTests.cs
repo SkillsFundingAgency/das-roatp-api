@@ -1,5 +1,5 @@
 ﻿using System.Threading;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using FluentAssertions;
 using FluentValidation.Results;
 using MediatR;

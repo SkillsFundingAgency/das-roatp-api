@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
-using AutoFixture.NUnit3;
+using AutoFixture.NUnit4;
 using Microsoft.Extensions.Logging;
 using Moq;
 using NUnit.Framework;
