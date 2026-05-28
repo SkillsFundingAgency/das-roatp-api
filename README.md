@@ -103,7 +103,7 @@ You will need following on your local:
     "ReloadStandardsCacheSchedule": "0 0 20 * * 1-5",
     "ReloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
     "SendInitialForecastEmailsFunctionSchedule": "0 0 3 * * *",
-    "SendForecastsReminderEmailsFunctionSchedule": "0 0 0 15 */3,6,9,12 *",
+    "SendForecastsReminderEmailsFunctionSchedule": "0 0 0 15 3,6,9,12 *",
     "UpdateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
     "AzureWebJobs.DeleteExpiredShortlistsFunction.Disabled": true,
     "AzureWebJobs.ImportAnnualFeedbackSummariesFunction.Disabled": true,

@@ -9,7 +9,7 @@ public class DeleteExpiredShortlistsFunction(ILogger<DeleteExpiredShortlistsFunc
     public const string DeleteExpiredShortlistsUri = "shortlists/expired";
 
     [Function(nameof(DeleteExpiredShortlistsFunction))]
-    public async Task Run([TimerTrigger("%DeleteExpiredShortlistsSchedule%", RunOnStartup = true)] TimerInfo myTimer, CancellationToken cancellationToken)
+    public async Task Run([TimerTrigger("%DeleteExpiredShortlistsSchedule%", RunOnStartup = false)] TimerInfo myTimer, CancellationToken cancellationToken)
     {
         _logger.LogInformation("DeleteExpiredShortlistsFunction started");
 

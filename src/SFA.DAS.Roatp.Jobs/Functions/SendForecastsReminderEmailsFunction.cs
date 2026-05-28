@@ -35,7 +35,7 @@ public class SendForecastsReminderEmailsFunction
     }
 
     [Function(nameof(SendForecastsReminderEmailsFunction))]
-    public async Task Run([TimerTrigger("%SendForecastsReminderEmailsFunctionSchedule%", RunOnStartup = true)] TimerInfo myTimer, CancellationToken cancellationToken)
+    public async Task Run([TimerTrigger("%SendForecastsReminderEmailsFunctionSchedule%", RunOnStartup = false)] TimerInfo myTimer, CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# Timer trigger function executing at: {ExecutionTime}", DateTime.Now);
         List<int> allowedProviders = await _providerCourseTypesReadRepository.GetAllProvidersWithShortCourses(cancellationToken);
