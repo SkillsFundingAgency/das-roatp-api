@@ -29,7 +29,7 @@ public class SendInitialForecastEmailsFunction
     }
 
     [Function(nameof(SendInitialForecastEmailsFunction))]
-    public async Task Run([TimerTrigger("%SendInitialForecastEmailsFunctionSchedule%", RunOnStartup = true)] TimerInfo myTimer, CancellationToken cancellationToken)
+    public async Task Run([TimerTrigger("%SendInitialForecastEmailsFunctionSchedule%", RunOnStartup = false)] TimerInfo myTimer, CancellationToken cancellationToken)
     {
         _logger.LogInformation("C# Timer trigger function executing at: {ExecutionTime}", DateTime.Now);
 

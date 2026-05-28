@@ -148,7 +148,7 @@
     "deleteExpiredShortlistsSchedule": "0 0 2 * * *",
     "importAnnualFeedbackSummariesFunctionSchedule": "0 0 4 1-10 8 *",
     "sendInitialForecastEmailsFunctionSchedule": "0 0 3 * * *",
-    "sendForecastsReminderEmailsFunctionSchedule": "0 0 3 * * *",
+    "sendForecastsReminderEmailsFunctionSchedule": "0 0 0 15 3,6,9,12 *",
     "reloadStandardsCacheFunctionDisabled": false,
     "routeTableId": {
       "id": "[resourceId(subscription().subscriptionId, parameters('sharedEnvResourceGroup'), 'Microsoft.Network/routeTables', parameters('SharedRouteTableName'))]"
