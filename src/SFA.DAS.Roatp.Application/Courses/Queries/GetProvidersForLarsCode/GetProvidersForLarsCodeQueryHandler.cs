@@ -88,7 +88,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             LarsCode = first.LarsCode,
             StandardName = first.StandardName,
             CourseType = first.CourseType,
-            ApprenticeshipType = first.ApprenticeshipType,
+            LearningType = first.LearningType,
             IsActiveAvailable = first.IsActiveAvailable,
             QarPeriod = first.QarPeriod,
             ReviewPeriod = first.ReviewPeriod,

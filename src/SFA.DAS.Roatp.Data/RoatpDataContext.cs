@@ -3,42 +3,41 @@ using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
 using ProviderCourse = SFA.DAS.Roatp.Domain.Entities.ProviderCourse;
 
-namespace SFA.DAS.Roatp.Data
+namespace SFA.DAS.Roatp.Data;
+
+[ExcludeFromCodeCoverage]
+public class RoatpDataContext : DbContext
 {
-    [ExcludeFromCodeCoverage]
-    public class RoatpDataContext : DbContext
+    public DbSet<Standard> Standards { get; set; }
+    public DbSet<Provider> Providers { get; set; }
+    public DbSet<ProviderCourse> ProviderCourses { get; set; }
+    public DbSet<ProviderLocation> ProviderLocations { get; set; }
+    public DbSet<ProviderCourseLocation> ProviderCoursesLocations { get; set; }
+    public DbSet<ImportAudit> ImportAudits { get; set; }
+    public DbSet<Audit> Audits { get; set; }
+    public DbSet<ProviderRegistrationDetail> ProviderRegistrationDetails { get; set; }
+    public DbSet<Region> Regions { get; set; }
+    public DbSet<ProviderAddress> ProviderAddresses { get; set; }
+    public DbSet<NationalQar> NationalQars { get; set; }
+    public DbSet<Shortlist> Shortlists { get; set; }
+    public DbSet<ProviderEmployerStars> ProviderEmployerStars { get; set; }
+
+    public DbSet<ProviderContact> ProviderContacts { get; set; }
+    public DbSet<ProviderCourseType> ProviderCoursesTypes { get; set; }
+
+    public DbSet<ProviderCoursesTimeline> ProviderCoursesTimelines { get; set; }
+
+    public DbSet<ProviderAllowedCourse> ProviderAllowedCourses { get; set; }
+
+    public DbSet<ProviderCourseForecast> ProviderCourseForecasts { get; set; }
+
+    public DbSet<ForecastQuarter> ForecastQuarters { get; set; }
+
+    public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) { }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        public DbSet<Standard> Standards { get; set; }
-        public DbSet<Provider> Providers { get; set; }
-        public DbSet<ProviderCourse> ProviderCourses { get; set; }
-        public DbSet<ProviderLocation> ProviderLocations { get; set; }
-        public DbSet<ProviderCourseLocation> ProviderCoursesLocations { get; set; }
-        public DbSet<ImportAudit> ImportAudits { get; set; }
-        public DbSet<Audit> Audits { get; set; }
-        public DbSet<ProviderRegistrationDetail> ProviderRegistrationDetails { get; set; }
-        public DbSet<Region> Regions { get; set; }
-        public DbSet<ProviderAddress> ProviderAddresses { get; set; }
-        public DbSet<NationalQar> NationalQars { get; set; }
-        public DbSet<Shortlist> Shortlists { get; set; }
-        public DbSet<ProviderEmployerStars> ProviderEmployerStars { get; set; }
-
-        public DbSet<ProviderContact> ProviderContacts { get; set; }
-        public DbSet<ProviderCourseType> ProviderCoursesTypes { get; set; }
-
-        public DbSet<ProviderCoursesTimeline> ProviderCoursesTimelines { get; set; }
-
-        public DbSet<ProviderAllowedCourse> ProviderAllowedCourses { get; set; }
-
-        public DbSet<ProviderCourseForecast> ProviderCourseForecasts { get; set; }
-
-        public DbSet<ForecastQuarter> ForecastQuarters { get; set; }
-
-        public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) { }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.ApplyConfigurationsFromAssembly(typeof(RoatpDataContext).Assembly);
-        }
+        base.OnModelCreating(modelBuilder);
+        modelBuilder.ApplyConfigurationsFromAssembly(typeof(RoatpDataContext).Assembly);
     }
 }

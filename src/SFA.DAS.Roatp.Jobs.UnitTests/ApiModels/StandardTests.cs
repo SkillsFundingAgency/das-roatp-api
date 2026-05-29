@@ -20,6 +20,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.ApiModels
             {
                 o.Excluding(s => s.Level);
                 o.Excluding(s => s.ApprovalBody);
+                o.Excluding(s => s.ApprenticeshipType);
                 return o;
             });
             target.Level.Should().Be(expectedLevel);
@@ -41,6 +42,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.ApiModels
             {
                 o.Excluding(s => s.Level);
                 o.Excluding(s => s.ApprovalBody);
+                o.Excluding(s => s.ApprenticeshipType);
                 return o;
             });
             target.ApprovalBody.Should().BeNull();
