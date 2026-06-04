@@ -44,7 +44,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
             result.Standards[0].Title.Should().Be(location.ProviderCourseLocations[0].ProviderCourse.Standard.Title);
             result.Standards[0].Level.Should().Be(location.ProviderCourseLocations[0].ProviderCourse.Standard.Level);
             result.Standards[0].LarsCode.Should().Be(location.ProviderCourseLocations[0].ProviderCourse.Standard.LarsCode);
-            result.Standards[0].LearningType.Should().Be(location.ProviderCourseLocations[0].ProviderCourse.Standard.ApprenticeshipType);
+            result.Standards[0].LearningType.Should().Be(location.ProviderCourseLocations[0].ProviderCourse.Standard.LearningType);
             result.Standards[0].HasOtherVenues.Should().Be(false);
         }
 

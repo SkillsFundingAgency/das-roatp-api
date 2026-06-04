@@ -41,7 +41,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails
                 standardModel.Title = matchedStandard.Title;
                 standardModel.LarsCode = matchedStandard.LarsCode;
                 standardModel.Level = matchedStandard.Level;
-                standardModel.LearningType = matchedStandard.ApprenticeshipType;
+                standardModel.LearningType = matchedStandard.LearningType;
 
                 var providerCourse = location.Provider.Courses.FirstOrDefault(c => c.LarsCode == matchedStandard.LarsCode);
 
