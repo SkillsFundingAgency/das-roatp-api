@@ -15,7 +15,8 @@ public class Standard
     public int Duration { get; set; }
     public DurationUnits DurationUnits { get; set; }
     public string Route { get; set; }
-    public ApprenticeshipType ApprenticeshipType { get; set; }
+    public LearningType ApprenticeshipType { get; set; }
+    public LearningType LearningType { get; set; }
     public CourseType CourseType { get; set; }
     public bool IsActiveAvailable { get; set; }
     public virtual List<ProviderCourse> ProviderCourses { get; set; }

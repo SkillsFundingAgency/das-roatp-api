@@ -5,24 +5,23 @@ using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Data.Repositories
+namespace SFA.DAS.Roatp.Data.Repositories;
+
+[ExcludeFromCodeCoverage]
+internal class RegionsReadRepository : IRegionsReadRepository
 {
-    [ExcludeFromCodeCoverage]
-    internal class RegionsReadRepository : IRegionsReadRepository
+    private readonly RoatpDataContext _roatpDataContext;
+
+    public RegionsReadRepository(RoatpDataContext roatpDataContext)
     {
-        private readonly RoatpDataContext _roatpDataContext;
+        _roatpDataContext = roatpDataContext;
+    }
 
-        public RegionsReadRepository(RoatpDataContext roatpDataContext)
-        {
-            _roatpDataContext = roatpDataContext;
-        }
-
-        public async Task<List<Region>> GetAllRegions()
-        {
-            return await _roatpDataContext
-                .Regions
-                .AsNoTracking()
-                .ToListAsync();
-        }
+    public async Task<List<Region>> GetAllRegions()
+    {
+        return await _roatpDataContext
+            .Regions
+            .AsNoTracking()
+            .ToListAsync();
     }
 }

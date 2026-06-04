@@ -72,7 +72,7 @@ public sealed class CourseProviderDetailsReadRepository : ICourseProviderDetails
                     LarsCode = GetReaderStringValue(nameof(CourseProviderDetailsModel.LarsCode), reader),
                     IFateReferenceNumber = GetReaderStringValue(nameof(CourseProviderDetailsModel.IFateReferenceNumber), reader),
                     CourseType = Enum.Parse<CourseType>(GetReaderStringValue(nameof(CourseProviderDetailsModel.CourseType), reader)),
-                    ApprenticeshipType = Enum.Parse<ApprenticeshipType>(GetReaderStringValue(nameof(CourseProviderDetailsModel.ApprenticeshipType), reader)),
+                    LearningType = Enum.Parse<LearningType>(GetReaderStringValue(nameof(CourseProviderDetailsModel.LearningType), reader)),
                     IsActiveAvailable = reader.GetBoolean(nameof(CourseProviderDetailsModel.IsActiveAvailable)),
 
                     Period = GetReaderStringValue(nameof(CourseProviderDetailsModel.Period), reader),

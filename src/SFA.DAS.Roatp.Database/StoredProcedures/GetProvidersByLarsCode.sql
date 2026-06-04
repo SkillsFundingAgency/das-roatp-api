@@ -78,7 +78,7 @@ BEGIN
 END;
 
 -- the Standards
-SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [CourseType], [ApprenticeshipType], [IsRegulatedForProvider], [IsActiveAvailable]
+SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [CourseType], [LearningType], [IsRegulatedForProvider], [IsActiveAvailable]
 INTO #Standard
 FROM [dbo].[Standard]
 WHERE [LarsCode] = @LarsCode;
@@ -92,7 +92,7 @@ SELECT pc1.[Id]
       ,st1.[Title], [Level]
       ,pc1.[HasOnlineDeliveryOption]
       ,st1.[CourseType]
-      ,st1.[ApprenticeshipType]
+      ,st1.[LearningType]
       ,st1.[IsActiveAvailable]
 INTO #ProviderAndCourse
 FROM [dbo].[ProviderCourse] pc1
@@ -372,7 +372,7 @@ SELECT
     ,Standards.LarsCode larscode
     ,Standards.[Title]+' (level '+CONVERT(varchar,Standards.[Level])+')' standardName
     ,Standards.CourseType courseType
-    ,Standards.ApprenticeshipType apprenticeshipType
+    ,Standards.LearningType learningType
     ,Standards.IsActiveAvailable isActiveAvailable
     ,@QARPeriod qarPeriod
     ,@ReviewPeriod reviewPeriod

@@ -22,7 +22,7 @@ public class ShortlistCourseModel
     public string LarsCode { get; set; }
     public string StandardName { get; set; }
     public CourseType CourseType { get; set; }
-    public ApprenticeshipType ApprenticeshipType { get; set; }
+    public LearningType LearningType { get; set; }
     public List<ShortlistLocationModel> Locations { get; set; } = [];
 }
 

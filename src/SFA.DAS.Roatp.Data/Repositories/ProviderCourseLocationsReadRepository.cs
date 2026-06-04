@@ -6,38 +6,37 @@ using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Data.Repositories
+namespace SFA.DAS.Roatp.Data.Repositories;
+
+[ExcludeFromCodeCoverage]
+internal class ProviderCourseLocationsReadRepository : IProviderCourseLocationsReadRepository
 {
-    [ExcludeFromCodeCoverage]
-    internal class ProviderCourseLocationsReadRepository : IProviderCourseLocationsReadRepository
+    private readonly RoatpDataContext _roatpDataContext;
+
+    public ProviderCourseLocationsReadRepository(RoatpDataContext roatpDataContext)
     {
-        private readonly RoatpDataContext _roatpDataContext;
+        _roatpDataContext = roatpDataContext;
+    }
 
-        public ProviderCourseLocationsReadRepository(RoatpDataContext roatpDataContext)
-        {
-            _roatpDataContext = roatpDataContext;
-        }
-
-        public async Task<List<ProviderCourseLocation>> GetAllProviderCourseLocations(int ukprn, string larsCode)
-        {
-            return await _roatpDataContext
-                    .ProviderCoursesLocations
-                    .Include(l => l.Location)
-                    .ThenInclude(r => r.Region)
-                    .Where(p => p.ProviderCourse.Provider.Ukprn == ukprn && p.ProviderCourse.LarsCode == larsCode)
-                    .AsNoTracking()
-                    .ToListAsync();
-        }
-
-        public async Task<List<ProviderCourseLocation>> GetProviderCourseLocationsByUkprn(int ukprn)
-        {
-            return await _roatpDataContext
+    public async Task<List<ProviderCourseLocation>> GetAllProviderCourseLocations(int ukprn, string larsCode)
+    {
+        return await _roatpDataContext
                 .ProviderCoursesLocations
-                    .Include(l => l.Location)
-                    .ThenInclude(r => r.Region)
-                    .Where(p => p.ProviderCourse.Provider.Ukprn == ukprn)
-                    .AsNoTracking()
-                    .ToListAsync();
-        }
+                .Include(l => l.Location)
+                .ThenInclude(r => r.Region)
+                .Where(p => p.ProviderCourse.Provider.Ukprn == ukprn && p.ProviderCourse.LarsCode == larsCode)
+                .AsNoTracking()
+                .ToListAsync();
+    }
+
+    public async Task<List<ProviderCourseLocation>> GetProviderCourseLocationsByUkprn(int ukprn)
+    {
+        return await _roatpDataContext
+            .ProviderCoursesLocations
+                .Include(l => l.Location)
+                .ThenInclude(r => r.Region)
+                .Where(p => p.ProviderCourse.Provider.Ukprn == ukprn)
+                .AsNoTracking()
+                .ToListAsync();
     }
 }
