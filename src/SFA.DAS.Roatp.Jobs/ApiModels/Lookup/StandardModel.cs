@@ -8,7 +8,6 @@ public class StandardModel
     public string LarsCode { get; set; }
     public string IfateReferenceNumber { get; set; }
     public int Level { get; set; }
-    public LearningType ApprenticeshipType { get; set; }
     public LearningType LearningType { get; set; }
     public string Title { get; set; }
     public string ApprovalBody { get; set; }
@@ -30,7 +29,6 @@ public class StandardModel
             ApprovalBody = string.IsNullOrWhiteSpace(standard.ApprovalBody) ? null : standard.ApprovalBody,
             IsRegulatedForProvider = standard.IsRegulatedForProvider,
             Route = standard.Route,
-            ApprenticeshipType = standard.LearningType,
             LearningType = standard.LearningType,
             CourseType = standard.CourseType,
             IsActiveAvailable = standard.IsActiveAvailable,

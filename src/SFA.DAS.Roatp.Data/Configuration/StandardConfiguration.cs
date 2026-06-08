@@ -21,9 +21,6 @@ public class StandardConfiguration : IEntityTypeConfiguration<Standard>
         builder.Property(e => e.CourseType).HasConversion(
             v => v.ToString(),
             v => (CourseType)Enum.Parse(typeof(CourseType), v));
-        builder.Property(e => e.ApprenticeshipType).HasConversion(
-            v => v.ToString(),
-            v => (LearningType)Enum.Parse(typeof(LearningType), v));
         builder.Property(e => e.LearningType).HasConversion(
             v => v.ToString(),
             v => (LearningType)Enum.Parse(typeof(LearningType), v));
