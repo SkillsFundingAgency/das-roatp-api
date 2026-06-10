@@ -1,11 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.ApiModels;
 using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
-using SFA.DAS.Roatp.Jobs.Requests;
 
 namespace SFA.DAS.Roatp.Jobs.Services;
 
@@ -16,25 +14,22 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
     private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
     private readonly ILogger<ReloadProviderRegistrationDetailService> _logger;
     private readonly IProviderRegistrationDetailsWriteRepository _providerRegistrationDetailsWriteRepository;
-    private readonly IProviderRegistrationDetailsReadRepository _providerRegistrationDetailsReadRepository;
-    private readonly IProvidersWriteRepository _providersWriteRepository;
+    private readonly IImportAuditReadRepository _importAuditReadRepository;
 
     public ReloadProviderRegistrationDetailService(
         IReloadProviderRegistrationDetailsRepository reloadProviderRegistrationDetailsRepository,
         ICourseManagementOuterApiClient courseManagementOuterApiClient,
         ILogger<ReloadProviderRegistrationDetailService> logger,
         IProviderRegistrationDetailsWriteRepository providerRegistrationDetailsWriteRepository,
-        IProviderRegistrationDetailsReadRepository providerRegistrationDetailsReadRepository,
         IReloadProviderCourseTypesRepository reloadProviderCourseTypesRepository,
-        IProvidersWriteRepository providersWriteRepository)
+        IImportAuditReadRepository importAuditReadRepository)
     {
         _reloadProviderRegistrationDetailsRepository = reloadProviderRegistrationDetailsRepository;
         _courseManagementOuterApiClient = courseManagementOuterApiClient;
         _logger = logger;
         _providerRegistrationDetailsWriteRepository = providerRegistrationDetailsWriteRepository;
-        _providerRegistrationDetailsReadRepository = providerRegistrationDetailsReadRepository;
         _reloadProviderCourseTypesRepository = reloadProviderCourseTypesRepository;
-        _providersWriteRepository = providersWriteRepository;
+        _importAuditReadRepository = importAuditReadRepository;
     }
 
     public async Task ReloadProviderRegistrationDetails()
@@ -70,17 +65,14 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
     {
         var timeStarted = DateTime.UtcNow;
         var activeProvidersOnRegister = await _providerRegistrationDetailsWriteRepository.GetActiveProviders();
-
         var ukprnsSubset = activeProvidersOnRegister.Select(provider => provider.Ukprn).ToList();
+        var updatedSinceDate = await _importAuditReadRepository.GetLastImportedDateByImportType(ImportType.ProviderRegistrationAddresses);
 
-        var request = new ProviderAddressLookupRequest
-        {
-            Ukprns = ukprnsSubset
-        };
+        var request = new GetUkrlpProvidersRequest(ukprnsSubset, updatedSinceDate);
 
-        var (success, ukrlpResponse) = await _courseManagementOuterApiClient.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address", request);
+        var (success, ukrlpResponse) = await _courseManagementOuterApiClient.Post<GetUkrlpProvidersRequest, GetUkrlpProvidersResponse>(Constants.GetUkrlpDataRequestUrl, request);
 
-        if (!success || ukrlpResponse.Count == 0)
+        if (!success)
         {
             _logger.LogError("LoadAllProviderAddressesFunction function failed to get ukrlp addresses");
             return;
@@ -88,17 +80,17 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
 
         foreach (var activeProvider in activeProvidersOnRegister)
         {
-            var ukrlpProvider = ukrlpResponse.Find(x => x.Ukprn == activeProvider.Ukprn);
+            var ukrlpProvider = ukrlpResponse.Providers.FirstOrDefault(x => x.Ukprn == activeProvider.Ukprn);
             if (ukrlpProvider == null)
             {
                 _logger.LogWarning("Unable to get address from UKRLP for provider ukprn: {Ukprn}", activeProvider.Ukprn);
                 continue;
 
             }
-            activeProvider.UpdateAddress(ukrlpProvider);
+            UpdateAddress(activeProvider, ukrlpProvider.LegalAddress);
         }
 
-        await _providerRegistrationDetailsWriteRepository.UpdateProviders(timeStarted, ukrlpResponse.Count, ImportType.ProviderRegistrationAddresses);
+        await _providerRegistrationDetailsWriteRepository.UpdateProviders(timeStarted, ukrlpResponse.Providers.Count(), ImportType.ProviderRegistrationAddresses);
 
         _logger.LogInformation("Provider registration addresses reload complete");
     }
@@ -138,27 +130,13 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
         await _providerRegistrationDetailsWriteRepository.UpdateProviders(timeStarted, providers.Count, ImportType.ProviderRegistrationAddressCoordinates);
     }
 
-    public async Task ReloadProviderDetails()
+    private static void UpdateAddress(ProviderRegistrationDetail provider, Address source)
     {
-        var timeStarted = DateTime.UtcNow;
-
-        var providerRegistrationDetails = await _providerRegistrationDetailsReadRepository.GetActiveProviderRegistrations(CancellationToken.None);
-
-        var providers = await _providersWriteRepository.GetAllProviders();
-
-        foreach (var provider in providers)
-        {
-            var providerRegistrationDetail = providerRegistrationDetails.FirstOrDefault(x => x.Ukprn == provider.Ukprn);
-
-            if (providerRegistrationDetail != null)
-            {
-                provider.LegalName = providerRegistrationDetail.LegalName;
-                provider.TradingName = providerRegistrationDetail.TradingName;
-            }
-        }
-
-        _logger.LogInformation("Reloading {Count} provider details", providers.Count);
-
-        await _providersWriteRepository.UpdateProviders(timeStarted, providers.Count, ImportType.Providers);
+        provider.AddressLine1 = source.Address1;
+        provider.AddressLine2 = source.Address2;
+        provider.AddressLine3 = source.Address3;
+        provider.AddressLine4 = source.Address4;
+        provider.Town = source.Town;
+        provider.Postcode = source.Postcode;
     }
 }

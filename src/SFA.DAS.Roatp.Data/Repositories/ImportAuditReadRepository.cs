@@ -18,7 +18,7 @@ internal class ImportAuditReadRepository : IImportAuditReadRepository
         _roatpDataContext = roatpDataContext;
     }
 
-    public async Task<DateTime> GetLastImportedDateByImportType(ImportType importType)
+    public async Task<DateTime?> GetLastImportedDateByImportType(ImportType importType)
     {
         return await _roatpDataContext
              .ImportAudits

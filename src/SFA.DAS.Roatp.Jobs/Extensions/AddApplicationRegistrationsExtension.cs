@@ -14,13 +14,13 @@ public static class AddApplicationRegistrationsExtension
     {
         services.AddTransient<IReloadStandardsCacheService, ReloadStandardsCacheService>();
         services.AddTransient<IReloadProviderRegistrationDetailService, ReloadProviderRegistrationDetailService>();
-        services.AddTransient<ILoadUkrlpAddressesService, LoadUkrlpAddressesService>();
         services.AddTransient<IUpdateProviderAddressCoordinatesService, UpdateProviderAddressCoordinatesService>();
         services.AddTransient<IDataExtractorService, DataExtractorService>();
 
         services.AddTransient<IImportAnnualFeedbackSummariesService, ImportAnnualFeedbackSummariesService>();
         services.AddTransient<IDateTimeProvider, DateTimeProvider>();
         services.AddTransient<IProviderEmailProcessingService, ProviderEmailProcessingService>();
+        services.AddTransient<IRefreshProviderDetailsFromUkrlpService, RefreshProviderDetailsFromUkrlpService>();
 
         RegisterHttpClient(services, configuration);
 
