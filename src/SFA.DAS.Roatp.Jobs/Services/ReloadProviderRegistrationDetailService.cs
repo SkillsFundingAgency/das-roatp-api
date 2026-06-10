@@ -65,10 +65,9 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
     {
         var timeStarted = DateTime.UtcNow;
         var activeProvidersOnRegister = await _providerRegistrationDetailsWriteRepository.GetActiveProviders();
-        var ukprnsSubset = activeProvidersOnRegister.Select(provider => provider.Ukprn).ToList();
-        var updatedSinceDate = await _importAuditReadRepository.GetLastImportedDateByImportType(ImportType.ProviderRegistrationAddresses);
+        var ukprns = activeProvidersOnRegister.Select(provider => provider.Ukprn).ToList();
 
-        var request = new GetUkrlpProvidersRequest(ukprnsSubset, updatedSinceDate);
+        var request = new GetUkrlpProvidersRequest(ukprns, null);
 
         var (success, ukrlpResponse) = await _courseManagementOuterApiClient.Post<GetUkrlpProvidersRequest, GetUkrlpProvidersResponse>(Constants.GetUkrlpDataRequestUrl, request);
 
@@ -78,15 +77,10 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
             return;
         }
 
-        foreach (var activeProvider in activeProvidersOnRegister)
+        foreach (var ukrlpProvider in ukrlpResponse.Providers)
         {
-            var ukrlpProvider = ukrlpResponse.Providers.FirstOrDefault(x => x.Ukprn == activeProvider.Ukprn);
-            if (ukrlpProvider == null)
-            {
-                _logger.LogWarning("Unable to get address from UKRLP for provider ukprn: {Ukprn}", activeProvider.Ukprn);
-                continue;
-
-            }
+            _logger.LogInformation("Updating address for provider ukprn: {Ukprn} with latest ukrlp info", ukrlpProvider.Ukprn);
+            var activeProvider = activeProvidersOnRegister.Single(x => x.Ukprn == ukrlpProvider.Ukprn);
             UpdateAddress(activeProvider, ukrlpProvider.LegalAddress);
         }
 

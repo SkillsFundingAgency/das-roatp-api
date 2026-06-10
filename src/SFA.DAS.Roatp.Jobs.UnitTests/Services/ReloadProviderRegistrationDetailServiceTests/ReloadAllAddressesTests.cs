@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services.ReloadProviderRegistrationDetail
 public class ReloadAllAddressesTests
 {
     [Test, RecursiveMoqAutoData]
-    public async Task WhenGettingUkrlpData_IncludesAllUkprnsAndLastUpdatedDateInRequest(
+    public async Task WhenGettingUkrlpData_IncludesAllUkprnsAndAvoidsLastUpdatedDateInRequest(
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
         [Frozen] Mock<IImportAuditReadRepository> importAuditReadRepositoryMock,
@@ -37,7 +37,7 @@ public class ReloadAllAddressesTests
         apiClientMock.Verify(x => x.Post<GetUkrlpProvidersRequest, GetUkrlpProvidersResponse>(Constants.GetUkrlpDataRequestUrl,
             It.Is<GetUkrlpProvidersRequest>(r =>
                 r.Ukprns.SequenceEqual(providerRegistrationDetails.Select(p => p.Ukprn)) &&
-                r.UpdatedSinceDate == lastUpdatedDate)), Times.Once);
+                r.UpdatedSinceDate == null)), Times.Once);
     }
 
     [Test, MoqAutoData]
