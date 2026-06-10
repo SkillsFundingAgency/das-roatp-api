@@ -84,6 +84,24 @@ public class RefreshProviderDetailsFromUkrlpServiceTests
     }
 
     [Test, RecursiveMoqAutoData]
+    public async Task WhenRefreshingProviderDetails_AndResponseIsEmpty_ThenReturnsWithNoFurtherAction(Provider provider)
+    {
+        // Arrange
+        var name = provider.LegalName;
+        var courseManagementOuterApiClientMock = new Mock<ICourseManagementOuterApiClient>();
+        courseManagementOuterApiClientMock.Setup(c => c.Post<GetUkrlpProvidersRequest, GetUkrlpProvidersResponse>(Constants.GetUkrlpDataRequestUrl, It.IsAny<GetUkrlpProvidersRequest>())).ReturnsAsync((true, new GetUkrlpProvidersResponse { Providers = [] }));
+        var importAuditReadRepositoryMock = new Mock<IImportAuditReadRepository>();
+        var providersWriteRepositoryMock = new Mock<IProvidersWriteRepository>();
+        providersWriteRepositoryMock.Setup(r => r.GetAllProviders()).ReturnsAsync([provider]);
+        var sut = new RefreshProviderDetailsFromUkrlpService(courseManagementOuterApiClientMock.Object, importAuditReadRepositoryMock.Object, providersWriteRepositoryMock.Object, Mock.Of<ILogger<RefreshProviderDetailsFromUkrlpService>>());
+        // Act
+        await sut.RefreshProviderDetailsFromUkrlp(false);
+        // Assert
+        Assert.That(provider.LegalName, Is.EqualTo(name), "there is no change expected");
+        providersWriteRepositoryMock.Verify(r => r.UpdateProviders(It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<ImportType>()), Times.Never, "there should be no update calls to the repository");
+    }
+
+    [Test, RecursiveMoqAutoData]
     public async Task WhenRefreshingProviderDetails_ThenUpdatesProviderDetails(Provider actual, ProviderDetails expected, int ukprn)
     {
         // Arrange

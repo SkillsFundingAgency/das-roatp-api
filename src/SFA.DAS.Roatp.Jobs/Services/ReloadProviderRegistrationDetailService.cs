@@ -14,22 +14,19 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
     private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
     private readonly ILogger<ReloadProviderRegistrationDetailService> _logger;
     private readonly IProviderRegistrationDetailsWriteRepository _providerRegistrationDetailsWriteRepository;
-    private readonly IImportAuditReadRepository _importAuditReadRepository;
 
     public ReloadProviderRegistrationDetailService(
         IReloadProviderRegistrationDetailsRepository reloadProviderRegistrationDetailsRepository,
         ICourseManagementOuterApiClient courseManagementOuterApiClient,
         ILogger<ReloadProviderRegistrationDetailService> logger,
         IProviderRegistrationDetailsWriteRepository providerRegistrationDetailsWriteRepository,
-        IReloadProviderCourseTypesRepository reloadProviderCourseTypesRepository,
-        IImportAuditReadRepository importAuditReadRepository)
+        IReloadProviderCourseTypesRepository reloadProviderCourseTypesRepository)
     {
         _reloadProviderRegistrationDetailsRepository = reloadProviderRegistrationDetailsRepository;
         _courseManagementOuterApiClient = courseManagementOuterApiClient;
         _logger = logger;
         _providerRegistrationDetailsWriteRepository = providerRegistrationDetailsWriteRepository;
         _reloadProviderCourseTypesRepository = reloadProviderCourseTypesRepository;
-        _importAuditReadRepository = importAuditReadRepository;
     }
 
     public async Task ReloadProviderRegistrationDetails()
