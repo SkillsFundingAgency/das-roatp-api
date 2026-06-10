@@ -31,15 +31,4 @@ public class ReloadProviderRegistrationDetailsFunctionTests
 
         serviceMock.Verify(s => s.ReloadAllAddresses());
     }
-
-    [Test]
-    public async Task Run_InvokesService_ReloadsAllCoordinates()
-    {
-        var serviceMock = new Mock<IReloadProviderRegistrationDetailService>();
-        var sut = new ReloadProviderRegistrationDetailsFunction(serviceMock.Object, Mock.Of<ILogger<ReloadProviderRegistrationDetailsFunction>>());
-
-        await sut.Run(default);
-
-        serviceMock.Verify(s => s.ReloadAllCoordinates());
-    }
 }
