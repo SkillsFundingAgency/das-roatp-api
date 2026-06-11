@@ -13,5 +13,11 @@
     [LearningType] Varchar(50) NOT NULL,
     [CourseType] NVarchar(50) NOT NULL,
     [IsActiveAvailable] BIT NOT NULL DEFAULT 0,
+    [LastDateStarts] DATETIME NULL,
     CONSTRAINT PK_Standard PRIMARY KEY (StandardUId)
-)
+);
+GO
+
+CREATE UNIQUE NONCLUSTERED INDEX IXU_Standard_LarsCode
+ON [dbo].[Standard] ([LarsCode]) INCLUDE ([LearningType],[CourseType],[IfateReferenceNumber],[Title],[Level],[LastDateStarts]);
+GO
