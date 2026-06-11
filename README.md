@@ -20,15 +20,17 @@ There are two sets of endpoints:
 The SFA.DAS.Roatp.Jobs project that contains functions to reload standards, reload provider details, update provider address and coordinates and import provider achievement rates. 
 
 #### Functions summary
-- `DeleteExpiredShortlistsFunction`: Removes expired shortlists via the outer API.
-- `ImportAnnualFeedbackSummariesFunction`: Imports annual apprentice and employer feedback summaries when data for the configured period is not already present.
-- `LoadAllProviderAddressesFunction`: Load and persist addresses for all providers.
-- `LoadProvidersAddressFunction`: Load provider addresses updated since the last run.
-- `ReloadProviderRegistrationDetailsFunction`: Reloads provider registration details, addresses, coordinates, and provider details from course api.
-- `ReloadStandardsCacheFunction`: Refreshes the standards cache from course api.
-- `SendInitialForecastEmailsFunction`: Sends initial forecast reminder emails for recently added short courses.
-- `SendForecastsReminderEmailsFunction`: Sends periodic forecast reminder emails to providers with short courses that have missing or out-of-date forecasts.
-- `UpdateProviderAddressCoordinatesFunction`: Updates stored provider address coordinates.
+| Function Name | Trigger | Description |
+|---------------|---------|-------------|
+| DeleteExpiredShortlistsFunction | Timer | Removes expired shortlists via the outer API. |
+| ImportAnnualFeedbackSummariesFunction | Timer | Imports annual apprentice and employer feedback summaries when data for the configured period is not already present. |
+| RefreshAllProviderDetailsFromUkrlpFunction | Http Request | Updates all the providers details from UKRLP. This function is triggered manually to refresh all provider details when needed. |
+| RefreshProviderDetailsFromUkrlpFunction | Timer | Updates details for providers updated since the last run. |
+| UpdateProviderAddressCoordinatesFunction | Timer | Updates stored provider address coordinates. This function has to run after `RefreshProviderDetailsFromUkrlpFunction` so any address changes can be picked up. |
+| ReloadProviderRegistrationDetailsFunction | Timer | Reloads provider registration details from Roatp V1, Updates coordinates for any new provider addresses. |
+| ReloadStandardsCacheFunction | Timer | Refreshes the standards cache from course api. |
+| SendInitialForecastEmailsFunction | Timer | Sends initial forecast reminder emails for recently added short courses. |
+| SendForecastsReminderEmailsFunction | Timer | Sends periodic forecast reminder emails to providers with short courses that have missing or out-of-date forecasts. |
 
 ## Developer Setup
 
@@ -99,21 +101,21 @@ You will need following on your local:
     "QarProviderLevelImportFileName": "app-narts-provider-level-fwk-std.csv",
     "DeleteExpiredShortlistsSchedule": "0 0 2 * * *",
     "ImportAnnualFeedbackSummariesFunctionSchedule": "0 0 4 1-10 8 *",
-    "UpdateUkrlpDataSchedule": "0 0 23 * * 1-5",
     "ReloadStandardsCacheSchedule": "0 0 20 * * 1-5",
     "ReloadProviderRegistrationDetailsSchedule": "0 0 21 * * 1-5",
     "SendInitialForecastEmailsFunctionSchedule": "0 0 3 * * *",
     "SendForecastsReminderEmailsFunctionSchedule": "0 0 0 15 3,6,9,12 *",
+    "UpdateUkrlpDataSchedule": "0 0 23 * * 1-5",
     "UpdateProviderAddressCoordinatesSchedule": "0 30 23 * * 1-5",
     "AzureWebJobs.DeleteExpiredShortlistsFunction.Disabled": true,
     "AzureWebJobs.ImportAnnualFeedbackSummariesFunction.Disabled": true,
-    "AzureWebJobs.LoadAllProviderAddressesFunction.Disabled": true,
-    "AzureWebJobs.LoadProvidersAddressFunction.Disabled": true,
-    "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": true,
     "AzureWebJobs.ReloadStandardsCacheFunction.Disabled": true,
+    "AzureWebJobs.ReloadProviderRegistrationDetailsFunction.Disabled": true,
     "AzureWebJobs.SendInitialForecastEmailsFunction.Disabled": true,
     "AzureWebJobs.SendForecastsReminderEmailsFunction.Disabled": true,
-    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true,
+    "AzureWebJobs.RefreshAllProviderDetailsFromUkrlpFunction.Disabled": true,
+    "AzureWebJobs.RefreshProviderDetailsFromUkrlpFunction.Disabled": true,
+    "AzureWebJobs.UpdateProviderAddressCoordinatesFunction.Disabled": true
   }
 }
 ```

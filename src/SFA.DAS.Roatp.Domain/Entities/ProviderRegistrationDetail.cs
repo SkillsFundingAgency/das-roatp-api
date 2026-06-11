@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Domain.Entities
 {
@@ -24,15 +23,5 @@ namespace SFA.DAS.Roatp.Domain.Entities
 
         public virtual Provider Provider { get; set; }
         public virtual List<ProviderCourseType> ProviderCourseTypes { get; set; } = [];
-
-        public void UpdateAddress(UkrlpProviderAddress source)
-        {
-            AddressLine1 = source.Address1;
-            AddressLine2 = source.Address2;
-            AddressLine3 = source.Address3;
-            AddressLine4 = source.Address4;
-            Town = source.Town;
-            Postcode = source.Postcode;
-        }
     }
 }

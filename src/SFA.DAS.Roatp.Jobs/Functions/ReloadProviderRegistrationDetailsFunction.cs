@@ -15,10 +15,6 @@ public class ReloadProviderRegistrationDetailsFunction(IReloadProviderRegistrati
 
         await _service.ReloadAllAddresses();
 
-        await _service.ReloadAllCoordinates();
-
-        await _service.ReloadProviderDetails();
-
         _logger.LogInformation("ReloadProviderRegistrationDetailsFunction function finished");
     }
 }

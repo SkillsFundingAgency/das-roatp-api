@@ -6,6 +6,6 @@ namespace SFA.DAS.Roatp.Domain.Interfaces
 {
     public interface IImportAuditReadRepository
     {
-        Task<DateTime> GetLastImportedDateByImportType(ImportType importType);
+        Task<DateTime?> GetLastImportedDateByImportType(ImportType importType);
     }
 }

@@ -1,20 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
-using Azure.Core;
-using Castle.Components.DictionaryAdapter;
 using FluentAssertions;
-using FluentAssertions.Execution;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Roatp.Jobs.ApiClients;
-using SFA.DAS.Roatp.Jobs.Requests;
+using SFA.DAS.Roatp.Jobs.ApiModels;
 using SFA.DAS.Roatp.Jobs.Services;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -23,9 +18,30 @@ namespace SFA.DAS.Roatp.Jobs.UnitTests.Services.ReloadProviderRegistrationDetail
 [TestFixture]
 public class ReloadAllAddressesTests
 {
-    [Test]
-    [MoqAutoData]
-    public async Task ReloadAllAddresses_OnApiError_ReturnsWithoutWritingToRepository(
+    [Test, RecursiveMoqAutoData]
+    public async Task WhenGettingUkrlpData_IncludesAllUkprnsAndAvoidsLastUpdatedDateInRequest(
+        [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
+        [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
+        [Frozen] Mock<IImportAuditReadRepository> importAuditReadRepositoryMock,
+        [Greedy] ReloadProviderRegistrationDetailService sut,
+        List<ProviderRegistrationDetail> providerRegistrationDetails,
+        DateTime lastUpdatedDate)
+    {
+        repositoryMock.Setup(x => x.GetActiveProviders()).ReturnsAsync(providerRegistrationDetails);
+        importAuditReadRepositoryMock.Setup(x => x.GetLastImportedDateByImportType(ImportType.ProviderRegistrationAddresses)).ReturnsAsync(lastUpdatedDate);
+
+        apiClientMock.Setup(x => x.Post<GetUkrlpProvidersRequest, GetUkrlpProvidersResponse>(Constants.GetUkrlpDataRequestUrl, It.IsAny<GetUkrlpProvidersRequest>())).ReturnsAsync((false, null));
+
+        await sut.ReloadAllAddresses();
+
+        apiClientMock.Verify(x => x.Post<GetUkrlpProvidersRequest, GetUkrlpProvidersResponse>(Constants.GetUkrlpDataRequestUrl,
+            It.Is<GetUkrlpProvidersRequest>(r =>
+                r.Ukprns.SequenceEqual(providerRegistrationDetails.Select(p => p.Ukprn)) &&
+                r.UpdatedSinceDate == null)), Times.Once);
+    }
+
+    [Test, MoqAutoData]
+    public async Task ReloadAllAddresses_OnOuterApiError_ReturnsWithoutWritingToRepository(
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
         [Greedy] ReloadProviderRegistrationDetailService sut)
@@ -33,90 +49,37 @@ public class ReloadAllAddressesTests
         List<ProviderRegistrationDetail> providerRegistrationDetails = [new(), new()];
         repositoryMock.Setup(x => x.GetActiveProviders()).ReturnsAsync(providerRegistrationDetails);
 
-        apiClientMock
-            .Setup(x => x.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address",
-                It.IsAny<ProviderAddressLookupRequest>())).ReturnsAsync((false, null));
+        apiClientMock.Setup(x => x.Post<GetUkrlpProvidersRequest, GetUkrlpProvidersResponse>(Constants.GetUkrlpDataRequestUrl, It.IsAny<GetUkrlpProvidersRequest>())).ReturnsAsync((false, null));
 
-        Func<Task> action = () => sut.ReloadAllAddresses();
+        await sut.ReloadAllAddresses();
 
-        await action.Invoke();
-
-        repositoryMock.Verify(x =>
-                x.UpdateProviders(It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<ImportType>()),
-            Times.Never);
+        repositoryMock.Verify(x => x.UpdateProviders(It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<ImportType>()), Times.Never);
     }
 
-    [Test]
-    [MoqAutoData]
-    public async Task ReloadAllAddresses_NoUkrlpResponse_ReturnsWithoutWritingToRepository(
-        [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
-        [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetailService sut)
-    {
-        List<ProviderRegistrationDetail> providerRegistrationDetails = [new(), new()];
-        repositoryMock.Setup(x => x.GetActiveProviders()).ReturnsAsync(providerRegistrationDetails);
-
-        apiClientMock
-            .Setup(x => x.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address",
-                It.IsAny<ProviderAddressLookupRequest>())).ReturnsAsync((true, new()));
-
-        Func<Task> action = () => sut.ReloadAllAddresses();
-
-        await action.Invoke();
-
-        repositoryMock.Verify(x =>
-                x.UpdateProviders(It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<ImportType>()),
-            Times.Never);
-    }
-
-    [Test]
-    [MoqAutoData]
+    [Test, RecursiveMoqAutoData]
     public async Task ReloadAllAddresses_UpdatesAddresses(
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        List<UkrlpProviderAddress> ukrlpResponse,
-        [Greedy] ReloadProviderRegistrationDetailService sut)
+        [Greedy] ReloadProviderRegistrationDetailService sut,
+        ProviderRegistrationDetail actualProvider,
+        ProviderDetails expectedProvider)
     {
-        List<ProviderRegistrationDetail> providerRegistrationDetails = new List<ProviderRegistrationDetail>
-        {
-            new()
-            {
-                AddressLine1 = "OldAddress",
-                AddressLine2 = "OldAddress2",
-                AddressLine3 = "OldAddress3",
-                AddressLine4 = "OldAddress4",
-                Postcode = "OldPostcode",
-                Town = "OldTown",
-                Ukprn = 12345678
-            }
-        };
+        actualProvider.Ukprn = 12345678;
+        List<ProviderRegistrationDetail> providerRegistrationDetails = [actualProvider];
         repositoryMock.Setup(x => x.GetActiveProviders()).ReturnsAsync(providerRegistrationDetails);
 
-        ukrlpResponse[0] = new UkrlpProviderAddress
-        {
-            Address1 = "TestAddress1",
-            Address2 = "TestAddress2",
-            Address3 = "TestAddress3",
-            Address4 = "TestAddress4",
-            Postcode = "TestPostcode",
-            Town = "TestTown",
-            Ukprn = 12345678
-        };
+        expectedProvider.Ukprn = actualProvider.Ukprn;
+        GetUkrlpProvidersResponse ukrlpResponse = new() { Providers = [expectedProvider] };
+        apiClientMock.Setup(x => x.Post<GetUkrlpProvidersRequest, GetUkrlpProvidersResponse>(Constants.GetUkrlpDataRequestUrl, It.IsAny<GetUkrlpProvidersRequest>())).ReturnsAsync((true, ukrlpResponse));
 
-        apiClientMock
-            .Setup(x => x.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address",
-                It.IsAny<ProviderAddressLookupRequest>())).ReturnsAsync((true, ukrlpResponse));
+        await sut.ReloadAllAddresses();
 
-        Func<Task> action = () => sut.ReloadAllAddresses();
-
-        await action.Invoke();
-
-        providerRegistrationDetails[0].AddressLine1.Should().BeEquivalentTo(ukrlpResponse[0].Address1);
-        providerRegistrationDetails[0].AddressLine2.Should().BeEquivalentTo(ukrlpResponse[0].Address2);
-        providerRegistrationDetails[0].AddressLine3.Should().BeEquivalentTo(ukrlpResponse[0].Address3);
-        providerRegistrationDetails[0].AddressLine4.Should().BeEquivalentTo(ukrlpResponse[0].Address4);
-        providerRegistrationDetails[0].Postcode.Should().BeEquivalentTo(ukrlpResponse[0].Postcode);
-        providerRegistrationDetails[0].Town.Should().BeEquivalentTo(ukrlpResponse[0].Town);
+        actualProvider.AddressLine1.Should().BeEquivalentTo(expectedProvider.LegalAddress.Address1);
+        actualProvider.AddressLine2.Should().BeEquivalentTo(expectedProvider.LegalAddress.Address2);
+        actualProvider.AddressLine3.Should().BeEquivalentTo(expectedProvider.LegalAddress.Address3);
+        actualProvider.AddressLine4.Should().BeEquivalentTo(expectedProvider.LegalAddress.Address4);
+        actualProvider.Postcode.Should().BeEquivalentTo(expectedProvider.LegalAddress.Postcode);
+        actualProvider.Town.Should().BeEquivalentTo(expectedProvider.LegalAddress.Town);
     }
 
     [Test]
@@ -124,22 +87,18 @@ public class ReloadAllAddressesTests
     public async Task ReloadAllAddresses_WritesToRepository(
         [Frozen] Mock<IProviderRegistrationDetailsWriteRepository> repositoryMock,
         [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        List<UkrlpProviderAddress> ukrlpResponse,
+        GetUkrlpProvidersResponse ukrlpResponse,
         [Greedy] ReloadProviderRegistrationDetailService sut)
     {
         List<ProviderRegistrationDetail> providerRegistrationDetails = [new(), new()];
         repositoryMock.Setup(x => x.GetActiveProviders()).ReturnsAsync(providerRegistrationDetails);
 
         apiClientMock
-            .Setup(x => x.Post<ProviderAddressLookupRequest, List<UkrlpProviderAddress>>("lookup/providers-address",
-                It.IsAny<ProviderAddressLookupRequest>())).ReturnsAsync((true, ukrlpResponse));
+            .Setup(x => x.Post<GetUkrlpProvidersRequest, GetUkrlpProvidersResponse>(Constants.GetUkrlpDataRequestUrl,
+                It.IsAny<GetUkrlpProvidersRequest>())).ReturnsAsync((true, new GetUkrlpProvidersResponse()));
 
-        Func<Task> action = () => sut.ReloadAllAddresses();
+        await sut.ReloadAllAddresses();
 
-        await action.Invoke();
-
-        repositoryMock.Verify(x =>
-                x.UpdateProviders(It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<ImportType>()),
-            Times.Once);
+        repositoryMock.Verify(x => x.UpdateProviders(It.IsAny<DateTime>(), It.IsAny<int>(), It.IsAny<ImportType>()), Times.Once);
     }
 }
