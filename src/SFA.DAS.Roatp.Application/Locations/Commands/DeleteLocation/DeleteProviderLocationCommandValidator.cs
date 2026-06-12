@@ -4,6 +4,7 @@ using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Locations.Commands.DeleteLocation;
+
 public class DeleteProviderLocationCommandValidator : AbstractValidator<DeleteProviderLocationCommand>
 {
     public const string InvalidIdErrorMessage = "Invalid id";
@@ -17,7 +18,7 @@ public class DeleteProviderLocationCommandValidator : AbstractValidator<DeletePr
             .Cascade(CascadeMode.Stop)
             .NotEmpty().WithMessage(InvalidIdErrorMessage)
              .MustAsync(async (model, id, cancellation)
-                 => (await providerLocationsReadRepository.GetProviderCoursesByLocation(model.Ukprn, id)).All(providerCourse => providerCourse.Locations.Count > 1))
+                 => (await providerLocationsReadRepository.GetProviderCoursesByLocation(model.Ukprn, id)).All(providerCourse => providerCourse.Locations.Count > 1 || providerCourse.HasOnlineDeliveryOption))
              .WithMessage(ProviderLocationOrphanedStandardErrorMessage);
         Include(new UserInfoValidator());
     }

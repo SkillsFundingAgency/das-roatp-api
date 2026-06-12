@@ -6,9 +6,9 @@ using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails;
-using SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocations;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocations
@@ -30,7 +30,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
 
             response.Should().NotBeNull();
             response.Result.Should().NotBeNull();
-            var result = response.Result as ProviderLocationModel;
+            var result = response.Result;
             result.Should().BeEquivalentTo(location, c => c
                 .Excluding(s => s.Id)
                 .Excluding(s => s.ProviderId)
@@ -74,7 +74,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
 
             response.Should().NotBeNull();
             response.Result.Should().NotBeNull();
-            var result = response.Result as ProviderLocationModel;
+            var result = response.Result;
             result.Should().BeEquivalentTo(location, c => c
                 .Excluding(s => s.Id)
                 .Excluding(s => s.ProviderId)
@@ -86,6 +86,31 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
             result.ProviderLocationId.Should().Be(location.Id);
 
             result.Standards[0].HasOtherVenues.Should().Be(true);
+        }
+
+        [Test, RecursiveMoqAutoData()]
+        public async Task WhenHandlingReturnResultAndCourseTypeIsShortCourseAndHasOnlineDeliveryOptionIsTrue_ThenHasOtherVenuesIsSetToTrue(
+            List<Standard> standards,
+            ProviderLocation location,
+            [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepository,
+            GetProviderLocationDetailsQuery query,
+            GetProviderLocationDetailsQueryHandler sut,
+            CancellationToken cancellationToken)
+        {
+            var matchedLarsCode = standards[0].LarsCode;
+            standards[0].CourseType = CourseType.ShortCourse;
+            location.ProviderCourseLocations[0].ProviderCourse.HasOnlineDeliveryOption = true;
+            location.ProviderCourseLocations[0].ProviderCourse.LarsCode = matchedLarsCode;
+            location.ProviderCourseLocations[0].ProviderCourse.Standard = standards[0];
+
+            location.Provider.Courses[0].LarsCode = matchedLarsCode;
+            location.Provider.Courses[0].Standard = standards[0];
+
+            providerLocationsReadRepository.Setup(r => r.GetProviderLocation(query.Ukprn, query.Id)).ReturnsAsync(location);
+
+            var response = await sut.Handle(query, cancellationToken);
+
+            response.Result.Standards[0].HasOtherVenues.Should().Be(true);
         }
     }
 }

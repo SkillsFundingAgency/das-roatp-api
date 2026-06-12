@@ -48,7 +48,7 @@ namespace SFA.DAS.Roatp.Application.Locations.Queries.GetProviderLocationDetails
                 if (providerCourse != null)
                 {
                     standardModel.HasOtherVenues = providerCourse.Locations.Any(l =>
-                        l.ProviderLocationId != providerCourseLocation.ProviderLocationId);
+                        l.ProviderLocationId != providerCourseLocation.ProviderLocationId) || (matchedStandard.CourseType == CourseType.ShortCourse && providerCourse.HasOnlineDeliveryOption);
                 }
 
                 if (standards.All(x => x.LarsCode != matchedStandard.LarsCode))
