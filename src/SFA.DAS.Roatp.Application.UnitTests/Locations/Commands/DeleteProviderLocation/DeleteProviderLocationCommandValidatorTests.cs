@@ -114,6 +114,58 @@ public class DeleteProviderLocationCommandValidatorTests
             .Be(DeleteProviderLocationCommandValidator.ProviderLocationOrphanedStandardErrorMessage);
     }
 
+    [Test, RecursiveMoqAutoData]
+    public async Task WhenCourseHasOneLocationAndHasOnlineDeliveryOptionTrue_ThenReturnsNoErrors(
+    [Frozen] Mock<IProvidersReadRepository> providerReadRepository,
+    [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepository,
+    [Greedy] DeleteProviderLocationCommandValidator sut)
+    {
+        var command = new DeleteProviderLocationCommand(_ukprn, _navigationId, _userId, _userDisplayName);
+
+        var providerCourse = new Domain.Entities.ProviderCourse
+        {
+            HasOnlineDeliveryOption = true,
+            Locations = new List<Domain.Entities.ProviderCourseLocation>
+        {
+            new()
+        }
+        };
+
+        providerLocationsReadRepository
+            .Setup(x => x.GetProviderCoursesByLocation(_ukprn, _navigationId))
+            .ReturnsAsync(new List<Domain.Entities.ProviderCourse> { providerCourse });
+
+        var result = await sut.TestValidateAsync(command);
+
+        result.ShouldNotHaveValidationErrorFor(c => c.Id);
+    }
+
+    [Test, RecursiveMoqAutoData]
+    public async Task WhenCourseHasOneLocationAndHasOnlineDeliveryOptionFalse_ThenValidationFails(
+    [Frozen] Mock<IProvidersReadRepository> providerReadRepository,
+    [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepository,
+    [Greedy] DeleteProviderLocationCommandValidator sut)
+    {
+        var command = new DeleteProviderLocationCommand(_ukprn, _navigationId, _userId, _userDisplayName);
+
+        var providerCourse = new Domain.Entities.ProviderCourse
+        {
+            HasOnlineDeliveryOption = false,
+            Locations = new List<Domain.Entities.ProviderCourseLocation>
+        {
+            new()
+        }
+        };
+
+        providerLocationsReadRepository
+            .Setup(x => x.GetProviderCoursesByLocation(_ukprn, _navigationId))
+            .ReturnsAsync(new List<Domain.Entities.ProviderCourse> { providerCourse });
+
+        var result = await sut.TestValidateAsync(command);
+
+        result.ShouldHaveValidationErrorFor(c => c.Id);
+    }
+
     private static DeleteProviderLocationCommandValidator GetDefaultValidator()
     {
         var providerLocationsReadRepositoryMock = new Mock<IProviderLocationsReadRepository>();
