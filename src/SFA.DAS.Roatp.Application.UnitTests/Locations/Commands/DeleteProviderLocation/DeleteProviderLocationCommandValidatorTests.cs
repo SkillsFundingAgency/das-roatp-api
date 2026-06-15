@@ -115,7 +115,7 @@ public class DeleteProviderLocationCommandValidatorTests
     }
 
     [Test, RecursiveMoqAutoData]
-    public async Task WhenCourseHasOneLocationAndHasOnlineDeliveryOptionTrue_ThenReturnsNoErrors(
+    public async Task ValidateHasOnlineOption_HasOnlineOptionIsTrue_ReturnsNoErrors(
     [Frozen] Mock<IProvidersReadRepository> providerReadRepository,
     [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepository,
     [Greedy] DeleteProviderLocationCommandValidator sut)
@@ -141,7 +141,7 @@ public class DeleteProviderLocationCommandValidatorTests
     }
 
     [Test, RecursiveMoqAutoData]
-    public async Task WhenCourseHasOneLocationAndHasOnlineDeliveryOptionFalse_ThenValidationFails(
+    public async Task ValidateHasOnlineOption_CourseHasOneLocationAndHasOnlineOptionIsFalse_ValidationFails(
     [Frozen] Mock<IProvidersReadRepository> providerReadRepository,
     [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepository,
     [Greedy] DeleteProviderLocationCommandValidator sut)

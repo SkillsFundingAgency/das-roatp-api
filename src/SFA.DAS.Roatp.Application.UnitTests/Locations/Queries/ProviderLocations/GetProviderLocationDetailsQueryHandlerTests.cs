@@ -89,7 +89,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Locations.Queries.ProviderLocation
         }
 
         [Test, RecursiveMoqAutoData()]
-        public async Task WhenHandlingReturnResultAndCourseTypeIsShortCourseAndHasOnlineDeliveryOptionIsTrue_ThenHasOtherVenuesIsSetToTrue(
+        public async Task Handle_ShortCourseWithHasOnlineDeliveryOption_HasOtherVenuesIsTrue(
             List<Standard> standards,
             ProviderLocation location,
             [Frozen] Mock<IProviderLocationsReadRepository> providerLocationsReadRepository,
