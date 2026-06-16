@@ -27,7 +27,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         Standards,
         NationalAchievementRates,
         NationalAchievementRatesOverall,
-        ProviderAddresses,
         ProviderAddressesLatLong,
         ProviderApprenticeStars,
         ProviderEmployerStars,

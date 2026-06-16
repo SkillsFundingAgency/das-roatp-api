@@ -48,7 +48,6 @@ public static class AddRoatpDataContextExtension
         services.AddTransient<IProviderCourseLocationsWriteRepository, ProviderCourseLocationsWriteRepository>();
         services.AddTransient<IImportAuditWriteRepository, ImportAuditWriteRepository>();
         services.AddTransient<IImportAuditReadRepository, ImportAuditReadRepository>();
-        services.AddTransient<IReloadProviderAddressesRepository, ReloadProviderAddressesRepository>();
         services.AddTransient<IProviderAddressReadRepository, ProviderAddressReadRepository>();
         services.AddTransient<IProviderAddressWriteRepository, ProviderAddressWriteRepository>();
         services.AddTransient<IProvidersCountReadRepository, ProvidersCountReadRepository>();
