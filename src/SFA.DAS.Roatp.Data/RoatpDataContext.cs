@@ -33,6 +33,8 @@ public class RoatpDataContext : DbContext
 
     public DbSet<ForecastQuarter> ForecastQuarters { get; set; }
 
+    public DbSet<RestrictedCourseView> RestrictedCourseViews { get; set; }
+
     public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
