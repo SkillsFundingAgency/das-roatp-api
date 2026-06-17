@@ -184,6 +184,8 @@ BEGIN
         FROM [dbo].[ProviderApprenticeStars] 
         WHERE TimePeriod = @feedbackperiod
     )
+
+    -- NOTE: This json query should have camcelCase column names to match the expected output for the API.
     -- Prepare the JSON for response
     SELECT @JSON = (
         SELECT 
@@ -194,7 +196,7 @@ BEGIN
             ,courses.courseType
             ,courses.learningType
             ,locations.ordering
-            ,locations.LocationDescription
+            ,locations.LocationDescription locationDescription
             ,providers.ordering
             ,providers.shortlistId
             ,providers.ukprn
