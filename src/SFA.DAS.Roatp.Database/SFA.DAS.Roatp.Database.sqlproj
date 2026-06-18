@@ -83,7 +83,6 @@
     <Build Include="Tables\ProviderQAR.sql" />
     <Build Include="Tables\ProviderApprenticeStars.sql" />
     <Build Include="Tables\ProviderEmployerStars.sql" />
-    <Build Include="Tables\Shortlist.sql" />
     <Build Include="StoredProcedures\GetTrainingProvidersCount.sql" />
     <Build Include="StoredProcedures\GetProvidersByLarsCode.sql" />
     <Build Include="StoredProcedures\GetShortlistsForUser.sql" />
@@ -104,6 +103,10 @@
     <Build Include="Tables\ProviderAllowedCourse.sql" />
     <Build Include="Tables\ProviderCourseForecast.sql" />
     <Build Include="Views\ForecastQuartersView.sql" />
+    <Build Include="Tables\RestrictedCourse.sql" />
+    <Build Include="Tables\RestrictedProviderCourseType.sql" />
+    <Build Include="Views\RestrictedCourseView.sql" />
+    <Build Include="Views\RestrictedProviderView.sql" />    
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
