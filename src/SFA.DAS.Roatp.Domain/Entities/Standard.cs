@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Domain.Entities;
@@ -18,6 +19,7 @@ public class Standard
     public LearningType LearningType { get; set; }
     public CourseType CourseType { get; set; }
     public bool IsActiveAvailable { get; set; }
+    public DateTime? LastDateStarts { get; set; }
     public virtual List<ProviderCourse> ProviderCourses { get; set; }
     public virtual List<ProviderCoursesTimeline> ProviderCoursesTimelines { get; set; }
     public virtual List<ProviderAllowedCourse> ProviderAllowedCourses { get; set; }

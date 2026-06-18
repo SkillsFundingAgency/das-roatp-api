@@ -17,6 +17,7 @@ public class StandardModel
     public DurationUnits DurationUnits { get; set; }
     public int Duration { get; set; }
     public bool IsActiveAvailable { get; set; }
+    public DateTime? LastDateStarts { get; set; }
 
     public static implicit operator Domain.Entities.Standard(StandardModel standard) =>
         new Domain.Entities.Standard
@@ -33,6 +34,7 @@ public class StandardModel
             CourseType = standard.CourseType,
             IsActiveAvailable = standard.IsActiveAvailable,
             DurationUnits = standard.DurationUnits,
-            Duration = standard.Duration
+            Duration = standard.Duration,
+            LastDateStarts = standard.LastDateStarts
         };
 }
