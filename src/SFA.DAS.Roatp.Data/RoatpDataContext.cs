@@ -33,7 +33,7 @@ public class RoatpDataContext : DbContext
 
     public DbSet<ForecastQuarter> ForecastQuarters { get; set; }
 
-    public DbSet<RestrictedCourseView> RestrictedCourseViews { get; set; }
+    public DbSet<RestrictedCourseView> RestrictedCoursesView { get; set; }
 
     public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) { }
 
