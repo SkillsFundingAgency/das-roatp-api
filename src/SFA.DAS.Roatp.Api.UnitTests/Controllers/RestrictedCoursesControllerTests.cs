@@ -25,7 +25,7 @@ public class RestrictedCoursesControllerTests
             .ReturnsAsync(expected);
 
         // Act
-        var result = await sut.GetAllRestrictedCourses(true);
+        var result = await sut.GetRestrictedCourses(true);
 
         // Assert
         result.As<OkObjectResult>().Value.Should().Be(expected);
