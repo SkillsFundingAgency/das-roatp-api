@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers;
 public class RestrictedCoursesControllerTests
 {
     [Test, MoqAutoData]
-    public async Task WhenGetAllRestrictedCoursesIsInvoked_ThenReturnsOkResult(
+    public async Task WhenGetRestrictedCoursesIsInvoked_ThenReturnsOkResult(
         [Frozen] Mock<IMediator> _mediatorMock,
         [Greedy] RestrictedCoursesController sut,
         GetAllRestrictedCoursesQueryResult expected)
