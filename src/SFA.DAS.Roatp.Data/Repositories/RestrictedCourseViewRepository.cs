@@ -13,6 +13,9 @@ internal class RestrictedCourseViewRepository(RoatpDataContext _context) : IRest
 {
     public async Task<List<RestrictedCourseView>> GetRestrictedCourses(CancellationToken cancellationToken)
     {
-        return await _context.RestrictedCoursesView.AsNoTracking().ToListAsync(cancellationToken);
+        return await _context.RestrictedCoursesView
+            .Include(x => x.Standard)
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
     }
 }

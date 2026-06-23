@@ -10,6 +10,12 @@ public class RestrictedCourseViewConfiguration : IEntityTypeConfiguration<Restri
 {
     public void Configure(EntityTypeBuilder<RestrictedCourseView> builder)
     {
-        builder.ToView("RestrictedCourseView").HasNoKey();
+        builder.ToView("RestrictedCourseView")
+            .HasNoKey();
+
+        builder.HasOne(x => x.Standard)
+        .WithOne()
+        .HasForeignKey<RestrictedCourseView>(x => x.LarsCode)
+        .HasPrincipalKey<Standard>(x => x.LarsCode);
     }
 }

@@ -29,8 +29,8 @@ public class GetAllRestrictedCoursesQueryHandlerTests
 
         var restrictedCourses = new List<RestrictedCourseView>
         {
-            new RestrictedCourseView { LarsCode = allStandards[0].LarsCode },
-            new RestrictedCourseView { LarsCode = allStandards[1].LarsCode }
+            new RestrictedCourseView { LarsCode = allStandards[0].LarsCode, Standard = allStandards[0] },
+            new RestrictedCourseView { LarsCode = allStandards[1].LarsCode, Standard = allStandards[1] }
         };
 
         restrictedCourseViewRepositoryMock.Setup(r => r.GetRestrictedCourses(It.IsAny<CancellationToken>()))
@@ -66,8 +66,8 @@ public class GetAllRestrictedCoursesQueryHandlerTests
 
         var restrictedCourses = new List<RestrictedCourseView>
         {
-            new RestrictedCourseView { LarsCode = allStandards[0].LarsCode },
-            new RestrictedCourseView { LarsCode = allStandards[1].LarsCode }
+            new RestrictedCourseView { LarsCode = allStandards[0].LarsCode, Standard = allStandards[0] },
+            new RestrictedCourseView { LarsCode = allStandards[1].LarsCode, Standard = allStandards[1] }
         };
 
         restrictedCourseViewRepositoryMock.Setup(r => r.GetRestrictedCourses(It.IsAny<CancellationToken>()))

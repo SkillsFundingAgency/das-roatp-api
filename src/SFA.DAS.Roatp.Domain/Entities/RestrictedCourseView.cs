@@ -3,4 +3,6 @@
 public class RestrictedCourseView
 {
     public string LarsCode { get; set; }
+
+    public virtual Standard Standard { get; set; }
 }

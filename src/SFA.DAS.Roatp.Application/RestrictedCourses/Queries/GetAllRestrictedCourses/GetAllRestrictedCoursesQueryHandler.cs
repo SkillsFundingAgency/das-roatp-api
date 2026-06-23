@@ -14,19 +14,24 @@ public class GetAllRestrictedCoursesQueryHandler(IRestrictedCourseViewRepository
     {
         List<RestrictedCourseView> restrictedCourses = await _restrictedCourseViewRepository.GetRestrictedCourses(cancellationToken);
 
-        List<Standard> allStandards = await _standardsReadRepository.GetAllStandards();
+        if (request.Restricted)
+        {
+            return new GetAllRestrictedCoursesQueryResult
+            {
+                Courses = restrictedCourses
+                    .Select(x => (RestrictedCourseModel)x.Standard)
+                    .ToList()
+            };
+        }
 
-        var courses = request.Restricted
-        ? allStandards
-            .Where(s => restrictedCourses.Any(r => r.LarsCode == s.LarsCode))
-            .Select(s => (RestrictedCourseModel)s)
-        : allStandards
-            .Where(s => !restrictedCourses.Any(r => r.LarsCode == s.LarsCode))
-            .Select(s => (RestrictedCourseModel)s);
+        var allStandards = await _standardsReadRepository.GetAllStandards();
 
         return new GetAllRestrictedCoursesQueryResult
         {
-            Courses = courses.ToList()
+            Courses = allStandards
+                .Where(s => !restrictedCourses.Any(r => r.LarsCode == s.LarsCode))
+                .Select(s => (RestrictedCourseModel)s)
+                .ToList()
         };
     }
 }
