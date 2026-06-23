@@ -5,11 +5,13 @@ namespace SFA.DAS.Roatp.Application.RestrictedCourses.Queries.GetAllRestrictedCo
 public class RestrictedCourseModel
 {
     public string LarsCode { get; set; }
-    public string CourseName { get; set; }
+    public string Title { get; set; }
+    public int Level { get; set; }
 
     public static implicit operator RestrictedCourseModel(Standard source) => new()
     {
         LarsCode = source.LarsCode,
-        CourseName = $"{source.Title} (Level {source.Level})"
+        Title = source.Title,
+        Level = source.Level
     };
 }

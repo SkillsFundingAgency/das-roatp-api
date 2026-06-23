@@ -23,6 +23,7 @@ public class RestrictedCourseModelTests
 
         // Assert
         sut.LarsCode.Should().Be(source.LarsCode);
-        sut.CourseName.Should().Be("Test Course (Level 1)");
+        sut.Title.Should().Be(source.Title);
+        sut.Level.Should().Be(source.Level);
     }
 }
