@@ -35,6 +35,8 @@ public class RoatpDataContext : DbContext
 
     public DbSet<RestrictedCourseView> RestrictedCoursesView { get; set; }
 
+    public DbSet<RestrictedCourse> RestrictedCourses { get; set; }
+
     public RoatpDataContext(DbContextOptions<RoatpDataContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
