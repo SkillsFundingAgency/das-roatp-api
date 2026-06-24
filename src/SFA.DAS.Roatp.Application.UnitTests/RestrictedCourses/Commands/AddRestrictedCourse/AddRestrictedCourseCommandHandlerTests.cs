@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
+using MediatR;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.RestrictedCourses.Commands.AddRestrictedCourse;
@@ -28,5 +29,23 @@ public class AddRestrictedCourseCommandHandlerTests
                 command.UserId,
                 command.UserDisplayName,
                 AuditEventTypes.CreateRestrictedCourse), Times.Once);
+    }
+
+    [Test]
+    [MoqAutoData]
+    public async Task WhenHandlingAddRestrictedCourseCommand_ThenValidatedResponseIsReturned(
+        AddRestrictedCourseCommand command,
+        [Greedy] AddRestrictedCourseCommandHandler sut)
+    {
+        // Act
+        var result = await sut.Handle(command, CancellationToken.None);
+
+        // Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(result, Is.Not.Null);
+            Assert.That(result.IsValidResponse, Is.True);
+            Assert.That(result.Result, Is.EqualTo(Unit.Value));
+        });
     }
 }
