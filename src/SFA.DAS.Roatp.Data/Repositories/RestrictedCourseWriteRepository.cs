@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -9,9 +10,10 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Data.Repositories;
 
+[ExcludeFromCodeCoverage]
 public class RestrictedCourseWriteRepository(RoatpDataContext _roatpDataContext, ILogger<RestrictedCourseWriteRepository> _logger) : IRestrictedCourseWriteRepository
 {
-    public async Task CreateRestrictedCourse(string larsCode, string userId, string userDisplayName, string userAction)
+    public async Task CreateRestrictedCourse(string larsCode, RestrictedCourse restrictedCourse, string userId, string userDisplayName, string userAction)
     {
         var strategy = _roatpDataContext.Database.CreateExecutionStrategy();
 
@@ -21,35 +23,11 @@ public class RestrictedCourseWriteRepository(RoatpDataContext _roatpDataContext,
 
             try
             {
-                var restrictedCourse = new RestrictedCourse
-                {
-                    LarsCode = larsCode,
-                    CreatedDate = DateTime.UtcNow
-                };
-
-                var providerAllowedCourses = await (
-                from providerCourse in _roatpDataContext.ProviderCourses
-                join provider in _roatpDataContext.Providers
-                    on providerCourse.ProviderId equals provider.Id
-                where providerCourse.LarsCode == larsCode
-                      && !_roatpDataContext.ProviderAllowedCourses.Any(pac =>
-                          pac.Ukprn == provider.Ukprn &&
-                          pac.LarsCode == larsCode)
-                select new ProviderAllowedCourse
-                {
-                    Ukprn = provider.Ukprn,
-                    LarsCode = larsCode
-                })
-                .Distinct()
-                .ToListAsync();
-
                 await _roatpDataContext.RestrictedCourses.AddAsync(restrictedCourse);
-
-                await _roatpDataContext.ProviderAllowedCourses.AddRangeAsync(providerAllowedCourses);
 
                 var initialState = new
                 {
-                    AllowedProviders = providerAllowedCourses
+                    AllowedProviders = restrictedCourse.ProviderAllowedCourses
                     .Select(x => x.Ukprn)
                     .Distinct()
                     .ToList()
@@ -74,7 +52,7 @@ public class RestrictedCourseWriteRepository(RoatpDataContext _roatpDataContext,
             {
                 await transaction.RollbackAsync();
                 _logger.LogError(ex, "RestrictedCourse create failed for LarsCode {LarsCode} by userId {UserId}", larsCode, userId);
-                throw;
+                throw new InvalidOperationException();
             }
         });
     }

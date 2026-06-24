@@ -11,8 +11,9 @@ public class RestrictedCourseConfiguration : IEntityTypeConfiguration<Restricted
     public void Configure(EntityTypeBuilder<RestrictedCourse> builder)
     {
         builder.ToTable(nameof(RestrictedCourse));
-        builder.HasKey(x => x.Id);
-        builder.Property(x => x.LarsCode).IsRequired();
-        builder.Property(x => x.CreatedDate).IsRequired();
+        builder.HasMany(x => x.ProviderAllowedCourses)
+        .WithOne()
+        .HasForeignKey(x => x.LarsCode)
+        .HasPrincipalKey(x => x.LarsCode);
     }
 }
