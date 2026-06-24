@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Application.RestrictedCourses.Commands.AddRestrictedCourse;
 using SFA.DAS.Roatp.Application.RestrictedCourses.Queries.GetAllRestrictedCourses;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
@@ -24,5 +25,17 @@ public class RestrictedCoursesController(IMediator _mediator, ILogger<Restricted
         GetAllRestrictedCoursesQuery query = new(restricted);
         GetAllRestrictedCoursesQueryResult result = await _mediator.Send(query);
         return Ok(result);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> CreateRestrictedCourse(AddRestrictedCourseCommand command)
+    {
+        _logger.LogInformation("Request to create restricted course for {LarsCode}", command.LarsCode);
+
+        var response = await _mediator.Send(command);
+
+        return GetNoContentResponse(response);
     }
 }
