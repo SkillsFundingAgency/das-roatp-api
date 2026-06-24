@@ -24,6 +24,7 @@ public class RestrictedCourseWriteRepository(RoatpDataContext _roatpDataContext,
                 var restrictedCourse = new RestrictedCourse
                 {
                     LarsCode = larsCode,
+                    CreatedDate = DateTime.UtcNow
                 };
 
                 var providerAllowedCourses = await (
@@ -55,7 +56,7 @@ public class RestrictedCourseWriteRepository(RoatpDataContext _roatpDataContext,
                 };
 
                 var audit = new Audit(
-                    nameof(ProviderAllowedCourse),
+                    nameof(RestrictedCourse),
                     larsCode,
                     userId,
                     userDisplayName,
