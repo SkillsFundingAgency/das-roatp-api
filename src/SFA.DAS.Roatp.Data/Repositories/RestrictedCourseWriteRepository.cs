@@ -11,7 +11,6 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 namespace SFA.DAS.Roatp.Data.Repositories;
 
 [ExcludeFromCodeCoverage]
-
 public class RestrictedCourseWriteRepository(RoatpDataContext _roatpDataContext, ILogger<RestrictedCourseWriteRepository> _logger) : IRestrictedCourseWriteRepository
 {
     public async Task CreateRestrictedCourse(string larsCode, RestrictedCourse restrictedCourse, string userId, string userDisplayName, string userAction)

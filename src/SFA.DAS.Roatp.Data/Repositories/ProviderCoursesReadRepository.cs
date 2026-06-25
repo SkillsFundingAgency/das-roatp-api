@@ -76,6 +76,7 @@ internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
             .ToListAsync(cancellationToken);
     }
 
+    [ExcludeFromCodeCoverage]
     public async Task<List<ProviderCourse>> GetProviderCoursesByLarsCode(string larsCode)
     {
         return await _roatpDataContext
