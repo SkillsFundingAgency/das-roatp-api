@@ -24,12 +24,6 @@ public class RestrictedCourseWriteRepository(RoatpDataContext _roatpDataContext,
 
             try
             {
-                var restrictedCourse = new RestrictedCourse
-                {
-                    LarsCode = larsCode,
-                    CreatedDate = DateTime.UtcNow
-                };
-
                 var providerAllowedCourses = await (
                 from providerCourse in _roatpDataContext.ProviderCourses
                 join provider in _roatpDataContext.Providers
@@ -46,9 +40,15 @@ public class RestrictedCourseWriteRepository(RoatpDataContext _roatpDataContext,
                 .Distinct()
                 .ToListAsync();
 
+                var restrictedCourse = new RestrictedCourse
+                {
+                    LarsCode = larsCode,
+                    ProviderAllowedCourses = providerAllowedCourses
+                };
+
                 await _roatpDataContext.RestrictedCourses.AddAsync(restrictedCourse);
 
-                await _roatpDataContext.ProviderAllowedCourses.AddRangeAsync(providerAllowedCourses);
+                //await _roatpDataContext.ProviderAllowedCourses.AddRangeAsync(providerAllowedCourses);
 
                 var initialState = new
                 {
