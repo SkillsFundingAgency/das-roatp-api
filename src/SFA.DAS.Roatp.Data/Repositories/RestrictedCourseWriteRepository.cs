@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Data.Repositories;
 
 public class RestrictedCourseWriteRepository(RoatpDataContext _roatpDataContext, ILogger<RestrictedCourseWriteRepository> _logger) : IRestrictedCourseWriteRepository
 {
-    public async Task CreateRestrictedCourse(string larsCode, string userId, string userDisplayName, string userAction)
+    public async Task CreateRestrictedCourse(string larsCode, RestrictedCourse restrictedCourse, string userId, string userDisplayName, string userAction)
     {
         var strategy = _roatpDataContext.Database.CreateExecutionStrategy();
 
@@ -24,35 +24,11 @@ public class RestrictedCourseWriteRepository(RoatpDataContext _roatpDataContext,
 
             try
             {
-                var providerAllowedCourses = await (
-                from providerCourse in _roatpDataContext.ProviderCourses
-                join provider in _roatpDataContext.Providers
-                    on providerCourse.ProviderId equals provider.Id
-                where providerCourse.LarsCode == larsCode
-                      && !_roatpDataContext.ProviderAllowedCourses.Any(pac =>
-                          pac.Ukprn == provider.Ukprn &&
-                          pac.LarsCode == larsCode)
-                select new ProviderAllowedCourse
-                {
-                    Ukprn = provider.Ukprn,
-                    LarsCode = larsCode
-                })
-                .Distinct()
-                .ToListAsync();
-
-                var restrictedCourse = new RestrictedCourse
-                {
-                    LarsCode = larsCode,
-                    ProviderAllowedCourses = providerAllowedCourses
-                };
-
                 await _roatpDataContext.RestrictedCourses.AddAsync(restrictedCourse);
-
-                //await _roatpDataContext.ProviderAllowedCourses.AddRangeAsync(providerAllowedCourses);
 
                 var initialState = new
                 {
-                    AllowedProviders = providerAllowedCourses
+                    AllowedProviders = restrictedCourse.ProviderAllowedCourses
                     .Select(x => x.Ukprn)
                     .Distinct()
                     .ToList()
