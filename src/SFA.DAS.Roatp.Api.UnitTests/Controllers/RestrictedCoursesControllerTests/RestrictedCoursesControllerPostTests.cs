@@ -13,7 +13,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.RestrictedCourses.Commands.AddRestrictedCourse;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Api.UnitTests.Controllers;
+namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.RestrictedCoursesControllerTests;
 
 public class RestrictedCoursesControllerPostTests
 {
