@@ -1,11 +1,14 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
+using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
+using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.RestrictedCourses.Commands.AddRestrictedCourse;
 using SFA.DAS.Testing.AutoFixture;
@@ -30,7 +33,7 @@ public class RestrictedCoursesControllerPostTests
         var result = await sut.AddRestrictedCourse(command);
 
         // Assert
-        Assert.That(result, Is.InstanceOf<NoContentResult>());
+        Assert.That(result, Is.InstanceOf<CreatedResult>());
     }
 
     [Test]
@@ -41,17 +44,16 @@ public class RestrictedCoursesControllerPostTests
         [Greedy] RestrictedCoursesController sut)
     {
         // Arrange
-        var response = new ValidatedResponse<Unit>(
-            new[]
-            {
-                new FluentValidation.Results.ValidationFailure(
-                    nameof(command.LarsCode),
-                    "Validation error")
-            });
+        List<ValidationFailure> errors = new List<ValidationFailure>
+        {
+            new() { ErrorMessage = LarsCodeValidator.NotFoundMessage }
+        };
+
+        ValidatedResponse<Unit> validatedResponse = new(errors);
 
         mediatorMock
             .Setup(x => x.Send(command, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(response);
+            .ReturnsAsync(validatedResponse);
 
         // Act
         var result = await sut.AddRestrictedCourse(command);

@@ -29,13 +29,13 @@ public class RestrictedCoursesController(IMediator _mediator, ILogger<Restricted
 
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status201Created)]
     public async Task<IActionResult> AddRestrictedCourse(AddRestrictedCourseCommand command)
     {
         _logger.LogInformation("Request to add restricted course for {LarsCode}", command.LarsCode);
 
         var response = await _mediator.Send(command);
 
-        return GetNoContentResponse(response);
+        return GetPostResponse(response, "/restricted-courses");
     }
 }
