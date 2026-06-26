@@ -27,7 +27,7 @@ public class RestrictedCoursesControllerPostTests
             .ReturnsAsync(new ValidatedResponse<Unit>(Unit.Value));
 
         // Act
-        var result = await sut.CreateRestrictedCourse(command);
+        var result = await sut.AddRestrictedCourse(command);
 
         // Assert
         Assert.That(result, Is.InstanceOf<NoContentResult>());
@@ -54,7 +54,7 @@ public class RestrictedCoursesControllerPostTests
             .ReturnsAsync(response);
 
         // Act
-        var result = await sut.CreateRestrictedCourse(command);
+        var result = await sut.AddRestrictedCourse(command);
 
         // Assert
         Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
