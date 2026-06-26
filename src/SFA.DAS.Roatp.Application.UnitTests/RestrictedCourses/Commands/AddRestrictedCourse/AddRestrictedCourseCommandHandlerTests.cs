@@ -15,13 +15,11 @@ namespace SFA.DAS.Roatp.Application.UnitTests.RestrictedCourses.Commands.AddRest
 
 public class AddRestrictedCourseCommandHandlerTests
 {
-    [Test]
-    [MoqAutoData]
+    [Test, MoqAutoData]
     public async Task WhenDoesNotExistInProviderAllowedCourse_ThenVerifyUkprnsAreIncludedInRestrictedCourseCreation(
         AddRestrictedCourseCommand command,
         [Frozen] Mock<IRestrictedCourseWriteRepository> restrictedCourseWriteRepository,
         [Frozen] Mock<IProviderCoursesReadRepository> providerCoursesReadRepository,
-        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] AddRestrictedCourseCommandHandler sut)
     {
         // Arrange
@@ -43,15 +41,9 @@ public class AddRestrictedCourseCommandHandlerTests
             }
         };
 
-        var providerAllowedCourses = new List<ProviderAllowedCourse>();
-
         providerCoursesReadRepository
             .Setup(x => x.GetProviderCoursesByLarsCode(command.LarsCode))
             .ReturnsAsync(providerCourses);
-
-        providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCoursesByLarsCode(command.LarsCode, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(providerAllowedCourses);
 
         // Act
         await sut.Handle(command, CancellationToken.None);
@@ -71,13 +63,11 @@ public class AddRestrictedCourseCommandHandlerTests
                 AuditEventTypes.CreateRestrictedCourse), Times.Once);
     }
 
-    [Test]
-    [MoqAutoData]
+    [Test, MoqAutoData]
     public async Task WhenExistsInProviderAllowedCourse_ThenVerifyUkprnNotIncludedInRestrictedCourseCreation(
         AddRestrictedCourseCommand command,
         [Frozen] Mock<IRestrictedCourseWriteRepository> restrictedCourseWriteRepository,
         [Frozen] Mock<IProviderCoursesReadRepository> providerCoursesReadRepository,
-        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] AddRestrictedCourseCommandHandler sut)
     {
         // Arrange
@@ -90,7 +80,15 @@ public class AddRestrictedCourseCommandHandlerTests
             new SFA.DAS.Roatp.Domain.Entities.ProviderCourse
             {
                 LarsCode = command.LarsCode,
-                Provider = new Provider { Ukprn = 10001 }
+                Provider = new Provider
+                {
+                    Ukprn = 10001,
+                    ProviderAllowedCourse = new ProviderAllowedCourse
+                    {
+                        Ukprn = 10001,
+                        LarsCode = command.LarsCode
+                    }
+                }
             },
             new SFA.DAS.Roatp.Domain.Entities.ProviderCourse
             {
@@ -99,22 +97,9 @@ public class AddRestrictedCourseCommandHandlerTests
             }
         };
 
-        var providerAllowedCourses = new List<ProviderAllowedCourse>
-        {
-            new ProviderAllowedCourse
-            {
-                Ukprn = 10001,
-                LarsCode = command.LarsCode
-            }
-        };
-
         providerCoursesReadRepository
             .Setup(x => x.GetProviderCoursesByLarsCode(command.LarsCode))
             .ReturnsAsync(providerCourses);
-
-        providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCoursesByLarsCode(command.LarsCode, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(providerAllowedCourses);
 
         // Act
         await sut.Handle(command, CancellationToken.None);
@@ -132,13 +117,11 @@ public class AddRestrictedCourseCommandHandlerTests
                 AuditEventTypes.CreateRestrictedCourse), Times.Once);
     }
 
-    [Test]
-    [MoqAutoData]
+    [Test, MoqAutoData]
     public async Task WhenHandlingAddRestrictedCourseCommand_ThenValidatedResponseIsReturned(
         AddRestrictedCourseCommand command,
         [Frozen] Mock<IRestrictedCourseWriteRepository> restrictedCourseWriteRepository,
         [Frozen] Mock<IProviderCoursesReadRepository> providerCoursesReadRepository,
-        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] AddRestrictedCourseCommandHandler sut)
     {
         // Arrange
@@ -149,10 +132,6 @@ public class AddRestrictedCourseCommandHandlerTests
         providerCoursesReadRepository
             .Setup(x => x.GetProviderCoursesByLarsCode(command.LarsCode))
             .ReturnsAsync(new List<SFA.DAS.Roatp.Domain.Entities.ProviderCourse>());
-
-        providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCoursesByLarsCode(command.LarsCode, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new List<ProviderAllowedCourse>());
 
         restrictedCourseWriteRepository
             .Setup(x => x.CreateRestrictedCourse(command.LarsCode, It.IsAny<RestrictedCourse>(), command.UserId, command.UserDisplayName, AuditEventTypes.CreateRestrictedCourse))

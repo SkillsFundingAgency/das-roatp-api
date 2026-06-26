@@ -84,6 +84,7 @@ internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
              .Include(pc => pc.Standard)
              .Include(pc => pc.Locations)
              .Include(pc => pc.Provider)
+             .ThenInclude(p => p.ProviderAllowedCourse)
              .Where(pc => pc.LarsCode == larsCode)
              .AsNoTracking().ToListAsync();
     }

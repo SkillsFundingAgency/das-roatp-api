@@ -9,5 +9,4 @@ namespace SFA.DAS.Roatp.Domain.Interfaces;
 public interface IProviderAllowedCoursesRepository
 {
     Task<List<ProviderAllowedCourse>> GetProviderAllowedCourses(int ukprn, CourseType courseType, CancellationToken cancellationToken);
-    Task<List<ProviderAllowedCourse>> GetProviderAllowedCoursesByLarsCode(string larsCode, CancellationToken cancellationToken);
 }

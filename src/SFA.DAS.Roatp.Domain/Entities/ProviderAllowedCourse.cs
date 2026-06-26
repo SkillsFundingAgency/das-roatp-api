@@ -7,4 +7,5 @@ public class ProviderAllowedCourse
     public string LarsCode { get; set; }
 
     public virtual Standard Standard { get; set; }
+    public virtual Provider Provider { get; set; }
 }

@@ -9,26 +9,23 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.RestrictedCourses.Commands.AddRestrictedCourse;
 
-public class AddRestrictedCourseCommandHandler(IRestrictedCourseWriteRepository _restrictedCourseWriteRepository, IProviderCoursesReadRepository _providerCoursesReadRepository, IProviderAllowedCoursesRepository _providerAllowedCoursesRepository) : IRequestHandler<AddRestrictedCourseCommand, ValidatedResponse<Unit>>
+public class AddRestrictedCourseCommandHandler(IRestrictedCourseWriteRepository _restrictedCourseWriteRepository, IProviderCoursesReadRepository _providerCoursesReadRepository) : IRequestHandler<AddRestrictedCourseCommand, ValidatedResponse<Unit>>
 {
     public async Task<ValidatedResponse<Unit>> Handle(AddRestrictedCourseCommand command, CancellationToken cancellationToken)
     {
         var providerCourses = await _providerCoursesReadRepository.GetProviderCoursesByLarsCode(command.LarsCode);
 
-        var providerAllowedCourses = await _providerAllowedCoursesRepository.GetProviderAllowedCoursesByLarsCode(command.LarsCode, cancellationToken);
-
         var restrictedCourse = new RestrictedCourse()
         {
             LarsCode = command.LarsCode,
             ProviderAllowedCourses = providerCourses
-                .Where(pc => !providerAllowedCourses.Any(pac =>
-                    pac.Ukprn == pc.Provider.Ukprn &&
-                    pac.LarsCode == command.LarsCode))
+                .Where(pc => pc.Provider.ProviderAllowedCourse == null)
                 .Select(pc => new ProviderAllowedCourse
                 {
                     Ukprn = pc.Provider.Ukprn,
                     LarsCode = command.LarsCode
                 })
+                .DistinctBy(x => x.Ukprn)
                 .ToList()
         };
 

@@ -22,14 +22,4 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
             .ToListAsync(cancellationToken);
         return providerAllowedCourses;
     }
-
-    public async Task<List<ProviderAllowedCourse>> GetProviderAllowedCoursesByLarsCode(string larsCode, CancellationToken cancellationToken)
-    {
-        var providerAllowedCourses = await _roatpDataContext.ProviderAllowedCourses
-            .Include(p => p.Standard)
-            .AsNoTracking()
-            .Where(p => p.LarsCode == larsCode)
-            .ToListAsync(cancellationToken);
-        return providerAllowedCourses;
-    }
 }
