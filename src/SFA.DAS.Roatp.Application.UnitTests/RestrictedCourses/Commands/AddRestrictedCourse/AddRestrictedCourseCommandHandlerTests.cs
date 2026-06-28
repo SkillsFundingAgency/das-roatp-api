@@ -32,12 +32,20 @@ public class AddRestrictedCourseCommandHandlerTests
             new SFA.DAS.Roatp.Domain.Entities.ProviderCourse
             {
                 LarsCode = command.LarsCode,
-                Provider = new Provider { Ukprn = 10001 }
+                Provider = new Provider
+                {
+                    Ukprn = 10001,
+                    ProviderAllowedCourses = new List<ProviderAllowedCourse>()
+                }
             },
             new SFA.DAS.Roatp.Domain.Entities.ProviderCourse
             {
                 LarsCode = command.LarsCode,
-                Provider = new Provider { Ukprn = 10002 }
+                Provider = new Provider
+                {
+                    Ukprn = 10002,
+                    ProviderAllowedCourses = new List<ProviderAllowedCourse>()
+                }
             }
         };
 
@@ -83,17 +91,24 @@ public class AddRestrictedCourseCommandHandlerTests
                 Provider = new Provider
                 {
                     Ukprn = 10001,
-                    ProviderAllowedCourse = new ProviderAllowedCourse
+                    ProviderAllowedCourses = new List<ProviderAllowedCourse>
                     {
-                        Ukprn = 10001,
-                        LarsCode = command.LarsCode
+                        new ProviderAllowedCourse
+                        {
+                            Ukprn = 10001,
+                            LarsCode = command.LarsCode
+                        }
                     }
                 }
             },
             new SFA.DAS.Roatp.Domain.Entities.ProviderCourse
             {
                 LarsCode = command.LarsCode,
-                Provider = new Provider { Ukprn = 10002 }
+                Provider = new Provider
+                {
+                    Ukprn = 10002,
+                    ProviderAllowedCourses = new List<ProviderAllowedCourse>()
+                }
             }
         };
 

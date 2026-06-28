@@ -25,5 +25,5 @@ public class Provider
     public virtual ProviderRegistrationDetail ProviderRegistrationDetail { get; set; }
     public virtual List<ProviderCoursesTimeline> ProviderCoursesTimelines { get; set; } = [];
     public virtual List<ProviderCourseType> ProviderCourseTypes { get; set; } = [];
-    public virtual ProviderAllowedCourse ProviderAllowedCourse { get; set; }
+    public virtual List<ProviderAllowedCourse> ProviderAllowedCourses { get; set; } = [];
 }

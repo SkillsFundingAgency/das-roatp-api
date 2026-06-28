@@ -15,11 +15,11 @@ public class AddRestrictedCourseCommandHandler(IRestrictedCourseWriteRepository 
     {
         var providerCourses = await _providerCoursesReadRepository.GetProviderCoursesByLarsCode(command.LarsCode);
 
-        var restrictedCourse = new RestrictedCourse()
+        var restrictedCourse = new RestrictedCourse
         {
             LarsCode = command.LarsCode,
             ProviderAllowedCourses = providerCourses
-                .Where(pc => pc.Provider.ProviderAllowedCourse == null)
+                .Where(pc => !pc.Provider.ProviderAllowedCourses.Any(pac => pac.LarsCode == command.LarsCode))
                 .Select(pc => new ProviderAllowedCourse
                 {
                     Ukprn = pc.Provider.Ukprn,

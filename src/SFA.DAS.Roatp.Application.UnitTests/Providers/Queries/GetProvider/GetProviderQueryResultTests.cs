@@ -25,7 +25,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProvider
                 .Excluding(s => s.ProviderContacts)
                 .Excluding(s => s.ProviderCoursesTimelines)
                 .Excluding(s => s.ProviderCourseTypes)
-                .Excluding(s => s.ProviderAllowedCourse)
+                .Excluding(s => s.ProviderAllowedCourses)
             );
         }
     }
