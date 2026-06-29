@@ -19,7 +19,7 @@ public class RestrictedCoursesControllerPostTests
 {
     [Test]
     [MoqAutoData]
-    public async Task WhenCreateRestrictedCourseCommandIsValid_ThenReturnsNoContent(
+    public async Task WhenCreateRestrictedCourseCommandIsValid_ThenReturnsCreatedResult(
         AddRestrictedCourseCommand command,
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] RestrictedCoursesController sut)
