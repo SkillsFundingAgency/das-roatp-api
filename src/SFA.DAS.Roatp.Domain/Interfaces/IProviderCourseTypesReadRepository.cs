@@ -9,4 +9,5 @@ public interface IProviderCourseTypesReadRepository
 {
     Task<List<ProviderCourseType>> GetProviderCourseTypesByUkprn(int ukprn, CancellationToken cancellationToken = default);
     Task<List<int>> GetAllProvidersWithShortCourses(CancellationToken cancellationToken = default);
+    Task<List<ProviderCourseType>> GetAllProviderCourseTypes(CancellationToken cancellationToken = default);
 }
