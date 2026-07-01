@@ -65,5 +65,6 @@ public static class AddRoatpDataContextExtension
         services.AddTransient<IProviderCourseForecastRepository, ProviderCourseForecastRepository>();
         services.AddTransient<IForecastQuartersRepository, ForecastQuartersRepository>();
         services.AddTransient<IRestrictedCourseViewRepository, RestrictedCourseViewRepository>();
+        services.AddTransient<IRestrictedCourseWriteRepository, RestrictedCourseWriteRepository>();
     }
 }
