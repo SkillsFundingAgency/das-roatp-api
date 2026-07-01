@@ -17,5 +17,10 @@ public class ProviderAllowedCoursesConfiguration : IEntityTypeConfiguration<Prov
             .HasPrincipalKey(s => s.LarsCode)
             .HasForeignKey(p => p.LarsCode)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(p => p.Provider)
+            .WithMany()
+            .HasPrincipalKey(p => p.Ukprn)
+            .HasForeignKey(p => p.Ukprn);
     }
 }
