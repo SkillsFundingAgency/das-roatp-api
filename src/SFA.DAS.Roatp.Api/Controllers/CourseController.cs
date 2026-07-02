@@ -24,6 +24,6 @@ public class CourseController(IMediator _mediator, ILogger<CourseController> _lo
 
         GetAllowedProvidersQuery query = new(larsCode);
         var result = await _mediator.Send(query);
-        return GetResponse(result);
+        return result is null ? NotFound() : Ok(result);
     }
 }
