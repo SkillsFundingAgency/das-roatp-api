@@ -57,7 +57,6 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
                         Latitude = 1,
                         Longitude = -1,
                         AddressUpdateDate = DateTime.UtcNow,
-                        CoordinatesUpdateDate = DateTime.UtcNow
                     }
                 }
             },

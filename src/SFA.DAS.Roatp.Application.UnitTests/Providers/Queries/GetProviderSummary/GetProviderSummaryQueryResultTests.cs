@@ -31,8 +31,6 @@ public class GetProviderSummaryQueryResultTests
             Assert.That(sut.Address.AddressLine4, Is.EqualTo(source.MainAddressLine4));
             Assert.That(sut.Address.Town, Is.EqualTo(source.MainTown));
             Assert.That(sut.Address.Postcode, Is.EqualTo(source.MainPostcode));
-            Assert.That(sut.Address.Latitude, Is.EqualTo(source.Latitude));
-            Assert.That(sut.Address.Longitude, Is.EqualTo(source.Longitude));
             Assert.That(sut.Qar.Period, Is.EqualTo(source.QARPeriod));
             Assert.That(sut.Qar.Leavers, Is.EqualTo(source.Leavers));
             Assert.That(sut.Qar.AchievementRate, Is.EqualTo(source.AchievementRate));

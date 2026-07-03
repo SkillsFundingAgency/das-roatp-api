@@ -140,8 +140,6 @@ internal class ProviderRegistrationDetailsReadRepository : IProviderRegistration
                 MainTown = GetReaderStringValue("MainTown", reader),
                 MainPostcode = GetReaderStringValue("MainPostcode", reader),
                 MarketingInfo = GetReaderStringValue("MarketingInfo", reader),
-                Latitude = reader["Latitude"] == DBNull.Value ? null : (double)reader["Latitude"],
-                Longitude = reader["Longitude"] == DBNull.Value ? null : (double)reader["Longitude"],
                 QARPeriod = GetReaderStringValue("QARPeriod", reader),
                 Leavers = GetReaderStringValue("Leavers", reader),
                 AchievementRate = GetReaderStringValue("AchievementRate", reader),

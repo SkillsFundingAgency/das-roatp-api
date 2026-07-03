@@ -10,8 +10,6 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
         public string AddressLine4 { get; set; }
         public string Town { get; set; }
         public string Postcode { get; set; }
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
 
         public static implicit operator ProviderAddressModel(ProviderRegistrationDetail source) =>
             new ProviderAddressModel
@@ -22,8 +20,6 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
                 AddressLine4 = source.AddressLine4,
                 Town = source.Town,
                 Postcode = source.Postcode,
-                Latitude = source.Latitude,
-                Longitude = source.Longitude
             };
 
         public static implicit operator ProviderAddressModel(ProviderAddress source)
@@ -39,8 +35,6 @@ namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProviders
                 AddressLine4 = source.AddressLine4,
                 Town = source.Town,
                 Postcode = source.Postcode,
-                Latitude = source.Latitude,
-                Longitude = source.Longitude
             };
         }
     }

@@ -20,8 +20,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
             model.AddressLine4.Should().Be(source.AddressLine4);
             model.Town.Should().Be(source.Town);
             model.Postcode.Should().Be(source.Postcode);
-            model.Latitude.Should().Be(source.Latitude);
-            model.Longitude.Should().Be(source.Longitude);
         }
     }
 }

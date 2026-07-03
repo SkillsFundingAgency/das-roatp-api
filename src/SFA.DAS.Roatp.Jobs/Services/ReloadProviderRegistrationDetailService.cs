@@ -3,7 +3,6 @@ using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Jobs.ApiClients;
 using SFA.DAS.Roatp.Jobs.ApiModels;
-using SFA.DAS.Roatp.Jobs.ApiModels.Lookup;
 
 namespace SFA.DAS.Roatp.Jobs.Services;
 
@@ -84,41 +83,6 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
         await _providerRegistrationDetailsWriteRepository.UpdateProviders(timeStarted, ukrlpResponse.Providers.Count(), ImportType.ProviderRegistrationAddresses);
 
         _logger.LogInformation("Provider registration addresses reload complete");
-    }
-
-    public async Task ReloadAllCoordinates()
-    {
-        var timeStarted = DateTime.UtcNow;
-        var providers = await _providerRegistrationDetailsWriteRepository.GetActiveProviders();
-
-        foreach (var provider in providers)
-        {
-            if (string.IsNullOrWhiteSpace(provider.Postcode))
-            {
-                _logger.LogWarning("Provider with Ukprn: {Ukprn} has no postcode", provider.Ukprn);
-                continue;
-            }
-
-            var (success, lookupAddresses) = await _courseManagementOuterApiClient.Get<AddressList>($"lookup/addresses?postcode={provider.Postcode}");
-
-            if (!success)
-            {
-                _logger.LogWarning("Attempt to get address for Ukprn:{Ukprn} Postcode: {Postcode} failed", provider.Ukprn, provider.Postcode);
-                continue;
-            }
-
-            if (lookupAddresses.Addresses.Count == 0)
-            {
-                _logger.LogWarning("Attempt to get address for Ukprn:{Ukprn} Postcode: {Postcode} returned no addresses", provider.Ukprn, provider.Postcode);
-                continue;
-            }
-
-            var firstAddress = lookupAddresses.Addresses[0];
-            provider.Latitude = firstAddress.Latitude;
-            provider.Longitude = firstAddress.Longitude;
-        }
-
-        await _providerRegistrationDetailsWriteRepository.UpdateProviders(timeStarted, providers.Count, ImportType.ProviderRegistrationAddressCoordinates);
     }
 
     private static void UpdateAddress(ProviderRegistrationDetail provider, Address source)

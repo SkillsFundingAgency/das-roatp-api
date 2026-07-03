@@ -1,7 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Diagnostics.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SFA.DAS.Roatp.Domain.Entities;
-using System.Diagnostics.CodeAnalysis;
 
 namespace SFA.DAS.Roatp.Data.Configuration
 {
@@ -23,7 +23,6 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.Property(x => x.Latitude).IsRequired(false);
             builder.Property(x => x.Latitude).IsRequired(false);
             builder.Property(x => x.AddressUpdateDate).IsRequired();
-            builder.Property(x => x.CoordinatesUpdateDate).IsRequired(false);
         }
     }
 }
