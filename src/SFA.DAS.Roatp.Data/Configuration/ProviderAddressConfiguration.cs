@@ -20,8 +20,6 @@ namespace SFA.DAS.Roatp.Data.Configuration
             builder.Property(x => x.AddressLine4).HasMaxLength(250).IsRequired(false);
             builder.Property(x => x.Town).HasMaxLength(250).IsRequired(false);
             builder.Property(x => x.Postcode).HasMaxLength(25).IsRequired(false);
-            builder.Property(x => x.Latitude).IsRequired(false);
-            builder.Property(x => x.Latitude).IsRequired(false);
             builder.Property(x => x.AddressUpdateDate).IsRequired();
         }
     }
