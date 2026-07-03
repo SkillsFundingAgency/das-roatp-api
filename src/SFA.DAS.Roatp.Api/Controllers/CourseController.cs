@@ -18,6 +18,7 @@ public class CourseController(IMediator _mediator, ILogger<CourseController> _lo
 {
     [HttpGet("{larsCode}/providers/allowed")]
     [ProducesResponseType(typeof(GetAllowedProvidersQueryResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAllowedProvidersByCourse([FromRoute] string larsCode)
     {
         _logger.LogInformation("Request received to get allowed providers for a course");

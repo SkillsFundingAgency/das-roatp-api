@@ -35,11 +35,4 @@ internal class ProviderCourseTypesReadRepository : IProviderCourseTypesReadRepos
             .Select(p => p.Ukprn)
             .ToListAsync(cancellationToken);
     }
-
-    public async Task<List<ProviderCourseType>> GetAllProviderCourseTypes(CancellationToken cancellationToken = default)
-    {
-        return await _roatpDataContext
-            .ProviderCoursesTypes
-            .ToListAsync(cancellationToken);
-    }
 }

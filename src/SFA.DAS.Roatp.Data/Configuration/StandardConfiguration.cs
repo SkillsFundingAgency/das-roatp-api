@@ -28,5 +28,9 @@ public class StandardConfiguration : IEntityTypeConfiguration<Standard>
             v => v.ToString(),
             v => (DurationUnits)Enum.Parse(typeof(DurationUnits), v));
 
+        builder.HasOne(x => x.RestrictedCourseView)
+            .WithOne(x => x.Standard)
+            .HasForeignKey<RestrictedCourseView>(x => x.LarsCode)
+            .HasPrincipalKey<Standard>(x => x.LarsCode);
     }
 }
