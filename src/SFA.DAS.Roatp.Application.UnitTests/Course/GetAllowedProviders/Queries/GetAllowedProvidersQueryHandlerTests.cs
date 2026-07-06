@@ -35,7 +35,7 @@ public class GetAllowedProvidersQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenCourseIsRestrictedA_ThenReturnsProvidersFromProviderAllowedCourse(
+    public async Task WhenCourseIsRestricted_ThenReturnsProvidersFromProviderAllowedCourse(
             [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
             [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
             [Frozen] Mock<IProviderCoursesReadRepository> providerCoursesReadRepository,
