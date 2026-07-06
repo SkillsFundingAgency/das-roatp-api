@@ -15,10 +15,16 @@ public class GetProviderAllowedCoursesByLarsCodeTests
         const string matchingLarsCode = "100";
         const string otherLarsCode = "200";
 
+        var provider = new Provider
+        {
+            Ukprn = 12345678,
+            LegalName = "Test Provider",
+        };
+
         context.ProviderAllowedCourses.AddRange(
-            new ProviderAllowedCourse { LarsCode = matchingLarsCode },
-            new ProviderAllowedCourse { LarsCode = matchingLarsCode },
-            new ProviderAllowedCourse { LarsCode = otherLarsCode });
+            new ProviderAllowedCourse { LarsCode = matchingLarsCode, Provider = provider },
+            new ProviderAllowedCourse { LarsCode = matchingLarsCode, Provider = provider },
+            new ProviderAllowedCourse { LarsCode = otherLarsCode, Provider = provider });
 
         await context.SaveChangesAsync();
 

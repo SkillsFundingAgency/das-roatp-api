@@ -23,4 +23,5 @@ public class Standard
     public virtual List<ProviderCourse> ProviderCourses { get; set; }
     public virtual List<ProviderCoursesTimeline> ProviderCoursesTimelines { get; set; }
     public virtual List<ProviderAllowedCourse> ProviderAllowedCourses { get; set; }
+    public virtual RestrictedCourseView RestrictedCourseView { get; set; }
 }
