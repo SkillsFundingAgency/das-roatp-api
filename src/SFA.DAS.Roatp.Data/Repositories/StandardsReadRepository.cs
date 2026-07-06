@@ -30,6 +30,7 @@ internal class StandardsReadRepository : IStandardsReadRepository
     {
         return await _roatpDataContext
             .Standards
+            .Include(x => x.RestrictedCourseView)
             .SingleOrDefaultAsync(c => c.LarsCode == larsCode);
     }
     public async Task<int> GetStandardsCount()
