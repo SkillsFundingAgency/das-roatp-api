@@ -95,6 +95,67 @@ public class GetProvidersNotAllowedQueryHandlerTests
     }
 
     [Test, MoqAutoData]
+    public async Task WhenProviderHasCourseTypeAndHasNoMatchingLarsCodeInProviderAllowedCourse_ThenReturnsProvider(
+            [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
+            [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
+            [Frozen] Mock<IProviderCourseTypesReadRepository> providerCourseTypesReadRepository,
+            GetProvidersNotAllowedQueryHandler sut,
+            CancellationToken cancellationToken)
+    {
+        // Arrange
+        var larsCode = "123456";
+        var ukprn = 100001;
+        var nonMatchingLarsCode = "567689";
+
+        var standard = new Standard
+        {
+            LarsCode = larsCode,
+            IfateReferenceNumber = "TestIfate",
+            Title = "TestTitle",
+            Route = "TestRoute",
+            LearningType = LearningType.Apprenticeship,
+            CourseType = CourseType.Apprenticeship,
+            IsActiveAvailable = true,
+            LastDateStarts = DateTime.UtcNow.Date,
+            RestrictedCourseView = new RestrictedCourseView { LarsCode = larsCode }
+        };
+
+        var providerAllowedCourses = new List<ProviderAllowedCourse>
+            {
+                new()
+                {
+                    Ukprn = ukprn,
+                    LarsCode = nonMatchingLarsCode,
+                    LastDateStarts = DateTime.UtcNow.Date
+                }
+            };
+
+        var providers = new List<ProviderCourseType>
+        {
+            new()
+            {
+                Ukprn = ukprn,
+                CourseType = standard.CourseType,
+                Provider = new Provider { LegalName = "TestProvider", Ukprn = ukprn }
+            }
+        };
+
+        standardsReadRepository.Setup(x => x.GetStandard(larsCode)).ReturnsAsync(standard);
+
+        providerAllowedCoursesRepository.Setup(x => x.GetProviderAllowedCoursesByLarsCode(larsCode, cancellationToken)).ReturnsAsync(providerAllowedCourses);
+
+        providerCourseTypesReadRepository.Setup(x => x.GetAllProvidersByCourseType(standard.CourseType, cancellationToken)).ReturnsAsync(providers);
+
+        // Act
+        var response = await sut.Handle(new GetProvidersNotAllowedQuery(larsCode), cancellationToken);
+
+        // Assert
+        response.Providers[0].Ukprn.Should().Be(providers[0].Ukprn);
+        response.Providers[0].ProviderName.Should().Be(providers[0].Provider.LegalName);
+        response.Providers[0].DateLastStarts.Should().BeNull();
+    }
+
+    [Test, MoqAutoData]
     public async Task WhenProviderHasCourseTypeAndCourseIsAllowed_ThenDoesNotReturnProvider(
             [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
             [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
@@ -143,7 +204,7 @@ public class GetProvidersNotAllowedQueryHandlerTests
 
         providerAllowedCoursesRepository.Setup(x => x.GetProviderAllowedCoursesByLarsCode(larsCode, cancellationToken)).ReturnsAsync(providerAllowedCourses);
 
-        providerCourseTypesReadRepository.Setup(x => x.GetAllProvidersByCourseType(standard.CourseType, cancellationToken)).ReturnsAsync(providers); ;
+        providerCourseTypesReadRepository.Setup(x => x.GetAllProvidersByCourseType(standard.CourseType, cancellationToken)).ReturnsAsync(providers);
 
         // Act
         var response = await sut.Handle(new GetProvidersNotAllowedQuery(larsCode), cancellationToken);

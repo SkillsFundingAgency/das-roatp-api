@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
+using SFA.DAS.Roatp.Application.Common.Models;
 using SFA.DAS.Roatp.Application.Course.GetAllowedProviders.Queries;
 using SFA.DAS.Roatp.Application.Course.GetProvidersNotAllowed.Queries;
 using SFA.DAS.Testing.AutoFixture;
@@ -19,7 +20,7 @@ public class CourseControllerGetTests
     public async Task WhenGetAllowedProvidersByCourseIsInvoked_ThenReturnsOkResult(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] CourseController sut,
-        GetAllowedProvidersQueryResult expected,
+        CourseAllowedProvidersModel expected,
         GetAllowedProvidersQuery query)
     {
         // Arrange
@@ -41,7 +42,7 @@ public class CourseControllerGetTests
     {
         // Arrange
         mediatorMock.Setup(m => m.Send(It.Is<GetAllowedProvidersQuery>(q => q.LarsCode == query.LarsCode), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((GetAllowedProvidersQueryResult)null);
+            .ReturnsAsync((CourseAllowedProvidersModel)null);
 
         // Act
         var result = await sut.GetAllowedProvidersByCourse(query.LarsCode);
@@ -54,7 +55,7 @@ public class CourseControllerGetTests
     public async Task WhenGetProvidersNotAllowedByCourseIsInvoked_ThenReturnsOkResult(
         [Frozen] Mock<IMediator> mediatorMock,
         [Greedy] CourseController sut,
-        GetProvidersNotAllowedQueryResult expected,
+        CourseAllowedProvidersModel expected,
         GetProvidersNotAllowedQuery query)
     {
         // Arrange
@@ -76,7 +77,7 @@ public class CourseControllerGetTests
     {
         // Arrange
         mediatorMock.Setup(m => m.Send(It.Is<GetProvidersNotAllowedQuery>(q => q.LarsCode == query.LarsCode), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((GetProvidersNotAllowedQueryResult)null);
+            .ReturnsAsync((CourseAllowedProvidersModel)null);
 
         // Act
         var result = await sut.GetProvidersNotAllowedByCourse(query.LarsCode);
