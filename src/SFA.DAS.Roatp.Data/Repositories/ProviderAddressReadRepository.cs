@@ -22,11 +22,4 @@ internal class ProviderAddressReadRepository : IProviderAddressReadRepository
     {
         return await _roatpDataContext.ProviderAddresses.AsNoTracking().ToListAsync();
     }
-
-    public async Task<List<ProviderAddress>> GetProviderAddressesWithMissingLatLongs()
-    {
-        return await _roatpDataContext.ProviderAddresses.AsNoTracking()
-            .Where(x => x.Latitude == null || x.Longitude == null)
-            .ToListAsync();
-    }
 }

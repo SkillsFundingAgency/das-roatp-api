@@ -69,8 +69,6 @@ public class GetProvidersQueryHandlerTests
                 Assert.That(actualResult[i].Address.AddressLine4, Is.EqualTo(expectedResult[i].Address.AddressLine4));
                 Assert.That(actualResult[i].Address.Town, Is.EqualTo(expectedResult[i].Address.Town));
                 Assert.That(actualResult[i].Address.Postcode, Is.EqualTo(expectedResult[i].Address.Postcode));
-                Assert.That(actualResult[i].Address.Latitude, Is.EqualTo(expectedResult[i].Address.Latitude));
-                Assert.That(actualResult[i].Address.Longitude, Is.EqualTo(expectedResult[i].Address.Longitude));
             }
         });
     }
@@ -129,8 +127,6 @@ public class GetProvidersQueryHandlerTests
                 Assert.That(actualResult[i].Address.AddressLine4, Is.EqualTo(expectedResult[i].Address.AddressLine4));
                 Assert.That(actualResult[i].Address.Town, Is.EqualTo(expectedResult[i].Address.Town));
                 Assert.That(actualResult[i].Address.Postcode, Is.EqualTo(expectedResult[i].Address.Postcode));
-                Assert.That(actualResult[i].Address.Latitude, Is.EqualTo(expectedResult[i].Address.Latitude));
-                Assert.That(actualResult[i].Address.Longitude, Is.EqualTo(expectedResult[i].Address.Longitude));
             }
         });
     }

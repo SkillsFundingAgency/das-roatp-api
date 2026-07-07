@@ -54,10 +54,7 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
                         AddressLine4 = "AddressLine4",
                         Town = "Town",
                         Postcode = "Postcode",
-                        Latitude = 1,
-                        Longitude = -1,
                         AddressUpdateDate = DateTime.UtcNow,
-                        CoordinatesUpdateDate = DateTime.UtcNow
                     }
                 }
             },

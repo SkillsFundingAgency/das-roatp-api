@@ -132,8 +132,6 @@ public class RefreshProviderDetailsFromUkrlpServiceTests
             Assert.That(actual.ProviderAddress.AddressLine4, Is.EqualTo(expected.LegalAddress.Address4));
             Assert.That(actual.ProviderAddress.Town, Is.EqualTo(expected.LegalAddress.Town));
             Assert.That(actual.ProviderAddress.Postcode, Is.EqualTo(expected.LegalAddress.Postcode));
-            Assert.That(actual.ProviderAddress.Latitude, Is.Null);
-            Assert.That(actual.ProviderAddress.Longitude, Is.Null);
             Assert.That(actual.ProviderAddress.AddressUpdateDate.GetValueOrDefault().Date, Is.EqualTo(DateTime.UtcNow.Date));
         });
     }

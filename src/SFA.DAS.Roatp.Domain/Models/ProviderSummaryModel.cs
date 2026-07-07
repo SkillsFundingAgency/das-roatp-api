@@ -18,8 +18,6 @@ public sealed class ProviderSummaryModel
     public string MainAddressLine4 { get; set; }
     public string MainTown { get; set; }
     public string MainPostcode { get; set; }
-    public double? Latitude { get; set; }
-    public double? Longitude { get; set; }
     public string QARPeriod { get; set; }
     public string Leavers { get; set; }
     public string AchievementRate { get; set; }

@@ -38,8 +38,6 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviders
                 Assert.That(sut.Address.AddressLine4, Is.EqualTo(source.Provider.ProviderAddress.AddressLine4));
                 Assert.That(sut.Address.Town, Is.EqualTo(source.Provider.ProviderAddress.Town));
                 Assert.That(sut.Address.Postcode, Is.EqualTo(source.Provider.ProviderAddress.Postcode));
-                Assert.That(sut.Address.Latitude, Is.EqualTo(source.Provider.ProviderAddress.Latitude));
-                Assert.That(sut.Address.Longitude, Is.EqualTo(source.Provider.ProviderAddress.Longitude));
             });
         }
 

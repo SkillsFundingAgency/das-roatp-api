@@ -1,12 +1,12 @@
-﻿using AutoFixture.NUnit4;
+﻿using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit4;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Providers.Queries.GetProviderSummary;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetProviderSummary;
 
@@ -22,7 +22,7 @@ public class GetProviderSummaryQueryHandlerTests
         CancellationToken cancellationToken
     )
     {
-        _providersRegistrationDetailReadRepositoryMock.Setup(r => 
+        _providersRegistrationDetailReadRepositoryMock.Setup(r =>
             r.GetProviderSummary(query.Ukprn, CancellationToken.None)
         ).ReturnsAsync(providerSummaryModel);
 
@@ -50,8 +50,6 @@ public class GetProviderSummaryQueryHandlerTests
             Assert.That(result.Address.AddressLine4, Is.EqualTo(providerSummaryModel.MainAddressLine4));
             Assert.That(result.Address.Town, Is.EqualTo(providerSummaryModel.MainTown));
             Assert.That(result.Address.Postcode, Is.EqualTo(providerSummaryModel.MainPostcode));
-            Assert.That(result.Address.Latitude, Is.EqualTo(providerSummaryModel.Latitude));
-            Assert.That(result.Address.Longitude, Is.EqualTo(providerSummaryModel.Longitude));
             Assert.That(result.Qar.Period, Is.EqualTo(providerSummaryModel.QARPeriod));
             Assert.That(result.Qar.Leavers, Is.EqualTo(providerSummaryModel.Leavers));
             Assert.That(result.Qar.AchievementRate, Is.EqualTo(providerSummaryModel.AchievementRate));

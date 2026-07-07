@@ -83,8 +83,6 @@ BEGIN
 		,MainAddressLine4 AS 'MainAddressLine4'
 		,MainTown AS 'MainTown'
 		,MainPostcode AS 'MainPostcode'
-		,MainLatitude AS 'Latitude'
-		,MainLongitude AS 'Longitude'
 		,MarketingInfo AS 'MarketingInfo'
 		,@QARPeriod AS 'QARPeriod'
 		,ISNULL(qp1.[Leavers], '-') AS 'Leavers'
@@ -107,8 +105,6 @@ BEGIN
 				,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.AddressLine4 ELSE tp.AddressLine4 END MainAddressLine4
 				,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.Town ELSE tp.Town END MainTown
 				,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.Postcode ELSE tp.Postcode END MainPostcode
-				,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.Latitude ELSE tp.Latitude END MainLatitude
-				,CASE WHEN pad.ProviderId IS NOT NULL THEN pad.Longitude ELSE tp.Longitude END MainLongitude
 				,pr1.MarketingInfo
 				,pr1.Email 
 				,pr1.Phone 

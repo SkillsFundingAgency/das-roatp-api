@@ -66,9 +66,6 @@ public class RefreshProviderDetailsFromUkrlpService(ICourseManagementOuterApiCli
             existingProvider.ProviderAddress.AddressLine4 = provider.LegalAddress.Address4;
             existingProvider.ProviderAddress.Town = provider.LegalAddress.Town;
             existingProvider.ProviderAddress.Postcode = provider.LegalAddress.Postcode;
-            // set lat and lon to null so these can be refreshed by UpdateProviderAddressCoordinatesFunction
-            existingProvider.ProviderAddress.Latitude = null;
-            existingProvider.ProviderAddress.Longitude = null;
             existingProvider.ProviderAddress.AddressUpdateDate = DateTime.UtcNow;
         }
     }

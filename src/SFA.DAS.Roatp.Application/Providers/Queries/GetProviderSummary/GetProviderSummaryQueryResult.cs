@@ -41,10 +41,9 @@ public class GetProviderSummaryQueryResult
                 AddressLine4 = source.MainAddressLine4,
                 Town = source.MainTown,
                 Postcode = source.MainPostcode,
-                Latitude = source.Latitude,
-                Longitude = source.Longitude,
             },
-            Qar = new ProviderQarModel() {
+            Qar = new ProviderQarModel()
+            {
                 Period = source.QARPeriod,
                 Leavers = source.Leavers,
                 AchievementRate = source.AchievementRate,

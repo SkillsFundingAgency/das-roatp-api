@@ -12,10 +12,7 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string AddressLine4 { get; set; }
         public string Town { get; set; }
         public string Postcode { get; set; }
-        public double? Latitude { get; set; }
-        public double? Longitude { get; set; }
         public DateTime? AddressUpdateDate { get; set; }
-        public DateTime? CoordinatesUpdateDate { get; set; }
         public virtual Provider Provider { get; set; }
     }
 }
