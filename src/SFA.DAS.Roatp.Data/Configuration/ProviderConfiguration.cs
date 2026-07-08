@@ -50,5 +50,10 @@ public class ProviderConfiguration : IEntityTypeConfiguration<Provider>
            .WithOne(c => c.Provider)
            .HasPrincipalKey(p => p.Id)
            .HasForeignKey(p => p.ProviderId);
+
+        builder.HasMany(p => p.ProviderAllowedCourses)
+            .WithOne(pc => pc.Provider)
+            .HasPrincipalKey(p => p.Ukprn)
+            .HasForeignKey(pc => pc.Ukprn);
     }
 }
