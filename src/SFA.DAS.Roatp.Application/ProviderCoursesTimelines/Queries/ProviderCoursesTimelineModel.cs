@@ -24,7 +24,11 @@ public class ProviderCoursesTimelineModel
                     ct.CourseType,
                     p.Provider?.ProviderCoursesTimelines
                         .Where(t => t.Standard.CourseType == ct.CourseType)
-                        .Select(t => new CoursesTimelineModel(t.LarsCode, t.EffectiveFrom, t.EffectiveTo, p.ProviderAllowedCourses.FirstOrDefault(ac => ac.LarsCode == t.LarsCode)?.LastDateStarts)) ?? []))
+                        .Select(t => new CoursesTimelineModel(t.LarsCode, t.EffectiveFrom, t.EffectiveTo, p.ProviderAllowedCourses
+                                .FirstOrDefault(ac =>
+                                    ac.LarsCode == t.LarsCode &&
+                                    ac.ProviderCourses.Any(pc => pc.ProviderId == p.Provider.Id))?
+                                .LastDateStarts)) ?? []))
         };
 }
 
