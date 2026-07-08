@@ -21,5 +21,10 @@ public class ProviderRegistrationDetailConfiguration : IEntityTypeConfiguration<
             .WithOne(c => c.ProviderRegistrationDetail)
             .HasPrincipalKey(r => r.Ukprn)
             .HasForeignKey(c => c.Ukprn);
+        builder
+            .HasMany(r => r.ProviderAllowedCourses)
+            .WithOne()
+            .HasPrincipalKey(r => r.Ukprn)
+            .HasForeignKey(c => c.Ukprn);
     }
 }

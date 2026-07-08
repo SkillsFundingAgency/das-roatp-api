@@ -20,5 +20,6 @@ namespace SFA.DAS.Roatp.Domain.Entities
         public string Postcode { get; set; }
         public virtual Provider Provider { get; set; }
         public virtual List<ProviderCourseType> ProviderCourseTypes { get; set; } = [];
+        public virtual List<ProviderAllowedCourse> ProviderAllowedCourses { get; set; } = [];
     }
 }

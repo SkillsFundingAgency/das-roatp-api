@@ -18,6 +18,7 @@ internal class ProviderCoursesTimelineRepository(RoatpDataContext _roatpDataCont
         return await _roatpDataContext
             .ProviderRegistrationDetails
             .Include(p => p.ProviderCourseTypes)
+            .Include(r => r.ProviderAllowedCourses)
             .Include(p => p.Provider)
             .ThenInclude(p => p.ProviderCoursesTimelines)
             .ThenInclude(t => t.Standard)
@@ -30,6 +31,7 @@ internal class ProviderCoursesTimelineRepository(RoatpDataContext _roatpDataCont
         var result = await _roatpDataContext
             .ProviderRegistrationDetails
             .Include(p => p.ProviderCourseTypes)
+            .Include(r => r.ProviderAllowedCourses)
             .Include(t => t.Provider)
             .ThenInclude(p => p.ProviderCoursesTimelines)
             .ThenInclude(t => t.Standard)

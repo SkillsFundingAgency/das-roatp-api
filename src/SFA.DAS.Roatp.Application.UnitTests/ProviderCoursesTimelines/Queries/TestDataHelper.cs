@@ -35,6 +35,46 @@ public static class TestDataHelper
                         Standard = new Standard { CourseType = CourseType.Apprenticeship }
                     }
                 ]
-            }
+            },
+            ProviderAllowedCourses = [
+                new ProviderAllowedCourse
+                {
+                    LarsCode = "LARS123",
+                    Ukprn = 12345678,
+                    LastDateStarts = DateTime.Today
+                }
+            ]
+        };
+
+    public static ProviderRegistrationDetail GetProviderRegistrationDetailsWithoutLastDateStarts()
+        => new()
+        {
+            Ukprn = 12345678,
+            StatusId = (int)ProviderStatusType.Active,
+            ProviderTypeId = (int)ProviderType.Main,
+            ProviderCourseTypes =
+            [
+                new ProviderCourseType
+                {
+                    CourseType = CourseType.Apprenticeship,
+                },
+                new ProviderCourseType
+                {
+                    CourseType = CourseType.ShortCourse
+                }
+            ],
+            Provider = new Provider
+            {
+                ProviderCoursesTimelines =
+                [
+                    new ProviderCoursesTimeline
+                    {
+                        LarsCode = "LARS123",
+                        EffectiveFrom = new DateTime(2023, 1, 1, 0,0,0, DateTimeKind.Unspecified),
+                        EffectiveTo = null,
+                        Standard = new Standard { CourseType = CourseType.Apprenticeship }
+                    }
+                ]
+            },
         };
 }

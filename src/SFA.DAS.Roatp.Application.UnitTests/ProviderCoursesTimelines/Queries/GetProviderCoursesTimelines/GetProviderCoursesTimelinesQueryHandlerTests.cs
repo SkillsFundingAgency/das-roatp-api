@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using FluentAssertions;
@@ -26,6 +27,20 @@ public class GetProviderCoursesTimelinesQueryHandlerTests
         ProviderCoursesTimelineModel actual = await sut.Handle(query, cancellationToken);
 
         actual.Should().BeEquivalentTo(expected);
+    }
+
+    [Test, MoqAutoData]
+    public async Task Handle_LastDateStartsNotAvailable_ReturnsLastDateStartsAsNull(
+        [Frozen] Mock<IProviderCoursesTimelineRepository> repoMock,
+        GetProviderCoursesTimelinesQuery query,
+        GetProviderCoursesTimelinesQueryHandler sut,
+        CancellationToken cancellationToken)
+    {
+        repoMock.Setup(r => r.GetProviderCoursesTimelines(query.Ukprn, cancellationToken)).ReturnsAsync(TestDataHelper.GetProviderRegistrationDetailsWithoutLastDateStarts());
+
+        ProviderCoursesTimelineModel actual = await sut.Handle(query, cancellationToken);
+
+        actual.CourseTypes.FirstOrDefault().Courses.FirstOrDefault().LastDateStarts.Should().BeNull();
     }
 
     [Test, MoqAutoData]
