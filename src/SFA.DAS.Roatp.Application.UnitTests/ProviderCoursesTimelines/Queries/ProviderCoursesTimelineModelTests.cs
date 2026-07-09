@@ -72,18 +72,21 @@ public class ProviderCoursesTimelineModelTests
     public void Operator_WhenAllowedCourseMatchesProviderCourse_SetsLastDateStarts()
     {
         var expected = _expected.ProviderAllowedCourses[0].LastDateStarts;
-        var actual = _actual.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First(); actual.LastDateStarts.Should().Be(expected);
+        var actual = _actual.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First();
+        actual.LastDateStarts.Should().Be(expected);
     }
 
     [Test]
     public void Operator_WhenCourseIsNotAllowed_SetsLastDateStartsToNull()
     {
-        var actual = _actualCourseNotAllowed.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First(); actual.LastDateStarts.Should().BeNull();
+        var actual = _actualCourseNotAllowed.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First();
+        actual.LastDateStarts.Should().BeNull();
     }
 
     [Test]
     public void Operator_WhenProviderDoesNotProvideCourse_SetsLastDateStartsToNull()
     {
-        var actual = _actualProviderDoesNotProvideCourse.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First(); actual.LastDateStarts.Should().BeNull();
+        var actual = _actualProviderDoesNotProvideCourse.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First();
+        actual.LastDateStarts.Should().BeNull();
     }
 }
