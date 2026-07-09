@@ -59,4 +59,11 @@ public class ProviderCoursesTimelineModelTests
         actual.EffectiveFrom.Should().Be(expected.EffectiveFrom);
         actual.EffectiveTo.Should().Be(expected.EffectiveTo);
     }
+
+    [Test]
+    public void Operator_SetsLastDateStartsWhenCourseIsAllowed()
+    {
+        var expected = _expected.Provider.ProviderAllowedCourses[0].LastDateStarts;
+        var actual = _actual.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First(); actual.LastDateStarts.Should().Be(expected);
+    }
 }
