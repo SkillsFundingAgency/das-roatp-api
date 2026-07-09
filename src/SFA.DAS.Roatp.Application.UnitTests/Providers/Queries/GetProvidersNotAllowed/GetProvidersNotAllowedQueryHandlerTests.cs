@@ -36,7 +36,7 @@ public class GetProvidersNotAllowedQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenProviderHasCourseTypeAndCourseIsNotAllowedAndNoMatchingLarsCodeInProviderAllowedCourse_ThenReturnsProvider(
+    public async Task WhenProviderHasCourseType_AndNoMatchingLarsCodeInProviderAllowedCourse_ThenReturnsProvide(
             [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
             [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
             [Frozen] Mock<IProviderCourseTypesReadRepository> providerCourseTypesReadRepository,
@@ -168,7 +168,7 @@ public class GetProvidersNotAllowedQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenProviderDoesNotHaveCourseTypeAndCourseIsNotAllowed_ThenDoesNotReturnProvider(
+    public async Task WhenProviderDoesNotHaveCourseType_AndCourseIsAllowed_ThenDoesNotReturnProvider(
             [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
             [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
             [Frozen] Mock<IProviderCourseTypesReadRepository> providerCourseTypesReadRepository,
