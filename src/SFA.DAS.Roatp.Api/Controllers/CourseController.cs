@@ -6,8 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Common.Models;
-using SFA.DAS.Roatp.Application.Course.GetAllowedProviders.Queries;
-using SFA.DAS.Roatp.Application.Course.GetProvidersNotAllowed.Queries;
+using SFA.DAS.Roatp.Application.Providers.Queries.GetAllowedProviders;
+using SFA.DAS.Roatp.Application.Providers.Queries.GetProvidersNotAllowed;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 public class CourseController(IMediator _mediator, ILogger<CourseController> _logger) : ActionResponseControllerBase
 {
     [HttpGet("{larsCode}/providers/allowed")]
-    [ProducesResponseType(typeof(CourseAllowedProvidersModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RestrictedCourseDetailsModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAllowedProvidersByCourse([FromRoute] string larsCode)
     {
@@ -31,7 +31,7 @@ public class CourseController(IMediator _mediator, ILogger<CourseController> _lo
     }
 
     [HttpGet("{larsCode}/providers/not-allowed")]
-    [ProducesResponseType(typeof(CourseAllowedProvidersModel), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(RestrictedCourseDetailsModel), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetProvidersNotAllowedByCourse([FromRoute] string larsCode)
     {

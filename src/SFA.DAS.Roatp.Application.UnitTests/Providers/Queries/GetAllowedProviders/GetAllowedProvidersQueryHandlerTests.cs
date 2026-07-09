@@ -6,13 +6,13 @@ using AutoFixture.NUnit4;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.Course.GetAllowedProviders.Queries;
+using SFA.DAS.Roatp.Application.Providers.Queries.GetAllowedProviders;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.Course.GetAllowedProviders.Queries;
+namespace SFA.DAS.Roatp.Application.UnitTests.Providers.Queries.GetAllowedProviders;
 
 public class GetAllowedProvidersQueryHandlerTests
 {
@@ -124,7 +124,7 @@ public class GetAllowedProvidersQueryHandlerTests
                 }
             };
 
-        var providerCourses = new List<SFA.DAS.Roatp.Domain.Entities.ProviderCourse>
+        var providerCourses = new List<Domain.Entities.ProviderCourse>
             {
                 new()
                 {
@@ -181,7 +181,7 @@ public class GetAllowedProvidersQueryHandlerTests
             RestrictedCourseView = null
         };
 
-        var providerCourses = new List<SFA.DAS.Roatp.Domain.Entities.ProviderCourse>
+        var providerCourses = new List<Domain.Entities.ProviderCourse>
             {
                 new()
                 {

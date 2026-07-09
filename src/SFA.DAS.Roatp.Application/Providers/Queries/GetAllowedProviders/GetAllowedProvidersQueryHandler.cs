@@ -7,11 +7,11 @@ using SFA.DAS.Roatp.Application.Common.Models;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.Course.GetAllowedProviders.Queries;
+namespace SFA.DAS.Roatp.Application.Providers.Queries.GetAllowedProviders;
 
-public class GetAllowedProvidersQueryHandler(IStandardsReadRepository _standardsReadRepository, IProviderAllowedCoursesRepository _providerAllowedCoursesRepository, IProviderCoursesReadRepository _providerCoursesReadRepository) : IRequestHandler<GetAllowedProvidersQuery, CourseAllowedProvidersModel>
+public class GetAllowedProvidersQueryHandler(IStandardsReadRepository _standardsReadRepository, IProviderAllowedCoursesRepository _providerAllowedCoursesRepository, IProviderCoursesReadRepository _providerCoursesReadRepository) : IRequestHandler<GetAllowedProvidersQuery, RestrictedCourseDetailsModel>
 {
-    public async Task<CourseAllowedProvidersModel> Handle(GetAllowedProvidersQuery request, CancellationToken cancellationToken)
+    public async Task<RestrictedCourseDetailsModel> Handle(GetAllowedProvidersQuery request, CancellationToken cancellationToken)
     {
         var standard = await _standardsReadRepository.GetStandard(request.LarsCode);
 
@@ -26,7 +26,7 @@ public class GetAllowedProvidersQueryHandler(IStandardsReadRepository _standards
             ? await BuildRestrictedCourseProviders(request.LarsCode, cancellationToken)
             : await BuildNotRestrictedCourseProviders(request.LarsCode, cancellationToken);
 
-        return new CourseAllowedProvidersModel
+        return new RestrictedCourseDetailsModel
         {
             LarsCode = standard.LarsCode,
             IfateReferenceNumber = standard.IfateReferenceNumber,
