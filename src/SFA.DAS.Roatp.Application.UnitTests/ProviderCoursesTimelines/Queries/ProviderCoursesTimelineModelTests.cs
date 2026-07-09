@@ -13,6 +13,8 @@ public class ProviderCoursesTimelineModelTests
     ProviderCoursesTimelineModel _actual = null;
     ProviderRegistrationDetail _expectedCourseNotAllowed = null;
     ProviderCoursesTimelineModel _actualCourseNotAllowed = null;
+    ProviderRegistrationDetail _expectedProviderDoesNotProvideCourse = null;
+    ProviderCoursesTimelineModel _actualProviderDoesNotProvideCourse = null;
 
     [SetUp]
     public void BeforeEachTest()
@@ -21,6 +23,8 @@ public class ProviderCoursesTimelineModelTests
         _actual = _expected;
         _expectedCourseNotAllowed = TestDataHelper.GetProviderRegistrationDetailsCourseIsNotAllowed();
         _actualCourseNotAllowed = _expectedCourseNotAllowed;
+        _expectedProviderDoesNotProvideCourse = TestDataHelper.GetProviderRegistrationDetailsProviderDoesNotProvideCourse();
+        _actualProviderDoesNotProvideCourse = _expectedProviderDoesNotProvideCourse;
     }
 
     [Test]
@@ -65,15 +69,21 @@ public class ProviderCoursesTimelineModelTests
     }
 
     [Test]
-    public void Operator_SetsLastDateStartsWhenAllowedCourseMatchesProviderCourse()
+    public void Operator_WhenAllowedCourseMatchesProviderCourse_SetsLastDateStarts()
     {
         var expected = _expected.ProviderAllowedCourses[0].LastDateStarts;
         var actual = _actual.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First(); actual.LastDateStarts.Should().Be(expected);
     }
 
     [Test]
-    public void Operator_SetsLastDateStartsToNullWhenCourseIsNotAllowed()
+    public void Operator_WhenCourseIsNotAllowed_SetsLastDateStartsToNull()
     {
         var actual = _actualCourseNotAllowed.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First(); actual.LastDateStarts.Should().BeNull();
+    }
+
+    [Test]
+    public void Operator_WhenProviderDoesNotProvideCourse_SetsLastDateStartsToNull()
+    {
+        var actual = _actualProviderDoesNotProvideCourse.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First(); actual.LastDateStarts.Should().BeNull();
     }
 }

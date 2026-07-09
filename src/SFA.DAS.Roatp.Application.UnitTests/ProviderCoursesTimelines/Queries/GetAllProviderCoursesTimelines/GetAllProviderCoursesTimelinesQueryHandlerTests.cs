@@ -78,7 +78,60 @@ public class GetAllProviderCoursesTimelinesQueryHandlerTests
     }
 
     [Test, RecursiveMoqAutoData]
-    public async Task Handle_CourseIsNotAllowedAndProviderDoesNotProvideCourse_ReturnsLastDateStartsAsNull(
+    public async Task Handle_CourseIsNotAllowed_ReturnsLastDateStartsAsNull(
+    [Frozen] Mock<IProviderCoursesTimelineRepository> repoMock,
+    GetAllProviderCoursesTimelinesQueryHandler sut,
+    GetAllProviderCoursesTimelinesQuery request,
+    ProviderRegistrationDetail providerRegistrationDetail,
+    string larsCode,
+    CancellationToken cancellationToken)
+    {
+        // Arrange
+        providerRegistrationDetail.StatusId = 1;
+        providerRegistrationDetail.ProviderTypeId = 1;
+
+        providerRegistrationDetail.ProviderCourseTypes = new List<ProviderCourseType>
+            {
+                new ProviderCourseType
+                {
+                    CourseType = CourseType.Apprenticeship,
+                    Ukprn = providerRegistrationDetail.Ukprn
+                }
+            };
+
+        providerRegistrationDetail.Provider.ProviderCoursesTimelines = new List<ProviderCoursesTimeline>
+            {
+                new ProviderCoursesTimeline
+                {
+                    LarsCode = larsCode,
+                    EffectiveFrom = new DateTime(2023, 1, 1, 0, 0, 0, DateTimeKind.Unspecified),
+                    EffectiveTo = null,
+                    Standard = new Standard { CourseType = CourseType.Apprenticeship }
+                }
+            };
+        providerRegistrationDetail.Provider.Courses = new List<Domain.Entities.ProviderCourse>()
+                    {
+                        new Domain.Entities.ProviderCourse
+                        {
+                            LarsCode = larsCode,
+                            ProviderId = providerRegistrationDetail.Provider.Id
+                        }
+                    };
+        providerRegistrationDetail.ProviderAllowedCourses = [];
+
+        List<ProviderRegistrationDetail> providersData = [providerRegistrationDetail];
+
+        repoMock.Setup(x => x.GetAllProviderCoursesTimelines(cancellationToken)).ReturnsAsync(providersData);
+
+        // Act
+        GetAllProviderCoursesTimelinesQueryResult actualResult = await sut.Handle(request, cancellationToken);
+
+        // Assert
+        actualResult.Providers.First().CourseTypes.First().Courses.First().LastDateStarts.Should().BeNull();
+    }
+
+    [Test, RecursiveMoqAutoData]
+    public async Task Handle_ProviderDoesNotProvideCourse_ReturnsLastDateStartsAsNull(
     [Frozen] Mock<IProviderCoursesTimelineRepository> repoMock,
     GetAllProviderCoursesTimelinesQueryHandler sut,
     GetAllProviderCoursesTimelinesQuery request,
@@ -110,7 +163,15 @@ public class GetAllProviderCoursesTimelinesQueryHandlerTests
                 }
             };
         providerRegistrationDetail.Provider.Courses = [];
-        providerRegistrationDetail.ProviderAllowedCourses = [];
+        providerRegistrationDetail.ProviderAllowedCourses = new List<ProviderAllowedCourse>()
+        {
+            new ProviderAllowedCourse
+                {
+                    LarsCode = larsCode,
+                    Ukprn = providerRegistrationDetail.Ukprn,
+                    LastDateStarts = DateTime.Today
+                }
+        };
 
         List<ProviderRegistrationDetail> providersData = [providerRegistrationDetail];
 
