@@ -30,13 +30,13 @@ public class GetProviderCoursesTimelinesQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task Handle_LastDateStartsNotAvailable_ReturnsLastDateStartsAsNull(
+    public async Task Handle_CourseIsNotAllowedAndProviderDoesNotProvideCourse_ReturnsLastDateStartsAsNull(
         [Frozen] Mock<IProviderCoursesTimelineRepository> repoMock,
         GetProviderCoursesTimelinesQuery query,
         GetProviderCoursesTimelinesQueryHandler sut,
         CancellationToken cancellationToken)
     {
-        repoMock.Setup(r => r.GetProviderCoursesTimelines(query.Ukprn, cancellationToken)).ReturnsAsync(TestDataHelper.GetProviderRegistrationDetailsWithoutLastDateStarts());
+        repoMock.Setup(r => r.GetProviderCoursesTimelines(query.Ukprn, cancellationToken)).ReturnsAsync(TestDataHelper.GetProviderRegistrationDetailsCourseIsNotAllowed());
 
         ProviderCoursesTimelineModel actual = await sut.Handle(query, cancellationToken);
 

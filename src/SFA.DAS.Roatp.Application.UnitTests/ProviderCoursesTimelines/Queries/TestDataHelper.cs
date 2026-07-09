@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Models;
 
@@ -25,6 +26,7 @@ public static class TestDataHelper
             ],
             Provider = new Provider
             {
+                Id = 1,
                 ProviderCoursesTimelines =
                 [
                     new ProviderCoursesTimeline
@@ -41,12 +43,20 @@ public static class TestDataHelper
                 {
                     LarsCode = "LARS123",
                     Ukprn = 12345678,
-                    LastDateStarts = DateTime.Today
+                    LastDateStarts = DateTime.Today,
+                    ProviderCourses = new List<Domain.Entities.ProviderCourse>
+                    {
+                        new Domain.Entities.ProviderCourse
+                        {
+                            LarsCode = "LARS123",
+                            ProviderId = 1
+                        }
+                    }
                 }
             ]
         };
 
-    public static ProviderRegistrationDetail GetProviderRegistrationDetailsWithoutLastDateStarts()
+    public static ProviderRegistrationDetail GetProviderRegistrationDetailsCourseIsNotAllowed()
         => new()
         {
             Ukprn = 12345678,
@@ -65,6 +75,7 @@ public static class TestDataHelper
             ],
             Provider = new Provider
             {
+                Id = 1,
                 ProviderCoursesTimelines =
                 [
                     new ProviderCoursesTimeline
@@ -76,5 +87,6 @@ public static class TestDataHelper
                     }
                 ]
             },
+            ProviderAllowedCourses = []
         };
 }

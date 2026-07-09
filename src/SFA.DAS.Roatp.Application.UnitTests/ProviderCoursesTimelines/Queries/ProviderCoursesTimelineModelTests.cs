@@ -11,12 +11,16 @@ public class ProviderCoursesTimelineModelTests
 {
     ProviderRegistrationDetail _expected = null;
     ProviderCoursesTimelineModel _actual = null;
+    ProviderRegistrationDetail _expectedCourseNotAllowed = null;
+    ProviderCoursesTimelineModel _actualCourseNotAllowed = null;
 
     [SetUp]
     public void BeforeEachTest()
     {
         _expected = TestDataHelper.GetProviderRegistrationDetails();
         _actual = _expected;
+        _expectedCourseNotAllowed = TestDataHelper.GetProviderRegistrationDetailsCourseIsNotAllowed();
+        _actualCourseNotAllowed = _expectedCourseNotAllowed;
     }
 
     [Test]
@@ -58,5 +62,18 @@ public class ProviderCoursesTimelineModelTests
         actual.LarsCode.Should().Be(expected.LarsCode);
         actual.EffectiveFrom.Should().Be(expected.EffectiveFrom);
         actual.EffectiveTo.Should().Be(expected.EffectiveTo);
+    }
+
+    [Test]
+    public void Operator_SetsLastDateStartsWhenAllowedCourseMatchesProviderCourse()
+    {
+        var expected = _expected.ProviderAllowedCourses[0].LastDateStarts;
+        var actual = _actual.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First(); actual.LastDateStarts.Should().Be(expected);
+    }
+
+    [Test]
+    public void Operator_SetsLastDateStartsToNullWhenCourseIsNotAllowed()
+    {
+        var actual = _actualCourseNotAllowed.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First(); actual.LastDateStarts.Should().BeNull();
     }
 }
