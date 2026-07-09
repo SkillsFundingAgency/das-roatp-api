@@ -50,21 +50,21 @@ public class GetAllProviderCoursesTimelinesQueryHandlerTests
                         Standard = new Standard { CourseType = CourseType.Apprenticeship }
                     }
         };
-        providerRegistrationDetail.ProviderAllowedCourses = new List<ProviderAllowedCourse>()
-        {
-            new ProviderAllowedCourse
-                {
-                    LarsCode = larsCode,
-                    Ukprn = providerRegistrationDetail.Ukprn,
-                    LastDateStarts = DateTime.Today,
-                    ProviderCourses = new List<Domain.Entities.ProviderCourse>()
+        providerRegistrationDetail.Provider.Courses = new List<Domain.Entities.ProviderCourse>()
                     {
                         new Domain.Entities.ProviderCourse
                         {
                             LarsCode = larsCode,
                             ProviderId = providerRegistrationDetail.Provider.Id
                         }
-                    }
+                    };
+        providerRegistrationDetail.ProviderAllowedCourses = new List<ProviderAllowedCourse>()
+        {
+            new ProviderAllowedCourse
+                {
+                    LarsCode = larsCode,
+                    Ukprn = providerRegistrationDetail.Ukprn,
+                    LastDateStarts = DateTime.Today
                 }
         };
         List<ProviderRegistrationDetail> providersData = [providerRegistrationDetail];
@@ -109,7 +109,7 @@ public class GetAllProviderCoursesTimelinesQueryHandlerTests
                     Standard = new Standard { CourseType = CourseType.Apprenticeship }
                 }
             };
-
+        providerRegistrationDetail.Provider.Courses = [];
         providerRegistrationDetail.ProviderAllowedCourses = [];
 
         List<ProviderRegistrationDetail> providersData = [providerRegistrationDetail];

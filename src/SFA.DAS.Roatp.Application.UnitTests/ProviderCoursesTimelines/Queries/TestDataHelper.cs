@@ -36,22 +36,22 @@ public static class TestDataHelper
                         EffectiveTo = null,
                         Standard = new Standard { CourseType = CourseType.Apprenticeship }
                     }
-                ]
+                ],
+                Courses = new List<Domain.Entities.ProviderCourse>
+                {
+                    new Domain.Entities.ProviderCourse
+                    {
+                        LarsCode = "LARS123",
+                        ProviderId = 1
+                    }
+                }
             },
             ProviderAllowedCourses = [
                 new ProviderAllowedCourse
                 {
                     LarsCode = "LARS123",
                     Ukprn = 12345678,
-                    LastDateStarts = DateTime.Today,
-                    ProviderCourses = new List<Domain.Entities.ProviderCourse>
-                    {
-                        new Domain.Entities.ProviderCourse
-                        {
-                            LarsCode = "LARS123",
-                            ProviderId = 1
-                        }
-                    }
+                    LastDateStarts = DateTime.Today
                 }
             ]
         };
@@ -85,7 +85,8 @@ public static class TestDataHelper
                         EffectiveTo = null,
                         Standard = new Standard { CourseType = CourseType.Apprenticeship }
                     }
-                ]
+                ],
+                Courses = []
             },
             ProviderAllowedCourses = []
         };
