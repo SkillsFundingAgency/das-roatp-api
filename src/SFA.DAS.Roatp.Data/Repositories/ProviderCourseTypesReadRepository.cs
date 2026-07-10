@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Data.Repositories;
 
@@ -33,6 +34,15 @@ internal class ProviderCourseTypesReadRepository : IProviderCourseTypesReadRepos
             .ProviderCoursesTypes
             .Where(p => p.CourseType == Domain.Models.CourseType.ShortCourse)
             .Select(p => p.Ukprn)
+            .ToListAsync(cancellationToken);
+    }
+
+    public async Task<List<ProviderCourseType>> GetAllProvidersByCourseType(CourseType courseType, CancellationToken cancellationToken = default)
+    {
+        return await _roatpDataContext
+            .ProviderCoursesTypes
+            .Include(x => x.Provider)
+            .Where(p => p.CourseType == courseType)
             .ToListAsync(cancellationToken);
     }
 }

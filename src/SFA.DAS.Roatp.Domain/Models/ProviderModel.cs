@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace SFA.DAS.Roatp.Application.Course.GetAllowedProviders.Queries;
+namespace SFA.DAS.Roatp.Domain.Models;
 
 public class ProviderModel
 {

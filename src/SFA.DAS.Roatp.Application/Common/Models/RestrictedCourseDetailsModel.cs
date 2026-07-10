@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using SFA.DAS.Roatp.Domain.Models;
 
-namespace SFA.DAS.Roatp.Application.Course.GetAllowedProviders.Queries;
+namespace SFA.DAS.Roatp.Application.Common.Models;
 
-public class GetAllowedProvidersQueryResult
+public class RestrictedCourseDetailsModel
 {
     public string LarsCode { get; set; } = string.Empty;
     public string IfateReferenceNumber { get; set; } = string.Empty;

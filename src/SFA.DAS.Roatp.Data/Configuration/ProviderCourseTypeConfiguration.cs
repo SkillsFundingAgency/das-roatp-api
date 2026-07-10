@@ -20,5 +20,10 @@ public class ProviderCourseTypeConfiguration : IEntityTypeConfiguration<Provider
                 v => v.ToString(),
                 v => (CourseType)Enum.Parse(typeof(CourseType), v)
             );
+
+        builder.HasOne(p => p.Provider)
+            .WithMany(p => p.ProviderCourseTypes)
+            .HasPrincipalKey(p => p.Ukprn)
+            .HasForeignKey(p => p.Ukprn);
     }
 }
