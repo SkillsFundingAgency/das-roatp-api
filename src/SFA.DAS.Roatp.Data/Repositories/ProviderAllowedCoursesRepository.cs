@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
@@ -30,5 +31,68 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
             .Where(p => p.LarsCode == larsCode)
             .AsNoTracking().ToListAsync(cancellationToken);
         return providerAllowedCourses;
+    }
+
+    public async Task AddProviderAllowedCourse(int ukprn, string larsCode, CourseType courseType, DateTime? lastDateStarts, string userId, string userDisplayName)
+    {
+        Provider provider = await _roatpDataContext.Providers
+            .Include(p => p.ProviderCourseTypes)
+            .Include(c => c.ProviderAllowedCourses)
+            .FirstOrDefaultAsync(p => p.Ukprn == ukprn);
+
+        bool providerAllowedCourseUpdated = false;
+
+        if (!provider.ProviderCourseTypes.Any(ct => ct.CourseType == courseType))
+        {
+            provider.ProviderCourseTypes.Add(new ProviderCourseType
+            {
+                Ukprn = ukprn,
+                CourseType = courseType
+            });
+
+            _roatpDataContext.Audits.Add(new Audit(
+                nameof(ProviderCourseType),
+                ukprn.ToString(),
+                userId,
+                userDisplayName,
+                "CreateProviderCourseType",
+                new ProviderCourseType
+                {
+                    Ukprn = ukprn,
+                    CourseType = courseType
+                },
+                null));
+        }
+
+        if (provider.ProviderAllowedCourses.Any(p => p.LarsCode == larsCode))
+        {
+            provider.ProviderAllowedCourses.FirstOrDefault(p => p.LarsCode == larsCode).LastDateStarts = lastDateStarts;
+            providerAllowedCourseUpdated = true;
+        }
+        else
+        {
+            provider.ProviderAllowedCourses.Add(new ProviderAllowedCourse
+            {
+                LarsCode = larsCode,
+                Ukprn = ukprn,
+                LastDateStarts = lastDateStarts
+            });
+        }
+
+        _roatpDataContext.Audits.Add(new Audit(
+            nameof(ProviderAllowedCourse),
+            ukprn.ToString(),
+            userId,
+            userDisplayName,
+            providerAllowedCourseUpdated ? "UpdateProviderAllowedCourse" : "AddProviderAllowedCourse",
+            new ProviderAllowedCourse
+            {
+                LarsCode = larsCode,
+                Ukprn = ukprn,
+                LastDateStarts = lastDateStarts
+            },
+            null));
+
+        await _roatpDataContext.SaveChangesAsync();
     }
 }

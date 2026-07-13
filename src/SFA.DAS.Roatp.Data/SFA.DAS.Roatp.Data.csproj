@@ -11,4 +11,9 @@
   <ItemGroup>
     <ProjectReference Include="..\SFA.DAS.Roatp.Domain\SFA.DAS.Roatp.Domain.csproj" />
   </ItemGroup>
+  <ItemGroup>
+	<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+		<_Parameter1>SFA.DAS.Roatp.Data.UnitTests</_Parameter1>
+	</AssemblyAttribute>
+  </ItemGroup>
 </Project>

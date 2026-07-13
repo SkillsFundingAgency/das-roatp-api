@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using SFA.DAS.Roatp.Domain.Entities;
@@ -10,4 +11,5 @@ public interface IProviderAllowedCoursesRepository
 {
     Task<List<ProviderAllowedCourse>> GetProviderAllowedCourses(int ukprn, CourseType courseType, CancellationToken cancellationToken);
     Task<List<ProviderAllowedCourse>> GetProviderAllowedCoursesByLarsCode(string larsCode, CancellationToken cancellationToken);
+    Task AddProviderAllowedCourse(int ukprn, string larsCode, CourseType courseType, DateTime? lastDateStarts, string userId, string userDisplayName);
 }

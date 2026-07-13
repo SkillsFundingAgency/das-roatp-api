@@ -9,7 +9,7 @@ public class AddProviderToAllowedCourseCommand : IRequest<ValidatedResponse<Unit
 {
     public string UserId { get; set; }
     public string UserDisplayName { get; set; }
-    public DateTime? DateLastStarts { get; set; }
+    public DateTime? LastDateStarts { get; set; }
     public int Ukprn { get; set; }
     public string LarsCode { get; set; }
 }
