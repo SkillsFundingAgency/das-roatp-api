@@ -32,8 +32,8 @@ public class GetProviderCoursesTimelinesQueryHandlerTests
     [Test, MoqAutoData]
     public async Task Handle_CourseIsNotAllowed_ReturnsLastDateStartsAsNull(
         [Frozen] Mock<IProviderCoursesTimelineRepository> repoMock,
+        [Greedy] GetProviderCoursesTimelinesQueryHandler sut,
         GetProviderCoursesTimelinesQuery query,
-        GetProviderCoursesTimelinesQueryHandler sut,
         CancellationToken cancellationToken)
     {
         repoMock.Setup(r => r.GetProviderCoursesTimelines(query.Ukprn, cancellationToken)).ReturnsAsync(TestDataHelper.GetProviderRegistrationDetailsCourseIsNotAllowed());
@@ -46,8 +46,8 @@ public class GetProviderCoursesTimelinesQueryHandlerTests
     [Test, MoqAutoData]
     public async Task Handle_ProviderDoesNotProvideCourse_ReturnsLastDateStartsAsNull(
         [Frozen] Mock<IProviderCoursesTimelineRepository> repoMock,
+        [Greedy] GetProviderCoursesTimelinesQueryHandler sut,
         GetProviderCoursesTimelinesQuery query,
-        GetProviderCoursesTimelinesQueryHandler sut,
         CancellationToken cancellationToken)
     {
         repoMock.Setup(r => r.GetProviderCoursesTimelines(query.Ukprn, cancellationToken)).ReturnsAsync(TestDataHelper.GetProviderRegistrationDetailsProviderDoesNotProvideCourse());
@@ -60,8 +60,8 @@ public class GetProviderCoursesTimelinesQueryHandlerTests
     [Test, MoqAutoData]
     public async Task Handle_ReturnsNullResult(
         [Frozen] Mock<IProviderCoursesTimelineRepository> repoMock,
+        [Greedy] GetProviderCoursesTimelinesQueryHandler sut,
         GetProviderCoursesTimelinesQuery query,
-        GetProviderCoursesTimelinesQueryHandler sut,
         CancellationToken cancellationToken)
     {
         repoMock.Setup(r => r.GetProviderCoursesTimelines(query.Ukprn, cancellationToken)).ReturnsAsync(() => null);
