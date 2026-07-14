@@ -16,8 +16,8 @@ public class AddProviderAllowedCourseTests
     {
         using var context = RoatpDataContextFactory.CreateInMemoryContext();
 
-        const int ukprn = 12345678;
-        const string larsCode = "LARS001";
+        int ukprn = 12345678;
+        string larsCode = "LARS001";
         var lastDateStarts = DateTime.Today;
 
         AddProvider(context, ukprn);
@@ -27,13 +27,7 @@ public class AddProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.AddProviderAllowedCourse(
-            ukprn,
-            larsCode,
-            CourseType.Apprenticeship,
-            lastDateStarts,
-            "user-1",
-            "Test User");
+        await sut.AddProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, lastDateStarts, "TestUserID", "Test User");
 
         activity.Stop();
 
@@ -55,8 +49,8 @@ public class AddProviderAllowedCourseTests
     {
         using var context = RoatpDataContextFactory.CreateInMemoryContext();
 
-        const int ukprn = 12345678;
-        const string larsCode = "LARS001";
+        int ukprn = 12345678;
+        string larsCode = "LARS001";
         var lastDateStarts = DateTime.Today;
 
         AddProvider(context, ukprn);
@@ -67,13 +61,7 @@ public class AddProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.AddProviderAllowedCourse(
-            ukprn,
-            larsCode,
-            CourseType.Apprenticeship,
-            lastDateStarts,
-            "user-1",
-            "Test User");
+        await sut.AddProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, lastDateStarts, "TestUserID", "Test User");
 
         activity.Stop();
 
@@ -94,8 +82,8 @@ public class AddProviderAllowedCourseTests
     {
         using var context = RoatpDataContextFactory.CreateInMemoryContext();
 
-        const int ukprn = 12345678;
-        const string larsCode = "LARS001";
+        int ukprn = 12345678;
+        string larsCode = "LARS001";
         var existingLastDateStarts = DateTime.UtcNow.AddMonths(-1);
         var updatedLastDateStarts = DateTime.UtcNow;
 
@@ -108,13 +96,7 @@ public class AddProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.AddProviderAllowedCourse(
-            ukprn,
-            larsCode,
-            CourseType.Apprenticeship,
-            updatedLastDateStarts,
-            "user-1",
-            "Test User");
+        await sut.AddProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, updatedLastDateStarts, "TestUserID", "Test User");
 
         activity.Stop();
 
@@ -135,8 +117,8 @@ public class AddProviderAllowedCourseTests
     {
         using var context = RoatpDataContextFactory.CreateInMemoryContext();
 
-        const int ukprn = 12345678;
-        const string larsCode = "LARS001";
+        int ukprn = 12345678;
+        string larsCode = "LARS001";
         var existingLastDateStarts = DateTime.UtcNow.AddMonths(-1);
         var updatedLastDateStarts = DateTime.UtcNow;
 
@@ -148,13 +130,7 @@ public class AddProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.AddProviderAllowedCourse(
-            ukprn,
-            larsCode,
-            CourseType.Apprenticeship,
-            updatedLastDateStarts,
-            "user-1",
-            "Test User");
+        await sut.AddProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, updatedLastDateStarts, "TestUserID", "Test User");
 
         activity.Stop();
 
@@ -176,8 +152,8 @@ public class AddProviderAllowedCourseTests
     {
         using var context = RoatpDataContextFactory.CreateInMemoryContext();
 
-        const int ukprn = 12345678;
-        const string larsCode = "LARS001";
+        int ukprn = 12345678;
+        string larsCode = "LARS001";
         var existingLastDateStarts = DateTime.UtcNow.AddMonths(-1);
 
         AddProvider(context, ukprn);
@@ -189,13 +165,7 @@ public class AddProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.AddProviderAllowedCourse(
-            ukprn,
-            larsCode,
-            CourseType.Apprenticeship,
-            null,
-            "user-1",
-            "Test User");
+        await sut.AddProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, null, "TestUserID", "Test User");
 
         activity.Stop();
 

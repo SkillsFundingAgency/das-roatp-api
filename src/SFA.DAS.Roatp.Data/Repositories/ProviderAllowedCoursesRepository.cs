@@ -14,6 +14,9 @@ namespace SFA.DAS.Roatp.Data.Repositories;
 [ExcludeFromCodeCoverage]
 internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataContext) : IProviderAllowedCoursesRepository
 {
+    private const string CreateProviderCourseType = "CreateProviderCourseType";
+    private const string UpdateProviderAllowedCourse = "UpdateProviderAllowedCourse";
+    private const string CreateProviderAllowedCourse = "CreateProviderAllowedCourse";
     public async Task<List<ProviderAllowedCourse>> GetProviderAllowedCourses(int ukprn, CourseType courseType, CancellationToken cancellationToken)
     {
         var providerAllowedCourses = await _roatpDataContext.ProviderAllowedCourses
@@ -42,6 +45,8 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
 
         bool providerAllowedCourseUpdated = false;
 
+        DateTime? existingLastDateStarts = null;
+
         if (!provider.ProviderCourseTypes.Any(ct => ct.CourseType == courseType))
         {
             provider.ProviderCourseTypes.Add(new ProviderCourseType
@@ -55,7 +60,7 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
                 ukprn.ToString(),
                 userId,
                 userDisplayName,
-                "CreateProviderCourseType",
+                CreateProviderCourseType,
                 new ProviderCourseType
                 {
                     Ukprn = ukprn,
@@ -84,14 +89,19 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
             ukprn.ToString(),
             userId,
             userDisplayName,
-            providerAllowedCourseUpdated ? "UpdateProviderAllowedCourse" : "AddProviderAllowedCourse",
+            providerAllowedCourseUpdated ? UpdateProviderAllowedCourse : CreateProviderAllowedCourse,
             new ProviderAllowedCourse
             {
                 LarsCode = larsCode,
                 Ukprn = ukprn,
                 LastDateStarts = lastDateStarts
             },
-            null));
+            providerAllowedCourseUpdated ? new ProviderAllowedCourse
+            {
+                LarsCode = larsCode,
+                Ukprn = ukprn,
+                LastDateStarts = existingLastDateStarts
+            } : null));
 
         await _roatpDataContext.SaveChangesAsync();
     }
