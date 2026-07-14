@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -11,7 +10,6 @@ using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Data.Repositories;
 
-[ExcludeFromCodeCoverage]
 internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataContext) : IProviderAllowedCoursesRepository
 {
     private const string CreateProviderCourseType = "CreateProviderCourseType";
