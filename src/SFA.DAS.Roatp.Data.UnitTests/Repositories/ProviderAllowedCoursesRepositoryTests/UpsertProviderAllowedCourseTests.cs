@@ -9,7 +9,7 @@ using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Data.UnitTests.Repositories.ProviderAllowedCoursesRepositoryTests;
 
-public class AddProviderAllowedCourseTests
+public class UpsertProviderAllowedCourseTests
 {
     [Test]
     public async Task WhenProviderDoesNotHaveCourseType_AndAllowedCourseDoesNotExist_ThenAddsBothCourseTypeAndAllowedCourse_AndCreatesTwoAuditEntries()
@@ -27,7 +27,7 @@ public class AddProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.AddProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, lastDateStarts, "TestUserID", "Test User");
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, lastDateStarts, "TestUserID", "Test User");
 
         activity.Stop();
 
@@ -61,7 +61,7 @@ public class AddProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.AddProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, lastDateStarts, "TestUserID", "Test User");
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, lastDateStarts, "TestUserID", "Test User");
 
         activity.Stop();
 
@@ -96,7 +96,7 @@ public class AddProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.AddProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, updatedLastDateStarts, "TestUserID", "Test User");
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, updatedLastDateStarts, "TestUserID", "Test User");
 
         activity.Stop();
 
@@ -130,7 +130,7 @@ public class AddProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.AddProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, updatedLastDateStarts, "TestUserID", "Test User");
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, updatedLastDateStarts, "TestUserID", "Test User");
 
         activity.Stop();
 
@@ -165,7 +165,7 @@ public class AddProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.AddProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, null, "TestUserID", "Test User");
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, null, "TestUserID", "Test User");
 
         activity.Stop();
 

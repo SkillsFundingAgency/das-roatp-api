@@ -2,12 +2,12 @@
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.AddProviderToAllowedCourse;
+namespace SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.UpsertProviderAllowedCourse;
 
-public class AddProviderToAllowedCourseCommandValidator : AbstractValidator<AddProviderToAllowedCourseCommand>
+public class UpsertProviderAllowedCourseCommandValidator : AbstractValidator<UpsertProviderAllowedCourseCommand>
 {
     public const string InvalidLastDateStarts = "LastDateStarts cannot be after LastDateStarts of the course";
-    public AddProviderToAllowedCourseCommandValidator(IStandardsReadRepository standardsReadRepository, IProvidersReadRepository providersReadRepository)
+    public UpsertProviderAllowedCourseCommandValidator(IStandardsReadRepository standardsReadRepository, IProvidersReadRepository providersReadRepository)
     {
         Include(new UserInfoValidator());
         Include(new LarsCodeValidator(standardsReadRepository));

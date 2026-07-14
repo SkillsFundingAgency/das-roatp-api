@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
-using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.AddProviderToAllowedCourse;
+using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.UpsertProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourses;
 using SFA.DAS.Roatp.Domain.Models;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
@@ -32,11 +32,11 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
     [HttpPost("{larsCode}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<IActionResult> AddProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromQuery] string userId, [FromQuery] string userDisplayName, [FromQuery] DateTime? lastDateStarts)
+    public async Task<IActionResult> UpsertProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromQuery] string userId, [FromQuery] string userDisplayName, [FromQuery] DateTime? lastDateStarts)
     {
-        _logger.LogInformation("Request to add provider to allowed course for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
+        _logger.LogInformation("Request to upsert provider allowed course for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
 
-        AddProviderToAllowedCourseCommand command = new()
+        UpsertProviderAllowedCourseCommand command = new()
         {
             Ukprn = ukprn,
             LarsCode = larsCode,
@@ -47,6 +47,6 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
 
         var response = await _mediator.Send(command);
 
-        return GetPostResponse(response, "/providers/{ukprn}/allowed-courses/{larsCode}");
+        return GetPostResponse(response, $"/providers/{ukprn}/allowed-courses/{larsCode}");
     }
 }

@@ -11,5 +11,5 @@ public interface IProviderAllowedCoursesRepository
 {
     Task<List<ProviderAllowedCourse>> GetProviderAllowedCourses(int ukprn, CourseType courseType, CancellationToken cancellationToken);
     Task<List<ProviderAllowedCourse>> GetProviderAllowedCoursesByLarsCode(string larsCode, CancellationToken cancellationToken);
-    Task AddProviderAllowedCourse(int ukprn, string larsCode, CourseType courseType, DateTime? lastDateStarts, string userId, string userDisplayName);
+    Task UpsertProviderAllowedCourse(int ukprn, string larsCode, CourseType courseType, DateTime? lastDateStarts, string userId, string userDisplayName);
 }

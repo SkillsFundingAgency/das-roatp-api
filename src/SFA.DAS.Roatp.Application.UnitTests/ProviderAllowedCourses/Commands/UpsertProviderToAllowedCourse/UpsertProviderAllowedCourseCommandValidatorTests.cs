@@ -5,23 +5,23 @@ using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Common;
-using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.AddProviderToAllowedCourse;
+using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.UpsertProviderAllowedCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderAllowedCourses.Commands.AddProviderToAllowedCourse;
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderAllowedCourses.Commands.UpsertProviderToAllowedCourse;
 
-public class AddProviderToAllowedCourseCommandValidatorTests
+public class UpsertProviderAllowedCourseCommandValidatorTests
 {
     [Test, MoqAutoData]
     public async Task WhenLastDateStartsIsAfterStandardDate_ThenValidationShouldFail(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
-        [Greedy] AddProviderToAllowedCourseCommandValidator sut)
+        [Greedy] UpsertProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
-        var command = new AddProviderToAllowedCourseCommand
+        var command = new UpsertProviderAllowedCourseCommand
         {
             Ukprn = 12345678,
             LarsCode = "12345",
@@ -43,17 +43,17 @@ public class AddProviderToAllowedCourseCommandValidatorTests
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x)
-            .WithErrorMessage(AddProviderToAllowedCourseCommandValidator.InvalidLastDateStarts);
+            .WithErrorMessage(UpsertProviderAllowedCourseCommandValidator.InvalidLastDateStarts);
     }
 
     [Test, MoqAutoData]
     public async Task WhenLastDateStartsIsBeforeStandardDate_ThenValidationShouldPass(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
-        [Greedy] AddProviderToAllowedCourseCommandValidator sut)
+        [Greedy] UpsertProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
-        var command = new AddProviderToAllowedCourseCommand
+        var command = new UpsertProviderAllowedCourseCommand
         {
             Ukprn = 12345678,
             LarsCode = "12345",
@@ -81,10 +81,10 @@ public class AddProviderToAllowedCourseCommandValidatorTests
     public async Task WhenLarsCodeDoesNotExist_ThenValidationShouldFail(
     [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
     [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
-    [Greedy] AddProviderToAllowedCourseCommandValidator sut)
+    [Greedy] UpsertProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
-        var command = new AddProviderToAllowedCourseCommand
+        var command = new UpsertProviderAllowedCourseCommand
         {
             Ukprn = 12345678,
             LarsCode = "12345",
@@ -113,10 +113,10 @@ public class AddProviderToAllowedCourseCommandValidatorTests
     public async Task WhenLarsCodeExists_ThenValidationShouldPass(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
-        [Greedy] AddProviderToAllowedCourseCommandValidator sut)
+        [Greedy] UpsertProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
-        var command = new AddProviderToAllowedCourseCommand
+        var command = new UpsertProviderAllowedCourseCommand
         {
             Ukprn = 12345678,
             LarsCode = "12345",
@@ -144,10 +144,10 @@ public class AddProviderToAllowedCourseCommandValidatorTests
     public async Task WhenUkprnDoesNotExist_ThenValidationShouldFail(
     [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
     [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
-    [Greedy] AddProviderToAllowedCourseCommandValidator sut)
+    [Greedy] UpsertProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
-        var command = new AddProviderToAllowedCourseCommand
+        var command = new UpsertProviderAllowedCourseCommand
         {
             Ukprn = 12345678,
             LarsCode = "12345",
@@ -176,10 +176,10 @@ public class AddProviderToAllowedCourseCommandValidatorTests
     public async Task WhenUkprnExists_ThenValidationShouldPass(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
-        [Greedy] AddProviderToAllowedCourseCommandValidator sut)
+        [Greedy] UpsertProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
-        var command = new AddProviderToAllowedCourseCommand
+        var command = new UpsertProviderAllowedCourseCommand
         {
             Ukprn = 12345678,
             LarsCode = "12345",

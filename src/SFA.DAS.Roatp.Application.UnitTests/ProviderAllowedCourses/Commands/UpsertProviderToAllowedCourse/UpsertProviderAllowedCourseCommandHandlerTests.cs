@@ -4,22 +4,22 @@ using AutoFixture.NUnit4;
 using MediatR;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.AddProviderToAllowedCourse;
+using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.UpsertProviderAllowedCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderAllowedCourses.Commands.AddProviderToAllowedCourse;
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderAllowedCourses.Commands.UpsertProviderToAllowedCourse;
 
-public class AddProviderToAllowedCourseCommandHandlerTests
+public class UpsertProviderAllowedCourseCommandHandlerTests
 {
     [Test, MoqAutoData]
     public async Task WhenHandlingCommand_ThenVerifyRepositoriesAreInvokedCorrectly(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
-        [Greedy] AddProviderToAllowedCourseCommandHandler sut,
-        AddProviderToAllowedCourseCommand command)
+        [Greedy] UpsertProviderAllowedCourseCommandHandler sut,
+        UpsertProviderAllowedCourseCommand command)
     {
         // Arrange
         var standard = new Standard { CourseType = CourseType.Apprenticeship };
@@ -29,7 +29,7 @@ public class AddProviderToAllowedCourseCommandHandlerTests
             .ReturnsAsync(standard);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.AddProviderAllowedCourse(command.Ukprn, command.LarsCode, standard.CourseType, command.LastDateStarts, command.UserId, command.UserDisplayName))
+            .Setup(x => x.UpsertProviderAllowedCourse(command.Ukprn, command.LarsCode, standard.CourseType, command.LastDateStarts, command.UserId, command.UserDisplayName))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -37,7 +37,7 @@ public class AddProviderToAllowedCourseCommandHandlerTests
 
         // Assert
         standardsReadRepository.Verify(x => x.GetStandard(command.LarsCode), Times.Once);
-        providerAllowedCoursesRepository.Verify(x => x.AddProviderAllowedCourse(
+        providerAllowedCoursesRepository.Verify(x => x.UpsertProviderAllowedCourse(
             command.Ukprn,
             command.LarsCode,
             standard.CourseType,
@@ -50,8 +50,8 @@ public class AddProviderToAllowedCourseCommandHandlerTests
     public async Task WhenHandlingCommand_ThenValidatedResponseIsReturned(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
-        [Greedy] AddProviderToAllowedCourseCommandHandler sut,
-        AddProviderToAllowedCourseCommand command)
+        [Greedy] UpsertProviderAllowedCourseCommandHandler sut,
+        UpsertProviderAllowedCourseCommand command)
     {
         // Arrange
         var standard = new Standard { CourseType = CourseType.Apprenticeship };
@@ -61,7 +61,7 @@ public class AddProviderToAllowedCourseCommandHandlerTests
             .ReturnsAsync(standard);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.AddProviderAllowedCourse(command.Ukprn, command.LarsCode, standard.CourseType, command.LastDateStarts, command.UserId, command.UserDisplayName))
+            .Setup(x => x.UpsertProviderAllowedCourse(command.Ukprn, command.LarsCode, standard.CourseType, command.LastDateStarts, command.UserId, command.UserDisplayName))
             .Returns(Task.CompletedTask);
 
         // Act

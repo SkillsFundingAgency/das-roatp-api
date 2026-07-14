@@ -34,7 +34,7 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
         return providerAllowedCourses;
     }
 
-    public async Task AddProviderAllowedCourse(int ukprn, string larsCode, CourseType courseType, DateTime? lastDateStarts, string userId, string userDisplayName)
+    public async Task UpsertProviderAllowedCourse(int ukprn, string larsCode, CourseType courseType, DateTime? lastDateStarts, string userId, string userDisplayName)
     {
         Provider provider = await _roatpDataContext.Providers
             .Include(p => p.ProviderCourseTypes)
