@@ -1,5 +1,4 @@
-﻿using System;
-using System.Threading;
+﻿using System.Threading;
 using System.Threading.Tasks;
 using Asp.Versioning;
 using MediatR;
@@ -32,7 +31,7 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
     [HttpPost("{larsCode}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status201Created)]
-    public async Task<IActionResult> UpsertProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromQuery] string userId, [FromQuery] string userDisplayName, [FromQuery] DateTime? lastDateStarts)
+    public async Task<IActionResult> UpsertProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] UpsertProviderAllowedCourseModel request)
     {
         _logger.LogInformation("Request to upsert provider allowed course for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
 
@@ -40,13 +39,13 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
         {
             Ukprn = ukprn,
             LarsCode = larsCode,
-            UserId = userId,
-            UserDisplayName = userDisplayName,
-            LastDateStarts = lastDateStarts
+            UserId = request.UserId,
+            UserDisplayName = request.UserDisplayName,
+            LastDateStarts = request.LastDateStarts,
         };
 
         var response = await _mediator.Send(command);
 
-        return GetPostResponse(response, $"/providers/{ukprn}/allowed-courses/{larsCode}");
+        return GetNoContentResponse(response);
     }
 }

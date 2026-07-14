@@ -38,57 +38,61 @@ public class ProviderAllowedCoursesControllerTests
     }
 
     [Test, MoqAutoData]
-    public async Task AddProviderAllowedCourse_ReturnsCreatedResult(
-        UpsertProviderAllowedCourseCommand command,
+    public async Task UpsertProviderAllowedCourse_ReturnsNoContentResult(
         [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] ProviderAllowedCoursesController sut)
+        [Greedy] ProviderAllowedCoursesController sut,
+        UpsertProviderAllowedCourseModel request,
+        int ukprn,
+        string larsCode)
     {
         // Arrange
         mediatorMock
-        .Setup(x => x.Send(
-            It.Is<UpsertProviderAllowedCourseCommand>(c =>
-                c.Ukprn == command.Ukprn &&
-                c.LarsCode == command.LarsCode &&
-                c.UserId == command.UserId &&
-                c.UserDisplayName == command.UserDisplayName &&
-                c.LastDateStarts == command.LastDateStarts),
-            It.IsAny<CancellationToken>()))
-        .ReturnsAsync(new ValidatedResponse<Unit>(Unit.Value));
+            .Setup(x => x.Send(
+                It.Is<UpsertProviderAllowedCourseCommand>(c =>
+                    c.Ukprn == ukprn &&
+                    c.LarsCode == larsCode &&
+                    c.UserId == request.UserId &&
+                    c.UserDisplayName == request.UserDisplayName &&
+                    c.LastDateStarts == request.LastDateStarts),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidatedResponse<Unit>(Unit.Value));
 
         // Act
-        var result = await sut.UpsertProviderAllowedCourse(command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, command.LastDateStarts);
+        var result = await sut.UpsertProviderAllowedCourse(ukprn, larsCode, request);
 
         // Assert
-        Assert.That(result, Is.InstanceOf<CreatedResult>());
+        Assert.That(result, Is.InstanceOf<NoContentResult>());
     }
 
     [Test, MoqAutoData]
-    public async Task AddProviderAllowedCourse_ResponseIsInvalid_ReturnsBadRequest(
-        UpsertProviderAllowedCourseCommand command,
+    public async Task UpsertProviderAllowedCourse_ResponseIsInvalid_ReturnsBadRequest(
         [Frozen] Mock<IMediator> mediatorMock,
-        [Greedy] ProviderAllowedCoursesController sut)
+        [Greedy] ProviderAllowedCoursesController sut,
+        UpsertProviderAllowedCourseModel request,
+        int ukprn,
+        string larsCode)
     {
         // Arrange
-        List<ValidationFailure> errors = new List<ValidationFailure>
-        {
-            new() { ErrorMessage = LarsCodeValidator.NotFoundMessage }
-        };
+        List<ValidationFailure> errors = new()
+    {
+        new() { ErrorMessage = LarsCodeValidator.NotFoundMessage }
+    };
 
         ValidatedResponse<Unit> validatedResponse = new(errors);
 
         mediatorMock
-       .Setup(x => x.Send(
-           It.Is<UpsertProviderAllowedCourseCommand>(c =>
-               c.Ukprn == command.Ukprn &&
-               c.LarsCode == command.LarsCode &&
-               c.UserId == command.UserId &&
-               c.UserDisplayName == command.UserDisplayName &&
-               c.LastDateStarts == command.LastDateStarts),
-           It.IsAny<CancellationToken>()))
-       .ReturnsAsync(validatedResponse);
+            .Setup(x => x.Send(
+                It.Is<UpsertProviderAllowedCourseCommand>(c =>
+                    c.Ukprn == ukprn &&
+                    c.LarsCode == larsCode &&
+                    c.UserId == request.UserId &&
+                    c.UserDisplayName == request.UserDisplayName &&
+                    c.LastDateStarts == request.LastDateStarts),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validatedResponse);
 
         // Act
-        var result = await sut.UpsertProviderAllowedCourse(command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, command.LastDateStarts);
+        var result = await sut.UpsertProviderAllowedCourse(ukprn, larsCode, request);
 
         // Assert
         Assert.That(result, Is.InstanceOf<BadRequestObjectResult>());
