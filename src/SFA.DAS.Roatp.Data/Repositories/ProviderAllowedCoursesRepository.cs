@@ -67,9 +67,14 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
                 null));
         }
 
-        if (provider.ProviderAllowedCourses.Any(p => p.LarsCode == larsCode))
+        var existingAllowedCourse = provider.ProviderAllowedCourses.FirstOrDefault(p => p.LarsCode == larsCode);
+
+        if (existingAllowedCourse != null)
         {
-            provider.ProviderAllowedCourses.FirstOrDefault(p => p.LarsCode == larsCode).LastDateStarts = lastDateStarts;
+            existingLastDateStarts = existingAllowedCourse.LastDateStarts;
+
+            existingAllowedCourse.LastDateStarts = lastDateStarts;
+
             providerAllowedCourseUpdated = true;
         }
         else
@@ -92,13 +97,13 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
             {
                 LarsCode = larsCode,
                 Ukprn = ukprn,
-                LastDateStarts = lastDateStarts
+                LastDateStarts = providerAllowedCourseUpdated ? existingLastDateStarts : lastDateStarts
             },
             providerAllowedCourseUpdated ? new ProviderAllowedCourse
             {
                 LarsCode = larsCode,
                 Ukprn = ukprn,
-                LastDateStarts = existingLastDateStarts
+                LastDateStarts = lastDateStarts
             } : null));
 
         await _roatpDataContext.SaveChangesAsync();
