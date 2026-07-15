@@ -1,11 +1,14 @@
 ﻿using System.Threading;
 using System.Threading.Tasks;
 using Asp.Versioning;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Api.Models;
+using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.UpsertProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourses;
 using SFA.DAS.Roatp.Domain.Models;
@@ -17,7 +20,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 [ApiVersion(ApiVersionNumber.One)]
 [Tags(EndpointTags.ProviderAllowedCourses)]
 [Route("providers/{ukprn}/allowed-courses")]
-public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<ProviderAllowedCoursesController> _logger) : ActionResponseControllerBase
+public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<ProviderAllowedCoursesController> _logger, AbstractValidator<ILarsCodeUkprn> _validator) : ActionResponseControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(GetProviderAllowedCoursesQueryResult), StatusCodes.Status200OK)]
@@ -31,14 +34,17 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
     [HttpPost("{larsCode}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpsertProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] UpsertProviderAllowedCourseModel request)
+    public async Task<IActionResult> UpsertProviderAllowedCourse([FromRoute] LarsCodeUkrpnModel model, [FromBody] UpsertProviderAllowedCourseModel request)
     {
-        _logger.LogInformation("Request to upsert provider allowed course for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
+        _logger.LogInformation("Request to upsert provider allowed course for Ukprn {Ukprn} and LarsCode {LarsCode}", model.Ukprn, model.LarsCode);
+
+        var result = _validator.Validate(model);
+        if (!result.IsValid) NotFound();
 
         UpsertProviderAllowedCourseCommand command = new()
         {
-            Ukprn = ukprn,
-            LarsCode = larsCode,
+            Ukprn = model.Ukprn,
+            LarsCode = model.LarsCode,
             UserId = request.UserId,
             UserDisplayName = request.UserDisplayName,
             LastDateStarts = request.LastDateStarts,
