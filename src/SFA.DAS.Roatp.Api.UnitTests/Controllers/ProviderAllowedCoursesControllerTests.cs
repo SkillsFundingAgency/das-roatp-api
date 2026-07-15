@@ -3,6 +3,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using FluentAssertions;
+using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -38,14 +39,21 @@ public class ProviderAllowedCoursesControllerTests
     }
 
     [Test, MoqAutoData]
-    public async Task UpsertProviderAllowedCourse_ReturnsNoContentResult(
+    public async Task UpsertProviderAllowedCourse_ValidationPasses_ReturnsNoContentResult(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ILarsCodeUkprn>> validatorMock,
         [Greedy] ProviderAllowedCoursesController sut,
         UpsertProviderAllowedCourseModel request,
         int ukprn,
         string larsCode)
     {
         // Arrange
+        validatorMock
+            .Setup(v => v.ValidateAsync(It.Is<ILarsCodeUkprn>(x =>
+                x.Ukprn == ukprn &&
+                x.LarsCode == larsCode), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
+
         mediatorMock
             .Setup(x => x.Send(
                 It.Is<UpsertProviderAllowedCourseCommand>(c =>
@@ -65,14 +73,47 @@ public class ProviderAllowedCoursesControllerTests
     }
 
     [Test, MoqAutoData]
-    public async Task UpsertProviderAllowedCourse_ResponseIsInvalid_ReturnsBadRequest(
+    public async Task UpsertProviderAllowedCourse_ControllerValidationFails_ReturnsNotFound(
         [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ILarsCodeUkprn>> validatorMock,
         [Greedy] ProviderAllowedCoursesController sut,
         UpsertProviderAllowedCourseModel request,
         int ukprn,
         string larsCode)
     {
         // Arrange
+        validatorMock
+            .Setup(v => v.ValidateAsync(It.Is<ILarsCodeUkprn>(x =>
+                x.Ukprn == ukprn &&
+                x.LarsCode == larsCode), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult(new[]
+            {
+                new ValidationFailure(nameof(ILarsCodeUkprn.LarsCode), LarsCodeUkprnCombinationValidator.InvalidLarsCodeErrorMessage)
+            }));
+
+        // Act
+        var result = await sut.UpsertProviderAllowedCourse(ukprn, larsCode, request);
+
+        // Assert
+        result.Should().BeOfType<NotFoundResult>();
+    }
+
+    [Test, MoqAutoData]
+    public async Task UpsertProviderAllowedCourse_ResponseIsInvalid_ReturnsBadRequest(
+        [Frozen] Mock<IMediator> mediatorMock,
+        [Frozen] Mock<IValidator<ILarsCodeUkprn>> validatorMock,
+        [Greedy] ProviderAllowedCoursesController sut,
+        UpsertProviderAllowedCourseModel request,
+        int ukprn,
+        string larsCode)
+    {
+        // Arrange
+        validatorMock
+            .Setup(v => v.ValidateAsync(It.Is<ILarsCodeUkprn>(x =>
+                x.Ukprn == ukprn &&
+                x.LarsCode == larsCode), CancellationToken.None))
+            .ReturnsAsync(new ValidationResult());
+
         List<ValidationFailure> errors = new()
     {
         new() { ErrorMessage = LarsCodeValidator.NotFoundMessage }

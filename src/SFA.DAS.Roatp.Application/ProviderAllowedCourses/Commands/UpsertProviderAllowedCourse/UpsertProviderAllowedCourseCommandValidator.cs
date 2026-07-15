@@ -7,11 +7,9 @@ namespace SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.UpsertProvid
 public class UpsertProviderAllowedCourseCommandValidator : AbstractValidator<UpsertProviderAllowedCourseCommand>
 {
     public const string InvalidLastDateStarts = "LastDateStarts cannot be after LastDateStarts of the course";
-    public UpsertProviderAllowedCourseCommandValidator(IStandardsReadRepository standardsReadRepository, IProvidersReadRepository providersReadRepository)
+    public UpsertProviderAllowedCourseCommandValidator(IStandardsReadRepository standardsReadRepository)
     {
         Include(new UserInfoValidator());
-        Include(new LarsCodeValidator(standardsReadRepository));
-        Include(new UkprnValidator(providersReadRepository));
         RuleFor(x => x)
             .MustAsync(async (command, cancellation) =>
             {

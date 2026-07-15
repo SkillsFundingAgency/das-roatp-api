@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 [ApiVersion(ApiVersionNumber.One)]
 [Tags(EndpointTags.ProviderAllowedCourses)]
 [Route("providers/{ukprn}/allowed-courses")]
-public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<ProviderAllowedCoursesController> _logger, AbstractValidator<ILarsCodeUkprn> _validator) : ActionResponseControllerBase
+public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<ProviderAllowedCoursesController> _logger, IValidator<ILarsCodeUkprn> _validator) : ActionResponseControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(GetProviderAllowedCoursesQueryResult), StatusCodes.Status200OK)]
@@ -33,18 +33,29 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
 
     [HttpPost("{larsCode}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpsertProviderAllowedCourse([FromRoute] LarsCodeUkrpnModel model, [FromBody] UpsertProviderAllowedCourseModel request)
+    public async Task<IActionResult> UpsertProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] UpsertProviderAllowedCourseModel request)
     {
-        _logger.LogInformation("Request to upsert provider allowed course for Ukprn {Ukprn} and LarsCode {LarsCode}", model.Ukprn, model.LarsCode);
+        _logger.LogInformation("Request to upsert provider allowed course for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
 
-        var result = _validator.Validate(model);
-        if (!result.IsValid) NotFound();
+        var model = new LarsCodeUkrpnModel
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode
+        };
+
+        var result = _validator.ValidateAsync(model);
+
+        if (!result.Result.IsValid)
+        {
+            return NotFound();
+        }
 
         UpsertProviderAllowedCourseCommand command = new()
         {
-            Ukprn = model.Ukprn,
-            LarsCode = model.LarsCode,
+            Ukprn = ukprn,
+            LarsCode = larsCode,
             UserId = request.UserId,
             UserDisplayName = request.UserDisplayName,
             LastDateStarts = request.LastDateStarts,
