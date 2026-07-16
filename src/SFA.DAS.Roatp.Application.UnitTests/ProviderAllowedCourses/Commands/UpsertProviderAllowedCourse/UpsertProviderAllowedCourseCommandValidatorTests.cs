@@ -16,7 +16,6 @@ public class UpsertProviderAllowedCourseCommandValidatorTests
     [Test, MoqAutoData]
     public async Task WhenLastDateStartsIsAfterStandardDate_ThenValidationShouldFail(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
-        [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
         [Greedy] UpsertProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
@@ -33,10 +32,6 @@ public class UpsertProviderAllowedCourseCommandValidatorTests
             .Setup(r => r.GetStandard(It.IsAny<string>()))
             .ReturnsAsync(new Standard { LarsCode = command.LarsCode, LastDateStarts = DateTime.UtcNow.AddMonths(-1) });
 
-        providersReadRepository
-            .Setup(r => r.GetByUkprn(It.IsAny<int>()))
-            .ReturnsAsync((Provider)null);
-
         // Act
         var result = await sut.TestValidateAsync(command);
 
@@ -48,7 +43,6 @@ public class UpsertProviderAllowedCourseCommandValidatorTests
     [Test, MoqAutoData]
     public async Task WhenLastDateStartsIsBeforeStandardDate_ThenValidationShouldPass(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
-        [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
         [Greedy] UpsertProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
@@ -65,10 +59,6 @@ public class UpsertProviderAllowedCourseCommandValidatorTests
             .Setup(r => r.GetStandard(It.IsAny<string>()))
             .ReturnsAsync(new Standard { LarsCode = command.LarsCode, LastDateStarts = DateTime.UtcNow });
 
-        providersReadRepository
-            .Setup(r => r.GetByUkprn(It.IsAny<int>()))
-            .ReturnsAsync((Provider)null);
-
         // Act
         var result = await sut.TestValidateAsync(command);
 
@@ -77,9 +67,8 @@ public class UpsertProviderAllowedCourseCommandValidatorTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenLastDateStartsIsNull_ThenValidationShouldPass(
+    public async Task WhenLastDateStartsIsNull_ThenValidationShouldPass_AndVerifyNoStandardsReadRepositoryCall(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
-        [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
         [Greedy] UpsertProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
@@ -96,14 +85,11 @@ public class UpsertProviderAllowedCourseCommandValidatorTests
             .Setup(r => r.GetStandard(It.IsAny<string>()))
             .ReturnsAsync(new Standard { LarsCode = command.LarsCode, LastDateStarts = DateTime.UtcNow });
 
-        providersReadRepository
-            .Setup(r => r.GetByUkprn(It.IsAny<int>()))
-            .ReturnsAsync((Provider)null);
-
         // Act
         var result = await sut.TestValidateAsync(command);
 
         // Assert
         result.ShouldNotHaveValidationErrorFor(x => x);
+        standardsReadRepository.Verify(r => r.GetStandard(It.Is<string>(x => x == command.LarsCode)), Times.Never);
     }
 }
