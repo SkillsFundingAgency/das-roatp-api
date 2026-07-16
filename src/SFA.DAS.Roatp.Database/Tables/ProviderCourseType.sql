@@ -3,8 +3,9 @@
 	[Id] INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	[Ukprn] INT NOT NULL,
 	[CourseType] nvarchar(50) NOT NULL,
+	[IsRestrictedProvider] BIT NULL DEFAULT 0
 );
 GO;
 
-CREATE UNIQUE INDEX IX_ProviderCourseType_Ukprn_CourseType
-ON [dbo].[ProviderCourseType] ([Ukprn],[CourseType]);
+CREATE UNIQUE INDEX IXU_ProviderCourseType_Ukprn_CourseType
+ON [dbo].[ProviderCourseType] ([Ukprn],[CourseType]) INCLUDE ([IsRestrictedProvider]);

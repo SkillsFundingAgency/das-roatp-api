@@ -42,8 +42,22 @@ BEGIN
 END
 GO
 
+IF OBJECT_ID(N'[dbo].[RestrictedProviderView]', N'U') IS NOT NULL
+BEGIN
+    DROP VIEW [dbo].[RestrictedProviderView];
+END
+GO
+
+IF OBJECT_ID(N'[dbo].[RestrictedProviderCourseType]', N'U') IS NOT NULL
+BEGIN
+    DROP TABLE [dbo].[RestrictedProviderCourseType];
+END
+GO
+
 IF Exists(SELECT * from sys.indexes where name = 'UK_ProviderLocation_ProviderId_LocationName')
 ALTER TABLE [dbo].[ProviderLocation] DROP CONSTRAINT [UK_ProviderLocation_ProviderId_LocationName]
 GO
 
 :r .\PostDeploymentScripts\PopulateRegionData.sql
+:r .\PostDeploymentScripts\CSP-2710_Database_updates_for_Provider_Restrictions.sql
+

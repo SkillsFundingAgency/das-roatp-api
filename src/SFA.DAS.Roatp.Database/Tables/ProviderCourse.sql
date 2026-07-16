@@ -11,6 +11,7 @@
     [HasPortableFlexiJobOption] BIT NOT NULL DEFAULT 0, 
     [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
     [HasOnlineDeliveryOption] Bit DEFAULT 0 NOT NULL,
+    [Ukprn] INT NULL,
     CONSTRAINT PK_ProviderCourse PRIMARY KEY (Id),
     CONSTRAINT UK_ProviderCourse_ProviderId_LarsCode UNIQUE (ProviderId, LarsCode),
     CONSTRAINT FK_ProviderCourse_Provider FOREIGN KEY (ProviderId) REFERENCES [Provider] (Id)
@@ -19,6 +20,12 @@ GO
 
 CREATE NONCLUSTERED INDEX IX_ProviderCourse_StatusId_ProviderTypeId
 ON [dbo].[ProviderCourse] ([LarsCode],[ProviderId])
-INCLUDE ([Id]);
+INCLUDE ([Id],[CreatedDate]);
+GO
+
+
+CREATE UNIQUE INDEX IXU_ProviderCourse_Ukprn_LarsCode 
+ON [dbo].[ProviderCourse] ([Ukprn],[Larscode])
+INCLUDE ([ProviderId]);
 GO
 

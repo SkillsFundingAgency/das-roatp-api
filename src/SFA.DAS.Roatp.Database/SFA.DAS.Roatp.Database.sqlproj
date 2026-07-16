@@ -73,6 +73,7 @@
     <Build Include="Tables\Region.sql" />
     <Build Include="Tables\Shortlist.sql" />
     <None Include="PostDeploymentScripts\PopulateRegionData.sql" />
+    <None Include="PostDeploymentScripts\CSP-2710_Database_updates_for_Provider_Restrictions.sql" />
     <Build Include="Tables\ProvderRegistrationDetail.sql" />
     <Build Include="Tables\ImportAudit.sql" />
     <Build Include="Tables\ProviderAddress.sql" />
@@ -104,9 +105,8 @@
     <Build Include="Tables\ProviderCourseForecast.sql" />
     <Build Include="Views\ForecastQuartersView.sql" />
     <Build Include="Tables\RestrictedCourse.sql" />
-    <Build Include="Tables\RestrictedProviderCourseType.sql" />
     <Build Include="Views\RestrictedCourseView.sql" />
-    <Build Include="Views\RestrictedProviderView.sql" />    
+    <Build Include="StoredProcedures\GetProviderTimelineExport.sql" />
   </ItemGroup>
   <ItemGroup>
     <None Include="SFA.DAS.Roatp.Database.publish.xml" />
