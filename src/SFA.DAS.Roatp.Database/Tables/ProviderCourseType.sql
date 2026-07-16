@@ -7,5 +7,5 @@
 );
 GO;
 
-CREATE UNIQUE INDEX IXU_ProviderCourseType_Ukprn_CourseType
+CREATE UNIQUE INDEX IX_ProviderCourseType_Ukprn_CourseType
 ON [dbo].[ProviderCourseType] ([Ukprn],[CourseType]) INCLUDE ([IsRestrictedProvider]);
