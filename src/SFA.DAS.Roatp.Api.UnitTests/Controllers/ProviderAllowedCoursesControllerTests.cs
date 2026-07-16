@@ -115,9 +115,12 @@ public class ProviderAllowedCoursesControllerTests
             .ReturnsAsync(new ValidationResult());
 
         List<ValidationFailure> errors = new()
-    {
-        new() { ErrorMessage = LarsCodeValidator.NotFoundMessage }
-    };
+        {
+            new()
+            {
+                ErrorMessage = LarsCodeValidator.NotFoundMessage
+            }
+        };
 
         ValidatedResponse<Unit> validatedResponse = new(errors);
 

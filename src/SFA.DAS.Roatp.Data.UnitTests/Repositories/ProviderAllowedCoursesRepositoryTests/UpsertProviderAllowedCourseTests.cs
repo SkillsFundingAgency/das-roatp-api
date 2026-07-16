@@ -19,6 +19,9 @@ public class UpsertProviderAllowedCourseTests
         int ukprn = 12345678;
         string larsCode = "LARS001";
         var lastDateStarts = DateTime.Today;
+        string userId = "TestUserID";
+        string userDisplayName = "Test User";
+        CourseType courseType = CourseType.Apprenticeship;
 
         AddProvider(context, ukprn);
 
@@ -27,7 +30,7 @@ public class UpsertProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, lastDateStarts, "TestUserID", "Test User");
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, courseType, lastDateStarts, userId, userDisplayName);
 
         activity.Stop();
 
@@ -42,6 +45,22 @@ public class UpsertProviderAllowedCourseTests
             x.LastDateStarts == lastDateStarts);
 
         context.Audits.Should().HaveCount(2);
+
+        var audits = await context.Audits.ToListAsync();
+
+        audits.Should().Contain(x =>
+            x.EntityType == nameof(ProviderCourseType) &&
+            x.EntityId == ukprn.ToString() &&
+            x.UserId == userId &&
+            x.UserDisplayName == userDisplayName &&
+            x.UserAction == "CreateProviderCourseType");
+
+        audits.Should().Contain(x =>
+            x.EntityType == nameof(ProviderAllowedCourse) &&
+            x.EntityId == ukprn.ToString() &&
+            x.UserId == userId &&
+            x.UserDisplayName == userDisplayName &&
+            x.UserAction == "CreateProviderAllowedCourse");
     }
 
     [Test]
@@ -52,6 +71,9 @@ public class UpsertProviderAllowedCourseTests
         int ukprn = 12345678;
         string larsCode = "LARS001";
         var lastDateStarts = DateTime.Today;
+        string userId = "TestUserID";
+        string userDisplayName = "Test User";
+        CourseType courseType = CourseType.Apprenticeship;
 
         AddProvider(context, ukprn);
         AddProviderCourseType(context, ukprn, CourseType.Apprenticeship);
@@ -61,7 +83,7 @@ public class UpsertProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, lastDateStarts, "TestUserID", "Test User");
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, courseType, lastDateStarts, userId, userDisplayName);
 
         activity.Stop();
 
@@ -75,6 +97,16 @@ public class UpsertProviderAllowedCourseTests
             x.LastDateStarts == lastDateStarts);
 
         context.Audits.Should().HaveCount(1);
+
+        var audits = await context.Audits.ToListAsync();
+
+        audits.Should().Contain(x =>
+            x.EntityType == nameof(ProviderAllowedCourse) &&
+            x.EntityId == ukprn.ToString() &&
+            x.UserId == userId &&
+            x.UserDisplayName == userDisplayName &&
+            x.UserAction == "CreateProviderAllowedCourse");
+
     }
 
     [Test]
@@ -86,6 +118,9 @@ public class UpsertProviderAllowedCourseTests
         string larsCode = "LARS001";
         var existingLastDateStarts = DateTime.UtcNow.AddMonths(-1);
         var updatedLastDateStarts = DateTime.UtcNow;
+        string userId = "TestUserID";
+        string userDisplayName = "Test User";
+        CourseType courseType = CourseType.Apprenticeship;
 
         AddProvider(context, ukprn);
         AddProviderCourseType(context, ukprn, CourseType.Apprenticeship);
@@ -96,7 +131,7 @@ public class UpsertProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, updatedLastDateStarts, "TestUserID", "Test User");
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, courseType, updatedLastDateStarts, userId, userDisplayName);
 
         activity.Stop();
 
@@ -110,6 +145,15 @@ public class UpsertProviderAllowedCourseTests
             x.LastDateStarts == updatedLastDateStarts);
 
         context.Audits.Should().HaveCount(1);
+
+        var audits = await context.Audits.ToListAsync();
+
+        audits.Should().Contain(x =>
+            x.EntityType == nameof(ProviderAllowedCourse) &&
+            x.EntityId == ukprn.ToString() &&
+            x.UserId == userId &&
+            x.UserDisplayName == userDisplayName &&
+            x.UserAction == "UpdateProviderAllowedCourse");
     }
 
     [Test]
@@ -121,6 +165,9 @@ public class UpsertProviderAllowedCourseTests
         string larsCode = "LARS001";
         var existingLastDateStarts = DateTime.UtcNow.AddMonths(-1);
         var updatedLastDateStarts = DateTime.UtcNow;
+        string userId = "TestUserID";
+        string userDisplayName = "Test User";
+        CourseType courseType = CourseType.Apprenticeship;
 
         AddProvider(context, ukprn);
         AddProviderAllowedCourse(context, ukprn, larsCode, existingLastDateStarts);
@@ -130,7 +177,7 @@ public class UpsertProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, updatedLastDateStarts, "TestUserID", "Test User");
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, courseType, updatedLastDateStarts, userId, userDisplayName);
 
         activity.Stop();
 
@@ -145,6 +192,22 @@ public class UpsertProviderAllowedCourseTests
             x.LastDateStarts == updatedLastDateStarts);
 
         context.Audits.Should().HaveCount(2);
+
+        var audits = await context.Audits.ToListAsync();
+
+        audits.Should().Contain(x =>
+            x.EntityType == nameof(ProviderCourseType) &&
+            x.EntityId == ukprn.ToString() &&
+            x.UserId == userId &&
+            x.UserDisplayName == userDisplayName &&
+            x.UserAction == "CreateProviderCourseType");
+
+        audits.Should().Contain(x =>
+            x.EntityType == nameof(ProviderAllowedCourse) &&
+            x.EntityId == ukprn.ToString() &&
+            x.UserId == userId &&
+            x.UserDisplayName == userDisplayName &&
+            x.UserAction == "UpdateProviderAllowedCourse");
     }
 
     [Test]
@@ -155,6 +218,9 @@ public class UpsertProviderAllowedCourseTests
         int ukprn = 12345678;
         string larsCode = "LARS001";
         var existingLastDateStarts = DateTime.UtcNow.AddMonths(-1);
+        string userId = "TestUserID";
+        string userDisplayName = "Test User";
+        CourseType courseType = CourseType.Apprenticeship;
 
         AddProvider(context, ukprn);
         AddProviderCourseType(context, ukprn, CourseType.Apprenticeship);
@@ -165,7 +231,7 @@ public class UpsertProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, CourseType.Apprenticeship, null, "TestUserID", "Test User");
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, courseType, null, userId, userDisplayName);
 
         activity.Stop();
 
@@ -179,6 +245,15 @@ public class UpsertProviderAllowedCourseTests
             x.LastDateStarts == null);
 
         context.Audits.Should().HaveCount(1);
+
+        var audits = await context.Audits.ToListAsync();
+
+        audits.Should().Contain(x =>
+            x.EntityType == nameof(ProviderAllowedCourse) &&
+            x.EntityId == ukprn.ToString() &&
+            x.UserId == userId &&
+            x.UserDisplayName == userDisplayName &&
+            x.UserAction == "UpdateProviderAllowedCourse");
     }
 
     private static void AddProvider(RoatpDataContext context, int ukprn)

@@ -75,4 +75,35 @@ public class UpsertProviderAllowedCourseCommandValidatorTests
         // Assert
         result.ShouldNotHaveValidationErrorFor(x => x);
     }
+
+    [Test, MoqAutoData]
+    public async Task WhenLastDateStartsIsNull_ThenValidationShouldPass(
+        [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
+        [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
+        [Greedy] UpsertProviderAllowedCourseCommandValidator sut)
+    {
+        // Arrange
+        var command = new UpsertProviderAllowedCourseCommand
+        {
+            Ukprn = 12345678,
+            LarsCode = "12345",
+            UserId = "TestUserId",
+            UserDisplayName = "TestUser",
+            LastDateStarts = null
+        };
+
+        standardsReadRepository
+            .Setup(r => r.GetStandard(It.IsAny<string>()))
+            .ReturnsAsync(new Standard { LarsCode = command.LarsCode, LastDateStarts = DateTime.UtcNow });
+
+        providersReadRepository
+            .Setup(r => r.GetByUkprn(It.IsAny<int>()))
+            .ReturnsAsync((Provider)null);
+
+        // Act
+        var result = await sut.TestValidateAsync(command);
+
+        // Assert
+        result.ShouldNotHaveValidationErrorFor(x => x);
+    }
 }

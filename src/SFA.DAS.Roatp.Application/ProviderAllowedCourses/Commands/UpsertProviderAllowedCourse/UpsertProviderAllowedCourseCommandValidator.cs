@@ -13,6 +13,11 @@ public class UpsertProviderAllowedCourseCommandValidator : AbstractValidator<Ups
         RuleFor(x => x)
             .MustAsync(async (command, cancellation) =>
             {
+                if (!command.LastDateStarts.HasValue)
+                {
+                    return true;
+                }
+
                 var standard = await standardsReadRepository.GetStandard(command.LarsCode);
 
                 return !command.LastDateStarts.HasValue
