@@ -4,7 +4,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
-public class GetProviderCourseQuery : IRequest<ValidatedResponse<ProviderCourseModel>>, ILarsCodeUkprn, IUkprn, ICourseType
+public class GetProviderCourseQuery : IRequest<ValidatedResponse<ProviderCourseModel>>, IProviderCourseValidator, IUkprn, ICourseType
 {
     public int Ukprn { get; }
     public string LarsCode { get; }

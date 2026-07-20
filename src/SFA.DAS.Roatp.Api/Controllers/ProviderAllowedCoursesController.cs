@@ -20,7 +20,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 [ApiVersion(ApiVersionNumber.One)]
 [Tags(EndpointTags.ProviderAllowedCourses)]
 [Route("providers/{ukprn}/allowed-courses")]
-public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<ProviderAllowedCoursesController> _logger, IValidator<ILarsCodeUkprn> _validator) : ActionResponseControllerBase
+public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<ProviderAllowedCoursesController> _logger, IValidator<IUkprnAndLarsCodeValidator> _validator) : ActionResponseControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(GetProviderAllowedCoursesQueryResult), StatusCodes.Status200OK)]
@@ -39,23 +39,23 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
     {
         _logger.LogInformation("Request to upsert provider allowed course for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
 
-        var model = new LarsCodeUkrpnModel
+        var model = new UkrpnAndLarsCodeModel
         {
             Ukprn = ukprn,
             LarsCode = larsCode
         };
 
-        var result = _validator.ValidateAsync(model);
+        var result = await _validator.ValidateAsync(model);
 
-        if (!result.Result.IsValid)
+        if (!result.IsValid)
         {
-            return NotFound();
+            return NotFound(FormatErrors(result.Errors));
         }
 
         UpsertProviderAllowedCourseCommand command = new()
         {
             Ukprn = ukprn,
-            LarsCode = larsCode,
+            LarsCode = larsCode.ToUpper().Trim(),
             UserId = request.UserId,
             UserDisplayName = request.UserDisplayName,
             LastDateStarts = request.LastDateStarts,

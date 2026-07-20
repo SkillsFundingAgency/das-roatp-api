@@ -2,8 +2,8 @@
 
 namespace SFA.DAS.Roatp.Api.Models;
 
-public class LarsCodeUkrpnModel : ILarsCodeUkprn
+public class UkrpnAndLarsCodeModel : IUkprnAndLarsCodeValidator
 {
-    public string LarsCode { get; set; }
     public int Ukprn { get; set; }
+    public string LarsCode { get; set; }
 }
