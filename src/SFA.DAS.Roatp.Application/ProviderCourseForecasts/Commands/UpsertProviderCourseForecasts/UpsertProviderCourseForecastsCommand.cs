@@ -5,7 +5,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseForecasts.Commands.UpsertProviderCourseForecasts;
 
-public class UpsertProviderCourseForecastsCommand : ILarsCodeUkprn, IRequest<ValidatedResponse>
+public class UpsertProviderCourseForecastsCommand : IProviderCourseValidator, IRequest<ValidatedResponse>
 {
     public int Ukprn { get; set; }
     public string LarsCode { get; set; }

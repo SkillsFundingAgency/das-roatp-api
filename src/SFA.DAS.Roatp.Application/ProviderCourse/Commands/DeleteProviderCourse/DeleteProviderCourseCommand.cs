@@ -4,7 +4,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse
 {
-    public class DeleteProviderCourseCommand : IRequest<ValidatedResponse<bool>>, ILarsCodeUkprn, IUkprn, IUserInfo
+    public class DeleteProviderCourseCommand : IRequest<ValidatedResponse<bool>>, IProviderCourseValidator, IUkprn, IUserInfo
     {
         public int Ukprn { get; set; }
         public string LarsCode { get; set; }

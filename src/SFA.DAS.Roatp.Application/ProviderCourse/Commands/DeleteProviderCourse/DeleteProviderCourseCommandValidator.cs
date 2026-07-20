@@ -10,7 +10,7 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.DeleteProviderCourse
         {
             Include(new UkprnValidator(providersReadRepository));
 
-            Include(new LarsCodeUkprnCombinationValidator(providersReadRepository, providerCoursesReadRepository));
+            Include(new ProviderCourseValidator(providersReadRepository, providerCoursesReadRepository));
 
             Include(new UserInfoValidator());
         }

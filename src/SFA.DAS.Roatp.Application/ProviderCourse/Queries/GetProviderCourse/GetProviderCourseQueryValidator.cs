@@ -14,7 +14,7 @@ public class GetProviderCourseQueryValidator : AbstractValidator<GetProviderCour
         IProviderAllowedCoursesRepository providerAllowedCoursesRepository)
     {
         Include(new UkprnValidator(providersReadRepository));
-        Include(new LarsCodeUkprnCombinationValidator(providersReadRepository, providerCoursesReadRepository));
+        Include(new ProviderCourseValidator(providersReadRepository, providerCoursesReadRepository));
         Include(new CourseTypeValidator(providerCourseTypesReadRepository, standardsReadRepository, providerAllowedCoursesRepository));
     }
 }

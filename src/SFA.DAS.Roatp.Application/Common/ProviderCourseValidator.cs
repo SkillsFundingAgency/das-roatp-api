@@ -3,12 +3,12 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.Common
 {
-    public class LarsCodeUkprnCombinationValidator : AbstractValidator<ILarsCodeUkprn>
+    public class ProviderCourseValidator : AbstractValidator<IProviderCourseValidator>
     {
         public const string InvalidLarsCodeErrorMessage = "Invalid larsCode";
         public const string ProviderCourseNotFoundErrorMessage = "No provider course found with given ukprn and larsCode";
 
-        public LarsCodeUkprnCombinationValidator(IProvidersReadRepository providersReadRepository, IProviderCoursesReadRepository providerCoursesReadRepository)
+        public ProviderCourseValidator(IProvidersReadRepository providersReadRepository, IProviderCoursesReadRepository providerCoursesReadRepository)
         {
             RuleFor(x => x.LarsCode)
                .Cascade(CascadeMode.Stop)

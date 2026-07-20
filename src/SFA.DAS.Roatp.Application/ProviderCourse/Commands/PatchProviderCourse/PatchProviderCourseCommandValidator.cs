@@ -33,7 +33,7 @@ public class PatchProviderCourseCommandValidator : AbstractValidator<PatchProvid
     {
         Include(new UkprnValidator(providersReadRepository));
 
-        Include(new LarsCodeUkprnCombinationValidator(providersReadRepository, providerCoursesReadRepository));
+        Include(new ProviderCourseValidator(providersReadRepository, providerCoursesReadRepository));
 
         RuleFor(c => c.Patch.Operations.Count).GreaterThan(0).WithMessage(NoPatchOperationsPresentErrorMessage);
 
