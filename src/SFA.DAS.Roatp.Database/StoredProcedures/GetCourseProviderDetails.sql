@@ -307,7 +307,7 @@ BEGIN
 	LEFT JOIN EmployerStars pes on pes.[Ukprn] = ab2.[Ukprn] 
 	LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = ab2.[Ukprn] 
 	LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[UserId] = @UserId
-		AND ISNULL(LTRIM(RTRIM(sht.[LocationName])), '') = ISNULL(LTRIM(RTRIM(@LocationName)), '')
+		AND ISNULL(LTRIM(RTRIM(sht.[LocationDescription])), '') = ISNULL(LTRIM(RTRIM(@LocationName)), '')
 	-- regulated check
 	WHERE (stq.IsRegulatedForProvider = 0 OR (stq.IsRegulatedForProvider = 1 AND IsApprovedByRegulator = 1))
 	ORDER BY ukprn, Larscode, Ordering

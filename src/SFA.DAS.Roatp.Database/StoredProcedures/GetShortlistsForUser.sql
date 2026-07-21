@@ -28,7 +28,7 @@ BEGIN
     (
         SELECT ShortlistId, NearestRegionId, AlternativeRegionId
         FROM (
-            SELECT st1.[Id] ShortlistId, st1.LocationName, reg1.[Id] NearestRegionId,  reg2.[Id] AlternativeRegionId, 
+            SELECT st1.[Id] ShortlistId, st1.LocationDescription, reg1.[Id] NearestRegionId,  reg2.[Id] AlternativeRegionId, 
             ROW_NUMBER() OVER (PARTITION BY st1.[Id] ORDER BY
                                geography::Point(reg1.Latitude, reg1.Longitude, 4326)
                                .STDistance(geography::Point(convert(float,st1.Latitude), convert(float,st1.Longitude), 4326)) ) seqn
@@ -50,10 +50,10 @@ BEGIN
         ,stq.[LearningType] "learningType"
         -- Training locations
         ,DENSE_RANK() OVER (PARTITION BY stq.[Title], stq.[Level], ab2.[Larscode] 
-                            ORDER BY ISNULL(ab2.[LocationName],' ') ) "l2.ordering"
-        ,LocationName 
+                            ORDER BY ISNULL(ab2.[LocationDescription],' ') ) "l2.ordering"
+        ,LocationDescription 
         -- Training providers at each location
-        ,ROW_NUMBER() OVER (PARTITION BY stq.[Title], stq.[Level], ab2.[Larscode], ISNULL(ab2.[LocationName],' ') 
+        ,ROW_NUMBER() OVER (PARTITION BY stq.[Title], stq.[Level], ab2.[Larscode], ISNULL(ab2.[LocationDescription],' ') 
                             ORDER BY ab2.[LegalName] ) "l2.p3.ordering"
         ,ShortlistId
         ,CreatedDate
@@ -77,7 +77,7 @@ BEGIN
     (
         SELECT ShortlistId
             ,CreatedDate
-            ,LocationName
+            ,LocationDescription
             ,Ukprn
             ,LegalName
             ,ContactUsEmail 
@@ -105,7 +105,7 @@ BEGIN
                   ,st1.[UserId]
                   ,st1.[Larscode]
                   ,st1.[Ukprn]
-                  ,st1.LocationName 
+                  ,st1.LocationDescription 
                   ,pr1.LegalName
                   ,ISNULL(pc1.ContactUsEmail,pr1.Email) ContactUsEmail
                   ,ISNULL(pc1.ContactUsPhoneNumber, pr1.Phone) ContactUsPhoneNumber
@@ -196,7 +196,7 @@ BEGIN
             ,courses.courseType
             ,courses.learningType
             ,locations.ordering
-            ,locations.LocationName locationName
+            ,locations.LocationDescription locationName
             ,providers.ordering
             ,providers.shortlistId
             ,providers.ukprn
@@ -229,7 +229,7 @@ BEGIN
             FROM #MainQuery ) AS courses 
         ON courses."userId" = toplevel."userId"
         JOIN (
-            SELECT DISTINCT Larscode, "l2.ordering" ordering, LocationName 
+            SELECT DISTINCT Larscode, "l2.ordering" ordering, LocationDescription 
             FROM #MainQuery ) AS locations 
         ON courses.Larscode = locations.Larscode
         JOIN (
@@ -240,16 +240,16 @@ BEGIN
             ,providerName providerName
             ,CAST(CASE WHEN AtEmployer = 1 THEN 1 ELSE 0 END AS BIT) atEmployer
             ,CAST(CASE WHEN AtProvider = 1 THEN 1 ELSE 0 END AS BIT) atProvider
-            ,CASE WHEN LocationName IS NULL 
+            ,CASE WHEN LocationDescription IS NULL 
                   THEN null
                   ELSE CONVERT(DECIMAL(6,1),ProviderDistance) END providerDistance
             ,CAST(CASE WHEN BlockRelease = 1 THEN 1 ELSE 0 END AS BIT) hasBlockRelease
             ,ISNULL(BlockReleaseCount,0) blockReleaseCount                                             
-            ,CASE WHEN LocationName IS NULL 
+            ,CASE WHEN LocationDescription IS NULL 
                   THEN null
                   ELSE CONVERT(DECIMAL(6,1),BlockReleaseDistance) END blockReleaseDistance
             ,CAST(CASE WHEN DayRelease = 1 THEN 1 ELSE 0 END AS BIT)  hasDayRelease
-            ,CASE WHEN LocationName IS NULL 
+            ,CASE WHEN LocationDescription IS NULL 
                   THEN null
                   ELSE CONVERT(DECIMAL(6,1),DayReleaseDistance) END dayReleaseDistance
             ,ISNULL(DayReleaseCount,0) dayReleaseCount                                          

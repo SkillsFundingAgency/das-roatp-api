@@ -338,7 +338,7 @@ AS
     LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = ab2.[Ukprn]
 
     LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[UserId] = @userId
-    AND ISNULL(sht.[LocationName],'') = ISNULL(@LocationName,'')
+    AND ISNULL(sht.[LocationDescription],'') = ISNULL(@LocationName,'')
 
     WHERE 1=1
     -- this gets only one row for each UKPRN (by larscode) taking nearest location/region or National
