@@ -83,7 +83,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
             IsDayRelease = isDayRelease,
             Latitude = request.Latitude,
             Longitude = request.Longitude,
-            Location = request.Location,
+            LocationName = request.LocationName,
             Distance = request.Distance,
             QarRange = qar,
             EmployerProviderRatings = employerProviderRatings,
@@ -108,7 +108,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
                     && p.QarRange == parametersUsed.QarRange
                     && p.EmployerProviderRatings == parametersUsed.EmployerProviderRatings
                     && p.ApprenticeProviderRatings == parametersUsed.ApprenticeProviderRatings
-                    && p.Location == parametersUsed.Location
+                    && p.LocationName == parametersUsed.LocationName
                     && p.UserId == parametersUsed.UserId
             ),
             cancellationToken
@@ -134,7 +134,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
                         && p.QarRange == parametersUsed.QarRange
                         && p.EmployerProviderRatings == parametersUsed.EmployerProviderRatings
                         && p.ApprenticeProviderRatings == parametersUsed.ApprenticeProviderRatings
-                        && p.Location == parametersUsed.Location
+                        && p.LocationName == parametersUsed.LocationName
                         && p.UserId == parametersUsed.UserId
                  ), cancellationToken),
             Times.Once);
@@ -287,7 +287,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
             IsDayRelease = isDayRelease,
             Latitude = request.Latitude,
             Longitude = request.Longitude,
-            Location = request.Location,
+            LocationName = request.LocationName,
             Distance = request.Distance,
             QarRange = qar,
             EmployerProviderRatings = employerProviderRatings,
@@ -308,7 +308,7 @@ public class GetProvidersForLarsCodeQueryHandlerTests
                     && p.IsDayRelease == parametersUsed.IsDayRelease
                     && p.Latitude == parametersUsed.Latitude
                     && p.Longitude == parametersUsed.Longitude
-                    && p.Location == parametersUsed.Location
+                    && p.LocationName == parametersUsed.LocationName
                     && p.Distance == parametersUsed.Distance
                     && p.QarRange == parametersUsed.QarRange
                     && p.EmployerProviderRatings == parametersUsed.EmployerProviderRatings

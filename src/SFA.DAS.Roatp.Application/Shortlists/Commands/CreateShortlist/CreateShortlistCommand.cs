@@ -10,7 +10,7 @@ public class CreateShortlistCommand : IRequest<ValidatedResponse<CreateShortlist
     public Guid UserId { get; set; }
     public int Ukprn { get; set; }
     public string LarsCode { get; set; }
-    public string LocationDescription { get; set; }
+    public string LocationName { get; set; }
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
 }

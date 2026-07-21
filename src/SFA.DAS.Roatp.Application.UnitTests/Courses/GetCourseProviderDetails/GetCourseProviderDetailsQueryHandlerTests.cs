@@ -32,9 +32,9 @@ public sealed class GetCourseProviderDetailsQueryHandlerTests
                 It.Is<GetCourseProviderDetailsParameters>(a =>
                     a.LarsCode == query.LarsCode &&
                     a.Ukprn == query.Ukprn &&
-                    a.Lat == query.Latitude &&
-                    a.Lon == query.Longitude &&
-                    a.Location == query.Location &&
+                    a.Latitude == query.Latitude &&
+                    a.Longitude == query.Longitude &&
+                    a.LocationName == query.LocationName &&
                     a.ShortlistUserId == query.ShortlistUserId
                 ),
                 cancellationToken
@@ -97,9 +97,9 @@ public sealed class GetCourseProviderDetailsQueryHandlerTests
                 It.Is<GetCourseProviderDetailsParameters>(a =>
                     a.LarsCode == query.LarsCode &&
                     a.Ukprn == query.Ukprn &&
-                    a.Lat == query.Latitude &&
-                    a.Lon == query.Longitude &&
-                    a.Location == query.Location &&
+                    a.Latitude == query.Latitude &&
+                    a.Longitude == query.Longitude &&
+                    a.LocationName == query.LocationName &&
                     a.ShortlistUserId == query.ShortlistUserId
                 ),
                 cancellationToken

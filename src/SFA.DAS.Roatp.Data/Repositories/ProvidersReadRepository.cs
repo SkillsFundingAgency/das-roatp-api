@@ -58,7 +58,7 @@ internal class ProvidersReadRepository : IProvidersReadRepository
         command.Parameters.Add(new SqlParameter("@onlineoption", parameters.IsOnline));
         command.Parameters.Add(new SqlParameter("@Latitude", parameters.Latitude));
         command.Parameters.Add(new SqlParameter("@Longitude", parameters.Longitude));
-        command.Parameters.Add(new SqlParameter("@Location", parameters.Location));
+        command.Parameters.Add(new SqlParameter("@LocationName", parameters.LocationName));
         command.Parameters.Add(new SqlParameter("@distance", parameters.Distance));
         command.Parameters.Add(new SqlParameter("@QarRange", parameters.QarRange));
         command.Parameters.Add(new SqlParameter("@employerProviderRatings", parameters.EmployerProviderRatings));

@@ -13,7 +13,7 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
     public string LarsCode { get; }
     public decimal? Latitude { get; private set; }
     public decimal? Longitude { get; private set; }
-    public string Location { get; private set; }
+    public string LocationName { get; private set; }
     public ProviderOrderBy? OrderBy { get; private set; }
     public decimal? Distance { get; private set; }
     public int? Page { get; private set; }
@@ -29,7 +29,7 @@ public class GetProvidersForLarsCodeQuery : IRequest<ValidatedResponse<GetProvid
         LarsCode = larsCode;
 
         Latitude = request.Latitude;
-        Location = request.Location;
+        LocationName = request.LocationName;
         Longitude = request.Longitude;
         OrderBy = request.OrderBy;
         Distance = request.Distance;

@@ -9,17 +9,17 @@ public sealed class GetCourseProviderDetailsQuery : IRequest<ValidatedResponse<G
 {
     public int Ukprn { get; private set; }
     public string LarsCode { get; set; }
-    public string Location { get; private set; }
+    public string LocationName { get; private set; }
     public decimal? Latitude { get; private set; }
     public decimal? Longitude { get; private set; }
     public Guid ShortlistUserId { get; private set; }
 
-    public GetCourseProviderDetailsQuery(int ukprn, string larsCode, Guid shortlistUserId, string location = null, decimal? longitude = null, decimal? latitude = null)
+    public GetCourseProviderDetailsQuery(int ukprn, string larsCode, Guid shortlistUserId, string locationName = null, decimal? longitude = null, decimal? latitude = null)
     {
         Ukprn = ukprn;
         LarsCode = larsCode;
         ShortlistUserId = shortlistUserId;
-        Location = string.IsNullOrWhiteSpace(location) ? null : location.Trim();
+        LocationName = string.IsNullOrWhiteSpace(locationName) ? null : locationName.Trim();
         Latitude = latitude;
         Longitude = longitude;
     }

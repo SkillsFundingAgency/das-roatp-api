@@ -10,7 +10,7 @@ public class GetProvidersForLarsCodeRequest
     public decimal? Distance { get; set; }
     public decimal? Latitude { get; set; }
     public decimal? Longitude { get; set; }
-    public string Location { get; set; }
+    public string LocationName { get; set; }
     public List<DeliveryMode> DeliveryModes { get; set; } = new List<DeliveryMode>();
     public List<ProviderRating> EmployerProviderRatings { get; set; } = new List<ProviderRating>();
     public List<ProviderRating> ApprenticeProviderRatings { get; set; } = new List<ProviderRating>();

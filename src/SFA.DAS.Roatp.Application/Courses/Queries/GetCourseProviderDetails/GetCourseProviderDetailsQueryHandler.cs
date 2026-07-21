@@ -17,9 +17,9 @@ public sealed class GetCourseProviderDetailsQueryHandler(ICourseProviderDetailsR
             {
                 LarsCode = query.LarsCode,
                 Ukprn = query.Ukprn,
-                Lat = query.Latitude,
-                Lon = query.Longitude,
-                Location = query.Location,
+                Latitude = query.Latitude,
+                Longitude = query.Longitude,
+                LocationName = query.LocationName,
                 ShortlistUserId = query.ShortlistUserId
             },
             cancellationToken

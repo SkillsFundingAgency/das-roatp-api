@@ -29,7 +29,7 @@ public sealed class GetCourseProviderDetailsV2Tests
             It.Is<GetCourseProviderDetailsQuery>(q =>
                 q.LarsCode == larsCode &&
                 q.Ukprn == ukprn &&
-                q.Location == request.Location &&
+                q.LocationName == request.LocationName &&
                 q.Longitude == request.Longitude &&
                 q.ShortlistUserId == request.ShortlistUserId
             ),
@@ -45,7 +45,7 @@ public sealed class GetCourseProviderDetailsV2Tests
                     q.LarsCode == larsCode
                     && q.Latitude == request.Latitude
                     && q.Longitude == request.Longitude
-                    && q.Location == request.Location
+                    && q.LocationName == request.LocationName
                     && q.ShortlistUserId == request.ShortlistUserId
             ), It.IsAny<CancellationToken>()), Times.Once);
 

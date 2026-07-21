@@ -4,7 +4,7 @@
     [UserId] UNIQUEIDENTIFIER NOT NULL,
     [Ukprn] INT NOT NULL,
     [Larscode] NVARCHAR(10) NOT NULL,
-    [LocationDescription] VARCHAR(1000) NULL,
+    [LocationName] VARCHAR(1000) NULL,
     [Latitude] FLOAT NULL,
     [Longitude] FLOAT NULL,
     [CreatedDate] DATETIME2 NOT NULL DEFAULT GETUTCDATE(),
@@ -21,7 +21,7 @@ CREATE UNIQUE NONCLUSTERED INDEX [IXU_Shortlist] ON [dbo].[Shortlist]
     [UserId],
     [Ukprn],
     [Larscode],
-    [LocationDescription]
+    [LocationName]
 )
 INCLUDE([Latitude],[Longitude]);
 GO

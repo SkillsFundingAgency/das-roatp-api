@@ -35,9 +35,9 @@ public sealed class CourseProviderDetailsReadRepository : ICourseProviderDetails
 
         command.Parameters.Add(new SqlParameter("@LarsCode", parameters.LarsCode));
         command.Parameters.Add(new SqlParameter("@Ukprn", parameters.Ukprn));
-        command.Parameters.Add(new SqlParameter("@Latitude", parameters.Lat ?? (object)DBNull.Value));
-        command.Parameters.Add(new SqlParameter("@Longitude", parameters.Lon ?? (object)DBNull.Value));
-        command.Parameters.Add(new SqlParameter("@Location", parameters.Location ?? (object)DBNull.Value));
+        command.Parameters.Add(new SqlParameter("@Latitude", parameters.Latitude ?? (object)DBNull.Value));
+        command.Parameters.Add(new SqlParameter("@Longitude", parameters.Longitude ?? (object)DBNull.Value));
+        command.Parameters.Add(new SqlParameter("@LocationName", parameters.LocationName ?? (object)DBNull.Value));
         command.Parameters.Add(new SqlParameter("@UserId", parameters.ShortlistUserId));
 
         if (command.Connection!.State != ConnectionState.Open)

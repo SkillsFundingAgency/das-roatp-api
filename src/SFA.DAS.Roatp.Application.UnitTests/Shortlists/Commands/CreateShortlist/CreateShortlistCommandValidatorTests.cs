@@ -153,7 +153,7 @@ public class CreateShortlistCommandValidatorTests
         CreateShortlistCommandValidator sut,
         CreateShortlistCommand command)
     {
-        command.LocationDescription = null;
+        command.LocationName = null;
         command.Latitude = null;
         command.Longitude = null;
 
@@ -168,7 +168,7 @@ public class CreateShortlistCommandValidatorTests
      CreateShortlistCommandValidator sut,
      CreateShortlistCommand command)
     {
-        command.LocationDescription = "MK4 4ET";
+        command.LocationName = "MK4 4ET";
         command.Latitude = null;
         command.Longitude = null;
         sut.ClassLevelCascadeMode = FluentValidation.CascadeMode.Continue;
@@ -184,7 +184,7 @@ public class CreateShortlistCommandValidatorTests
      CreateShortlistCommandValidator sut,
      CreateShortlistCommand command)
     {
-        command.LocationDescription = "MK4 4ET";
+        command.LocationName = "MK4 4ET";
         command.Latitude = 91;
 
         var result = await sut.TestValidateAsync(command, options => options.IncludeProperties(nameof(CreateShortlistCommand.Latitude)));
@@ -197,7 +197,7 @@ public class CreateShortlistCommandValidatorTests
      CreateShortlistCommandValidator sut,
      CreateShortlistCommand command)
     {
-        command.LocationDescription = "MK4 4ET";
+        command.LocationName = "MK4 4ET";
         command.Longitude = -181;
 
         var result = await sut.TestValidateAsync(command, options => options.IncludeProperties(nameof(CreateShortlistCommand.Longitude)));
@@ -210,7 +210,7 @@ public class CreateShortlistCommandValidatorTests
      CreateShortlistCommandValidator sut,
      CreateShortlistCommand command)
     {
-        command.LocationDescription = "MK4 4ET";
+        command.LocationName = "MK4 4ET";
         command.Latitude = 90;
         command.Longitude = -180;
 

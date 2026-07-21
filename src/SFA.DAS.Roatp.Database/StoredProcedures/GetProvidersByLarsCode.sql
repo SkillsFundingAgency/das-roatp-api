@@ -16,7 +16,7 @@
     @QARrange varchar(100) = null, -- any combo of 'Excellent', 'Good', 'Poor', 'Verypoor' and 'None' , or NULL
     @employerProviderRatings varchar(100) = null, -- any combo of 'Excellent', 'Good', 'Poor', 'VeryPoor' and 'NotYetReviewed' , or NULL
     @apprenticeProviderRatings varchar(100) = null, -- any combo of 'Excellent', 'Good', 'Poor', 'VeryPoor' and 'NotYetReviewed' , or NULL
-    @Location varchar(200) = null,
+    @LocationName varchar(200) = null,
     @userId uniqueidentifier = null
 
 as
@@ -338,7 +338,7 @@ AS
     LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = ab2.[Ukprn]
 
     LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[UserId] = @userId
-    AND ISNULL(sht.[LocationDescription],'') = ISNULL(@Location,'')
+    AND ISNULL(sht.[LocationName],'') = ISNULL(@LocationName,'')
 
     WHERE 1=1
     -- this gets only one row for each UKPRN (by larscode) taking nearest location/region or National

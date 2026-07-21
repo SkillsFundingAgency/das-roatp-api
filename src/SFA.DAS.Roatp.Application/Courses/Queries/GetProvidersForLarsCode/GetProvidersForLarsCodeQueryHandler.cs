@@ -66,7 +66,7 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             IsOnline = isOnline,
             Latitude = request.Latitude,
             Longitude = request.Longitude,
-            Location = request.Location,
+            LocationName = request.LocationName,
             Distance = request.Distance,
             QarRange = qar,
             EmployerProviderRatings = employerProviderRatings,
