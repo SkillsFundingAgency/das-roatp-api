@@ -26,6 +26,7 @@ GO
 
 CREATE UNIQUE INDEX IXU_ProviderCourse_Ukprn_LarsCode 
 ON [dbo].[ProviderCourse] ([Ukprn],[Larscode])
-INCLUDE ([ProviderId]);
+INCLUDE ([ProviderId])
+WHERE [Ukprn] IS NOT NULL;
 GO
 
