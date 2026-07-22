@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             string larsCode = "";
             int expectedTimesRepoIsInvoked = 0;
             string expectedErrorMessage1 = UkprnValidator.InvalidUkprnErrorMessage;
-            string expectedErrorMessage2 = LarsCodeUkprnCombinationValidator.InvalidLarsCodeErrorMessage;
+            string expectedErrorMessage2 = ProviderCourseValidator.InvalidLarsCodeErrorMessage;
             var query = new GetProviderCourseLocationsQuery(ukprn, larsCode);
             var repoMockProvideCourse = new Mock<IProviderCoursesReadRepository>();
             var repoMock = new Mock<IProvidersReadRepository>();
@@ -58,7 +58,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseLocations.Queries
             int ukprn = 10012002;
             string larsCode = "1";
             int expectedTimesRepoIsInvoked = 2;
-            string expectedErrorMessage1 = LarsCodeUkprnCombinationValidator.ProviderCourseNotFoundErrorMessage;
+            string expectedErrorMessage1 = ProviderCourseValidator.ProviderCourseNotFoundErrorMessage;
             var query = new GetProviderCourseLocationsQuery(ukprn, larsCode);
             var repoMockProvideCourse = new Mock<IProviderCoursesReadRepository>();
             var repoMock = new Mock<IProvidersReadRepository>();

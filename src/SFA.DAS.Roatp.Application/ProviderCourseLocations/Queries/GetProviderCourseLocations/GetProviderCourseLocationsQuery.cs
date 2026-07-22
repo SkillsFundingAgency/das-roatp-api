@@ -5,7 +5,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Queries.GetProviderCourseLocations
 {
-    public class GetProviderCourseLocationsQuery : IRequest<ValidatedResponse<List<ProviderCourseLocationModel>>>, ILarsCodeUkprn, IUkprn
+    public class GetProviderCourseLocationsQuery : IRequest<ValidatedResponse<List<ProviderCourseLocationModel>>>, IProviderCourseValidator, IUkprn
     {
         public int Ukprn { get; }
         public string LarsCode { get; }

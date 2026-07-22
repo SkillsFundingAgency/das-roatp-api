@@ -4,7 +4,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkDelete
 {
-    public class BulkDeleteProviderCourseLocationsCommand : IRequest<ValidatedResponse<int>>, ILarsCodeUkprn, IUkprn, IUserInfo
+    public class BulkDeleteProviderCourseLocationsCommand : IRequest<ValidatedResponse<int>>, IProviderCourseValidator, IUkprn, IUserInfo
     {
         public int Ukprn { get; }
         public string LarsCode { get; }

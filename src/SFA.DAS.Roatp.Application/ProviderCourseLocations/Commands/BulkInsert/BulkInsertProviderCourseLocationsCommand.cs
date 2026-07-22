@@ -5,7 +5,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourseLocations.Commands.BulkInsert
 {
-    public class BulkInsertProviderCourseLocationsCommand : IRequest<ValidatedResponse<int>>, ILarsCodeUkprn, IUkprn, IUserInfo
+    public class BulkInsertProviderCourseLocationsCommand : IRequest<ValidatedResponse<int>>, IProviderCourseValidator, IUkprn, IUserInfo
     {
         public int Ukprn { get; set; }
         public string LarsCode { get; set; }

@@ -7,7 +7,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.PatchProviderCourse;
 
-public class PatchProviderCourseCommand : IRequest<ValidatedResponse<bool>>, IUkprn, ILarsCodeUkprn, IUserInfo
+public class PatchProviderCourseCommand : IRequest<ValidatedResponse<bool>>, IUkprn, IProviderCourseValidator, IUserInfo
 {
     private const string Replace = "replace";
     public const string IsApprovedByRegulatorIdentifier = "IsApprovedByRegulator";

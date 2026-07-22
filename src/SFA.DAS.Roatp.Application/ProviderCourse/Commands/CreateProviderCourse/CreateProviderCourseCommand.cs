@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
 {
-    public class CreateProviderCourseCommand : IRequest<ValidatedResponse<int>>, IUkprn, ILarsCodeUkprn, ILarsCode, IUserInfo, ICourseType
+    public class CreateProviderCourseCommand : IRequest<ValidatedResponse<int>>, IUkprn, IProviderCourseValidator, ILarsCode, IUserInfo, ICourseType
     {
         public string UserId { get; set; }
         public string UserDisplayName { get; set; }
@@ -32,7 +32,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                 HasPortableFlexiJobOption = false,
                 IsImported = false,
                 HasOnlineDeliveryOption = source.HasOnlineDeliveryOption,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
+                Ukprn = source.Ukprn
             };
     }
 }
