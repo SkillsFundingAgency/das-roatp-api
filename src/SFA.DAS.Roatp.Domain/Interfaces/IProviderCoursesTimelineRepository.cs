@@ -9,4 +9,5 @@ public interface IProviderCoursesTimelineRepository
 {
     Task<List<ProviderRegistrationDetail>> GetAllProviderCoursesTimelines(CancellationToken cancellationToken);
     Task<ProviderRegistrationDetail> GetProviderCoursesTimelines(int ukprn, CancellationToken cancellationToken);
+    Task<List<ProviderCoursesTimelineExport>> GetProviderCoursesTimeline(int? ukprn, CancellationToken cancellationToken);
 }

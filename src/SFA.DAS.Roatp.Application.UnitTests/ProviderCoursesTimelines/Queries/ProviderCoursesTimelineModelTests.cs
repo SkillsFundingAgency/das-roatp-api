@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using FluentAssertions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCoursesTimelines.Queries;
@@ -9,20 +11,45 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCoursesTimelines.Queries;
 
 public class ProviderCoursesTimelineModelTests
 {
-    ProviderRegistrationDetail _expected = null;
-    ProviderCoursesTimelineModel _actual = null;
+    private List<ProviderCoursesTimelineExport> _expected = null!;
+    private ProviderCoursesTimelineModel _actual = null!;
 
     [SetUp]
     public void BeforeEachTest()
     {
-        _expected = TestDataHelper.GetProviderRegistrationDetails();
+        _expected = new List<ProviderCoursesTimelineExport>
+    {
+        new()
+        {
+            Ukprn = 100001,
+            StatusId = (int)ProviderStatusType.Active,
+            ProviderTypeId = (int)ProviderType.Main,
+            CourseType = CourseType.Apprenticeship,
+            LarsCode = "100",
+            EffectiveFrom = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+            EffectiveTo = new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Utc),
+            LastDateStarts = new DateTime(2024, 5, 1, 0, 0, 0, DateTimeKind.Utc)
+        },
+        new()
+        {
+            Ukprn = 100001,
+            StatusId = (int)ProviderStatusType.Active,
+            ProviderTypeId = (int)ProviderType.Main,
+            CourseType = CourseType.ShortCourse,
+            LarsCode = null,
+            EffectiveFrom = null,
+            EffectiveTo = null,
+            LastDateStarts = null
+        }
+    };
+
         _actual = _expected;
     }
 
     [Test]
-    public void Operator_ReturnsNull()
+    public void Operator_ReturnsNull_ForNullList()
     {
-        ProviderRegistrationDetail expected = null;
+        List<ProviderCoursesTimelineExport> expected = null!;
 
         ProviderCoursesTimelineModel actual = expected;
 
@@ -30,33 +57,78 @@ public class ProviderCoursesTimelineModelTests
     }
 
     [Test]
-    public void Operator_ConvertsFromProviderRegistrationDetails() => _actual.Should().NotBeNull();
+    public void Operator_ReturnsNull_ForEmptyList()
+    {
+        List<ProviderCoursesTimelineExport> expected = [];
+
+        ProviderCoursesTimelineModel actual = expected;
+
+        actual.Should().BeNull();
+    }
 
     [Test]
-    public void Operator_SetsUkprn() => _actual.Ukprn.Should().Be(_expected.Ukprn);
+    public void Operator_ConvertsFromProviderCoursesTimelineExportList()
+    {
+        _actual.Should().NotBeNull();
+    }
 
     [Test]
-    public void Operator_SetsProviderStatusType() => _actual.Status.Should().Be(ProviderStatusType.Active);
+    public void Operator_SetsUkprn()
+    {
+        _actual.Ukprn.Should().Be(100001);
+    }
 
     [Test]
-    public void Operator_SetsProviderType() => _actual.ProviderType.Should().Be(ProviderType.Main);
+    public void Operator_SetsProviderStatusType()
+    {
+        _actual.Status.Should().Be(ProviderStatusType.Active);
+    }
 
     [Test]
-    public void Operator_SetsCourseTypes() => _actual.CourseTypes.Should().HaveCount(2);
+    public void Operator_SetsProviderType()
+    {
+        _actual.ProviderType.Should().Be(ProviderType.Main);
+    }
 
     [Test]
-    public void Operator_HasNoCourseForCourseType_SetsEmptyCourse() => _actual.CourseTypes.First(c => c.CourseType == CourseType.ShortCourse).Courses.Should().HaveCount(0);
+    public void Operator_SetsCourseTypes()
+    {
+        _actual.CourseTypes.Should().HaveCount(2);
+    }
 
     [Test]
-    public void Operator_HasCourseForCourseType_SetsCourse() => _actual.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.Should().HaveCount(1);
+    public void Operator_HasNoCourseForCourseType_SetsEmptyCourse()
+    {
+        _actual.CourseTypes
+            .First(c => c.CourseType == CourseType.ShortCourse)
+            .Courses
+            .Should()
+            .BeEmpty();
+    }
+
+    [Test]
+    public void Operator_HasCourseForCourseType_SetsCourse()
+    {
+        _actual.CourseTypes
+            .First(c => c.CourseType == CourseType.Apprenticeship)
+            .Courses
+            .Should()
+            .HaveCount(1);
+    }
 
     [Test]
     public void Operator_SetsLarsCodeInCourses()
     {
-        var expected = _expected.Provider.ProviderCoursesTimelines[0];
-        var actual = _actual.CourseTypes.First(c => c.CourseType == CourseType.Apprenticeship).Courses.First();
+        var expected = _expected.First(x => x.CourseType == CourseType.Apprenticeship);
+
+        var actual = _actual.CourseTypes
+            .First(c => c.CourseType == CourseType.Apprenticeship)
+            .Courses
+            .First();
+
         actual.LarsCode.Should().Be(expected.LarsCode);
         actual.EffectiveFrom.Should().Be(expected.EffectiveFrom);
         actual.EffectiveTo.Should().Be(expected.EffectiveTo);
+        actual.LastDateStarts.Should().Be(expected.LastDateStarts);
     }
 }

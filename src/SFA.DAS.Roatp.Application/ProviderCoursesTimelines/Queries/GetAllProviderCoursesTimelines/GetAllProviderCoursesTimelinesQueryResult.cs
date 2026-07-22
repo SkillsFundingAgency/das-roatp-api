@@ -8,11 +8,12 @@ public class GetAllProviderCoursesTimelinesQueryResult
 {
     public IEnumerable<ProviderCoursesTimelineModel> Providers { get; set; } = [];
 
-    public static implicit operator GetAllProviderCoursesTimelinesQueryResult(List<ProviderRegistrationDetail> providers)
+    public static implicit operator GetAllProviderCoursesTimelinesQueryResult(List<ProviderCoursesTimelineExport> providers)
     {
         GetAllProviderCoursesTimelinesQueryResult result = new()
         {
-            Providers = providers.Select(p => (ProviderCoursesTimelineModel)p)
+            Providers = providers.GroupBy(x => x.Ukprn)
+                .Select(p => (ProviderCoursesTimelineModel)p.ToList())
         };
         return result;
     }

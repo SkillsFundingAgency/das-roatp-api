@@ -1,11 +1,15 @@
-﻿using System.Threading;
+﻿using System;
+using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderCoursesTimelines.Queries;
+using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCoursesTimelines.Queries.GetProviderCoursesTimelines;
@@ -19,13 +23,45 @@ public class GetProviderCoursesTimelinesQueryHandlerTests
         GetProviderCoursesTimelinesQueryHandler sut,
         CancellationToken cancellationToken)
     {
-        repoMock.Setup(r => r.GetProviderCoursesTimelines(query.Ukprn, cancellationToken)).ReturnsAsync(TestDataHelper.GetProviderRegistrationDetails());
+        var providerTimelines = new List<ProviderCoursesTimelineExport>
+        {
+            new()
+            {
+                Ukprn = query.Ukprn,
+                StatusId = (int)ProviderStatusType.Active,
+                ProviderTypeId = (int)ProviderType.Main,
+                CourseType = CourseType.Apprenticeship,
+                LarsCode = "100",
+                EffectiveFrom = new DateTime(2024, 1, 1, 0, 0, 0, DateTimeKind.Utc),
+                EffectiveTo = new DateTime(2024, 6, 1, 0, 0, 0, DateTimeKind.Utc),
+                LastDateStarts = new DateTime(2024, 5, 1, 0, 0, 0, DateTimeKind.Utc)
+            },
+            new()
+            {
+                Ukprn = query.Ukprn,
+                StatusId = (int)ProviderStatusType.Active,
+                ProviderTypeId = (int)ProviderType.Main,
+                CourseType = CourseType.ShortCourse,
+                LarsCode = null,
+                EffectiveFrom = null,
+                EffectiveTo = null,
+                LastDateStarts = null
+            }
+        };
 
-        ProviderCoursesTimelineModel expected = TestDataHelper.GetProviderRegistrationDetails();
+        repoMock
+            .Setup(r => r.GetProviderCoursesTimeline(query.Ukprn, cancellationToken))
+            .ReturnsAsync(providerTimelines);
+
+        ProviderCoursesTimelineModel expected = providerTimelines;
 
         ProviderCoursesTimelineModel actual = await sut.Handle(query, cancellationToken);
 
         actual.Should().BeEquivalentTo(expected);
+
+        repoMock.Verify(
+            r => r.GetProviderCoursesTimeline(query.Ukprn, cancellationToken),
+            Times.Once);
     }
 
     [Test, MoqAutoData]
@@ -35,10 +71,16 @@ public class GetProviderCoursesTimelinesQueryHandlerTests
         GetProviderCoursesTimelinesQueryHandler sut,
         CancellationToken cancellationToken)
     {
-        repoMock.Setup(r => r.GetProviderCoursesTimelines(query.Ukprn, cancellationToken)).ReturnsAsync(() => null);
+        repoMock
+            .Setup(r => r.GetProviderCoursesTimeline(query.Ukprn, cancellationToken))
+            .ReturnsAsync((List<ProviderCoursesTimelineExport>)null);
 
         ProviderCoursesTimelineModel actual = await sut.Handle(query, cancellationToken);
 
         actual.Should().BeNull();
+
+        repoMock.Verify(
+            r => r.GetProviderCoursesTimeline(query.Ukprn, cancellationToken),
+            Times.Once);
     }
 }

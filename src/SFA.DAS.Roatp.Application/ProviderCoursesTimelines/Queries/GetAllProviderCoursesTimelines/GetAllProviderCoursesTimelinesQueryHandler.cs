@@ -11,7 +11,7 @@ public class GetAllProviderCoursesTimelinesQueryHandler(IProviderCoursesTimeline
 {
     public async Task<GetAllProviderCoursesTimelinesQueryResult> Handle(GetAllProviderCoursesTimelinesQuery request, CancellationToken cancellationToken)
     {
-        List<ProviderRegistrationDetail> providers = await _providerCoursesTimelineRepository.GetAllProviderCoursesTimelines(cancellationToken);
+        List<ProviderCoursesTimelineExport> providers = await _providerCoursesTimelineRepository.GetProviderCoursesTimeline(null, cancellationToken);
 
         GetAllProviderCoursesTimelinesQueryResult result = providers;
 
