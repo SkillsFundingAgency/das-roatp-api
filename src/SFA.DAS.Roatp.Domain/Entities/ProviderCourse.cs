@@ -16,7 +16,7 @@ public class ProviderCourse
     public bool IsImported { get; set; } = false;
     public bool HasPortableFlexiJobOption { get; set; }
     public bool HasOnlineDeliveryOption { get; set; }
-    public int Ukprn { get; set; }
+    public int? Ukprn { get; set; }
     public DateTime CreatedDate { get; set; }
     public virtual Provider Provider { get; set; }
     public virtual Standard Standard { get; set; }
