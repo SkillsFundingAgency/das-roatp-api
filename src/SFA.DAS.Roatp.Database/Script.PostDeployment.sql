@@ -42,7 +42,7 @@ BEGIN
 END
 GO
 
-IF OBJECT_ID(N'[dbo].[RestrictedProviderView]', N'U') IS NOT NULL
+IF OBJECT_ID(N'[dbo].[RestrictedProviderView]', N'V') IS NOT NULL
 BEGIN
     DROP VIEW [dbo].[RestrictedProviderView];
 END

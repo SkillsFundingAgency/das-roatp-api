@@ -3,7 +3,7 @@
 	[Id] INT NOT NULL IDENTITY(1,1) PRIMARY KEY,
 	[Ukprn] INT NOT NULL,
 	[CourseType] nvarchar(50) NOT NULL,
-	[IsRestrictedProvider] BIT NULL DEFAULT 0
+	[IsRestrictedProvider] BIT NOT NULL DEFAULT 0
 );
 GO;
 
