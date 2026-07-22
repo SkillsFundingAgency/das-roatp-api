@@ -32,7 +32,8 @@ namespace SFA.DAS.Roatp.Application.ProviderCourse.Commands.CreateProviderCourse
                 HasPortableFlexiJobOption = false,
                 IsImported = false,
                 HasOnlineDeliveryOption = source.HasOnlineDeliveryOption,
-                CreatedDate = DateTime.UtcNow
+                CreatedDate = DateTime.UtcNow,
+                Ukprn = source.Ukprn
             };
     }
 }
