@@ -44,7 +44,7 @@ internal class ProviderCoursesTimelineRepository(RoatpDataContext _roatpDataCont
         return result.FirstOrDefault();
     }
 
-    public async Task<List<ProviderCoursesTimelineExport>> GetProviderCoursesTimeline(int? ukprn, CancellationToken cancellationToken)
+    public async Task<List<ProviderTimelineExport>> GetProviderTimelineExport(int? ukprn, CancellationToken cancellationToken)
     {
         var connection = _roatpDataContext.Database.GetDbConnection();
 
@@ -60,7 +60,7 @@ internal class ProviderCoursesTimelineRepository(RoatpDataContext _roatpDataCont
             await command.Connection.OpenAsync(cancellationToken);
         }
 
-        var providerTimelines = new List<ProviderCoursesTimelineExport>();
+        var providerTimelines = new List<ProviderTimelineExport>();
 
         try
         {
@@ -68,18 +68,18 @@ internal class ProviderCoursesTimelineRepository(RoatpDataContext _roatpDataCont
 
             while (await reader.ReadAsync(cancellationToken))
             {
-                var model = new ProviderCoursesTimelineExport
+                var model = new ProviderTimelineExport
                 {
-                    Ukprn = reader.GetInt32(nameof(ProviderCoursesTimelineExport.Ukprn)),
-                    StatusId = reader.GetInt32(nameof(ProviderCoursesTimelineExport.StatusId)),
-                    ProviderTypeId = reader.GetInt32(nameof(ProviderCoursesTimelineExport.ProviderTypeId)),
-                    CourseType = reader[nameof(ProviderCoursesTimelineExport.CourseType)] == DBNull.Value
+                    Ukprn = reader.GetInt32(nameof(ProviderTimelineExport.Ukprn)),
+                    StatusId = reader.GetInt32(nameof(ProviderTimelineExport.StatusId)),
+                    ProviderTypeId = reader.GetInt32(nameof(ProviderTimelineExport.ProviderTypeId)),
+                    CourseType = reader[nameof(ProviderTimelineExport.CourseType)] == DBNull.Value
                         ? null
-                        : Enum.Parse<CourseType>(reader.GetString(reader.GetOrdinal(nameof(ProviderCoursesTimelineExport.CourseType)))),
-                    LarsCode = GetReaderStringValue(nameof(ProviderCoursesTimelineExport.LarsCode), reader),
-                    EffectiveFrom = GetReaderDateTimeValue(nameof(ProviderCoursesTimelineExport.EffectiveFrom), reader),
-                    EffectiveTo = GetReaderDateTimeValue(nameof(ProviderCoursesTimelineExport.EffectiveTo), reader),
-                    LastDateStarts = GetReaderDateTimeValue(nameof(ProviderCoursesTimelineExport.LastDateStarts), reader)
+                        : Enum.Parse<CourseType>(reader.GetString(reader.GetOrdinal(nameof(ProviderTimelineExport.CourseType)))),
+                    LarsCode = GetReaderStringValue(nameof(ProviderTimelineExport.LarsCode), reader),
+                    EffectiveFrom = GetReaderDateTimeValue(nameof(ProviderTimelineExport.EffectiveFrom), reader),
+                    EffectiveTo = GetReaderDateTimeValue(nameof(ProviderTimelineExport.EffectiveTo), reader),
+                    LastDateStarts = GetReaderDateTimeValue(nameof(ProviderTimelineExport.LastDateStarts), reader)
                 };
 
                 providerTimelines.Add(model);

@@ -10,8 +10,8 @@ public class GetProviderCoursesTimelinesQueryHandler(IProviderCoursesTimelineRep
 {
     public async Task<ProviderCoursesTimelineModel> Handle(GetProviderCoursesTimelinesQuery request, CancellationToken cancellationToken)
     {
-        var providerTimelines = await _providerCoursesTimelineRepository.GetProviderCoursesTimeline(request.Ukprn, cancellationToken);
+        var provider = await _providerCoursesTimelineRepository.GetProviderTimelineExport(request.Ukprn, cancellationToken);
 
-        return providerTimelines;
+        return provider;
     }
 }

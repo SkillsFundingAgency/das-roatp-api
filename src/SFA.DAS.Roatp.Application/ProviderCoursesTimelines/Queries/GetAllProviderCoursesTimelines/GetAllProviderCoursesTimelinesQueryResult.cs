@@ -8,7 +8,7 @@ public class GetAllProviderCoursesTimelinesQueryResult
 {
     public IEnumerable<ProviderCoursesTimelineModel> Providers { get; set; } = [];
 
-    public static implicit operator GetAllProviderCoursesTimelinesQueryResult(List<ProviderCoursesTimelineExport> providers)
+    public static implicit operator GetAllProviderCoursesTimelinesQueryResult(List<ProviderTimelineExport> providers)
     {
         GetAllProviderCoursesTimelinesQueryResult result = new()
         {

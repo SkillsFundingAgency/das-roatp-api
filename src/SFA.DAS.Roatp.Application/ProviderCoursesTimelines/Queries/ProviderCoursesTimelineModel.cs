@@ -13,21 +13,21 @@ public class ProviderCoursesTimelineModel
     public ProviderType ProviderType { get; set; }
     public IEnumerable<CourseTypeModel> CourseTypes { get; set; } = [];
 
-    public static implicit operator ProviderCoursesTimelineModel(List<ProviderCoursesTimelineExport> providerCoursesTimeline)
+    public static implicit operator ProviderCoursesTimelineModel(List<ProviderTimelineExport> providerTimelineExport)
     {
-        if (providerCoursesTimeline is null || providerCoursesTimeline.Count == 0)
+        if (providerTimelineExport is null || providerTimelineExport.Count == 0)
         {
             return null;
         }
 
-        var providerCourse = providerCoursesTimeline.FirstOrDefault();
+        var provider = providerTimelineExport[0];
 
         return new ProviderCoursesTimelineModel
         {
-            Ukprn = providerCourse.Ukprn,
-            Status = (ProviderStatusType)providerCourse.StatusId,
-            ProviderType = (ProviderType)providerCourse.ProviderTypeId,
-            CourseTypes = providerCoursesTimeline
+            Ukprn = provider.Ukprn,
+            Status = (ProviderStatusType)provider.StatusId,
+            ProviderType = (ProviderType)provider.ProviderTypeId,
+            CourseTypes = providerTimelineExport
                 .Where(t => t.CourseType.HasValue)
                 .GroupBy(t => t.CourseType!.Value)
                 .Select(group => new CourseTypeModel(

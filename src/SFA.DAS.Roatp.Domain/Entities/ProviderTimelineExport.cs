@@ -3,7 +3,7 @@ using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Domain.Entities;
 
-public class ProviderCoursesTimelineExport
+public class ProviderTimelineExport
 {
     public int Ukprn { get; set; }
     public int StatusId { get; set; }

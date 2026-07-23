@@ -19,21 +19,21 @@ public class GetAllProviderCoursesTimelinesQueryHandlerTests
         [Frozen] Mock<IProviderCoursesTimelineRepository> repoMock,
         GetAllProviderCoursesTimelinesQueryHandler sut,
         GetAllProviderCoursesTimelinesQuery request,
-        List<ProviderCoursesTimelineExport> providerTimelines,
+        List<ProviderTimelineExport> providers,
         CancellationToken cancellationToken)
     {
-        GetAllProviderCoursesTimelinesQueryResult expected = providerTimelines;
+        GetAllProviderCoursesTimelinesQueryResult expected = providers;
 
         repoMock
-            .Setup(x => x.GetProviderCoursesTimeline(null, cancellationToken))
-            .ReturnsAsync(providerTimelines);
+            .Setup(x => x.GetProviderTimelineExport(null, cancellationToken))
+            .ReturnsAsync(providers);
 
         GetAllProviderCoursesTimelinesQueryResult actualResult = await sut.Handle(null, cancellationToken);
 
         actualResult.Should().BeEquivalentTo(expected);
 
         repoMock.Verify(
-            x => x.GetProviderCoursesTimeline(null, cancellationToken),
+            x => x.GetProviderTimelineExport(null, cancellationToken),
             Times.Once);
     }
 }

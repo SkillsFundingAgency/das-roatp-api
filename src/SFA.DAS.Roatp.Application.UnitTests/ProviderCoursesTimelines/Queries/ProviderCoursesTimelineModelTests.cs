@@ -11,13 +11,13 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCoursesTimelines.Queries;
 
 public class ProviderCoursesTimelineModelTests
 {
-    private List<ProviderCoursesTimelineExport> _expected = null!;
+    private List<ProviderTimelineExport> _expected = null!;
     private ProviderCoursesTimelineModel _actual = null!;
 
     [SetUp]
     public void BeforeEachTest()
     {
-        _expected = new List<ProviderCoursesTimelineExport>
+        _expected = new List<ProviderTimelineExport>
     {
         new()
         {
@@ -49,7 +49,7 @@ public class ProviderCoursesTimelineModelTests
     [Test]
     public void Operator_ReturnsNull_ForNullList()
     {
-        List<ProviderCoursesTimelineExport> expected = null!;
+        List<ProviderTimelineExport> expected = null!;
 
         ProviderCoursesTimelineModel actual = expected;
 
@@ -59,7 +59,7 @@ public class ProviderCoursesTimelineModelTests
     [Test]
     public void Operator_ReturnsNull_ForEmptyList()
     {
-        List<ProviderCoursesTimelineExport> expected = [];
+        List<ProviderTimelineExport> expected = [];
 
         ProviderCoursesTimelineModel actual = expected;
 

@@ -23,7 +23,7 @@ public class GetProviderCoursesTimelinesQueryHandlerTests
         GetProviderCoursesTimelinesQueryHandler sut,
         CancellationToken cancellationToken)
     {
-        var providerTimelines = new List<ProviderCoursesTimelineExport>
+        var providers = new List<ProviderTimelineExport>
         {
             new()
             {
@@ -50,17 +50,17 @@ public class GetProviderCoursesTimelinesQueryHandlerTests
         };
 
         repoMock
-            .Setup(r => r.GetProviderCoursesTimeline(query.Ukprn, cancellationToken))
-            .ReturnsAsync(providerTimelines);
+            .Setup(r => r.GetProviderTimelineExport(query.Ukprn, cancellationToken))
+            .ReturnsAsync(providers);
 
-        ProviderCoursesTimelineModel expected = providerTimelines;
+        ProviderCoursesTimelineModel expected = providers;
 
         ProviderCoursesTimelineModel actual = await sut.Handle(query, cancellationToken);
 
         actual.Should().BeEquivalentTo(expected);
 
         repoMock.Verify(
-            r => r.GetProviderCoursesTimeline(query.Ukprn, cancellationToken),
+            r => r.GetProviderTimelineExport(query.Ukprn, cancellationToken),
             Times.Once);
     }
 
@@ -72,15 +72,15 @@ public class GetProviderCoursesTimelinesQueryHandlerTests
         CancellationToken cancellationToken)
     {
         repoMock
-            .Setup(r => r.GetProviderCoursesTimeline(query.Ukprn, cancellationToken))
-            .ReturnsAsync((List<ProviderCoursesTimelineExport>)null);
+            .Setup(r => r.GetProviderTimelineExport(query.Ukprn, cancellationToken))
+            .ReturnsAsync((List<ProviderTimelineExport>)null);
 
         ProviderCoursesTimelineModel actual = await sut.Handle(query, cancellationToken);
 
         actual.Should().BeNull();
 
         repoMock.Verify(
-            r => r.GetProviderCoursesTimeline(query.Ukprn, cancellationToken),
+            r => r.GetProviderTimelineExport(query.Ukprn, cancellationToken),
             Times.Once);
     }
 }
