@@ -14,7 +14,7 @@ public class CreateShortlistCommandHandler(IShortlistsRepository _shortlistWrite
     {
         CreateShortlistCommandResult result = new();
 
-        Shortlist shortlist = await _shortlistWriteRepository.Get(request.UserId, request.Ukprn, request.LarsCode, request.LocationDescription, cancellationToken);
+        Shortlist shortlist = await _shortlistWriteRepository.Get(request.UserId, request.Ukprn, request.LarsCode, request.LocationName, cancellationToken);
 
         if (shortlist == null)
         {
@@ -34,9 +34,9 @@ public class CreateShortlistCommandHandler(IShortlistsRepository _shortlistWrite
             UserId = command.UserId,
             Ukprn = command.Ukprn,
             LarsCode = command.LarsCode,
-            LocationDescription = command.LocationDescription,
-            Latitude = string.IsNullOrEmpty(command.LocationDescription) ? null : command.Latitude,
-            Longitude = string.IsNullOrEmpty(command.LocationDescription) ? null : command.Longitude,
+            LocationName = command.LocationName,
+            Latitude = string.IsNullOrEmpty(command.LocationName) ? null : command.Latitude,
+            Longitude = string.IsNullOrEmpty(command.LocationName) ? null : command.Longitude,
             CreatedDate = DateTime.UtcNow
         };
 }

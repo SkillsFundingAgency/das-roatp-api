@@ -69,7 +69,7 @@ public class CoursesController : ActionResponseControllerBase
                     ukprn,
                     larsCode.ToString(),
                     request.ShortlistUserId,
-                    request.Location,
+                    request.LocationName,
                     request.Longitude,
                     request.Latitude
                     )
@@ -98,7 +98,7 @@ public class CoursesController : ActionResponseControllerBase
                     ukprn,
                     larsCode,
                     request.ShortlistUserId,
-                    request.Location,
+                    request.LocationName,
                     request.Longitude,
                     request.Latitude
                     )

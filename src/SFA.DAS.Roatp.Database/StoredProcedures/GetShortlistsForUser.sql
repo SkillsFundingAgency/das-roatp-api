@@ -196,7 +196,7 @@ BEGIN
             ,courses.courseType
             ,courses.learningType
             ,locations.ordering
-            ,locations.LocationDescription locationDescription
+            ,locations.LocationDescription locationName
             ,providers.ordering
             ,providers.shortlistId
             ,providers.ukprn

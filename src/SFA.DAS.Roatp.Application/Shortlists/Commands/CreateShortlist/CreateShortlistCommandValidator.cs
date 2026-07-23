@@ -35,7 +35,7 @@ public class CreateShortlistCommandValidator : AbstractValidator<CreateShortlist
             })
             .WithMessage(ShortlistMaximumCapacityReachedMessaged);
 
-        When(command => !string.IsNullOrWhiteSpace(command.LocationDescription), () =>
+        When(command => !string.IsNullOrWhiteSpace(command.LocationName), () =>
         {
             RuleFor(command => command.Latitude).NotEmpty().InclusiveBetween(NationalLatLong.MinimumLatitude, NationalLatLong.MaximumLatitude);
             RuleFor(command => command.Longitude).NotEmpty().InclusiveBetween(NationalLatLong.MinimumLongitude, NationalLatLong.MaximumLongitude);

@@ -34,7 +34,7 @@ public sealed class GetCourseProviderDetailsQueryTests
             Assert.That(sut.Longitude, Is.EqualTo(longitude));
             Assert.That(sut.Latitude, Is.EqualTo(latitude));
             Assert.That(sut.ShortlistUserId, Is.EqualTo(shortlistUserId));
-            Assert.That(sut.Location, Is.EqualTo(location));
+            Assert.That(sut.LocationName, Is.EqualTo(location));
         });
     }
 
@@ -58,7 +58,7 @@ public sealed class GetCourseProviderDetailsQueryTests
             latitude
         );
 
-        Assert.That(sut.Location, Is.Null);
+        Assert.That(sut.LocationName, Is.Null);
     }
 
     [Test]
@@ -83,6 +83,6 @@ public sealed class GetCourseProviderDetailsQueryTests
             latitude
         );
 
-        Assert.That(sut.Location, Is.EqualTo(expected));
+        Assert.That(sut.LocationName, Is.EqualTo(expected));
     }
 }

@@ -37,7 +37,7 @@ public class GetProvidersForLarsCodeV2Tests
                     && q.Distance == request.Distance
                     && q.Page == request.Page
                     && q.PageSize == request.PageSize
-                    && q.Location == request.Location
+                    && q.LocationName == request.LocationName
                     && q.UserId == request.UserId
             ), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidatedResponse<GetProvidersForLarsCodeQueryResult>(queryResult));
@@ -67,7 +67,7 @@ public class GetProvidersForLarsCodeV2Tests
                 && q.Distance == request.Distance
                 && q.Page == request.Page
                 && q.PageSize == request.PageSize
-                && q.Location == request.Location
+                && q.LocationName == request.LocationName
                 && q.UserId == request.UserId
         ), It.IsAny<CancellationToken>()));
     }

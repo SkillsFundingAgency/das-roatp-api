@@ -21,10 +21,10 @@ public class ShortlistsRepository(RoatpDataContext _roatpDataContext) : IShortli
         await _roatpDataContext.SaveChangesAsync(cancellationToken);
     }
 
-    public Task<Shortlist> Get(Guid userId, int ukprn, string larsCode, string locationDescription, CancellationToken cancellationToken)
+    public Task<Shortlist> Get(Guid userId, int ukprn, string larsCode, string locationName, CancellationToken cancellationToken)
         => _roatpDataContext
             .Shortlists
-            .Where(s => s.UserId == userId && s.Ukprn == ukprn && s.LarsCode == larsCode && s.LocationDescription == locationDescription)
+            .Where(s => s.UserId == userId && s.Ukprn == ukprn && s.LarsCode == larsCode && s.LocationName == locationName)
             .FirstOrDefaultAsync(cancellationToken);
 
     public Task<int> GetShortlistCount(Guid userId, CancellationToken cancellationToken)

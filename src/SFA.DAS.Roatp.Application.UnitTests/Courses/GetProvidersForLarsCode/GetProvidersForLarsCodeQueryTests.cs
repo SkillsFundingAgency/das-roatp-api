@@ -28,7 +28,7 @@ public class GetProvidersForLarsCodeQueryTests
         {
             Latitude = latitude,
             Longitude = longitude,
-            Location = location,
+            LocationName = location,
             OrderBy = orderBy,
             Distance = distance,
             Page = page,
@@ -45,7 +45,7 @@ public class GetProvidersForLarsCodeQueryTests
         sut.LarsCode.Should().Be(larsCode);
         sut.Latitude.Should().Be(latitude);
         sut.Longitude.Should().Be(longitude);
-        sut.Location.Should().Be(location);
+        sut.LocationName.Should().Be(location);
         sut.OrderBy.Should().Be(orderBy);
         sut.Distance.Should().Be(distance);
         sut.Page.Should().Be(page);
@@ -99,7 +99,7 @@ public class GetProvidersForLarsCodeQueryTests
         {
             Latitude = latitude,
             Longitude = longitude,
-            Location = location,
+            LocationName = location,
             OrderBy = orderBy,
             Distance = distance,
             Page = page,
@@ -116,7 +116,7 @@ public class GetProvidersForLarsCodeQueryTests
         sut.LarsCode.Should().Be(larsCode);
         sut.Latitude.Should().Be(latitude);
         sut.Longitude.Should().Be(longitude);
-        sut.Location.Should().Be(location);
+        sut.LocationName.Should().Be(location);
         sut.OrderBy.Should().Be(orderBy);
         sut.Distance.Should().Be(distance);
         sut.Page.Should().Be(page);
@@ -149,7 +149,7 @@ public class GetProvidersForLarsCodeQueryTests
         {
             Latitude = latitude,
             Longitude = longitude,
-            Location = location,
+            LocationName = location,
             OrderBy = orderBy,
             Distance = distance,
             Page = page,
@@ -166,7 +166,7 @@ public class GetProvidersForLarsCodeQueryTests
         sut.LarsCode.Should().Be(larsCode);
         sut.Latitude.Should().Be(latitude);
         sut.Longitude.Should().Be(longitude);
-        sut.Location.Should().Be(location);
+        sut.LocationName.Should().Be(location);
         sut.OrderBy.Should().Be(orderBy);
         sut.Distance.Should().Be(distance);
         sut.Page.Should().Be(page);

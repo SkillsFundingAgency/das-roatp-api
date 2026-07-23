@@ -20,9 +20,5 @@
     <PackageReference Include="WireMock.Net.StandAlone" Version="2.13.0" />
   </ItemGroup>
 
-  <!--TRANSITIVE PACKAGES -->
-  <ItemGroup>
-    <PackageReference Include="System.Linq.Dynamic.Core" Version="1.7.3" />
-  </ItemGroup>
-  <!--END OF TRANSITIVE PACKAGES-->
+
 </Project>
