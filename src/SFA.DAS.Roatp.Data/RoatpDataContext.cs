@@ -23,9 +23,8 @@ public class RoatpDataContext : DbContext
     public DbSet<ProviderEmployerStars> ProviderEmployerStars { get; set; }
 
     public DbSet<ProviderContact> ProviderContacts { get; set; }
-    public DbSet<ProviderCourseType> ProviderCoursesTypes { get; set; }
 
-    public DbSet<ProviderCoursesTimeline> ProviderCoursesTimelines { get; set; }
+    public DbSet<ProviderCourseType> ProviderCoursesTypes { get; set; }
 
     public DbSet<ProviderAllowedCourse> ProviderAllowedCourses { get; set; }
 

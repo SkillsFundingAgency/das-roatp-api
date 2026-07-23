@@ -23,7 +23,6 @@ public class Provider
     public virtual List<ProviderContact> ProviderContacts { get; set; } = [];
     public virtual ProviderAddress ProviderAddress { get; set; }
     public virtual ProviderRegistrationDetail ProviderRegistrationDetail { get; set; }
-    public virtual List<ProviderCoursesTimeline> ProviderCoursesTimelines { get; set; } = [];
     public virtual List<ProviderCourseType> ProviderCourseTypes { get; set; } = [];
     public virtual List<ProviderAllowedCourse> ProviderAllowedCourses { get; set; } = [];
 }

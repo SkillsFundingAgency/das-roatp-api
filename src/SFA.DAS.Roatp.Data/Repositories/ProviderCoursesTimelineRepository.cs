@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Data.SqlClient;
@@ -18,32 +17,6 @@ namespace SFA.DAS.Roatp.Data.Repositories;
 internal class ProviderCoursesTimelineRepository(RoatpDataContext _roatpDataContext) : IProviderCoursesTimelineRepository
 {
     private const string GetProviderTimelineExportStoredProcedure = "dbo.GetProviderTimelineExport";
-    public async Task<List<ProviderRegistrationDetail>> GetAllProviderCoursesTimelines(CancellationToken cancellationToken)
-    {
-        return await _roatpDataContext
-            .ProviderRegistrationDetails
-            .Include(p => p.ProviderCourseTypes)
-            .Include(p => p.Provider)
-            .ThenInclude(p => p.ProviderCoursesTimelines)
-            .ThenInclude(t => t.Standard)
-            .Where(r => r.StatusId == (int)ProviderStatusType.Active || r.StatusId == (int)ProviderStatusType.ActiveNoStarts)
-            .ToListAsync(cancellationToken);
-    }
-
-    public async Task<ProviderRegistrationDetail> GetProviderCoursesTimelines(int ukprn, CancellationToken cancellationToken)
-    {
-        var result = await _roatpDataContext
-            .ProviderRegistrationDetails
-            .Include(p => p.ProviderCourseTypes)
-            .Include(t => t.Provider)
-            .ThenInclude(p => p.ProviderCoursesTimelines)
-            .ThenInclude(t => t.Standard)
-            .Where(r => (r.StatusId == (int)ProviderStatusType.Active || r.StatusId == (int)ProviderStatusType.ActiveNoStarts) && r.Ukprn == ukprn)
-            .ToListAsync(cancellationToken);
-
-        return result.FirstOrDefault();
-    }
-
     public async Task<List<ProviderTimelineExport>> GetProviderTimelineExport(int? ukprn, CancellationToken cancellationToken)
     {
         var connection = _roatpDataContext.Database.GetDbConnection();
