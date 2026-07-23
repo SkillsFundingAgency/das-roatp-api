@@ -1,12 +1,15 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
+using FluentAssertions;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.RestrictedCourses.Queries.GetAllRestrictedCourses;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.RestrictedCourses.Queries.GetAllRestrictedCourses;
@@ -22,9 +25,9 @@ public class GetAllRestrictedCoursesQueryHandlerTests
         // Arrange
         var allStandards = new List<Standard>
         {
-            new Standard { LarsCode = "123", Title = "Standard 1", Level = 1 },
-            new Standard { LarsCode = "456", Title = "Standard 2", Level = 2 },
-            new Standard { LarsCode = "789", Title = "Standard 3", Level = 3 }
+            new Standard { LarsCode = "123", Title = "Standard 1", Level = 1, LearningType = LearningType.Apprenticeship },
+            new Standard { LarsCode = "456", Title = "Standard 2", Level = 2, LearningType = LearningType.FoundationApprenticeship },
+            new Standard { LarsCode = "789", Title = "Standard 3", Level = 3, LearningType = LearningType.ApprenticeshipUnit }
         };
 
         var restrictedCourses = new List<RestrictedCourseView>
@@ -48,6 +51,8 @@ public class GetAllRestrictedCoursesQueryHandlerTests
         Assert.IsTrue(result.Courses.Exists(c => c.LarsCode == allStandards[0].LarsCode));
         Assert.IsTrue(result.Courses.Exists(c => c.LarsCode == allStandards[1].LarsCode));
         Assert.IsFalse(result.Courses.Exists(c => c.LarsCode == allStandards[2].LarsCode));
+        result.Courses.Should().Contain(c => c.LarsCode == allStandards[0].LarsCode && c.LearningType == allStandards[0].LearningType);
+        result.Courses.Should().Contain(c => c.LarsCode == allStandards[1].LarsCode && c.LearningType == allStandards[1].LearningType);
     }
 
     [Test, MoqAutoData]
@@ -59,9 +64,9 @@ public class GetAllRestrictedCoursesQueryHandlerTests
         // Arrange
         var allStandards = new List<Standard>
         {
-            new Standard { LarsCode = "123", Title = "Standard 1", Level = 1 },
-            new Standard { LarsCode = "456", Title = "Standard 2", Level = 2 },
-            new Standard { LarsCode = "789", Title = "Standard 3", Level = 3 }
+            new Standard { LarsCode = "123", Title = "Standard 1", Level = 1, LearningType = LearningType.Apprenticeship },
+            new Standard { LarsCode = "456", Title = "Standard 2", Level = 2, LearningType = LearningType.FoundationApprenticeship },
+            new Standard { LarsCode = "789", Title = "Standard 3", Level = 3, LearningType = LearningType.ApprenticeshipUnit }
         };
 
         var restrictedCourses = new List<RestrictedCourseView>
@@ -85,5 +90,6 @@ public class GetAllRestrictedCoursesQueryHandlerTests
         Assert.IsTrue(result.Courses.Exists(c => c.LarsCode == allStandards[2].LarsCode));
         Assert.IsFalse(result.Courses.Exists(c => c.LarsCode == allStandards[0].LarsCode));
         Assert.IsFalse(result.Courses.Exists(c => c.LarsCode == allStandards[1].LarsCode));
+        result.Courses.Should().ContainSingle(c => c.LarsCode == allStandards[2].LarsCode && c.LearningType == allStandards[2].LearningType);
     }
 }
