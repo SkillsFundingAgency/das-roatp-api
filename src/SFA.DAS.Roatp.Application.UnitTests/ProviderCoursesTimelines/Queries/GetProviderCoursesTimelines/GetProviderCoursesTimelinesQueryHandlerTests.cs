@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using FluentAssertions;
@@ -29,10 +30,38 @@ public class GetProviderCoursesTimelinesQueryHandlerTests
     }
 
     [Test, MoqAutoData]
+    public async Task Handle_CourseIsNotAllowed_ReturnsLastDateStartsAsNull(
+        [Frozen] Mock<IProviderCoursesTimelineRepository> repoMock,
+        [Greedy] GetProviderCoursesTimelinesQueryHandler sut,
+        GetProviderCoursesTimelinesQuery query,
+        CancellationToken cancellationToken)
+    {
+        repoMock.Setup(r => r.GetProviderCoursesTimelines(query.Ukprn, cancellationToken)).ReturnsAsync(TestDataHelper.GetProviderRegistrationDetailsCourseIsNotAllowed());
+
+        ProviderCoursesTimelineModel actual = await sut.Handle(query, cancellationToken);
+
+        actual.CourseTypes.FirstOrDefault().Courses.FirstOrDefault().LastDateStarts.Should().BeNull();
+    }
+
+    [Test, MoqAutoData]
+    public async Task Handle_ProviderDoesNotProvideCourse_ReturnsLastDateStartsAsNull(
+        [Frozen] Mock<IProviderCoursesTimelineRepository> repoMock,
+        [Greedy] GetProviderCoursesTimelinesQueryHandler sut,
+        GetProviderCoursesTimelinesQuery query,
+        CancellationToken cancellationToken)
+    {
+        repoMock.Setup(r => r.GetProviderCoursesTimelines(query.Ukprn, cancellationToken)).ReturnsAsync(TestDataHelper.GetProviderRegistrationDetailsProviderDoesNotProvideCourse());
+
+        ProviderCoursesTimelineModel actual = await sut.Handle(query, cancellationToken);
+
+        actual.CourseTypes.FirstOrDefault().Courses.FirstOrDefault().LastDateStarts.Should().BeNull();
+    }
+
+    [Test, MoqAutoData]
     public async Task Handle_ReturnsNullResult(
         [Frozen] Mock<IProviderCoursesTimelineRepository> repoMock,
+        [Greedy] GetProviderCoursesTimelinesQueryHandler sut,
         GetProviderCoursesTimelinesQuery query,
-        GetProviderCoursesTimelinesQueryHandler sut,
         CancellationToken cancellationToken)
     {
         repoMock.Setup(r => r.GetProviderCoursesTimelines(query.Ukprn, cancellationToken)).ReturnsAsync(() => null);
