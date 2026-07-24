@@ -12,36 +12,6 @@ Post-Deployment Script Template
 
 GO
 
-IF OBJECT_ID(N'[dbo].[NationalAchievementRateImport]', N'U') IS NOT NULL
-BEGIN
-    DROP TABLE [dbo].[NationalAchievementRateImport];
-END
-GO
-
-IF OBJECT_ID(N'[dbo].[NationalAchievementRateOverallImport]', N'U') IS NOT NULL
-BEGIN
-    DROP TABLE [dbo].[NationalAchievementRateOverallImport];
-END
-GO
-
-IF OBJECT_ID(N'[dbo].[NationalAchievementRateOverall]', N'U') IS NOT NULL
-BEGIN
-    DROP TABLE [dbo].[NationalAchievementRateOverall];
-END
-GO
-
-IF OBJECT_ID(N'[dbo].[NationalAchievementRate]', N'U') IS NOT NULL
-BEGIN
-    DROP TABLE [dbo].[NationalAchievementRate];
-END
-GO
-
-IF OBJECT_ID(N'[dbo].[ProviderCourseVersion]', N'U') IS NOT NULL
-BEGIN
-    DROP TABLE [dbo].[ProviderCourseVersion];
-END
-GO
-
 IF OBJECT_ID(N'[dbo].[RestrictedProviderView]', N'V') IS NOT NULL
 BEGIN
     DROP VIEW [dbo].[RestrictedProviderView];
