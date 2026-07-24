@@ -128,7 +128,19 @@ public class GetAllowedProvidersQueryHandlerTests
             {
                 new()
                 {
-                    Provider = new Provider { Ukprn = 100001, LegalName = "TestProvider" }
+                    Provider = new Provider
+                    {
+                        Ukprn = 100001,
+                        LegalName = "TestProvider",
+                        ProviderCourseTypes = new List<ProviderCourseType>
+                        {
+                            new()
+                            {
+                                CourseType = standard.CourseType,
+                                IsRestrictedProvider = false
+                            }
+                        }
+                    }
                 }
             };
 
@@ -185,7 +197,19 @@ public class GetAllowedProvidersQueryHandlerTests
             {
                 new()
                 {
-                    Provider = new Provider { Ukprn = 100001, LegalName = "TestProvider" }
+                    Provider = new Provider
+                    {
+                        Ukprn = 100001,
+                        LegalName = "TestProvider",
+                        ProviderCourseTypes = new List<ProviderCourseType>
+                        {
+                            new()
+                            {
+                                CourseType = standard.CourseType,
+                                IsRestrictedProvider = false
+                            }
+                        }
+                    }
                 }
             };
 
@@ -200,5 +224,133 @@ public class GetAllowedProvidersQueryHandlerTests
 
         // Assert
         response.Providers[0].DateLastStarts.Should().BeNull();
+    }
+
+    [Test, MoqAutoData]
+    public async Task WhenProviderIsRestricted_ThenReturnsProvidersFromProviderAllowedCourse(
+    [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
+    [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
+    [Frozen] Mock<IProviderCoursesReadRepository> providerCoursesReadRepository,
+    GetAllowedProvidersQueryHandler sut,
+    CancellationToken cancellationToken)
+    {
+        // Arrange
+        var larsCode = "123456";
+
+        var standard = new Standard
+        {
+            LarsCode = larsCode,
+            IfateReferenceNumber = "TestIfate",
+            Title = "TestTitle",
+            Route = "TestRoute",
+            LearningType = LearningType.Apprenticeship,
+            CourseType = CourseType.Apprenticeship,
+            IsActiveAvailable = true,
+            LastDateStarts = DateTime.UtcNow.Date,
+            RestrictedCourseView = null
+        };
+
+        var providerAllowedCourses = new List<ProviderAllowedCourse>
+            {
+                new()
+                {
+                    Ukprn = 100001,
+                    LastDateStarts = DateTime.UtcNow.Date,
+                    Provider = new Provider { LegalName = "TestProvider" }
+                }
+            };
+
+        var providerCourses = new List<Domain.Entities.ProviderCourse>
+            {
+                new()
+                {
+                    Provider = new Provider
+                    {
+                        Ukprn = 100001,
+                        LegalName = "TestProvider",
+                        ProviderCourseTypes = new List<ProviderCourseType>
+                        {
+                            new()
+                            {
+                                CourseType = standard.CourseType,
+                                IsRestrictedProvider = true
+                            }
+                        }
+                    }
+                }
+            };
+
+        standardsReadRepository.Setup(x => x.GetStandard(larsCode)).ReturnsAsync(standard);
+
+        providerAllowedCoursesRepository.Setup(x => x.GetProviderAllowedCoursesByLarsCode(larsCode, cancellationToken)).ReturnsAsync(providerAllowedCourses);
+
+        providerCoursesReadRepository.Setup(x => x.GetProviderCoursesByLarsCode(larsCode)).ReturnsAsync(providerCourses);
+
+        // Act
+        var response = await sut.Handle(new GetAllowedProvidersQuery(larsCode), cancellationToken);
+
+        // Assert
+        response.Providers[0].Ukprn.Should().Be(providerAllowedCourses[0].Ukprn);
+        response.Providers[0].ProviderName.Should().Be(providerAllowedCourses[0].Provider.LegalName);
+        response.Providers[0].DateLastStarts.Should().Be(providerAllowedCourses[0].LastDateStarts);
+    }
+
+    [Test, MoqAutoData]
+    public async Task WhenProviderIsRestricted_AndDoesNotExistInProviderAllowedCourses_ThenReturnsEmtpy(
+        [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
+        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
+        [Frozen] Mock<IProviderCoursesReadRepository> providerCoursesReadRepository,
+        GetAllowedProvidersQueryHandler sut,
+        CancellationToken cancellationToken)
+    {
+        // Arrange
+        var larsCode = "123456";
+
+        var standard = new Standard
+        {
+            LarsCode = larsCode,
+            IfateReferenceNumber = "TestIfate",
+            Title = "TestTitle",
+            Route = "TestRoute",
+            LearningType = LearningType.Apprenticeship,
+            CourseType = CourseType.Apprenticeship,
+            IsActiveAvailable = true,
+            LastDateStarts = DateTime.UtcNow.Date,
+            RestrictedCourseView = null
+        };
+
+        var providerAllowedCourses = new List<ProviderAllowedCourse>();
+
+        var providerCourses = new List<Domain.Entities.ProviderCourse>
+            {
+                new()
+                {
+                    Provider = new Provider
+                    {
+                        Ukprn = 100001,
+                        LegalName = "TestProvider",
+                        ProviderCourseTypes = new List<ProviderCourseType>
+                        {
+                            new()
+                            {
+                                CourseType = standard.CourseType,
+                                IsRestrictedProvider = true
+                            }
+                        }
+                    }
+                }
+            };
+
+        standardsReadRepository.Setup(x => x.GetStandard(larsCode)).ReturnsAsync(standard);
+
+        providerAllowedCoursesRepository.Setup(x => x.GetProviderAllowedCoursesByLarsCode(larsCode, cancellationToken)).ReturnsAsync(providerAllowedCourses);
+
+        providerCoursesReadRepository.Setup(x => x.GetProviderCoursesByLarsCode(larsCode)).ReturnsAsync(providerCourses);
+
+        // Act
+        var response = await sut.Handle(new GetAllowedProvidersQuery(larsCode), cancellationToken);
+
+        // Assert
+        response.Providers.Should().BeEmpty();
     }
 }
