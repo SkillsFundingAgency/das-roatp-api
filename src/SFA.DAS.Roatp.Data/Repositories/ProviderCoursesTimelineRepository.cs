@@ -28,7 +28,7 @@ internal class ProviderCoursesTimelineRepository(RoatpDataContext _roatpDataCont
 
         command.Parameters.Add(new SqlParameter("@Ukprn", ukprn ?? (object)DBNull.Value));
 
-        if (command.Connection!.State != ConnectionState.Open)
+        if (command.Connection.State != ConnectionState.Open)
         {
             await command.Connection.OpenAsync(cancellationToken);
         }

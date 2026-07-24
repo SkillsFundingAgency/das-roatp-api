@@ -29,7 +29,7 @@ public class ProviderCoursesTimelineModel
             ProviderType = (ProviderType)provider.ProviderTypeId,
             CourseTypes = providerTimelineExport
                 .Where(t => t.CourseType.HasValue)
-                .GroupBy(t => t.CourseType!.Value)
+                .GroupBy(t => t.CourseType.Value)
                 .Select(group => new CourseTypeModel(
                     group.Key,
                     group
