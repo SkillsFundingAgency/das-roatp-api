@@ -53,6 +53,7 @@ public class GetProvidersNotAllowedQueryHandlerTests
             LarsCode = larsCode,
             IfateReferenceNumber = "TestIfate",
             Title = "TestTitle",
+            Level = 1,
             Route = "TestRoute",
             LearningType = LearningType.Apprenticeship,
             CourseType = CourseType.Apprenticeship,
@@ -97,15 +98,16 @@ public class GetProvidersNotAllowedQueryHandlerTests
             response.LarsCode.Should().Be(standard.LarsCode);
             response.IfateReferenceNumber.Should().Be(standard.IfateReferenceNumber);
             response.CourseName.Should().Be(standard.Title);
+            response.Level.Should().Be(standard.Level);
             response.Route.Should().Be(standard.Route);
             response.LearningType.Should().Be(standard.LearningType);
             response.CourseType.Should().Be(standard.CourseType);
             response.IsActiveAvailable.Should().Be(standard.IsActiveAvailable);
-            response.DateLastStarts.Should().Be(standard.LastDateStarts);
+            response.LastDateStarts.Should().Be(standard.LastDateStarts);
             response.IsCourseRestricted.Should().BeTrue();
             response.Providers[0].Ukprn.Should().Be(providers[0].Ukprn);
             response.Providers[0].ProviderName.Should().Be(providers[0].Provider.LegalName);
-            response.Providers[0].DateLastStarts.Should().BeNull();
+            response.Providers[0].LastDateStarts.Should().BeNull();
         }
     }
 

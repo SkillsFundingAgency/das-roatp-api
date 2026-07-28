@@ -32,11 +32,12 @@ public class GetAllowedProvidersQueryHandler(IStandardsReadRepository _standards
             LarsCode = standard.LarsCode,
             IfateReferenceNumber = standard.IfateReferenceNumber,
             CourseName = standard.Title,
+            Level = standard.Level,
             Route = standard.Route,
             LearningType = standard.LearningType,
             CourseType = standard.CourseType,
             IsActiveAvailable = standard.IsActiveAvailable,
-            DateLastStarts = standard.LastDateStarts,
+            LastDateStarts = standard.LastDateStarts,
             IsCourseRestricted = isRestrictedCourse,
             Providers = providers
         };
@@ -51,7 +52,7 @@ public class GetAllowedProvidersQueryHandler(IStandardsReadRepository _standards
             {
                 Ukprn = pac.Ukprn,
                 ProviderName = pac.Provider.LegalName,
-                DateLastStarts = pac.LastDateStarts
+                LastDateStarts = pac.LastDateStarts
             })
             .ToList();
     }
@@ -69,7 +70,7 @@ public class GetAllowedProvidersQueryHandler(IStandardsReadRepository _standards
             {
                 Ukprn = pc.Provider.Ukprn,
                 ProviderName = pc.Provider.LegalName,
-                DateLastStarts = providerAllowedCourses
+                LastDateStarts = providerAllowedCourses
                     .FirstOrDefault(pac => pac.Ukprn == pc.Provider.Ukprn)?
                     .LastDateStarts
             })
@@ -98,7 +99,7 @@ public class GetAllowedProvidersQueryHandler(IStandardsReadRepository _standards
             {
                 Ukprn = pac.Ukprn,
                 ProviderName = pac.Provider.LegalName,
-                DateLastStarts = pac.LastDateStarts
+                LastDateStarts = pac.LastDateStarts
             })
             .ToList();
     }

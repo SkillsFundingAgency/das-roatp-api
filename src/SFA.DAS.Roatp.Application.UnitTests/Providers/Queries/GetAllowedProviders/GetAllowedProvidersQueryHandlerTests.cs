@@ -50,6 +50,7 @@ public class GetAllowedProvidersQueryHandlerTests
             LarsCode = larsCode,
             IfateReferenceNumber = "TestIfate",
             Title = "TestTitle",
+            Level = 1,
             Route = "TestRoute",
             LearningType = LearningType.Apprenticeship,
             CourseType = CourseType.Apprenticeship,
@@ -80,15 +81,16 @@ public class GetAllowedProvidersQueryHandlerTests
         response.LarsCode.Should().Be(standard.LarsCode);
         response.IfateReferenceNumber.Should().Be(standard.IfateReferenceNumber);
         response.CourseName.Should().Be(standard.Title);
+        response.Level.Should().Be(standard.Level);
         response.Route.Should().Be(standard.Route);
         response.LearningType.Should().Be(standard.LearningType);
         response.CourseType.Should().Be(standard.CourseType);
         response.IsActiveAvailable.Should().Be(standard.IsActiveAvailable);
-        response.DateLastStarts.Should().Be(standard.LastDateStarts);
+        response.LastDateStarts.Should().Be(standard.LastDateStarts);
         response.IsCourseRestricted.Should().BeTrue();
         response.Providers[0].Ukprn.Should().Be(providerAllowedCourses[0].Ukprn);
         response.Providers[0].ProviderName.Should().Be(providerAllowedCourses[0].Provider.LegalName);
-        response.Providers[0].DateLastStarts.Should().Be(providerAllowedCourses[0].LastDateStarts);
+        response.Providers[0].LastDateStarts.Should().Be(providerAllowedCourses[0].LastDateStarts);
     }
 
     [Test, MoqAutoData]
@@ -107,6 +109,7 @@ public class GetAllowedProvidersQueryHandlerTests
             LarsCode = larsCode,
             IfateReferenceNumber = "TestIfate",
             Title = "TestTitle",
+            Level = 1,
             Route = "TestRoute",
             LearningType = LearningType.Apprenticeship,
             CourseType = CourseType.Apprenticeship,
@@ -158,15 +161,16 @@ public class GetAllowedProvidersQueryHandlerTests
         response.LarsCode.Should().Be(standard.LarsCode);
         response.IfateReferenceNumber.Should().Be(standard.IfateReferenceNumber);
         response.CourseName.Should().Be(standard.Title);
+        response.Level.Should().Be(standard.Level);
         response.Route.Should().Be(standard.Route);
         response.LearningType.Should().Be(standard.LearningType);
         response.CourseType.Should().Be(standard.CourseType);
         response.IsActiveAvailable.Should().Be(standard.IsActiveAvailable);
-        response.DateLastStarts.Should().Be(standard.LastDateStarts);
+        response.LastDateStarts.Should().Be(standard.LastDateStarts);
         response.IsCourseRestricted.Should().BeFalse();
         response.Providers[0].Ukprn.Should().Be(providerCourses[0].Provider.Ukprn);
         response.Providers[0].ProviderName.Should().Be(providerCourses[0].Provider.LegalName);
-        response.Providers[0].DateLastStarts.Should().Be(providerAllowedCourses[0].LastDateStarts);
+        response.Providers[0].LastDateStarts.Should().Be(providerAllowedCourses[0].LastDateStarts);
     }
 
     [Test, MoqAutoData]
@@ -223,7 +227,7 @@ public class GetAllowedProvidersQueryHandlerTests
         var response = await sut.Handle(new GetAllowedProvidersQuery(larsCode), cancellationToken);
 
         // Assert
-        response.Providers[0].DateLastStarts.Should().BeNull();
+        response.Providers[0].LastDateStarts.Should().BeNull();
     }
 
     [Test, MoqAutoData]
@@ -292,7 +296,7 @@ public class GetAllowedProvidersQueryHandlerTests
         // Assert
         response.Providers[0].Ukprn.Should().Be(providerAllowedCourses[0].Ukprn);
         response.Providers[0].ProviderName.Should().Be(providerAllowedCourses[0].Provider.LegalName);
-        response.Providers[0].DateLastStarts.Should().Be(providerAllowedCourses[0].LastDateStarts);
+        response.Providers[0].LastDateStarts.Should().Be(providerAllowedCourses[0].LastDateStarts);
     }
 
     [Test, MoqAutoData]

@@ -27,11 +27,12 @@ public class GetProvidersNotAllowedQueryHandler(IStandardsReadRepository _standa
             LarsCode = standard.LarsCode,
             IfateReferenceNumber = standard.IfateReferenceNumber,
             CourseName = standard.Title,
+            Level = standard.Level,
             Route = standard.Route,
             LearningType = standard.LearningType,
             CourseType = standard.CourseType,
             IsActiveAvailable = standard.IsActiveAvailable,
-            DateLastStarts = standard.LastDateStarts,
+            LastDateStarts = standard.LastDateStarts,
             IsCourseRestricted = standard.RestrictedCourseView != null,
             Providers = providers.ToList()
         };
