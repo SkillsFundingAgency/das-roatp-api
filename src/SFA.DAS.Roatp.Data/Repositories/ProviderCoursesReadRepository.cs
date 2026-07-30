@@ -81,6 +81,7 @@ internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
         return await _roatpDataContext
              .ProviderCourses
              .Include(pc => pc.Provider)
+             .ThenInclude(x => x.ProviderCourseTypes)
              .Where(pc => pc.LarsCode == larsCode)
              .AsNoTracking().ToListAsync();
     }
