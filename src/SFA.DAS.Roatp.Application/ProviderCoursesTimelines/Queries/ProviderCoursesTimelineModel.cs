@@ -13,21 +13,37 @@ public class ProviderCoursesTimelineModel
     public ProviderType ProviderType { get; set; }
     public IEnumerable<CourseTypeModel> CourseTypes { get; set; } = [];
 
-    public static implicit operator ProviderCoursesTimelineModel(ProviderRegistrationDetail p)
-        => p is null ? null : new ProviderCoursesTimelineModel
+    public static implicit operator ProviderCoursesTimelineModel(List<ProviderTimelineExport> providerTimelineExport)
+    {
+        if (providerTimelineExport is null || providerTimelineExport.Count == 0)
         {
-            Ukprn = p.Ukprn,
-            Status = (ProviderStatusType)p.StatusId,
-            ProviderType = (ProviderType)p.ProviderTypeId,
-            CourseTypes = p.ProviderCourseTypes
-                .Select(ct => new CourseTypeModel(
-                    ct.CourseType,
-                    p.Provider?.ProviderCoursesTimelines
-                        .Where(t => t.Standard.CourseType == ct.CourseType)
-                        .Select(t => new CoursesTimelineModel(t.LarsCode, t.EffectiveFrom, t.EffectiveTo)) ?? []))
+            return null;
+        }
+
+        var provider = providerTimelineExport[0];
+
+        return new ProviderCoursesTimelineModel
+        {
+            Ukprn = provider.Ukprn,
+            Status = (ProviderStatusType)provider.StatusId,
+            ProviderType = (ProviderType)provider.ProviderTypeId,
+            CourseTypes = providerTimelineExport
+                .Where(t => t.CourseType.HasValue)
+                .GroupBy(t => t.CourseType.Value)
+                .Select(group => new CourseTypeModel(
+                    group.Key,
+                    group
+                        .Where(t => t.LarsCode != null)
+                        .Select(t => new CoursesTimelineModel(
+                            t.LarsCode,
+                            t.EffectiveFrom,
+                            t.EffectiveTo,
+                            t.LastDateStarts))
+                        .ToList()))
         };
+    }
 }
 
 public record CourseTypeModel(CourseType CourseType, IEnumerable<CoursesTimelineModel> Courses);
 
-public record CoursesTimelineModel(string LarsCode, DateTime EffectiveFrom, DateTime? EffectiveTo);
+public record CoursesTimelineModel(string LarsCode, DateTime? EffectiveFrom, DateTime? EffectiveTo, DateTime? LastDateStarts);

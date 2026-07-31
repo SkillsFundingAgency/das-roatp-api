@@ -85,7 +85,6 @@ public class GetAllShortCoursesTests
         .Without(p => p.ProviderContacts)
         .Without(p => p.ProviderAddress)
         .Without(p => p.ProviderRegistrationDetail)
-        .Without(p => p.ProviderCoursesTimelines)
         .Without(p => p.ProviderCourseTypes)
         .Create();
 
@@ -94,7 +93,6 @@ public class GetAllShortCoursesTests
         .Build<Standard>()
         .With(s => s.CourseType, courseType)
         .Without(s => s.ProviderCourses)
-        .Without(s => s.ProviderCoursesTimelines)
         .Without(s => s.ProviderAllowedCourses)
         .Create();
 
