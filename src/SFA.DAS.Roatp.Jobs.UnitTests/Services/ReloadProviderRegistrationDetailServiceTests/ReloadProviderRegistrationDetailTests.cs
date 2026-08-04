@@ -45,19 +45,4 @@ public class ReloadProviderRegistrationDetailTests
 
         repositoryMock.Verify(r => r.ReloadRegisteredProviders(It.Is<List<ProviderRegistrationDetail>>(c => c.Count == data.Count), It.IsAny<DateTime>()));
     }
-
-    [Test]
-    [RecursiveMoqAutoData]
-    public async Task ReloadProviderRegistrationDetails_OnApiSuccess_CallsRepositoryReloadProviderCourseTypes(
-        [Frozen] Mock<IReloadProviderCourseTypesRepository> repositoryMock,
-        [Frozen] Mock<ICourseManagementOuterApiClient> apiClientMock,
-        [Greedy] ReloadProviderRegistrationDetailService sut,
-        List<RegisteredProviderModel> data)
-    {
-        apiClientMock.Setup(a => a.Get<List<RegisteredProviderModel>>("lookup/registered-providers")).ReturnsAsync((true, data));
-
-        await sut.ReloadProviderRegistrationDetails();
-
-        repositoryMock.Verify(r => r.ReloadProviderCourseTypes(It.IsAny<List<ProviderCourseType>>(), It.IsAny<DateTime>()));
-    }
 }

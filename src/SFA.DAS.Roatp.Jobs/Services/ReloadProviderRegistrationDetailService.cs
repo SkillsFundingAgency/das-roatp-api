@@ -9,7 +9,6 @@ namespace SFA.DAS.Roatp.Jobs.Services;
 public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrationDetailService
 {
     private readonly IReloadProviderRegistrationDetailsRepository _reloadProviderRegistrationDetailsRepository;
-    private readonly IReloadProviderCourseTypesRepository _reloadProviderCourseTypesRepository;
     private readonly ICourseManagementOuterApiClient _courseManagementOuterApiClient;
     private readonly ILogger<ReloadProviderRegistrationDetailService> _logger;
     private readonly IProviderRegistrationDetailsWriteRepository _providerRegistrationDetailsWriteRepository;
@@ -18,14 +17,12 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
         IReloadProviderRegistrationDetailsRepository reloadProviderRegistrationDetailsRepository,
         ICourseManagementOuterApiClient courseManagementOuterApiClient,
         ILogger<ReloadProviderRegistrationDetailService> logger,
-        IProviderRegistrationDetailsWriteRepository providerRegistrationDetailsWriteRepository,
-        IReloadProviderCourseTypesRepository reloadProviderCourseTypesRepository)
+        IProviderRegistrationDetailsWriteRepository providerRegistrationDetailsWriteRepository)
     {
         _reloadProviderRegistrationDetailsRepository = reloadProviderRegistrationDetailsRepository;
         _courseManagementOuterApiClient = courseManagementOuterApiClient;
         _logger = logger;
         _providerRegistrationDetailsWriteRepository = providerRegistrationDetailsWriteRepository;
-        _reloadProviderCourseTypesRepository = reloadProviderCourseTypesRepository;
     }
 
     public async Task ReloadProviderRegistrationDetails()
@@ -45,16 +42,6 @@ public class ReloadProviderRegistrationDetailService : IReloadProviderRegistrati
         List<ProviderRegistrationDetail> registeredProviders = providerRegistrationDetails.Select(prd => (ProviderRegistrationDetail)prd).ToList();
 
         await _reloadProviderRegistrationDetailsRepository.ReloadRegisteredProviders(registeredProviders, timeStarted);
-
-        var providerCourseTypes = new List<ProviderCourseType>();
-
-        foreach (var provider in providerRegistrationDetails)
-        {
-            providerCourseTypes.AddRange(provider.AllowedCourseTypes.Select(providerCourseType => new ProviderCourseType { Ukprn = provider.Ukprn, CourseType = providerCourseType.CourseTypeName }));
-        }
-
-        _logger.LogInformation("Reloading {Count} provider course types", providerCourseTypes.Count);
-        await _reloadProviderCourseTypesRepository.ReloadProviderCourseTypes(providerCourseTypes, DateTime.Now);
     }
 
     public async Task ReloadAllAddresses()
