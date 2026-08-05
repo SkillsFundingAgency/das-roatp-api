@@ -12,6 +12,7 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
+using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.UpsertProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourses;
 using SFA.DAS.Roatp.Domain.Models;
@@ -132,6 +133,57 @@ public class ProviderAllowedCoursesControllerTests
 
         // Act
         var result = await sut.UpsertProviderAllowedCourse(ukprn, larsCode, request);
+
+        // Assert
+        result.Should().BeOfType<BadRequestObjectResult>();
+    }
+
+    [Test, MoqAutoData]
+    public async Task UpdateLastDateStarts_ValidationPasses_ReturnsNoContentResult(
+    [Frozen] Mock<IMediator> mediatorMock,
+    [Greedy] ProviderAllowedCoursesController sut,
+    PatchProviderAllowedCourseModel request,
+    int ukprn,
+    string larsCode)
+    {
+        // Arrange
+        mediatorMock
+            .Setup(x => x.Send(
+                It.IsAny<PatchProviderAllowedCourseCommand>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidatedResponse<Unit>(Unit.Value));
+
+        // Act
+        var result = await sut.UpdateLastDateStarts(ukprn, larsCode, request);
+
+        // Assert
+        Assert.That(result, Is.InstanceOf<NoContentResult>());
+    }
+
+    [Test, MoqAutoData]
+    public async Task UpdateLastDateStarts_ResponseIsInvalid_ReturnsBadRequest(
+    [Frozen] Mock<IMediator> mediatorMock,
+    [Greedy] ProviderAllowedCoursesController sut,
+    PatchProviderAllowedCourseModel request,
+    int ukprn,
+    string larsCode)
+    {
+        // Arrange
+        var errors = new List<ValidationFailure>
+            {
+                new ValidationFailure(nameof(IUkprnAndLarsCodeValidator.LarsCode), LarsCodeValidator.NotFoundMessage)
+            };
+
+        var validatedResponse = new ValidatedResponse<Unit>(errors);
+
+        mediatorMock
+            .Setup(x => x.Send(
+                It.IsAny<PatchProviderAllowedCourseCommand>(),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(validatedResponse);
+
+        // Act
+        var result = await sut.UpdateLastDateStarts(ukprn, larsCode, request);
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();

@@ -108,4 +108,35 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
 
         await _roatpDataContext.SaveChangesAsync();
     }
+
+    public async Task UpdateLastDateStarts(int ukprn, string larsCode, DateTime? lastDateStarts, string userId, string userDisplayName)
+    {
+        ProviderAllowedCourse providerAllowedCourse = await _roatpDataContext.ProviderAllowedCourses
+            .FirstOrDefaultAsync(pac => pac.Ukprn == ukprn && pac.LarsCode == larsCode);
+
+        DateTime? existingLastDateStarts = providerAllowedCourse.LastDateStarts;
+
+        providerAllowedCourse.LastDateStarts = lastDateStarts;
+
+        _roatpDataContext.Audits.Add(new Audit(
+            nameof(ProviderAllowedCourse),
+            ukprn.ToString(),
+            userId,
+            userDisplayName,
+            UpdateProviderAllowedCourse,
+            new ProviderAllowedCourse
+            {
+                LarsCode = larsCode,
+                Ukprn = ukprn,
+                LastDateStarts = existingLastDateStarts
+            },
+            new ProviderAllowedCourse
+            {
+                LarsCode = larsCode,
+                Ukprn = ukprn,
+                LastDateStarts = lastDateStarts
+            }));
+
+        await _roatpDataContext.SaveChangesAsync();
+    }
 }

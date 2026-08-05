@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.UpsertProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourses;
 using SFA.DAS.Roatp.Domain.Models;
@@ -53,6 +54,27 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
         }
 
         UpsertProviderAllowedCourseCommand command = new()
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode.ToUpper().Trim(),
+            UserId = request.UserId,
+            UserDisplayName = request.UserDisplayName,
+            LastDateStarts = request.LastDateStarts,
+        };
+
+        var response = await _mediator.Send(command);
+
+        return GetNoContentResponse(response);
+    }
+
+    [HttpPatch("{larsCode}")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> UpdateLastDateStarts([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] PatchProviderAllowedCourseModel request)
+    {
+        _logger.LogInformation("Request to update last date starts for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
+
+        PatchProviderAllowedCourseCommand command = new()
         {
             Ukprn = ukprn,
             LarsCode = larsCode.ToUpper().Trim(),
