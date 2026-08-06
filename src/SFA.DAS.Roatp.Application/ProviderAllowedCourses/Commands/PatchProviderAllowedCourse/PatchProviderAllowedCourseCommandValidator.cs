@@ -9,11 +9,9 @@ public class PatchProviderAllowedCourseCommandValidator : AbstractValidator<Patc
 {
     public const string InvalidLastDateStarts = "LastDateStarts cannot be after LastDateStarts of the course";
     public const string NotExistsInProviderAllowedCourse = "Ukprn and LarsCode combination does not exist in provider allowed courses";
-    public PatchProviderAllowedCourseCommandValidator(IStandardsReadRepository standardsReadRepository, IProvidersReadRepository providersReadRepository, IProviderAllowedCoursesRepository providerAllowedCoursesRepository)
+    public PatchProviderAllowedCourseCommandValidator(IStandardsReadRepository standardsReadRepository, IProviderAllowedCoursesRepository providerAllowedCoursesRepository)
     {
         Include(new UserInfoValidator());
-        Include(new UkprnValidator(providersReadRepository));
-        Include(new LarsCodeValidator(standardsReadRepository));
         RuleFor(pac => pac)
             .MustAsync(async (command, cancellation) =>
             {

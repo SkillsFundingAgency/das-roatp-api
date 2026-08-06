@@ -69,10 +69,24 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
 
     [HttpPatch("{larsCode}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> UpdateLastDateStarts([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] PatchProviderAllowedCourseModel request)
     {
         _logger.LogInformation("Request to update last date starts for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
+
+        var model = new UkrpnAndLarsCodeModel
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode
+        };
+
+        var result = await _validator.ValidateAsync(model);
+
+        if (!result.IsValid)
+        {
+            return NotFound(FormatErrors(result.Errors));
+        }
 
         PatchProviderAllowedCourseCommand command = new()
         {

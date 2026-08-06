@@ -17,7 +17,6 @@ public class PatchProviderAllowedCourseCommandValidatorTests
 {
     [Test, MoqAutoData]
     public async Task WhenDoesNotExistInProviderAllowedCourse_ThenValidationShouldFail(
-        [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Greedy] PatchProviderAllowedCourseCommandValidator sut)
@@ -32,16 +31,7 @@ public class PatchProviderAllowedCourseCommandValidatorTests
             LastDateStarts = DateTime.UtcNow
         };
 
-        var provider = new Provider
-        {
-            Ukprn = command.Ukprn
-        };
-
         var providerAllowedCourses = new List<ProviderAllowedCourse>();
-
-        providersReadRepository
-            .Setup(r => r.GetByUkprn(command.Ukprn))
-            .ReturnsAsync(provider);
 
         providerAllowedCoursesRepository
             .Setup(r => r.GetProviderAllowedCoursesByLarsCode(command.LarsCode, It.IsAny<CancellationToken>()))
@@ -61,7 +51,6 @@ public class PatchProviderAllowedCourseCommandValidatorTests
 
     [Test, MoqAutoData]
     public async Task WhenLastDateStartsIsAfterStandardDate_ThenValidationShouldFail(
-        [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Greedy] PatchProviderAllowedCourseCommandValidator sut)
@@ -76,11 +65,6 @@ public class PatchProviderAllowedCourseCommandValidatorTests
             LastDateStarts = DateTime.UtcNow
         };
 
-        var provider = new Provider
-        {
-            Ukprn = command.Ukprn
-        };
-
         var providerAllowedCourses = new List<ProviderAllowedCourse>
             {
                 new ProviderAllowedCourse
@@ -90,10 +74,6 @@ public class PatchProviderAllowedCourseCommandValidatorTests
                     LastDateStarts = DateTime.UtcNow.AddMonths(-2)
                 }
             };
-
-        providersReadRepository
-            .Setup(r => r.GetByUkprn(command.Ukprn))
-            .ReturnsAsync(provider);
 
         providerAllowedCoursesRepository
             .Setup(r => r.GetProviderAllowedCoursesByLarsCode(command.LarsCode, It.IsAny<CancellationToken>()))
@@ -113,7 +93,6 @@ public class PatchProviderAllowedCourseCommandValidatorTests
 
     [Test, MoqAutoData]
     public async Task WhenLastDateStartsIsBeforeStandardDate_AndExistsInProviderAllowedCourse_ThenValidationShouldPass(
-        [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Greedy] PatchProviderAllowedCourseCommandValidator sut)
@@ -128,11 +107,6 @@ public class PatchProviderAllowedCourseCommandValidatorTests
             LastDateStarts = DateTime.UtcNow.AddMonths(-1)
         };
 
-        var provider = new Provider
-        {
-            Ukprn = command.Ukprn
-        };
-
         var providerAllowedCourses = new List<ProviderAllowedCourse>
             {
                 new ProviderAllowedCourse
@@ -142,10 +116,6 @@ public class PatchProviderAllowedCourseCommandValidatorTests
                     LastDateStarts = DateTime.UtcNow.AddMonths(-2)
                 }
             };
-
-        providersReadRepository
-            .Setup(r => r.GetByUkprn(command.Ukprn))
-            .ReturnsAsync(provider);
 
         providerAllowedCoursesRepository
             .Setup(r => r.GetProviderAllowedCoursesByLarsCode(command.LarsCode, It.IsAny<CancellationToken>()))
@@ -164,7 +134,6 @@ public class PatchProviderAllowedCourseCommandValidatorTests
 
     [Test, MoqAutoData]
     public async Task WhenLastDateStartsIsNull_ThenValidationShouldPass(
-        [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Greedy] PatchProviderAllowedCourseCommandValidator sut)
@@ -179,11 +148,6 @@ public class PatchProviderAllowedCourseCommandValidatorTests
             LastDateStarts = null
         };
 
-        var provider = new Provider
-        {
-            Ukprn = command.Ukprn
-        };
-
         var providerAllowedCourses = new List<ProviderAllowedCourse>
             {
                 new ProviderAllowedCourse
@@ -193,10 +157,6 @@ public class PatchProviderAllowedCourseCommandValidatorTests
                     LastDateStarts = DateTime.UtcNow.AddMonths(-2)
                 }
             };
-
-        providersReadRepository
-            .Setup(r => r.GetByUkprn(command.Ukprn))
-            .ReturnsAsync(provider);
 
         providerAllowedCoursesRepository
             .Setup(r => r.GetProviderAllowedCoursesByLarsCode(command.LarsCode, It.IsAny<CancellationToken>()))

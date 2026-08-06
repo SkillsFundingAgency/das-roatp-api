@@ -141,12 +141,21 @@ public class ProviderAllowedCoursesControllerTests
     [Test, MoqAutoData]
     public async Task UpdateLastDateStarts_ValidationPasses_ReturnsNoContentResult(
     [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock,
     [Greedy] ProviderAllowedCoursesController sut,
     PatchProviderAllowedCourseModel request,
     int ukprn,
     string larsCode)
     {
         // Arrange
+        validatorMock
+            .Setup(v => v.ValidateAsync(
+                It.Is<IUkprnAndLarsCodeValidator>(x =>
+                    x.Ukprn == ukprn &&
+                    x.LarsCode == larsCode),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult());
+
         mediatorMock
             .Setup(x => x.Send(
                 It.IsAny<PatchProviderAllowedCourseCommand>(),
@@ -161,14 +170,53 @@ public class ProviderAllowedCoursesControllerTests
     }
 
     [Test, MoqAutoData]
-    public async Task UpdateLastDateStarts_ResponseIsInvalid_ReturnsBadRequest(
+    public async Task UpdateLastDateStarts_ControllerValidationFails_ReturnsNotFound(
     [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock,
     [Greedy] ProviderAllowedCoursesController sut,
     PatchProviderAllowedCourseModel request,
     int ukprn,
     string larsCode)
     {
         // Arrange
+        validatorMock
+            .Setup(v => v.ValidateAsync(
+                It.Is<IUkprnAndLarsCodeValidator>(x =>
+                    x.Ukprn == ukprn &&
+                    x.LarsCode == larsCode),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult(new[]
+            {
+            new ValidationFailure(
+                nameof(IUkprnAndLarsCodeValidator.LarsCode),
+                ProviderCourseValidator.InvalidLarsCodeErrorMessage)
+            }));
+
+        // Act
+        var result = await sut.UpdateLastDateStarts(ukprn, larsCode, request);
+
+        // Assert
+        result.Should().BeOfType<NotFoundObjectResult>();
+    }
+
+    [Test, MoqAutoData]
+    public async Task UpdateLastDateStarts_ResponseIsInvalid_ReturnsBadRequest(
+    [Frozen] Mock<IMediator> mediatorMock,
+    [Frozen] Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock,
+    [Greedy] ProviderAllowedCoursesController sut,
+    PatchProviderAllowedCourseModel request,
+    int ukprn,
+    string larsCode)
+    {
+        // Arrange
+        validatorMock
+            .Setup(v => v.ValidateAsync(
+                It.Is<IUkprnAndLarsCodeValidator>(x =>
+                    x.Ukprn == ukprn &&
+                    x.LarsCode == larsCode),
+                It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new ValidationResult());
+
         var errors = new List<ValidationFailure>
             {
                 new ValidationFailure(nameof(IUkprnAndLarsCodeValidator.LarsCode), LarsCodeValidator.NotFoundMessage)
