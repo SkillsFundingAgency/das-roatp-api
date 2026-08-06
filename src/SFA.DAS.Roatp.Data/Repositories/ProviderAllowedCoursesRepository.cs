@@ -109,7 +109,7 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
         await _roatpDataContext.SaveChangesAsync();
     }
 
-    public async Task UpdateLastDateStarts(int ukprn, string larsCode, DateTime? lastDateStarts, string userId, string userDisplayName)
+    public async Task PatchProviderAllowedCourse(int ukprn, string larsCode, DateTime? lastDateStarts, string userId, string userDisplayName)
     {
         ProviderAllowedCourse providerAllowedCourse = await _roatpDataContext.ProviderAllowedCourses
             .FirstOrDefaultAsync(pac => pac.Ukprn == ukprn && pac.LarsCode == larsCode);

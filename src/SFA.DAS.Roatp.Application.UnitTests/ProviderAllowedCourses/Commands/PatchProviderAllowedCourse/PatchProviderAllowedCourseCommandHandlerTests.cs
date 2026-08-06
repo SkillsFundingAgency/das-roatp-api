@@ -27,7 +27,7 @@ public class PatchProviderAllowedCourseCommandHandlerTests
         var command = CreateCommand(expectedLastDateStarts);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.UpdateLastDateStarts(
+            .Setup(x => x.PatchProviderAllowedCourse(
                 command.Ukprn,
                 command.LarsCode,
                 expectedLastDateStarts,
@@ -39,7 +39,7 @@ public class PatchProviderAllowedCourseCommandHandlerTests
         await sut.Handle(command, CancellationToken.None);
 
         // Assert
-        providerAllowedCoursesRepository.Verify(x => x.UpdateLastDateStarts(
+        providerAllowedCoursesRepository.Verify(x => x.PatchProviderAllowedCourse(
             command.Ukprn,
             command.LarsCode,
             expectedLastDateStarts,
@@ -57,7 +57,7 @@ public class PatchProviderAllowedCourseCommandHandlerTests
         var command = CreateCommand(DateTime.UtcNow);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.UpdateLastDateStarts(
+            .Setup(x => x.PatchProviderAllowedCourse(
                 command.Ukprn,
                 command.LarsCode,
                 It.IsAny<DateTime?>(),

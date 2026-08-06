@@ -140,7 +140,7 @@ public class ProviderAllowedCoursesControllerTests
     }
 
     [Test, MoqAutoData]
-    public async Task UpdateLastDateStarts_ValidationPasses_ReturnsNoContentResult(
+    public async Task PatchProviderAllowedCourse_ValidationPasses_ReturnsNoContentResult(
     [Frozen] Mock<IMediator> mediatorMock,
     [Frozen] Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock,
     [Greedy] ProviderAllowedCoursesController sut,
@@ -175,7 +175,7 @@ public class ProviderAllowedCoursesControllerTests
     }
 
     [Test, MoqAutoData]
-    public async Task UpdateLastDateStarts_ControllerValidationFails_ReturnsNotFound(
+    public async Task PatchProviderAllowedCourse_ControllerValidationFails_ReturnsNotFound(
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock,
         [Greedy] ProviderAllowedCoursesController sut,
@@ -209,7 +209,7 @@ public class ProviderAllowedCoursesControllerTests
     }
 
     [Test, MoqAutoData]
-    public async Task UpdateLastDateStarts_ResponseIsInvalid_ReturnsBadRequest(
+    public async Task PatchProviderAllowedCourse_ResponseIsInvalid_ReturnsBadRequest(
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock,
         [Greedy] ProviderAllowedCoursesController sut,

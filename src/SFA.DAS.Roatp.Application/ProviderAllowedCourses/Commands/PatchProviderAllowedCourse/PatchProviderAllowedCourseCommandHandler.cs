@@ -15,7 +15,7 @@ public class PatchProviderAllowedCourseCommandHandler(IProviderAllowedCoursesRep
 
         request.PatchDoc.ApplyTo(model);
 
-        await _providerAllowedCoursesRepository.UpdateLastDateStarts(request.Ukprn, request.LarsCode, model.LastDateStarts, request.UserId, request.UserDisplayName);
+        await _providerAllowedCoursesRepository.PatchProviderAllowedCourse(request.Ukprn, request.LarsCode, model.LastDateStarts, request.UserId, request.UserDisplayName);
 
         return new ValidatedResponse<Unit>(Unit.Value);
     }

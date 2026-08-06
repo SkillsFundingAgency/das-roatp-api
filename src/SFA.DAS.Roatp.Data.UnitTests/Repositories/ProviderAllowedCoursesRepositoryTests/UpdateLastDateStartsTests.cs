@@ -31,7 +31,7 @@ public class UpdateLastDateStartsTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.UpdateLastDateStarts(ukprn, larsCode, lastDateStarts, userId, userDisplayName);
+        await sut.PatchProviderAllowedCourse(ukprn, larsCode, lastDateStarts, userId, userDisplayName);
 
         activity.Stop();
 
@@ -75,7 +75,7 @@ public class UpdateLastDateStartsTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.UpdateLastDateStarts(ukprn, larsCode, lastDateStarts, userId, userDisplayName);
+        await sut.PatchProviderAllowedCourse(ukprn, larsCode, lastDateStarts, userId, userDisplayName);
 
         activity.Stop();
 
