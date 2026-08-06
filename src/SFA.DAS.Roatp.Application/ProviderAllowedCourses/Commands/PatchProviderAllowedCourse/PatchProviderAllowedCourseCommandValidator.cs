@@ -1,7 +1,10 @@
-﻿using System.Linq;
+﻿using System;
+using System.Globalization;
+using System.Linq;
 using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
 
@@ -19,17 +22,35 @@ public class PatchProviderAllowedCourseCommandValidator : AbstractValidator<Patc
                 return providerAllowedCourses.Any(p => p.Ukprn == command.Ukprn);
             })
             .WithMessage(NotExistsInProviderAllowedCourse);
-        RuleFor(x => x)
-            .MustAsync(async (command, cancellation) =>
+        RuleFor(x => x.PatchDoc.Operations)
+            .MustAsync(async (command, ops, cancellationToken) =>
             {
-                if (!command.LastDateStarts.HasValue)
+                var lastDateStartsOp = ops.FirstOrDefault(o =>
+                    string.Equals(o.path?.TrimStart('/'), nameof(PatchProviderAllowedCourseModel.LastDateStarts), StringComparison.OrdinalIgnoreCase));
+
+                if (lastDateStartsOp == null)
                 {
                     return true;
                 }
+
+                if (lastDateStartsOp.value is null)
+                {
+                    return true;
+                }
+
+                if (!DateTime.TryParse(
+                        Convert.ToString(lastDateStartsOp.value, CultureInfo.InvariantCulture),
+                        CultureInfo.InvariantCulture,
+                        DateTimeStyles.RoundtripKind,
+                        out var patchedDate))
+                {
+                    return false;
+                }
+
                 var standard = await standardsReadRepository.GetStandard(command.LarsCode);
-                return !command.LastDateStarts.HasValue
-                       || standard?.LastDateStarts == null
-                       || command.LastDateStarts.Value <= standard.LastDateStarts.Value;
+
+                return standard?.LastDateStarts == null
+                       || patchedDate <= standard.LastDateStarts.Value;
             })
             .WithMessage(InvalidLastDateStarts);
     }

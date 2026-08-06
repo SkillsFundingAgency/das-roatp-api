@@ -4,6 +4,7 @@ using Asp.Versioning;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
@@ -71,9 +72,9 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpdateLastDateStarts([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] PatchProviderAllowedCourseModel request)
+    public async Task<IActionResult> PatchProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] JsonPatchDocument<PatchProviderAllowedCourseModel> request, [FromQuery] string userId, [FromQuery] string userDisplayName)
     {
-        _logger.LogInformation("Request to update last date starts for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
+        _logger.LogInformation("Request to patch provider allowedCourse for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
 
         var model = new UkrpnAndLarsCodeModel
         {
@@ -92,9 +93,9 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
         {
             Ukprn = ukprn,
             LarsCode = larsCode.ToUpper().Trim(),
-            UserId = request.UserId,
-            UserDisplayName = request.UserDisplayName,
-            LastDateStarts = request.LastDateStarts,
+            UserId = userId,
+            UserDisplayName = userDisplayName,
+            PatchDoc = request
         };
 
         var response = await _mediator.Send(command);

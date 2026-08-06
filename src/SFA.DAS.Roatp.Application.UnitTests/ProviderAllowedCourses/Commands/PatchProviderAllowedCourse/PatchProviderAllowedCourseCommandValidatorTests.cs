@@ -4,11 +4,13 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using FluentValidation.TestHelper;
+using Microsoft.AspNetCore.JsonPatch;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
@@ -22,14 +24,8 @@ public class PatchProviderAllowedCourseCommandValidatorTests
         [Greedy] PatchProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
-        var command = new PatchProviderAllowedCourseCommand
-        {
-            Ukprn = 12345678,
-            LarsCode = "12345",
-            UserId = "TestUserId",
-            UserDisplayName = "TestUser",
-            LastDateStarts = DateTime.UtcNow
-        };
+        var lastDateStarts = DateTime.UtcNow;
+        var command = CreateCommand(lastDateStarts);
 
         var providerAllowedCourses = new List<ProviderAllowedCourse>();
 
@@ -56,24 +52,20 @@ public class PatchProviderAllowedCourseCommandValidatorTests
         [Greedy] PatchProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
-        var command = new PatchProviderAllowedCourseCommand
-        {
-            Ukprn = 12345678,
-            LarsCode = "12345",
-            UserId = "TestUserId",
-            UserDisplayName = "TestUser",
-            LastDateStarts = DateTime.UtcNow
-        };
+        var standardLastDateStarts = DateTime.UtcNow.AddMonths(-1);
+        var lastDateStarts = standardLastDateStarts.AddDays(1);
+
+        var command = CreateCommand(lastDateStarts);
 
         var providerAllowedCourses = new List<ProviderAllowedCourse>
+        {
+            new ProviderAllowedCourse
             {
-                new ProviderAllowedCourse
-                {
-                    Ukprn = command.Ukprn,
-                    LarsCode = command.LarsCode,
-                    LastDateStarts = DateTime.UtcNow.AddMonths(-2)
-                }
-            };
+                Ukprn = command.Ukprn,
+                LarsCode = command.LarsCode,
+                LastDateStarts = DateTime.UtcNow.AddMonths(-2)
+            }
+        };
 
         providerAllowedCoursesRepository
             .Setup(r => r.GetProviderAllowedCoursesByLarsCode(command.LarsCode, It.IsAny<CancellationToken>()))
@@ -81,13 +73,17 @@ public class PatchProviderAllowedCourseCommandValidatorTests
 
         standardsReadRepository
             .Setup(r => r.GetStandard(It.IsAny<string>()))
-            .ReturnsAsync(new Standard { LarsCode = command.LarsCode, LastDateStarts = DateTime.UtcNow.AddMonths(-1) });
+            .ReturnsAsync(new Standard
+            {
+                LarsCode = command.LarsCode,
+                LastDateStarts = standardLastDateStarts
+            });
 
         // Act
         var result = await sut.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x)
+        result.ShouldHaveValidationErrorFor(x => x.PatchDoc.Operations)
             .WithErrorMessage(PatchProviderAllowedCourseCommandValidator.InvalidLastDateStarts);
     }
 
@@ -98,24 +94,20 @@ public class PatchProviderAllowedCourseCommandValidatorTests
         [Greedy] PatchProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
-        var command = new PatchProviderAllowedCourseCommand
-        {
-            Ukprn = 12345678,
-            LarsCode = "12345",
-            UserId = "TestUserId",
-            UserDisplayName = "TestUser",
-            LastDateStarts = DateTime.UtcNow.AddMonths(-1)
-        };
+        var standardLastDateStarts = DateTime.UtcNow;
+        var lastDateStarts = standardLastDateStarts.AddMonths(-1);
+
+        var command = CreateCommand(lastDateStarts);
 
         var providerAllowedCourses = new List<ProviderAllowedCourse>
+        {
+            new ProviderAllowedCourse
             {
-                new ProviderAllowedCourse
-                {
-                    Ukprn = command.Ukprn,
-                    LarsCode = command.LarsCode,
-                    LastDateStarts = DateTime.UtcNow.AddMonths(-2)
-                }
-            };
+                Ukprn = command.Ukprn,
+                LarsCode = command.LarsCode,
+                LastDateStarts = DateTime.UtcNow.AddMonths(-2)
+            }
+        };
 
         providerAllowedCoursesRepository
             .Setup(r => r.GetProviderAllowedCoursesByLarsCode(command.LarsCode, It.IsAny<CancellationToken>()))
@@ -123,7 +115,11 @@ public class PatchProviderAllowedCourseCommandValidatorTests
 
         standardsReadRepository
             .Setup(r => r.GetStandard(It.IsAny<string>()))
-            .ReturnsAsync(new Standard { LarsCode = command.LarsCode, LastDateStarts = DateTime.UtcNow });
+            .ReturnsAsync(new Standard
+            {
+                LarsCode = command.LarsCode,
+                LastDateStarts = standardLastDateStarts
+            });
 
         // Act
         var result = await sut.TestValidateAsync(command);
@@ -139,24 +135,17 @@ public class PatchProviderAllowedCourseCommandValidatorTests
         [Greedy] PatchProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
-        var command = new PatchProviderAllowedCourseCommand
-        {
-            Ukprn = 12345678,
-            LarsCode = "12345",
-            UserId = "TestUserId",
-            UserDisplayName = "TestUser",
-            LastDateStarts = null
-        };
+        var command = CreateCommand(null);
 
         var providerAllowedCourses = new List<ProviderAllowedCourse>
+        {
+            new ProviderAllowedCourse
             {
-                new ProviderAllowedCourse
-                {
-                    Ukprn = command.Ukprn,
-                    LarsCode = command.LarsCode,
-                    LastDateStarts = DateTime.UtcNow.AddMonths(-2)
-                }
-            };
+                Ukprn = command.Ukprn,
+                LarsCode = command.LarsCode,
+                LastDateStarts = DateTime.UtcNow.AddMonths(-2)
+            }
+        };
 
         providerAllowedCoursesRepository
             .Setup(r => r.GetProviderAllowedCoursesByLarsCode(command.LarsCode, It.IsAny<CancellationToken>()))
@@ -164,12 +153,32 @@ public class PatchProviderAllowedCourseCommandValidatorTests
 
         standardsReadRepository
             .Setup(r => r.GetStandard(It.IsAny<string>()))
-            .ReturnsAsync(new Standard { LarsCode = command.LarsCode, LastDateStarts = DateTime.UtcNow });
+            .ReturnsAsync(new Standard
+            {
+                LarsCode = command.LarsCode,
+                LastDateStarts = DateTime.UtcNow
+            });
 
         // Act
         var result = await sut.TestValidateAsync(command);
 
         // Assert
         result.ShouldNotHaveValidationErrorFor(x => x);
+    }
+
+    private static PatchProviderAllowedCourseCommand CreateCommand(DateTime? lastDateStarts)
+    {
+        var patchDoc = new JsonPatchDocument<PatchProviderAllowedCourseModel>();
+
+        patchDoc.Replace(x => x.LastDateStarts, lastDateStarts);
+
+        return new PatchProviderAllowedCourseCommand
+        {
+            Ukprn = 12345678,
+            LarsCode = "12345",
+            UserId = "TestUserId",
+            UserDisplayName = "TestUser",
+            PatchDoc = patchDoc
+        };
     }
 }
