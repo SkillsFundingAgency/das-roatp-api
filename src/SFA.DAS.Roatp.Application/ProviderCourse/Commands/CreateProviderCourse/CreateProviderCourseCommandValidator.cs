@@ -23,7 +23,7 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
         IProviderCoursesReadRepository providerCoursesReadRepository,
         IProviderLocationsReadRepository providerLocationsReadRepository,
         IRegionsReadRepository regionsReadRepository,
-        IProviderCourseTypesReadRepository providerCourseTypesReadRepository,
+        IProviderCourseTypesRepository providerCourseTypesReadRepository,
         IProviderAllowedCoursesRepository providerAllowedCoursesRepository)
     {
         Include(new UserInfoValidator());

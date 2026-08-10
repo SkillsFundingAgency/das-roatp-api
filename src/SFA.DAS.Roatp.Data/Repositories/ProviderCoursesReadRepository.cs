@@ -50,6 +50,7 @@ internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
              .Include(pc => pc.Standard)
              .Include(pc => pc.Locations)
              .Include(pc => pc.Provider)
+             .Include(pc => pc.ProviderAllowedCourse)
              .Where(pc => pc.Provider.Ukprn == ukprn && pc.Provider.ProviderCourseTypes.Any(pct => pct.CourseType == pc.Standard.CourseType))
              .AsNoTracking().ToListAsync();
     }

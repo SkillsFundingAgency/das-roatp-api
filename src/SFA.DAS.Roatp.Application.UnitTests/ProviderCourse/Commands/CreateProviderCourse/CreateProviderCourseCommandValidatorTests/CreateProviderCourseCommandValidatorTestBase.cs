@@ -16,7 +16,7 @@ public abstract class CreateProviderCourseCommandValidatorTestBase
     protected Mock<IStandardsReadRepository> standardsReadRepositoryMock;
     protected Mock<IProviderLocationsReadRepository> providerLocationsReadRepositoryMock;
     protected Mock<IRegionsReadRepository> regionsReadRepositoryMock;
-    protected Mock<IProviderCourseTypesReadRepository> providerCourseTypesReadRepositoryMock;
+    protected Mock<IProviderCourseTypesRepository> providerCourseTypesReadRepositoryMock;
     protected Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepositoryMock;
     public const int ValidUkprn = 10012002;
     protected const string ValidComboLarsCode = "321";
@@ -49,7 +49,7 @@ public abstract class CreateProviderCourseCommandValidatorTestBase
         regionsReadRepositoryMock = new Mock<IRegionsReadRepository>();
         regionsReadRepositoryMock.Setup(r => r.GetAllRegions()).ReturnsAsync(new List<Region> { new Region { Id = ValidRegionId } });
 
-        providerCourseTypesReadRepositoryMock = new Mock<IProviderCourseTypesReadRepository>();
+        providerCourseTypesReadRepositoryMock = new Mock<IProviderCourseTypesRepository>();
         providerCourseTypesReadRepositoryMock.Setup(r => r.GetProviderCourseTypesByUkprn(It.IsAny<int>(), It.IsAny<CancellationToken>())).ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { Id = 1, CourseType = CourseType.Apprenticeship, Ukprn = ValidUkprn } });
 
         providerAllowedCoursesRepositoryMock = new();

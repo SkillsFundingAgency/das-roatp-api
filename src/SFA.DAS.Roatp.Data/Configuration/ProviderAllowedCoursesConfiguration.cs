@@ -22,5 +22,10 @@ public class ProviderAllowedCoursesConfiguration : IEntityTypeConfiguration<Prov
             .WithMany()
             .HasPrincipalKey(p => p.Ukprn)
             .HasForeignKey(p => p.Ukprn);
+
+        builder.HasOne(pac => pac.ProviderCourse)
+            .WithOne(pc => pc.ProviderAllowedCourse)
+            .HasPrincipalKey<ProviderCourse>(pc => new { pc.Ukprn, pc.LarsCode })
+            .HasForeignKey<ProviderAllowedCourse>(pac => new { pac.Ukprn, pac.LarsCode });
     }
 }

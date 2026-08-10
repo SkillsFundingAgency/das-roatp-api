@@ -11,7 +11,7 @@ using SFA.DAS.Roatp.Domain.Models;
 namespace SFA.DAS.Roatp.Application.ProviderCourseForecasts.Queries.GetProviderCourseForecasts;
 
 public class GetProviderCourseForecastsQueryHandler(
-    IProviderCourseTypesReadRepository _providerCourseTypesReadRepository,
+    IProviderCourseTypesRepository _providerCourseTypesReadRepository,
     IProviderCourseForecastRepository _providerCourseForecastRepository,
     IForecastQuartersRepository _forecastQuartersRepository,
     IStandardsReadRepository _standardsReadRepository)

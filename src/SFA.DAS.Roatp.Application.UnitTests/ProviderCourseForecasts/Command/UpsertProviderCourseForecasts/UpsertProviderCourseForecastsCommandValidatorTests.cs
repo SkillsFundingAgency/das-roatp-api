@@ -117,7 +117,7 @@ public class UpsertProviderCourseForecastsCommandValidatorTests
         Mock<IStandardsReadRepository> standardsRepoMock = new();
         standardsRepoMock.Setup(x => x.GetStandard(It.IsAny<string>())).ReturnsAsync(new Standard() { CourseType = CourseType.ShortCourse });
 
-        Mock<IProviderCourseTypesReadRepository> courseTypesRepoMock = new();
+        Mock<IProviderCourseTypesRepository> courseTypesRepoMock = new();
         courseTypesRepoMock.Setup(x => x.GetProviderCourseTypesByUkprn(ValidUkprn, It.IsAny<CancellationToken>())).ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { CourseType = CourseType.ShortCourse } });
 
         Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepoMock = new();

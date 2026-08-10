@@ -11,4 +11,5 @@ public class ProviderAllowedCourse
 
     public virtual Standard Standard { get; set; }
     public virtual Provider Provider { get; set; }
+    public virtual ProviderCourse ProviderCourse { get; set; }
 }

@@ -22,7 +22,7 @@ public class SendForecastsReminderEmailsFunctionTests
 {
     private Fixture _fixture;
     private Mock<ILogger<SendForecastsReminderEmailsFunction>> _loggerMock;
-    private Mock<IProviderCourseTypesReadRepository> _providerCourseTypesReadRepositoryMock;
+    private Mock<IProviderCourseTypesRepository> _providerCourseTypesReadRepositoryMock;
     private Mock<IProviderCoursesReadRepository> _providerCoursesReadRepositoryMock;
     private Mock<IProviderCourseForecastRepository> _providerCourseForecastRepositoryMock;
     private Mock<IProviderEmailProcessingService> _providerEmailProcessingServiceMock;

@@ -15,14 +15,14 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries;
 [TestFixture]
 public class ProviderCourseQueryValidatorTests
 {
-    private Mock<IProviderCourseTypesReadRepository> _providerCourseTypesReadRepositoryMock;
+    private Mock<IProviderCourseTypesRepository> _providerCourseTypesReadRepositoryMock;
     private Mock<IStandardsReadRepository> _standardsReadRepositoryMock;
     private Mock<IProviderAllowedCoursesRepository> _providerAllowedCoursesRepositoryMock;
 
     [SetUp]
     public void BeforeEach()
     {
-        _providerCourseTypesReadRepositoryMock = new Mock<IProviderCourseTypesReadRepository>();
+        _providerCourseTypesReadRepositoryMock = new Mock<IProviderCourseTypesRepository>();
         _standardsReadRepositoryMock = new Mock<IStandardsReadRepository>();
         _standardsReadRepositoryMock.Setup(x => x.GetStandard(It.IsAny<string>()))
             .ReturnsAsync(new Standard { CourseType = CourseType.Apprenticeship });

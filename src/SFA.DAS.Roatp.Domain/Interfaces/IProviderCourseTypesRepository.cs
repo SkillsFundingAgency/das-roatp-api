@@ -6,9 +6,10 @@ using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Domain.Interfaces;
 
-public interface IProviderCourseTypesReadRepository
+public interface IProviderCourseTypesRepository
 {
     Task<List<ProviderCourseType>> GetProviderCourseTypesByUkprn(int ukprn, CancellationToken cancellationToken = default);
     Task<List<int>> GetAllProvidersWithShortCourses(CancellationToken cancellationToken = default);
     Task<List<ProviderCourseType>> GetAllProvidersByCourseType(CourseType courseType, CancellationToken cancellationToken = default);
+    Task RestrictProvider(int ukprn, CourseType courseType, List<ProviderAllowedCourse> coursesToAdd, List<ProviderAllowedCourse> coursesToRemove, string userId, string userDisplayName, CancellationToken cancellationToken = default);
 }

@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.Common;
 [TestFixture]
 public class CourseTypeValidatorTests
 {
-    private Mock<IProviderCourseTypesReadRepository> _providerCourseTypesReadRepositoryMock;
+    private Mock<IProviderCourseTypesRepository> _providerCourseTypesReadRepositoryMock;
     private Mock<IStandardsReadRepository> _standardsReadRepositoryMock;
     private Mock<IProviderAllowedCoursesRepository> _providerAllowedCoursesRepositoryMock;
     private CourseTypeValidator _sut;

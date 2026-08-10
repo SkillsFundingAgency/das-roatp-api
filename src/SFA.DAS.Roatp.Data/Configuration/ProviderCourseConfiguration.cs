@@ -30,6 +30,11 @@ namespace SFA.DAS.Roatp.Data.Configuration
                 .WithMany(c => c.ProviderCourses)
                 .HasPrincipalKey(s => s.LarsCode)
                 .HasForeignKey(pc => pc.LarsCode);
+
+            builder.HasOne(c => c.ProviderAllowedCourse)
+                .WithOne(pc => pc.ProviderCourse)
+                .HasPrincipalKey<ProviderCourse>(c => new { c.Ukprn, c.LarsCode })
+                .HasForeignKey<ProviderAllowedCourse>(pc => new { pc.Ukprn, pc.LarsCode });
         }
     }
 }
