@@ -12,10 +12,10 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Application.ProviderCourseTypes.Queries.GetProviderCourseTypes;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Api.UnitTests.Controllers
+namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ProviderCourseTypesControllerTests
 {
     [TestFixture]
-    public class ProviderCourseTypesControllerTests
+    public class ProviderCourseTypesControllerGetTests
     {
         [Test, MoqAutoData]
         public async Task GetCourseTypes_CallsMediator(

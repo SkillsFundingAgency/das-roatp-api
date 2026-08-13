@@ -74,7 +74,7 @@ internal class ProviderCourseTypesRepository : IProviderCourseTypesRepository
                 IsRestrictedProvider = providerCourseType.IsRestrictedProvider
             }));
 
-        List<ProviderAllowedCourse> initialState = await _roatpDataContext.ProviderAllowedCourses
+        List<ProviderAllowedCourse> providerAllowedCourse = await _roatpDataContext.ProviderAllowedCourses
             .Where(pac => pac.Ukprn == ukprn)
             .ToListAsync(cancellationToken);
 
@@ -86,13 +86,17 @@ internal class ProviderCourseTypesRepository : IProviderCourseTypesRepository
 
         if (coursesToRemove.Count > 0)
         {
+            var providerCoursesToRemove = providerAllowedCourse
+                .Where(x => coursesToRemove.Any(y => y.Id == x.Id))
+                .ToList();
+
             _roatpDataContext.ProviderAllowedCourses
-                .RemoveRange(coursesToRemove);
+                .RemoveRange(providerCoursesToRemove);
         }
 
         if (coursesToAdd.Count > 0 || coursesToRemove.Count > 0)
         {
-            var updatedState = initialState
+            var updatedState = providerAllowedCourse
                 .Where(pac => !coursesToRemove.Any(x =>
                     x.Ukprn == pac.Ukprn &&
                     x.LarsCode == pac.LarsCode))
@@ -105,7 +109,7 @@ internal class ProviderCourseTypesRepository : IProviderCourseTypesRepository
             userId,
             userDisplayName,
             "UpdateProviderAllowedCourse",
-            initialState,
+            providerAllowedCourse,
             updatedState));
         }
 

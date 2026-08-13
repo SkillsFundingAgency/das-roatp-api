@@ -6,7 +6,7 @@ using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.RestrictedProviders.Commands.RestrictProvider;
+namespace SFA.DAS.Roatp.Application.ProviderCourseTypes.Commands.RestrictProvider;
 
 public class RestrictProviderCommandHandler(IProviderCoursesReadRepository providerCoursesReadRepository, IProviderAllowedCoursesRepository providerAllowedCoursesRepository, IProviderCourseTypesRepository providerCourseTypesRepository) : IRequestHandler<RestrictProviderCommand, ValidatedResponse<Unit>>
 {

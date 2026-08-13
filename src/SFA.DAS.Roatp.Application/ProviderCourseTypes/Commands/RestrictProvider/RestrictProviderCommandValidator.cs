@@ -3,11 +3,11 @@ using FluentValidation;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.RestrictedProviders.Commands.RestrictProvider;
+namespace SFA.DAS.Roatp.Application.ProviderCourseTypes.Commands.RestrictProvider;
 
 public class RestrictProviderCommandValidator : AbstractValidator<RestrictProviderCommand>
 {
-    public const string ProviderNotFound = "The provider is not found for UKPRN and course type combination";
+    public const string ProviderNotFound = "Provider does not have requested Course Type";
     public const string ProviderAlreadyRestricted = "The provider is already restricted for this course type";
     public RestrictProviderCommandValidator(IProvidersReadRepository providersReadRepository, IProviderCourseTypesRepository providerCourseTypesRepository)
     {
