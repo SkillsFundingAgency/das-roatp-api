@@ -21,7 +21,7 @@ public class GetProviderCourseForecastsQueryValidatorTests
     [TestCase(10012002, UkprnValidator.ProviderNotFoundErrorMessage)]
     public async Task Validate_Ukprn_ReturnsErrorForInvalidNumbers(int ukprn, string errorMessage)
     {
-        var sut = new GetProviderCourseForecastsQueryValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseTypesReadRepository>(), Mock.Of<IStandardsReadRepository>(), Mock.Of<IProviderAllowedCoursesRepository>());
+        var sut = new GetProviderCourseForecastsQueryValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseTypesRepository>(), Mock.Of<IStandardsReadRepository>(), Mock.Of<IProviderAllowedCoursesRepository>());
 
         var result = await sut.TestValidateAsync(new GetProviderCourseForecastsQuery(ukprn, "ZSC10001"), options => options.IncludeProperties(nameof(GetProviderCourseForecastsQuery.Ukprn)));
 
@@ -35,7 +35,7 @@ public class GetProviderCourseForecastsQueryValidatorTests
         var ukprn = 10012002;
         Mock<IProvidersReadRepository> providersRepoMock = new();
         providersRepoMock.Setup(x => x.GetByUkprn(ukprn)).ReturnsAsync(provider);
-        var sut = new GetProviderCourseForecastsQueryValidator(providersRepoMock.Object, Mock.Of<IProviderCourseTypesReadRepository>(), Mock.Of<IStandardsReadRepository>(), Mock.Of<IProviderAllowedCoursesRepository>());
+        var sut = new GetProviderCourseForecastsQueryValidator(providersRepoMock.Object, Mock.Of<IProviderCourseTypesRepository>(), Mock.Of<IStandardsReadRepository>(), Mock.Of<IProviderAllowedCoursesRepository>());
 
         var result = await sut.TestValidateAsync(new GetProviderCourseForecastsQuery(ukprn, "ZSC10001"), options => options.IncludeProperties(nameof(GetProviderCourseForecastsQuery.Ukprn)));
 
@@ -49,7 +49,7 @@ public class GetProviderCourseForecastsQueryValidatorTests
         standard.CourseType = CourseType.Apprenticeship;
         Mock<IStandardsReadRepository> standardsRepoMock = new();
         standardsRepoMock.Setup(x => x.GetStandard(query.LarsCode)).ReturnsAsync(standard);
-        var sut = new GetProviderCourseForecastsQueryValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseTypesReadRepository>(), standardsRepoMock.Object, Mock.Of<IProviderAllowedCoursesRepository>());
+        var sut = new GetProviderCourseForecastsQueryValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCourseTypesRepository>(), standardsRepoMock.Object, Mock.Of<IProviderAllowedCoursesRepository>());
 
         var result = await sut.TestValidateAsync(query, options => options.IncludeProperties(nameof(GetProviderCourseForecastsQuery.LarsCode)));
 
@@ -64,7 +64,7 @@ public class GetProviderCourseForecastsQueryValidatorTests
         Mock<IStandardsReadRepository> standardsRepoMock = new();
         standardsRepoMock.Setup(x => x.GetStandard(query.LarsCode)).ReturnsAsync(standard);
 
-        Mock<IProviderCourseTypesReadRepository> courseTypesRepoMock = new();
+        Mock<IProviderCourseTypesRepository> courseTypesRepoMock = new();
         courseTypesRepoMock.Setup(x => x.GetProviderCourseTypesByUkprn(query.Ukprn, It.IsAny<CancellationToken>())).ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { CourseType = CourseType.Apprenticeship } });
 
         var sut = new GetProviderCourseForecastsQueryValidator(Mock.Of<IProvidersReadRepository>(), courseTypesRepoMock.Object, standardsRepoMock.Object, Mock.Of<IProviderAllowedCoursesRepository>());
@@ -82,7 +82,7 @@ public class GetProviderCourseForecastsQueryValidatorTests
         Mock<IStandardsReadRepository> standardsRepoMock = new();
         standardsRepoMock.Setup(x => x.GetStandard(query.LarsCode)).ReturnsAsync(standard);
 
-        Mock<IProviderCourseTypesReadRepository> courseTypesRepoMock = new();
+        Mock<IProviderCourseTypesRepository> courseTypesRepoMock = new();
         courseTypesRepoMock.Setup(x => x.GetProviderCourseTypesByUkprn(query.Ukprn, It.IsAny<CancellationToken>())).ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { CourseType = CourseType.ShortCourse } });
 
         Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepoMock = new();
@@ -103,7 +103,7 @@ public class GetProviderCourseForecastsQueryValidatorTests
         Mock<IStandardsReadRepository> standardsRepoMock = new();
         standardsRepoMock.Setup(x => x.GetStandard(query.LarsCode)).ReturnsAsync(standard);
 
-        Mock<IProviderCourseTypesReadRepository> courseTypesRepoMock = new();
+        Mock<IProviderCourseTypesRepository> courseTypesRepoMock = new();
         courseTypesRepoMock.Setup(x => x.GetProviderCourseTypesByUkprn(query.Ukprn, It.IsAny<CancellationToken>())).ReturnsAsync(new List<ProviderCourseType> { new ProviderCourseType { CourseType = CourseType.ShortCourse } });
 
         Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepoMock = new();

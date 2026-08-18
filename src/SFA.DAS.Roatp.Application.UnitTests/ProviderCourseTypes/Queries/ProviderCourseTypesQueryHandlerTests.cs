@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Queries
         public async Task Handle_ReturnsResult(
             ProviderCourseType providerCourseType,
             List<ProviderCourseType> providerCourseTypes,
-            [Frozen] Mock<IProviderCourseTypesReadRepository> repo,
+            [Frozen] Mock<IProviderCourseTypesRepository> repo,
             GetProviderCourseTypesQuery query,
             GetProviderCourseTypesQueryHandler sut,
             CancellationToken cancellationToken)
@@ -37,7 +37,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Queries
         [Test, RecursiveMoqAutoData()]
         public async Task Handle_NoData_ReturnsEmptyList(
             ProviderCourseType providerCourseType,
-            [Frozen] Mock<IProviderCourseTypesReadRepository> repo,
+            [Frozen] Mock<IProviderCourseTypesRepository> repo,
             GetProviderCourseTypesQuery query,
             GetProviderCourseTypesQueryHandler sut,
             CancellationToken cancellationToken)

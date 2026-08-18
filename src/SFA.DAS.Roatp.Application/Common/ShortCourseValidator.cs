@@ -24,7 +24,7 @@ public static class ShortCourseValidator
     /// <summary>
     /// Use this in conjunction with MustBeAShortCourseType to check that the provider is allowed to deliver the short course. 
     /// </summary>
-    public static IRuleBuilderOptions<T, string> MustBeAllowedToDeliverTheShortCourse<T>(this IRuleBuilder<T, string> ruleBuilder, IStandardsReadRepository standardsReadRepository, IProviderCourseTypesReadRepository providerCourseTypesReadRepository, IProviderAllowedCoursesRepository providerAllowedCoursesRepository) where T : IProviderCourseValidator
+    public static IRuleBuilderOptions<T, string> MustBeAllowedToDeliverTheShortCourse<T>(this IRuleBuilder<T, string> ruleBuilder, IStandardsReadRepository standardsReadRepository, IProviderCourseTypesRepository providerCourseTypesReadRepository, IProviderAllowedCoursesRepository providerAllowedCoursesRepository) where T : IProviderCourseValidator
     {
         return ruleBuilder.MustAsync(async (context, larsCode, cancellation) =>
         {

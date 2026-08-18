@@ -20,9 +20,9 @@ public class GetProviderCoursesByLarsCodeTests
         var provider3 = new Provider { Ukprn = 3001, LegalName = "Test3" };
 
         context.ProviderCourses.AddRange(
-            new ProviderCourse { LarsCode = matchingLarsCode, Provider = provider1 },
-            new ProviderCourse { LarsCode = matchingLarsCode, Provider = provider2 },
-            new ProviderCourse { LarsCode = otherLarsCode, Provider = provider3 });
+            new ProviderCourse { LarsCode = matchingLarsCode, Ukprn = provider1.Ukprn, Provider = provider1 },
+            new ProviderCourse { LarsCode = matchingLarsCode, Ukprn = provider2.Ukprn, Provider = provider2 },
+            new ProviderCourse { LarsCode = otherLarsCode, Ukprn = provider3.Ukprn, Provider = provider3 });
 
         await context.SaveChangesAsync();
 
@@ -42,11 +42,13 @@ public class GetProviderCoursesByLarsCodeTests
             new ProviderCourse
             {
                 LarsCode = "100",
+                Ukprn = 1001,
                 Provider = new Provider { Ukprn = 1001, LegalName = "Test1" }
             },
             new ProviderCourse
             {
                 LarsCode = "200",
+                Ukprn = 2001,
                 Provider = new Provider { Ukprn = 2001, LegalName = "Test2" }
             });
 

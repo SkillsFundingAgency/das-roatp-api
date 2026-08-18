@@ -37,7 +37,7 @@ public class GetProviderCourseForecastsQueryHandlerTests
 
     private Mock<IStandardsReadRepository> _standardsReadRepositoryMock;
     private Mock<IProviderCourseForecastRepository> _providerCourseForecastRepositoryMock;
-    private Mock<IProviderCourseTypesReadRepository> _providerCourseTypesReadRepositoryMock;
+    private Mock<IProviderCourseTypesRepository> _providerCourseTypesReadRepositoryMock;
     private Mock<IForecastQuartersRepository> _forecastQuartersRepositoryMock;
     GetProviderCourseForecastsQueryHandler _sut;
 

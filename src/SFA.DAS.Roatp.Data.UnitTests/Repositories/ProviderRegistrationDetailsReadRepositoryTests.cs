@@ -25,115 +25,152 @@ public sealed class ProviderRegistrationDetailsReadRepositoryTests
     private void SeedData()
     {
         var providerRegistrationDetails = new List<ProviderRegistrationDetail>
+    {
+        new ProviderRegistrationDetail
         {
-            new ProviderRegistrationDetail
+            StatusId = OrganisationStatus.Active,
+            ProviderTypeId = ProviderType.Main,
+            Provider = new Provider
             {
-                StatusId = OrganisationStatus.Active,
-                ProviderTypeId = ProviderType.Main,
-                Provider = new Provider
+                Ukprn = 1,
+                LegalName = "Valid provider",
+                Locations = new List<ProviderLocation>
                 {
-                    Ukprn = 1,
-                    LegalName = "Valid provider",
-                    Locations = new List<ProviderLocation>
+                    new ProviderLocation
                     {
-                        new ProviderLocation
+                        Latitude = 0,
+                        Longitude = 0,
+                        ProviderCourseLocations = new List<ProviderCourseLocation>
                         {
-                            Latitude = 0,
-                            Longitude = 0,
-                            ProviderCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation() }
+                            new ProviderCourseLocation()
                         }
-                    },
-                    Courses = new List<ProviderCourse> { new ProviderCourse {LarsCode = LarsCode} },
-                    ProviderAddress = new ProviderAddress()
-                    {
-                        Id = 1,
-                        ProviderId = 1,
-                        AddressLine1 = "AddressLine1",
-                        AddressLine2 = "AddressLine2",
-                        AddressLine3 = "AddressLine3",
-                        AddressLine4 = "AddressLine4",
-                        Town = "Town",
-                        Postcode = "Postcode",
-                        AddressUpdateDate = DateTime.UtcNow,
                     }
-                }
-            },
-            new ProviderRegistrationDetail
-            {
-                StatusId = OrganisationStatus.Active,
-                ProviderTypeId = ProviderType.Main,
-                Provider = new Provider
+                },
+                Courses = new List<ProviderCourse>
                 {
-                    Ukprn = 2,
-                    LegalName = "Provider with no locations",
-                    Locations = new List<ProviderLocation>(),
-                    Courses = new List<ProviderCourse> { new ProviderCourse { LarsCode = LarsCode } }
-                }
-            },
-            new ProviderRegistrationDetail
-            {
-                StatusId = OrganisationStatus.Active,
-                ProviderTypeId = ProviderType.Main,
-                Provider = new Provider
-                {
-                    Ukprn = 3,
-                    LegalName = "Provider with no courses",
-                    Locations = new List<ProviderLocation>
+                    new ProviderCourse
                     {
-                        new ProviderLocation
-                        {
-                            Latitude = 0,
-                            Longitude = 0,
-                            ProviderCourseLocations = new List<ProviderCourseLocation>
-                            {
-                                new ProviderCourseLocation()
-                            }
-                        }
-                    },
-                    Courses = new ()
-                }
-            },
-            new ProviderRegistrationDetail
-            {
-                StatusId = OrganisationStatus.Removed,
-                ProviderTypeId = ProviderType.Main,
-                Provider = new Provider
+                        LarsCode = LarsCode,
+                        Ukprn = 1
+                    }
+                },
+                ProviderAddress = new ProviderAddress
                 {
-                    Ukprn = 4,
-                    LegalName = "Provider main but removed",
-                    Locations = new List<ProviderLocation>
-                    {
-                        new ProviderLocation
-                        {
-                            Latitude = 0,
-                            Longitude = 0,
-                            ProviderCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation() }
-                        }
-                    },
-                    Courses = new List<ProviderCourse> { new ProviderCourse { LarsCode = LarsCode } }
-                }
-            },
-            new ProviderRegistrationDetail
-            {
-                StatusId = OrganisationStatus.Active,
-                ProviderTypeId = ProviderType.Supporting,
-                Provider = new Provider
-                {
-                    Ukprn = 5,
-                    LegalName = "Provider active but supporting",
-                    Locations = new List<ProviderLocation>
-                    {
-                        new ProviderLocation
-                        {
-                            Latitude = 0,
-                            Longitude = 0,
-                            ProviderCourseLocations = new List<ProviderCourseLocation> { new ProviderCourseLocation() }
-                        }
-                    },
-                    Courses = new List<ProviderCourse> { new ProviderCourse { LarsCode = LarsCode } }
+                    Id = 1,
+                    ProviderId = 1,
+                    AddressLine1 = "AddressLine1",
+                    AddressLine2 = "AddressLine2",
+                    AddressLine3 = "AddressLine3",
+                    AddressLine4 = "AddressLine4",
+                    Town = "Town",
+                    Postcode = "Postcode",
+                    AddressUpdateDate = DateTime.UtcNow,
                 }
             }
-        };
+        },
+        new ProviderRegistrationDetail
+        {
+            StatusId = OrganisationStatus.Active,
+            ProviderTypeId = ProviderType.Main,
+            Provider = new Provider
+            {
+                Ukprn = 2,
+                LegalName = "Provider with no locations",
+                Locations = new List<ProviderLocation>(),
+                Courses = new List<ProviderCourse>
+                {
+                    new ProviderCourse
+                    {
+                        LarsCode = LarsCode,
+                        Ukprn = 2
+                    }
+                }
+            }
+        },
+        new ProviderRegistrationDetail
+        {
+            StatusId = OrganisationStatus.Active,
+            ProviderTypeId = ProviderType.Main,
+            Provider = new Provider
+            {
+                Ukprn = 3,
+                LegalName = "Provider with no courses",
+                Locations = new List<ProviderLocation>
+                {
+                    new ProviderLocation
+                    {
+                        Latitude = 0,
+                        Longitude = 0,
+                        ProviderCourseLocations = new List<ProviderCourseLocation>
+                        {
+                            new ProviderCourseLocation()
+                        }
+                    }
+                },
+                Courses = new()
+            }
+        },
+        new ProviderRegistrationDetail
+        {
+            StatusId = OrganisationStatus.Removed,
+            ProviderTypeId = ProviderType.Main,
+            Provider = new Provider
+            {
+                Ukprn = 4,
+                LegalName = "Provider main but removed",
+                Locations = new List<ProviderLocation>
+                {
+                    new ProviderLocation
+                    {
+                        Latitude = 0,
+                        Longitude = 0,
+                        ProviderCourseLocations = new List<ProviderCourseLocation>
+                        {
+                            new ProviderCourseLocation()
+                        }
+                    }
+                },
+                Courses = new List<ProviderCourse>
+                {
+                    new ProviderCourse
+                    {
+                        LarsCode = LarsCode,
+                        Ukprn = 4
+                    }
+                }
+            }
+        },
+        new ProviderRegistrationDetail
+        {
+            StatusId = OrganisationStatus.Active,
+            ProviderTypeId = ProviderType.Supporting,
+            Provider = new Provider
+            {
+                Ukprn = 5,
+                LegalName = "Provider active but supporting",
+                Locations = new List<ProviderLocation>
+                {
+                    new ProviderLocation
+                    {
+                        Latitude = 0,
+                        Longitude = 0,
+                        ProviderCourseLocations = new List<ProviderCourseLocation>
+                        {
+                            new ProviderCourseLocation()
+                        }
+                    }
+                },
+                Courses = new List<ProviderCourse>
+                {
+                    new ProviderCourse
+                    {
+                        LarsCode = LarsCode,
+                        Ukprn = 5
+                    }
+                }
+            }
+        }
+    };
 
         _inMemoryContext?.SeedProviderRegistrationDetails(providerRegistrationDetails);
     }

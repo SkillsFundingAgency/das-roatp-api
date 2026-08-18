@@ -12,7 +12,7 @@ public class UpsertProviderCourseForecastsCommandValidator : AbstractValidator<U
 
     public UpsertProviderCourseForecastsCommandValidator(
         IProvidersReadRepository providersReadRepository,
-        IProviderCourseTypesReadRepository providerCourseTypesReadRepository,
+        IProviderCourseTypesRepository providerCourseTypesReadRepository,
         IStandardsReadRepository standardsReadRepository,
         IProviderAllowedCoursesRepository providerAllowedCoursesRepository,
         IProviderCoursesReadRepository providerCoursesReadRepository,

@@ -10,7 +10,7 @@ public class GetProviderCourseQueryValidator : AbstractValidator<GetProviderCour
         IProvidersReadRepository providersReadRepository,
         IProviderCoursesReadRepository providerCoursesReadRepository,
         IStandardsReadRepository standardsReadRepository,
-        IProviderCourseTypesReadRepository providerCourseTypesReadRepository,
+        IProviderCourseTypesRepository providerCourseTypesReadRepository,
         IProviderAllowedCoursesRepository providerAllowedCoursesRepository)
     {
         Include(new UkprnValidator(providersReadRepository));

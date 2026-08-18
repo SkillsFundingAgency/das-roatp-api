@@ -11,9 +11,9 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseTypes.Queries.GetProviderCours
 
 public class GetProviderCourseTypesQueryHandler : IRequestHandler<GetProviderCourseTypesQuery, ValidatedResponse<List<ProviderCourseTypeModel>>>
 {
-    private readonly IProviderCourseTypesReadRepository _providerCourseTypesReadRepository;
+    private readonly IProviderCourseTypesRepository _providerCourseTypesReadRepository;
 
-    public GetProviderCourseTypesQueryHandler(IProviderCourseTypesReadRepository providerCourseTypesReadRepository)
+    public GetProviderCourseTypesQueryHandler(IProviderCourseTypesRepository providerCourseTypesReadRepository)
     {
         _providerCourseTypesReadRepository = providerCourseTypesReadRepository;
     }

@@ -13,7 +13,7 @@ public class CourseTypeValidator : AbstractValidator<ICourseType>
     public const string CourseNotAllowed = "This course is not in the allowed list for the provider.";
 
     public CourseTypeValidator(
-        IProviderCourseTypesReadRepository providerCourseTypesReadRepository,
+        IProviderCourseTypesRepository providerCourseTypesReadRepository,
         IStandardsReadRepository standardsReadRepository,
         IProviderAllowedCoursesRepository providerAllowedCoursesRepository)
     {

@@ -21,4 +21,5 @@ public class ProviderCourse
     public virtual Provider Provider { get; set; }
     public virtual Standard Standard { get; set; }
     public virtual List<ProviderCourseLocation> Locations { get; set; } = new List<ProviderCourseLocation>();
+    public virtual ProviderAllowedCourse ProviderAllowedCourse { get; set; }
 }

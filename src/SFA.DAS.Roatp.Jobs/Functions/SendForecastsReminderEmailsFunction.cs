@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.Jobs.Functions;
 public class SendForecastsReminderEmailsFunction
 {
     private readonly ILogger<SendForecastsReminderEmailsFunction> _logger;
-    private readonly IProviderCourseTypesReadRepository _providerCourseTypesReadRepository;
+    private readonly IProviderCourseTypesRepository _providerCourseTypesReadRepository;
     private readonly IProviderCoursesReadRepository _providerCoursesReadRepository;
     private readonly IProviderCourseForecastRepository _providerCourseForecastRepository;
     private readonly IProviderEmailProcessingService _providerEmailProcessingService;
@@ -24,7 +24,7 @@ public class SendForecastsReminderEmailsFunction
         IProviderCourseForecastRepository providerCourseForecastRepository,
         IProviderEmailProcessingService providerEmailProcessingService,
         IOptions<ForecastEmailConfiguration> forecastEmailConfiguration,
-        IProviderCourseTypesReadRepository providerCourseTypesReadRepository)
+        IProviderCourseTypesRepository providerCourseTypesReadRepository)
     {
         _logger = logger;
         _providerCoursesReadRepository = providerCoursesReadRepository;

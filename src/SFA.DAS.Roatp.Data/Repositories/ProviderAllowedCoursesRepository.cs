@@ -19,6 +19,7 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
     {
         var providerAllowedCourses = await _roatpDataContext.ProviderAllowedCourses
             .Include(p => p.Standard)
+            .Include(p => p.ProviderCourse)
             .AsNoTracking()
             .Where(p => p.Ukprn == ukprn && p.Standard.CourseType == courseType)
             .ToListAsync(cancellationToken);
