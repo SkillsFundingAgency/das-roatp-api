@@ -12,7 +12,8 @@ public class ProviderAllowedCourseModelTests
     private static readonly DateTime StartRestrictedDate = new(1900, 1, 1, 0, 0, 0, DateTimeKind.Utc);
 
     [Test, RecursiveMoqAutoData]
-    public void ImplicitConversion_ReturnsExpectedModel(ProviderAllowedCourse providerAllowedCourse)
+    public void ImplicitConversion_ReturnsExpectedModel(
+        ProviderAllowedCourse providerAllowedCourse)
     {
         // Act
         ProviderAllowedCourseModel sut = providerAllowedCourse;
@@ -23,83 +24,48 @@ public class ProviderAllowedCourseModelTests
         sut.Level.Should().Be(providerAllowedCourse.Standard.Level);
     }
 
-    [Test, RecursiveMoqAutoData]
-    public void ImplicitConversion_WhenLastDateStartsIsNotStartRestrictedDate_ReturnsLastDateStarts(ProviderAllowedCourse providerAllowedCourse)
+    [TestCase(true)]
+    [TestCase(false)]
+    public void ImplicitConversion_SetsLastDateStartsAndIsStartRestricted(
+        bool isStartRestricted)
     {
         // Arrange
-        providerAllowedCourse.LastDateStarts = DateTime.UtcNow;
+        var lastDateStarts = isStartRestricted
+            ? StartRestrictedDate
+            : DateTime.UtcNow;
+
+        var providerAllowedCourse = new ProviderAllowedCourse
+        {
+            LastDateStarts = lastDateStarts,
+            Standard = new Standard()
+        };
 
         // Act
         ProviderAllowedCourseModel sut = providerAllowedCourse;
 
         // Assert
-        sut.LastDateStarts.Should().Be(providerAllowedCourse.LastDateStarts);
+        sut.LastDateStarts.Should().Be(isStartRestricted ? null : lastDateStarts);
+        sut.IsStartRestricted.Should().Be(isStartRestricted);
     }
 
-    [Test, RecursiveMoqAutoData]
-    public void ImplicitConversion_WhenLastDateStartsIsStartRestrictedDate_ReturnsNullLastDateStarts(ProviderAllowedCourse providerAllowedCourse)
+    [TestCase(true)]
+    [TestCase(false)]
+    public void ImplicitConversion_SetsIsActive(bool providerCourseExists)
     {
         // Arrange
-        providerAllowedCourse.LastDateStarts = StartRestrictedDate;
+        var providerAllowedCourse = new ProviderAllowedCourse
+        {
+            Standard = new Standard(),
+            ProviderCourse = providerCourseExists
+                ? new Domain.Entities.ProviderCourse()
+                : null
+        };
 
         // Act
         ProviderAllowedCourseModel sut = providerAllowedCourse;
 
         // Assert
-        sut.LastDateStarts.Should().BeNull();
-    }
-
-    [Test, RecursiveMoqAutoData]
-    public void ImplicitConversion_WhenLastDateStartsIsStartRestrictedDate_SetsIsStartRestrictedToTrue(ProviderAllowedCourse providerAllowedCourse)
-    {
-        // Arrange
-        providerAllowedCourse.LastDateStarts = StartRestrictedDate;
-
-        // Act
-        ProviderAllowedCourseModel sut = providerAllowedCourse;
-
-        // Assert
-        sut.IsStartRestricted.Should().BeTrue();
-    }
-
-    [Test, RecursiveMoqAutoData]
-    public void ImplicitConversion_WhenLastDateStartsIsNotStartRestrictedDate_SetsIsStartRestrictedToFalse(ProviderAllowedCourse providerAllowedCourse)
-    {
-        // Arrange
-        providerAllowedCourse.LastDateStarts = DateTime.UtcNow;
-
-        // Act
-        ProviderAllowedCourseModel sut = providerAllowedCourse;
-
-        // Assert
-        sut.IsStartRestricted.Should().BeFalse();
-    }
-
-    [Test, RecursiveMoqAutoData]
-    public void ImplicitConversion_WhenProviderCourseExists_SetsIsActiveToTrue(ProviderAllowedCourse providerAllowedCourse,
-        Domain.Entities.ProviderCourse providerCourse)
-    {
-        // Arrange
-        providerAllowedCourse.ProviderCourse = providerCourse;
-
-        // Act
-        ProviderAllowedCourseModel sut = providerAllowedCourse;
-
-        // Assert
-        sut.IsActive.Should().BeTrue();
-    }
-
-    [Test, RecursiveMoqAutoData]
-    public void ImplicitConversion_WhenProviderCourseDoesNotExist_SetsIsActiveToFalse(ProviderAllowedCourse providerAllowedCourse)
-    {
-        // Arrange
-        providerAllowedCourse.ProviderCourse = null;
-
-        // Act
-        ProviderAllowedCourseModel sut = providerAllowedCourse;
-
-        // Assert
-        sut.IsActive.Should().BeFalse();
+        sut.IsActive.Should().Be(providerCourseExists);
     }
 
     [Test, RecursiveMoqAutoData]
@@ -118,78 +84,41 @@ public class ProviderAllowedCourseModelTests
         sut.LarsCode.Should().Be(standard.LarsCode);
         sut.Title.Should().Be(standard.Title);
         sut.Level.Should().Be(standard.Level);
+        sut.IsActive.Should().BeTrue();
     }
 
-    [Test, RecursiveMoqAutoData]
-    public void ImplicitConversionFromStandardAndProviderCourse_WhenLastDateStartsIsNotStartRestrictedDate_ReturnsLastDateStarts(
-        Standard standard,
-        Domain.Entities.ProviderCourse providerCourse,
-        ProviderAllowedCourse providerAllowedCourse)
+    [TestCase(true)]
+    [TestCase(false)]
+    public void ImplicitConversionFromStandardAndProviderCourse_SetsLastDateStartsAndIsStartRestricted(
+        bool isStartRestricted)
     {
         // Arrange
-        providerAllowedCourse.LastDateStarts = DateTime.UtcNow;
-        providerCourse.ProviderAllowedCourse = providerAllowedCourse;
+        var lastDateStarts = isStartRestricted
+            ? StartRestrictedDate
+            : DateTime.UtcNow;
+
+        var standard = new Standard();
+
+        var providerAllowedCourse = new ProviderAllowedCourse
+        {
+            LastDateStarts = lastDateStarts
+        };
+
+        var providerCourse = new Domain.Entities.ProviderCourse
+        {
+            ProviderAllowedCourse = providerAllowedCourse
+        };
 
         // Act
         ProviderAllowedCourseModel sut = (standard, providerCourse);
 
         // Assert
-        sut.LastDateStarts.Should().Be(providerAllowedCourse.LastDateStarts);
+        sut.LastDateStarts.Should().Be(isStartRestricted ? null : lastDateStarts);
+        sut.IsStartRestricted.Should().Be(isStartRestricted);
     }
 
     [Test, RecursiveMoqAutoData]
-    public void ImplicitConversionFromStandardAndProviderCourse_WhenLastDateStartsIsStartRestrictedDate_ReturnsNullLastDateStarts(
-        Standard standard,
-        Domain.Entities.ProviderCourse providerCourse,
-        ProviderAllowedCourse providerAllowedCourse)
-    {
-        // Arrange
-        providerAllowedCourse.LastDateStarts = StartRestrictedDate;
-        providerCourse.ProviderAllowedCourse = providerAllowedCourse;
-
-        // Act
-        ProviderAllowedCourseModel sut = (standard, providerCourse);
-
-        // Assert
-        sut.LastDateStarts.Should().BeNull();
-    }
-
-    [Test, RecursiveMoqAutoData]
-    public void ImplicitConversionFromStandardAndProviderCourse_WhenLastDateStartsIsStartRestrictedDate_SetsIsStartRestrictedToTrue(
-        Standard standard,
-        Domain.Entities.ProviderCourse providerCourse,
-        ProviderAllowedCourse providerAllowedCourse)
-    {
-        // Arrange
-        providerAllowedCourse.LastDateStarts = StartRestrictedDate;
-        providerCourse.ProviderAllowedCourse = providerAllowedCourse;
-
-        // Act
-        ProviderAllowedCourseModel sut = (standard, providerCourse);
-
-        // Assert
-        sut.IsStartRestricted.Should().BeTrue();
-    }
-
-    [Test, RecursiveMoqAutoData]
-    public void ImplicitConversionFromStandardAndProviderCourse_WhenLastDateStartsIsNotStartRestrictedDate_SetsIsStartRestrictedToFalse(
-        Standard standard,
-        Domain.Entities.ProviderCourse providerCourse,
-        ProviderAllowedCourse providerAllowedCourse)
-    {
-        // Arrange
-        providerAllowedCourse.LastDateStarts = DateTime.UtcNow;
-        providerCourse.ProviderAllowedCourse = providerAllowedCourse;
-
-        // Act
-        ProviderAllowedCourseModel sut = (standard, providerCourse);
-
-        // Assert
-        sut.IsStartRestricted.Should().BeFalse();
-    }
-
-    [Test, RecursiveMoqAutoData]
-    public void ImplicitConversionFromStandardAndProviderCourse_WhenProviderAllowedCourseDoesNotExist_ReturnsNullLastDateStartsAndIsStartRestrictedFalse(
+    public void ImplicitConversionFromStandardAndProviderCourse_WhenProviderAllowedCourseDoesNotExist_ReturnsExpectedModel(
         Standard standard,
         Domain.Entities.ProviderCourse providerCourse)
     {
@@ -202,17 +131,6 @@ public class ProviderAllowedCourseModelTests
         // Assert
         sut.LastDateStarts.Should().BeNull();
         sut.IsStartRestricted.Should().BeFalse();
-    }
-
-    [Test, RecursiveMoqAutoData]
-    public void ImplicitConversionFromStandardAndProviderCourse_SetsIsActiveToTrue(
-        Standard standard,
-        Domain.Entities.ProviderCourse providerCourse)
-    {
-        // Act
-        ProviderAllowedCourseModel sut = (standard, providerCourse);
-
-        // Assert
         sut.IsActive.Should().BeTrue();
     }
 }
