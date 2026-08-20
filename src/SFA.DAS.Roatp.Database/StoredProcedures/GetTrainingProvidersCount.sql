@@ -51,8 +51,11 @@ BEGIN
     JOIN [dbo].[ProviderRegistrationDetail] tp on tp.[Ukprn] = pr1.[Ukprn] AND tp.[StatusId] = 1 AND tp.[ProviderTypeId] = 1 -- Active, Main only
     -- ensure course type is (still) available for the provider and course
     JOIN [dbo].[ProviderCourseType] pct on pct.Ukprn = pr1.[Ukprn] AND pct.CourseType = lc1.CourseType
+    -- check if date for last starts has been set, and if so is not in the past
+    LEFT JOIN [dbo].[ProviderAllowedCourse] pac on pac.[Ukprn] = pr1.[ukprn] AND pac.[LarsCode] = pc1.[LarsCode]
     --regulated check
-    WHERE (lc1.IsRegulatedForProvider = 0 OR (lc1.IsRegulatedForProvider = 1 AND IsNull(IsApprovedByRegulator, 0) = 1));    
+    WHERE (lc1.IsRegulatedForProvider = 0 OR (lc1.IsRegulatedForProvider = 1 AND IsNull(IsApprovedByRegulator, 0) = 1))
+    AND (pac.[LastDateStarts] IS NULL OR pac.[LastDateStarts] >= CONVERT(date,GETUTCDATE()) );
 
     -- Main Query
     SELECT 

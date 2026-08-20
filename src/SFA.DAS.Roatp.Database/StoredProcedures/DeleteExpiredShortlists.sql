@@ -38,6 +38,9 @@ BEGIN
     JOIN [dbo].[ProviderCourseLocation] pcl1 on pcl1.ProviderCourseId = pc1.[Id]
     JOIN [dbo].[ProviderLocation] pl1 on pl1.Id = pcl1.ProviderLocationId
     JOIN [dbo].[Standard] sd1 on sd1.LarsCode = st1.[Larscode]
+    -- check if date for last starts has been set, and if so is not in the past
+    LEFT JOIN [dbo].[ProviderAllowedCourse] pac on pac.[LarsCode] = st1.[Larscode] AND pac.[Ukprn] = tp.[Ukprn]
+    WHERE (pac.LastDateStarts IS NULL OR pac.LastDateStarts >= CONVERT(date,GETUTCDATE()) )
     GROUP BY st1.[Id]
     ;
 
