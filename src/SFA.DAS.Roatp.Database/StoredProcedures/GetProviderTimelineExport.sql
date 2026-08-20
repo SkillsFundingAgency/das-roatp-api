@@ -8,7 +8,15 @@ BEGIN
   ProviderAndCourseAndType
   AS
   (
-    SELECT prv.[Ukprn], pcv.[LarsCode], std.[CourseType], pcv.[EffectiveFrom], pcv.[EffectiveTo], pac.[LastDateStarts], pct.[IsRestrictedProvider]
+    SELECT prv.[Ukprn], pcv.[LarsCode], std.[CourseType]
+    ,CONVERT(date,
+          CASE std.[LearningType]
+          WHEN 'Apprenticeship' THEN '2014-08-01'
+          WHEN 'FoundationApprenticeship' THEN'2025-08-01'
+          WHEN 'ApprenticeshipUnit' THEN '2026-04-28'
+          ELSE '2014-08-01'
+          END) [EffectiveFrom]
+    , pcv.[EffectiveTo], pac.[LastDateStarts], pct.[IsRestrictedProvider]
     FROM [ProviderCoursesTimelineView] pcv
     JOIN [dbo].[Provider] prv on prv.[Id] = pcv.[ProviderId]
     JOIN [dbo].[Standard] std on std.[LarsCode] = pcv.[LarsCode]
