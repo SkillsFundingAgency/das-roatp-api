@@ -18,7 +18,7 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers;
 
 [TestFixture]
-public class ProviderContractControllerPostTests
+public class ProviderContactControllerPostTests
 {
     [Test, MoqAutoData]
     public async Task PostProviderContact_CallsMediator(
