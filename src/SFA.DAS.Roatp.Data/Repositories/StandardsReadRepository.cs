@@ -23,6 +23,7 @@ internal class StandardsReadRepository : IStandardsReadRepository
     {
         return await _roatpDataContext
             .Standards
+            .Include(x => x.RestrictedCourseView)
             .AsNoTracking()
             .ToListAsync();
     }
