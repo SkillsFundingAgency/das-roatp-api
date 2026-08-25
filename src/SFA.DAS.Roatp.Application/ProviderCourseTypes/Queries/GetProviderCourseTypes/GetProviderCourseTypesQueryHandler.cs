@@ -58,8 +58,7 @@ public class GetProviderCourseTypesQueryHandler : IRequestHandler<GetProviderCou
 
         if (providerCourseType.IsRestrictedProvider)
         {
-            model.AllowedCount = providerAllowedCourses.Count(pac =>
-                pac.LastDateStarts == null);
+            model.AllowedCount = providerAllowedCourses.Count;
 
             model.RestrictedCount = null;
         }

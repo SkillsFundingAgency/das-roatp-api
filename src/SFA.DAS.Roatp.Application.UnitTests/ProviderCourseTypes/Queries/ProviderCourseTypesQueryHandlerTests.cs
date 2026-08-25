@@ -56,7 +56,7 @@ public class ProviderCourseTypesQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenRestrictedApprenticeshipProviderHasCourseWithNullLastDateStarts_ThenCourseIsIncludedInAllowedCount(
+    public async Task WhenRestrictedApprenticeshipProvider_ThenAllowedCountIsProviderAllowedCourseCount(
         [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Frozen] Mock<IRestrictedCourseViewRepository> restrictedCourseViewRepository,
@@ -74,8 +74,11 @@ public class ProviderCourseTypesQueryHandlerTests
         {
             new()
             {
-                LarsCode = "100",
-                LastDateStarts = null
+                LarsCode = "100"
+            },
+            new()
+            {
+                LarsCode = "200"
             }
         };
 
@@ -98,7 +101,7 @@ public class ProviderCourseTypesQueryHandlerTests
         var result = await sut.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Result[0].AllowedCount.Should().Be(1);
+        result.Result[0].AllowedCount.Should().Be(2);
     }
 
     [Test, MoqAutoData]
