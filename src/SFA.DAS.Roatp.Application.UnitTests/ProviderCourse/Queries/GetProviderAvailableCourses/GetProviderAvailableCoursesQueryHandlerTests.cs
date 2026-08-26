@@ -291,6 +291,56 @@ public class GetProviderAvailableCoursesQueryHandlerTests
         Assert.That(validationResult.Result.AvailableCourses.Select(c => c.LarsCode), Is.EqualTo(["1", "2"]));
     }
 
+    [Test, MoqAutoData]
+    public async Task WhenCourseTypeIsAllowed_AndProviderIsNotRestricted_ThenExcludesCoursesAlreadyAdded(
+        [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepoMock,
+        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepoMock,
+        [Frozen] Mock<IProviderCoursesReadRepository> providerCoursesReadRepoMock,
+        [Frozen] Mock<IStandardsReadRepository> standardsRepoMock,
+        GetProviderAvailableCoursesQuery query,
+        GetProviderAvailableCoursesQueryHandler sut,
+        CancellationToken cancellationToken)
+    {
+        Fixture fixture = GetRecursiveResilientFixture();
+
+        providerCourseTypesRepoMock.Setup(x => x.GetProviderCourseTypesByUkprn(query.Ukprn, cancellationToken)).ReturnsAsync([new ProviderCourseType { CourseType = query.CourseType, IsRestrictedProvider = false }]);
+
+        string[] restrictedLarsCodes = ["1", "2"];
+        var restrictedCourses = fixture
+            .Build<Standard>()
+            .With(s => s.CourseType, query.CourseType)
+            .With(s => s.RestrictedCourseView, new RestrictedCourseView())
+            .CreateMany(a => a.LarsCode, restrictedLarsCodes)
+            .ToList();
+        string[] unrestrictedLarsCodes = ["3", "4"];
+        var unRestrictedCourses = fixture
+            .Build<Standard>()
+            .With(s => s.CourseType, query.CourseType)
+            .With(s => s.RestrictedCourseView, () => null)
+            .CreateMany(a => a.LarsCode, unrestrictedLarsCodes)
+            .ToList();
+        var allCourses = restrictedCourses.Concat(unRestrictedCourses).ToList();
+        standardsRepoMock.Setup(x => x.GetCoursesByCourseType(query.CourseType, cancellationToken)).ReturnsAsync(allCourses);
+
+        var allowedCourses = fixture
+            .Build<ProviderAllowedCourse>()
+            .With(a => a.LastDateStarts, () => null)
+            .CreateMany(a => a.LarsCode, restrictedLarsCodes)
+            .ToList();
+        providerAllowedCoursesRepoMock.Setup(x => x.GetProviderAllowedCourses(query.Ukprn, query.CourseType, cancellationToken)).ReturnsAsync(allowedCourses);
+
+        var includedCourses = fixture
+            .Build<Domain.Entities.ProviderCourse>()
+            .CreateMany(pc => pc.LarsCode, "1", "3")
+            .ToList();
+        providerCoursesReadRepoMock.Setup(x => x.GetAllProviderCourses(query.Ukprn)).ReturnsAsync(includedCourses);
+
+        // Action
+        ValidatedResponse<GetProviderAvailableCoursesQueryResult> validationResult = await sut.Handle(query, cancellationToken);
+
+        Assert.That(validationResult.Result.AvailableCourses.Select(c => c.LarsCode), Is.EqualTo(["2", "4"]));
+    }
+
     private static Fixture GetRecursiveResilientFixture()
     {
         Fixture fixture = new();

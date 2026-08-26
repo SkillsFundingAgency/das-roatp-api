@@ -42,10 +42,11 @@ public class GetProviderAvailableCoursesQueryHandler(
         {
             var unrestrictedCourses = courses.Where(c => c.RestrictedCourseView == null).Select(c => c.LarsCode);
             var ceasedList = allowedCourses.Where(c => c.LastDateStarts.HasValue && c.LastDateStarts.Value.Date < DateTime.UtcNow.Date).Select(c => c.LarsCode);
-            var unrestrictedLarsCodes = unrestrictedCourses.Except(ceasedList);
+            var unrestrictedLarsCodes = unrestrictedCourses.Except(ceasedList).Except(includedList);
 
             var restrictedCourses = courses.Where(c => c.RestrictedCourseView != null).Select(c => c.LarsCode);
-            var restrictedLarsCodes = restrictedCourses.Intersect(allowedList);
+            var allowedLarsCodes = restrictedCourses.Intersect(allowedList);
+            var restrictedLarsCodes = allowedLarsCodes.Except(includedList);
             larsCodes = unrestrictedLarsCodes.Concat(restrictedLarsCodes);
         }
 
