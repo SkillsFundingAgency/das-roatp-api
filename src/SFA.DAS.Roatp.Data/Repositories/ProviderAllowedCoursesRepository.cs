@@ -15,6 +15,7 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
     private const string CreateProviderCourseType = "CreateProviderCourseType";
     private const string UpdateProviderAllowedCourse = "UpdateProviderAllowedCourse";
     private const string CreateProviderAllowedCourse = "CreateProviderAllowedCourse";
+
     public async Task<List<ProviderAllowedCourse>> GetProviderAllowedCourses(int ukprn, CourseType courseType, CancellationToken cancellationToken)
     {
         var providerAllowedCourses = await _roatpDataContext.ProviderAllowedCourses

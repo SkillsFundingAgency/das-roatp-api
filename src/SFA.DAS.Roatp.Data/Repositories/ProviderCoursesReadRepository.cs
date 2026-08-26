@@ -86,4 +86,20 @@ internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
              .Where(pc => pc.LarsCode == larsCode)
              .AsNoTracking().ToListAsync();
     }
+
+    [ExcludeFromCodeCoverage]
+    public async Task<List<ProviderCourse>> GetProviderCoursesByCourseType(int ukprn, CourseType courseType, CancellationToken cancellationToken)
+    {
+        return await _roatpDataContext
+            .ProviderCourses
+            .Include(pc => pc.Standard)
+            .Include(pc => pc.Provider)
+            .Include(pc => pc.ProviderAllowedCourse)
+            .Where(pc =>
+                pc.Provider.Ukprn == ukprn
+                && pc.Standard.CourseType == courseType
+                && pc.Provider.ProviderCourseTypes.Any(pct => pct.CourseType == courseType))
+            .AsNoTracking()
+            .ToListAsync(cancellationToken);
+    }
 }
