@@ -61,6 +61,7 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
             UserId = request.UserId,
             UserDisplayName = request.UserDisplayName,
             LastDateStarts = request.LastDateStarts,
+            IsStartRestricted = request.IsStartRestricted
         };
 
         var response = await _mediator.Send(command);
