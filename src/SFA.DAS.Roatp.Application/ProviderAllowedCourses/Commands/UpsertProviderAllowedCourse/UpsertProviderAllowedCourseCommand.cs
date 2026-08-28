@@ -12,4 +12,5 @@ public class UpsertProviderAllowedCourseCommand : IRequest<ValidatedResponse<Uni
     public DateTime? LastDateStarts { get; set; }
     public int Ukprn { get; set; }
     public string LarsCode { get; set; }
+    public bool IsStartRestricted { get; set; }
 }

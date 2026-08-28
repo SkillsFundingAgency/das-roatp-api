@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Data.Repositories;
 using SFA.DAS.Roatp.Data.UnitTests.Setup;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Models;
 
@@ -30,7 +31,7 @@ public class UpsertProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, courseType, lastDateStarts, userId, userDisplayName);
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, false, courseType, lastDateStarts, userId, userDisplayName);
 
         activity.Stop();
 
@@ -83,7 +84,7 @@ public class UpsertProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, courseType, lastDateStarts, userId, userDisplayName);
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, false, courseType, lastDateStarts, userId, userDisplayName);
 
         activity.Stop();
 
@@ -131,7 +132,7 @@ public class UpsertProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, courseType, updatedLastDateStarts, userId, userDisplayName);
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, false, courseType, updatedLastDateStarts, userId, userDisplayName);
 
         activity.Stop();
 
@@ -177,7 +178,7 @@ public class UpsertProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, courseType, updatedLastDateStarts, userId, userDisplayName);
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, false, courseType, updatedLastDateStarts, userId, userDisplayName);
 
         activity.Stop();
 
@@ -231,7 +232,7 @@ public class UpsertProviderAllowedCourseTests
         using var activity = new Activity("test");
         activity.Start();
 
-        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, courseType, null, userId, userDisplayName);
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, false, courseType, null, userId, userDisplayName);
 
         activity.Stop();
 
@@ -254,6 +255,41 @@ public class UpsertProviderAllowedCourseTests
             x.UserId == userId &&
             x.UserDisplayName == userDisplayName &&
             x.UserAction == "UpdateProviderAllowedCourse");
+    }
+
+    [Test]
+    public async Task WhenIsStartRestrictedIsTrue_ThenUpdatesLastDateStartsToStartRestrictedDate()
+    {
+        using var context = RoatpDataContextFactory.CreateInMemoryContext();
+
+        int ukprn = 12345678;
+        string larsCode = "LARS001";
+        var existingLastDateStarts = DateTime.UtcNow.AddMonths(-1);
+        string userId = "TestUserID";
+        string userDisplayName = "Test User";
+        CourseType courseType = CourseType.Apprenticeship;
+
+        AddProvider(context, ukprn);
+        AddProviderCourseType(context, ukprn, CourseType.Apprenticeship);
+        AddProviderAllowedCourse(context, ukprn, larsCode, existingLastDateStarts);
+
+        ProviderAllowedCoursesRepository sut = new(context);
+
+        using var activity = new Activity("test");
+        activity.Start();
+
+        await sut.UpsertProviderAllowedCourse(ukprn, larsCode, true, courseType, null, userId, userDisplayName);
+
+        activity.Stop();
+
+        var provider = await context.Providers
+            .Include(x => x.ProviderCourseTypes)
+            .Include(x => x.ProviderAllowedCourses)
+            .SingleAsync(x => x.Ukprn == ukprn);
+
+        provider.ProviderAllowedCourses.Should().ContainSingle(x =>
+            x.LarsCode == larsCode &&
+            x.LastDateStarts == DateConstants.StartRestrictedDate);
     }
 
     private static void AddProvider(RoatpDataContext context, int ukprn)

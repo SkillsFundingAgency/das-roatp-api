@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
@@ -36,7 +37,7 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
         return providerAllowedCourses;
     }
 
-    public async Task UpsertProviderAllowedCourse(int ukprn, string larsCode, CourseType courseType, DateTime? lastDateStarts, string userId, string userDisplayName)
+    public async Task UpsertProviderAllowedCourse(int ukprn, string larsCode, bool isStartRestricted, CourseType courseType, DateTime? lastDateStarts, string userId, string userDisplayName)
     {
         Provider provider = await _roatpDataContext.Providers
             .Include(p => p.ProviderCourseTypes)
@@ -67,6 +68,11 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
                     CourseType = courseType
                 },
                 null));
+        }
+
+        if (isStartRestricted)
+        {
+            lastDateStarts = DateConstants.StartRestrictedDate;
         }
 
         var existingAllowedCourse = provider.ProviderAllowedCourses.FirstOrDefault(p => p.LarsCode == larsCode);

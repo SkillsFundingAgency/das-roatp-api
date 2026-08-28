@@ -29,7 +29,7 @@ public class UpsertProviderAllowedCourseCommandHandlerTests
             .ReturnsAsync(standard);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.UpsertProviderAllowedCourse(command.Ukprn, command.LarsCode, standard.CourseType, command.LastDateStarts, command.UserId, command.UserDisplayName))
+            .Setup(x => x.UpsertProviderAllowedCourse(command.Ukprn, command.LarsCode, command.IsStartRestricted, standard.CourseType, command.LastDateStarts, command.UserId, command.UserDisplayName))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -40,6 +40,7 @@ public class UpsertProviderAllowedCourseCommandHandlerTests
         providerAllowedCoursesRepository.Verify(x => x.UpsertProviderAllowedCourse(
             command.Ukprn,
             command.LarsCode,
+            command.IsStartRestricted,
             standard.CourseType,
             command.LastDateStarts,
             command.UserId,
@@ -61,7 +62,7 @@ public class UpsertProviderAllowedCourseCommandHandlerTests
             .ReturnsAsync(standard);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.UpsertProviderAllowedCourse(command.Ukprn, command.LarsCode, standard.CourseType, command.LastDateStarts, command.UserId, command.UserDisplayName))
+            .Setup(x => x.UpsertProviderAllowedCourse(command.Ukprn, command.LarsCode, command.IsStartRestricted, standard.CourseType, command.LastDateStarts, command.UserId, command.UserDisplayName))
             .Returns(Task.CompletedTask);
 
         // Act

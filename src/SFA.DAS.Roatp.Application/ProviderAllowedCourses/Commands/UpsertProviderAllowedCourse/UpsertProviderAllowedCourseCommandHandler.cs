@@ -12,7 +12,7 @@ public class UpsertProviderAllowedCourseCommandHandler(IStandardsReadRepository 
     {
         var standard = await _standardsReadRepository.GetStandard(command.LarsCode);
 
-        await _providerAllowedCoursesRepository.UpsertProviderAllowedCourse(command.Ukprn, command.LarsCode, standard.CourseType, command.LastDateStarts, command.UserId, command.UserDisplayName);
+        await _providerAllowedCoursesRepository.UpsertProviderAllowedCourse(command.Ukprn, command.LarsCode, command.IsStartRestricted, standard.CourseType, command.LastDateStarts, command.UserId, command.UserDisplayName);
 
         return new ValidatedResponse<Unit>(Unit.Value);
     }
