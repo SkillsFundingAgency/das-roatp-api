@@ -8,6 +8,7 @@ public class ProviderAllowedCourse
     public int Ukprn { get; set; }
     public string LarsCode { get; set; }
     public DateTime? LastDateStarts { get; set; }
+    public DateTime UpdatedDate { get; set; }
 
     public virtual Standard Standard { get; set; }
     public virtual Provider Provider { get; set; }
