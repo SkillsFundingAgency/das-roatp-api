@@ -77,8 +77,6 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
 
             existingAllowedCourse.LastDateStarts = lastDateStarts;
 
-            existingAllowedCourse.UpdatedDate = DateTime.UtcNow;
-
             providerAllowedCourseUpdated = true;
         }
         else
