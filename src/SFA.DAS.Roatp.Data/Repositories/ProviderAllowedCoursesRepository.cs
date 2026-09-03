@@ -14,7 +14,7 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
 {
     private const string CreateProviderCourseType = "CreateProviderCourseType";
     private const string UpdateProviderAllowedCourse = "UpdateProviderAllowedCourse";
-    private const string CreateProviderAllowedCourse = "CreateProviderAllowedCourse";
+    private const string CreateProviderAllowedCourseAction = "CreateProviderAllowedCourse";
 
     public async Task<List<ProviderAllowedCourse>> GetProviderAllowedCourses(int ukprn, CourseType courseType, CancellationToken cancellationToken)
     {
@@ -36,16 +36,12 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
         return providerAllowedCourses;
     }
 
-    public async Task UpsertProviderAllowedCourse(int ukprn, string larsCode, CourseType courseType, DateTime? lastDateStarts, string userId, string userDisplayName)
+    public async Task CreateProviderAllowedCourse(int ukprn, string larsCode, CourseType courseType, DateTime? lastDateStarts, string userId, string userDisplayName)
     {
         Provider provider = await _roatpDataContext.Providers
             .Include(p => p.ProviderCourseTypes)
             .Include(c => c.ProviderAllowedCourses)
             .FirstOrDefaultAsync(p => p.Ukprn == ukprn);
-
-        bool providerAllowedCourseUpdated = false;
-
-        DateTime? existingLastDateStarts = null;
 
         if (!provider.ProviderCourseTypes.Any(ct => ct.CourseType == courseType))
         {
@@ -69,44 +65,26 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
                 null));
         }
 
-        var existingAllowedCourse = provider.ProviderAllowedCourses.FirstOrDefault(p => p.LarsCode == larsCode);
-
-        if (existingAllowedCourse != null)
+        provider.ProviderAllowedCourses.Add(new ProviderAllowedCourse
         {
-            existingLastDateStarts = existingAllowedCourse.LastDateStarts;
-
-            existingAllowedCourse.LastDateStarts = lastDateStarts;
-
-            providerAllowedCourseUpdated = true;
-        }
-        else
-        {
-            provider.ProviderAllowedCourses.Add(new ProviderAllowedCourse
-            {
-                LarsCode = larsCode,
-                Ukprn = ukprn,
-                LastDateStarts = lastDateStarts
-            });
-        }
+            LarsCode = larsCode,
+            Ukprn = ukprn,
+            LastDateStarts = lastDateStarts
+        });
 
         _roatpDataContext.Audits.Add(new Audit(
             nameof(ProviderAllowedCourse),
             ukprn.ToString(),
             userId,
             userDisplayName,
-            providerAllowedCourseUpdated ? UpdateProviderAllowedCourse : CreateProviderAllowedCourse,
+            CreateProviderAllowedCourseAction,
             new ProviderAllowedCourse
             {
                 LarsCode = larsCode,
                 Ukprn = ukprn,
-                LastDateStarts = providerAllowedCourseUpdated ? existingLastDateStarts : lastDateStarts
-            },
-            providerAllowedCourseUpdated ? new ProviderAllowedCourse
-            {
-                LarsCode = larsCode,
-                Ukprn = ukprn,
                 LastDateStarts = lastDateStarts
-            } : null));
+            },
+            null));
 
         await _roatpDataContext.SaveChangesAsync();
     }

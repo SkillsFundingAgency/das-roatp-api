@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Roatp.Domain.Models;
 
-public class UpsertProviderAllowedCourseModel
+public class CreateProviderAllowedCourseModel
 {
     public string UserId { get; set; }
     public string UserDisplayName { get; set; }

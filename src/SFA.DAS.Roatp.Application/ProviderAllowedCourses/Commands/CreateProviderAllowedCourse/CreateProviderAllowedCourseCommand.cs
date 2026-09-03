@@ -3,9 +3,9 @@ using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
-namespace SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.UpsertProviderAllowedCourse;
+namespace SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.CreateProviderAllowedCourse;
 
-public class UpsertProviderAllowedCourseCommand : IRequest<ValidatedResponse<Unit>>, IUserInfo
+public class CreateProviderAllowedCourseCommand : IRequest<ValidatedResponse<Unit>>, IUserInfo
 {
     public string UserId { get; set; }
     public string UserDisplayName { get; set; }
