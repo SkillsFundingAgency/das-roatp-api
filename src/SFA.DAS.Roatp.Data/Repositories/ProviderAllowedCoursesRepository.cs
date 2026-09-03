@@ -12,8 +12,8 @@ namespace SFA.DAS.Roatp.Data.Repositories;
 
 internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataContext) : IProviderAllowedCoursesRepository
 {
-    private const string CreateProviderCourseType = "CreateProviderCourseType";
-    private const string UpdateProviderAllowedCourse = "UpdateProviderAllowedCourse";
+    private const string CreateProviderCourseTypeAction = "CreateProviderCourseType";
+    private const string UpdateProviderAllowedCourseAction = "UpdateProviderAllowedCourse";
     private const string CreateProviderAllowedCourseAction = "CreateProviderAllowedCourse";
 
     public async Task<List<ProviderAllowedCourse>> GetProviderAllowedCourses(int ukprn, CourseType courseType, CancellationToken cancellationToken)
@@ -56,7 +56,7 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
                 ukprn.ToString(),
                 userId,
                 userDisplayName,
-                CreateProviderCourseType,
+                CreateProviderCourseTypeAction,
                 new ProviderCourseType
                 {
                     Ukprn = ukprn,
@@ -103,7 +103,7 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
             ukprn.ToString(),
             userId,
             userDisplayName,
-            UpdateProviderAllowedCourse,
+            UpdateProviderAllowedCourseAction,
             new ProviderAllowedCourse
             {
                 LarsCode = larsCode,
