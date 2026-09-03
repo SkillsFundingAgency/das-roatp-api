@@ -9,7 +9,7 @@ using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Data.UnitTests.Repositories.ProviderAllowedCoursesRepositoryTests;
 
-public class UpsertProviderAllowedCourseTests
+public class CreateProviderAllowedCourseTests
 {
     [Test]
     public async Task WhenProviderDoesNotHaveCourseType_ThenAddsBothCourseTypeAndAllowedCourse_AndCreatesTwoAuditEntries()
