@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
@@ -12,10 +13,6 @@ namespace SFA.DAS.Roatp.Data.Repositories;
 
 internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataContext) : IProviderAllowedCoursesRepository
 {
-    private const string CreateProviderCourseTypeAction = "CreateProviderCourseType";
-    private const string UpdateProviderAllowedCourseAction = "UpdateProviderAllowedCourse";
-    private const string CreateProviderAllowedCourseAction = "CreateProviderAllowedCourse";
-
     public async Task<List<ProviderAllowedCourse>> GetProviderAllowedCourses(int ukprn, CourseType courseType, CancellationToken cancellationToken)
     {
         var providerAllowedCourses = await _roatpDataContext.ProviderAllowedCourses
@@ -45,45 +42,40 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
 
         if (!provider.ProviderCourseTypes.Any(ct => ct.CourseType == courseType))
         {
-            provider.ProviderCourseTypes.Add(new ProviderCourseType
+            var providerCourseType = new ProviderCourseType
             {
                 Ukprn = ukprn,
                 CourseType = courseType
-            });
+            };
+
+            provider.ProviderCourseTypes.Add(providerCourseType);
 
             _roatpDataContext.Audits.Add(new Audit(
                 nameof(ProviderCourseType),
                 ukprn.ToString(),
                 userId,
                 userDisplayName,
-                CreateProviderCourseTypeAction,
-                new ProviderCourseType
-                {
-                    Ukprn = ukprn,
-                    CourseType = courseType
-                },
+                AuditEventTypes.CreateProviderCourseType,
+                providerCourseType,
                 null));
         }
 
-        provider.ProviderAllowedCourses.Add(new ProviderAllowedCourse
+        var providerAllowedCourse = new ProviderAllowedCourse
         {
             LarsCode = larsCode,
             Ukprn = ukprn,
             LastDateStarts = lastDateStarts
-        });
+        };
+
+        provider.ProviderAllowedCourses.Add(providerAllowedCourse);
 
         _roatpDataContext.Audits.Add(new Audit(
             nameof(ProviderAllowedCourse),
             ukprn.ToString(),
             userId,
             userDisplayName,
-            CreateProviderAllowedCourseAction,
-            new ProviderAllowedCourse
-            {
-                LarsCode = larsCode,
-                Ukprn = ukprn,
-                LastDateStarts = lastDateStarts
-            },
+            AuditEventTypes.CreateProviderAllowedCourse,
+            providerAllowedCourse,
             null));
 
         await _roatpDataContext.SaveChangesAsync();
@@ -103,7 +95,7 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
             ukprn.ToString(),
             userId,
             userDisplayName,
-            UpdateProviderAllowedCourseAction,
+            AuditEventTypes.UpdateProviderAllowedCourse,
             new ProviderAllowedCourse
             {
                 LarsCode = larsCode,

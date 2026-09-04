@@ -19,5 +19,8 @@
         public const string CreateProvider = "CreateProvider";
         public const string CreateProviderContact = "CreateProviderContact";
         public const string CreateRestrictedCourse = "CreatedRestrictedCourse";
+        public const string CreateProviderCourseType = "CreateProviderCourseType";
+        public const string UpdateProviderAllowedCourse = "UpdateProviderAllowedCourse";
+        public const string CreateProviderAllowedCourse = "CreateProviderAllowedCourse";
     }
 }
