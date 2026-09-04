@@ -10,8 +10,8 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.CreateProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
-using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.UpsertProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourses;
 using SFA.DAS.Roatp.Domain.Models;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
@@ -37,9 +37,9 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> UpsertProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] UpsertProviderAllowedCourseModel request)
+    public async Task<IActionResult> AddProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] CreateProviderAllowedCourseModel request)
     {
-        _logger.LogInformation("Request to upsert provider allowed course for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
+        _logger.LogInformation("Request to add provider allowed course for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
 
         var model = new UkrpnAndLarsCodeModel
         {
@@ -54,13 +54,14 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
             return NotFound(FormatErrors(result.Errors));
         }
 
-        UpsertProviderAllowedCourseCommand command = new()
+        CreateProviderAllowedCourseCommand command = new()
         {
             Ukprn = ukprn,
             LarsCode = larsCode.ToUpper().Trim(),
             UserId = request.UserId,
             UserDisplayName = request.UserDisplayName,
             LastDateStarts = request.LastDateStarts,
+            IsStartRestricted = request.IsStartRestricted
         };
 
         var response = await _mediator.Send(command);
