@@ -18,7 +18,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Commands.Creat
 public class CreateProviderCourseTypeCommandHandlerTests
 {
     [Test, MoqAutoData]
-    public async Task WhenHandlingCommandWithApprenticeshipCourseType_ThenRepositoryIsInvokedWithApprenticeshipCourseType(
+    public async Task WhenHandlingCommandWithApprenticeshipCourseType_ThenRepositoryIsInvokedWithApprenticeship(
     [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
     [Greedy] CreateProviderCourseTypeCommandHandler sut)
     {
@@ -53,7 +53,7 @@ public class CreateProviderCourseTypeCommandHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenHandlingCommandWithShortCourseCourseType_ThenVerifyRepositoryIsInvokedCorrectly(
+    public async Task WhenHandlingCommandWithShortCourseCourseType_ThenRepositoryIsInvokedWithCorrectlyShortCourse(
         [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
         [Greedy] CreateProviderCourseTypeCommandHandler sut)
     {
@@ -62,7 +62,7 @@ public class CreateProviderCourseTypeCommandHandlerTests
 
         var request = new AddCourseTypesModel
         {
-            CourseTypes = ["Apprenticeship"],
+            CourseTypes = ["ShortCourse"],
             UserId = "TestUserId",
             UserDisplayName = "Test User"
         };
@@ -88,7 +88,7 @@ public class CreateProviderCourseTypeCommandHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenHandlingCommandWithBothCourseTypes_ThenVerifyRepositoryIsInvokedCorrectly(
+    public async Task WhenHandlingCommandWithBothCourseTypes_ThenRepositoryIsInvokedWithAppreticeshipAndShortCourse(
         [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
         [Greedy] CreateProviderCourseTypeCommandHandler sut)
     {
@@ -97,7 +97,7 @@ public class CreateProviderCourseTypeCommandHandlerTests
 
         var request = new AddCourseTypesModel
         {
-            CourseTypes = ["Apprenticeship"],
+            CourseTypes = ["Apprenticeship", "ShortCourse"],
             UserId = "TestUserId",
             UserDisplayName = "Test User"
         };
