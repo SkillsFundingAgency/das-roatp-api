@@ -129,7 +129,7 @@ internal class ProviderCourseTypesRepository : IProviderCourseTypesRepository
             await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync(cancellationToken);
             try
             {
-                await _roatpDataContext.ProviderCoursesTypes.AddRangeAsync(providerCourseType);
+                await _roatpDataContext.ProviderCoursesTypes.AddRangeAsync(providerCourseType, cancellationToken);
 
                 Audit audit = new(nameof(ProviderCourseType), ukprn.ToString(), userId, userDisplayName, userAction, providerCourseType, null);
 

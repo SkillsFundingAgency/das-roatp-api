@@ -26,7 +26,7 @@ public class CreateProviderCourseTypeCommandValidator : AbstractValidator<Create
             {
                 List<ProviderCourseType> providerCourseTypes = await providerCourseTypesRepository.GetProviderCourseTypesByUkprn(command.Ukprn, cancellation);
 
-                return !providerCourseTypes.Any(x => x.Ukprn == command.Ukprn && command.CourseTypes.Contains(x.CourseType));
+                return !providerCourseTypes.Any(x => command.CourseTypes.Contains(x.CourseType));
             })
             .WithMessage(CourseTypesExist);
     }

@@ -147,4 +147,41 @@ public class CreateProviderCourseTypeCommandValidatorTests
         result.ShouldNotHaveValidationErrorFor(x => x.CourseTypes);
         result.ShouldNotHaveValidationErrorFor(x => x);
     }
+
+    [Test, MoqAutoData]
+    public async Task WhenRequestingCourseTypeIsDifferentToExistingCourseType_ThenValidationShouldPass(
+    [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
+    [Greedy] CreateProviderCourseTypeCommandValidator sut)
+    {
+        // Arrange
+        int ukprn = 12345678;
+
+        var request = new AddCourseTypesModel
+        {
+            CourseTypes = ["ShortCourse"],
+            UserId = "TestUserId",
+            UserDisplayName = "Test User"
+        };
+
+        var command = new CreateProviderCourseTypeCommand(ukprn, request);
+
+        var providerCourseTypes = new List<ProviderCourseType>
+            {
+                new()
+                {
+                    Ukprn = ukprn,
+                    CourseType = CourseType.Apprenticeship
+                }
+            };
+
+        providerCourseTypesRepository
+            .Setup(x => x.GetProviderCourseTypesByUkprn(ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(providerCourseTypes);
+
+        // Act
+        var result = await sut.TestValidateAsync(command);
+
+        // Assert
+        result.ShouldNotHaveValidationErrorFor(x => x);
+    }
 }
