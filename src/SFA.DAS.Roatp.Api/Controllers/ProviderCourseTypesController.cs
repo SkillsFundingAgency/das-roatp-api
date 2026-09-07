@@ -1,11 +1,15 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Asp.Versioning;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
+using SFA.DAS.Roatp.Api.Models;
+using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Application.ProviderCourseTypes.Commands.CreateProviderCourseType;
 using SFA.DAS.Roatp.Application.ProviderCourseTypes.Commands.RestrictProvider;
 using SFA.DAS.Roatp.Application.ProviderCourseTypes.Queries.GetProviderCourseTypes;
 using SFA.DAS.Roatp.Domain.Models;
@@ -17,7 +21,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 [ApiVersion(ApiVersionNumber.One)]
 [Tags(EndpointTags.ProviderCourses)]
 [Route("/providers/{ukprn}/course-types", Name = RouteNames.GetProviderCourseTypes)]
-public class ProviderCourseTypesController(IMediator _mediator, ILogger<ProviderCourseTypesController> _logger) : ActionResponseControllerBase
+public class ProviderCourseTypesController(IMediator _mediator, ILogger<ProviderCourseTypesController> _logger, IValidator<IUkprn> _ukprnValidator) : ActionResponseControllerBase
 {
     [HttpGet]
     [Produces("application/json")]
@@ -49,6 +53,33 @@ public class ProviderCourseTypesController(IMediator _mediator, ILogger<Provider
             UserId = request.UserId,
             UserDisplayName = request.UserDisplayName
         };
+
+        var response = await _mediator.Send(command);
+
+        return GetNoContentResponse(response);
+    }
+
+    [HttpPost]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> AddCourseTypes([FromRoute] int ukprn, [FromBody] AddCourseTypesModel request)
+    {
+        _logger.LogInformation("Request to add course types for Ukprn {Ukprn}", ukprn);
+
+        var model = new UkprnValidatorModel
+        {
+            Ukprn = ukprn,
+        };
+
+        var result = await _ukprnValidator.ValidateAsync(model);
+
+        if (!result.IsValid)
+        {
+            return NotFound(FormatErrors(result.Errors));
+        }
+
+        CreateProviderCourseTypeCommand command = new(ukprn, request);
 
         var response = await _mediator.Send(command);
 

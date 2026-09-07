@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
@@ -14,10 +16,12 @@ namespace SFA.DAS.Roatp.Data.Repositories;
 internal class ProviderCourseTypesRepository : IProviderCourseTypesRepository
 {
     private readonly RoatpDataContext _roatpDataContext;
+    private readonly ILogger<ProviderCourseTypesRepository> _logger;
 
-    public ProviderCourseTypesRepository(RoatpDataContext roatpDataContext)
+    public ProviderCourseTypesRepository(RoatpDataContext roatpDataContext, ILogger<ProviderCourseTypesRepository> logger)
     {
         _roatpDataContext = roatpDataContext;
+        _logger = logger;
     }
 
     public async Task<List<ProviderCourseType>> GetProviderCourseTypesByUkprn(int ukprn, CancellationToken cancellationToken = default)
@@ -114,5 +118,33 @@ internal class ProviderCourseTypesRepository : IProviderCourseTypesRepository
         }
 
         await _roatpDataContext.SaveChangesAsync(cancellationToken);
+    }
+
+    public async Task CreateProviderCourseType(IEnumerable<ProviderCourseType> providerCourseType, string userId, string userDisplayName, int ukprn, string userAction, CancellationToken cancellationToken)
+    {
+        var strategy = _roatpDataContext.Database.CreateExecutionStrategy();
+
+        await strategy.ExecuteAsync(async () =>
+        {
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync(cancellationToken);
+            try
+            {
+                await _roatpDataContext.ProviderCoursesTypes.AddRangeAsync(providerCourseType);
+
+                Audit audit = new(nameof(ProviderCourseType), ukprn.ToString(), userId, userDisplayName, userAction, providerCourseType, null);
+
+                _roatpDataContext.Audits.Add(audit);
+
+                await _roatpDataContext.SaveChangesAsync(cancellationToken);
+
+                await transaction.CommitAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                _logger.LogError(ex, "Failed to create provider course types for ukprn {Ukprn} by userId {UserId}", ukprn, userId);
+                throw new InvalidOperationException();
+            }
+        });
     }
 }
