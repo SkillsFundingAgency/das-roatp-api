@@ -14,7 +14,7 @@ public class ProviderCourseTypeModel
     public static implicit operator ProviderCourseTypeModel(ProviderCourseType source) =>
         new()
         {
-            CourseTypeId = source.Id,
+            CourseTypeId = (int)source.CourseType,
             CourseType = source.CourseType,
             IsRestricted = source.IsRestrictedProvider,
         };

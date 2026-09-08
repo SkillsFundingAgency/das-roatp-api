@@ -39,7 +39,7 @@ public abstract class CreateProviderCourseCommandValidatorTestBase
             .ReturnsAsync(new Standard { IsRegulatedForProvider = false });
         standardsReadRepositoryMock
             .Setup(r => r.GetStandard(It.Is<string>(i => i == RegulatedLarsCode)))
-            .ReturnsAsync(new Standard { IsRegulatedForProvider = true });
+            .ReturnsAsync(new Standard { IsRegulatedForProvider = true, CourseType = CourseType.Apprenticeship });
 
         providerCoursesReadRepositoryMock = new Mock<IProviderCoursesReadRepository>();
         providerCoursesReadRepositoryMock.Setup(r => r.GetProviderCourseByUkprn(ValidUkprn, ValidComboLarsCode)).ReturnsAsync(new Domain.Entities.ProviderCourse());
