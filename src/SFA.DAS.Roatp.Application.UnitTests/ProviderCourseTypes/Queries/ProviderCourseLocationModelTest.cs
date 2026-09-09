@@ -14,7 +14,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Queries
         {
             var model = (ProviderCourseTypeModel)courseType;
             model.CourseType.Should().Be(courseType.CourseType);
-            model.CourseTypeId.Should().Be(courseType.Id);
+            model.CourseTypeId.Should().Be((int)courseType.CourseType);
             model.IsRestricted.Should().Be(courseType.IsRestrictedProvider);
         }
     }
