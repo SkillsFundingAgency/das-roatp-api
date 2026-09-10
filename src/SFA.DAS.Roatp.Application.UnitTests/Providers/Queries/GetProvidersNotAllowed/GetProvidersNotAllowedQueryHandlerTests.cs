@@ -36,7 +36,7 @@ public class GetProvidersNotAllowedQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenCourseDoesNotExistInProviderAllowedCourseForProvider_ThenReturnsProvide(
+    public async Task WhenProviderDoesNotExistInProviderAllowedCourseForLarsCode_ThenReturnsProvide(
             [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
             [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
             [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
@@ -111,7 +111,7 @@ public class GetProvidersNotAllowedQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenCourseExistInProviderAllowedCourseForProvider_ThenDoesNotReturnProvider(
+    public async Task WhenProviderExistInProviderAllowedCourseForLarscode_ThenDoesNotReturnProvider(
             [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
             [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
             [Frozen] Mock<IProvidersReadRepository> providersReadRepository,
