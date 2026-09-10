@@ -115,7 +115,7 @@ public class ProviderCourseTypesControllerPostTests
     int ukprn)
     {
         // Arrange
-        request.CourseTypes = ["Apprenticeship"];
+        request.CourseTypes = [CourseType.Apprenticeship];
 
         validatorMock
             .Setup(v => v.ValidateAsync(It.Is<UkprnValidatorModel>(x => x.Ukprn == ukprn), It.IsAny<CancellationToken>()))
@@ -141,7 +141,7 @@ public class ProviderCourseTypesControllerPostTests
     int ukprn)
     {
         // Arrange
-        request.CourseTypes = ["Apprenticeship"];
+        request.CourseTypes = [CourseType.Apprenticeship];
 
         validatorMock
             .Setup(v => v.ValidateAsync(It.Is<UkprnValidatorModel>(x => x.Ukprn == ukprn), It.IsAny<CancellationToken>()))
@@ -166,7 +166,7 @@ public class ProviderCourseTypesControllerPostTests
     int ukprn)
     {
         // Arrange
-        request.CourseTypes = ["Apprenticeship"];
+        request.CourseTypes = [CourseType.Apprenticeship];
 
         validatorMock
             .Setup(v => v.ValidateAsync(It.Is<UkprnValidatorModel>(x => x.Ukprn == ukprn), It.IsAny<CancellationToken>()))

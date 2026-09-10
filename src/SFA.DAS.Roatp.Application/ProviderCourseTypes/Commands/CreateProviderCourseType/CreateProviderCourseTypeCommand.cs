@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections.Generic;
 using MediatR;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
@@ -14,12 +12,4 @@ public class CreateProviderCourseTypeCommand : IRequest<ValidatedResponse<Unit>>
     public IEnumerable<CourseType> CourseTypes { get; set; }
     public string UserId { get; set; }
     public string UserDisplayName { get; set; }
-
-    public CreateProviderCourseTypeCommand(int ukprn, AddCourseTypesModel request)
-    {
-        Ukprn = ukprn;
-        CourseTypes = request.CourseTypes.Select(x => Enum.Parse<CourseType>(x, ignoreCase: true)).ToList();
-        UserId = request.UserId;
-        UserDisplayName = request.UserDisplayName;
-    }
 }

@@ -18,21 +18,20 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Commands.Creat
 public class CreateProviderCourseTypeCommandHandlerTests
 {
     [Test, MoqAutoData]
-    public async Task WhenHandlingCommandWithApprenticeshipCourseType_ThenRepositoryIsInvokedWithApprenticeship(
+    public async Task WhenHandlingCommandWithApprenticeshipCourseType_ThenCreatesApprenticeshipCourseType(
     [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
     [Greedy] CreateProviderCourseTypeCommandHandler sut)
     {
         // Arrange
         int ukprn = 12345678;
 
-        var request = new AddCourseTypesModel
+        var command = new CreateProviderCourseTypeCommand()
         {
-            CourseTypes = ["Apprenticeship"],
+            Ukprn = ukprn,
+            CourseTypes = new[] { CourseType.Apprenticeship },
             UserId = "TestUserId",
             UserDisplayName = "Test User"
         };
-
-        var command = new CreateProviderCourseTypeCommand(ukprn, request);
 
         // Act
         await sut.Handle(command, CancellationToken.None);
@@ -53,21 +52,20 @@ public class CreateProviderCourseTypeCommandHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenHandlingCommandWithShortCourseCourseType_ThenRepositoryIsInvokedWithCorrectlyShortCourse(
+    public async Task WhenHandlingCommandWithShortCourseCourseType_ThenCreatesShortCourseCourseType(
         [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
         [Greedy] CreateProviderCourseTypeCommandHandler sut)
     {
         // Arrange
         int ukprn = 12345678;
 
-        var request = new AddCourseTypesModel
+        var command = new CreateProviderCourseTypeCommand()
         {
-            CourseTypes = ["ShortCourse"],
+            Ukprn = ukprn,
+            CourseTypes = new[] { CourseType.ShortCourse },
             UserId = "TestUserId",
             UserDisplayName = "Test User"
         };
-
-        var command = new CreateProviderCourseTypeCommand(ukprn, request);
 
         // Act
         await sut.Handle(command, CancellationToken.None);
@@ -88,21 +86,20 @@ public class CreateProviderCourseTypeCommandHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenHandlingCommandWithBothCourseTypes_ThenRepositoryIsInvokedWithAppreticeshipAndShortCourse(
+    public async Task WhenHandlingCommandWithBothCourseTypes_ThenCreatesAppreticeshipAndShortCourseCourseTypes(
         [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
         [Greedy] CreateProviderCourseTypeCommandHandler sut)
     {
         // Arrange
         int ukprn = 12345678;
 
-        var request = new AddCourseTypesModel
+        var command = new CreateProviderCourseTypeCommand()
         {
-            CourseTypes = ["Apprenticeship", "ShortCourse"],
+            Ukprn = ukprn,
+            CourseTypes = new[] { CourseType.Apprenticeship, CourseType.ShortCourse },
             UserId = "TestUserId",
             UserDisplayName = "Test User"
         };
-
-        var command = new CreateProviderCourseTypeCommand(ukprn, request);
 
         // Act
         await sut.Handle(command, CancellationToken.None);

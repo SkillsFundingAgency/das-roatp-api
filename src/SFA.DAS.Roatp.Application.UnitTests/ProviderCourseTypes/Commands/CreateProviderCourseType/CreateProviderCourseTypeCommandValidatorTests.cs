@@ -23,14 +23,13 @@ public class CreateProviderCourseTypeCommandValidatorTests
         // Arrange
         int ukprn = 12345678;
 
-        var request = new AddCourseTypesModel
+        var command = new CreateProviderCourseTypeCommand()
         {
+            Ukprn = ukprn,
             CourseTypes = [],
             UserId = "TestUserId",
             UserDisplayName = "Test User"
         };
-
-        var command = new CreateProviderCourseTypeCommand(ukprn, request);
 
         providerCourseTypesRepository
             .Setup(x => x.GetProviderCourseTypesByUkprn(ukprn, It.IsAny<CancellationToken>()))
@@ -52,18 +51,13 @@ public class CreateProviderCourseTypeCommandValidatorTests
         // Arrange
         int ukprn = 12345678;
 
-        var request = new AddCourseTypesModel
+        var command = new CreateProviderCourseTypeCommand()
         {
-            CourseTypes =
-            [
-                "Apprenticeship",
-                "Apprenticeship"
-            ],
+            Ukprn = ukprn,
+            CourseTypes = new[] { CourseType.Apprenticeship, CourseType.Apprenticeship },
             UserId = "TestUserId",
             UserDisplayName = "Test User"
         };
-
-        var command = new CreateProviderCourseTypeCommand(ukprn, request);
 
         providerCourseTypesRepository
             .Setup(x => x.GetProviderCourseTypesByUkprn(ukprn, It.IsAny<CancellationToken>()))
@@ -85,14 +79,13 @@ public class CreateProviderCourseTypeCommandValidatorTests
         // Arrange
         int ukprn = 12345678;
 
-        var request = new AddCourseTypesModel
+        var command = new CreateProviderCourseTypeCommand()
         {
-            CourseTypes = ["Apprenticeship"],
+            Ukprn = ukprn,
+            CourseTypes = new[] { CourseType.Apprenticeship },
             UserId = "TestUserId",
             UserDisplayName = "Test User"
         };
-
-        var command = new CreateProviderCourseTypeCommand(ukprn, request);
 
         var providerCourseTypes = new List<ProviderCourseType>
         {
@@ -123,18 +116,13 @@ public class CreateProviderCourseTypeCommandValidatorTests
         // Arrange
         int ukprn = 12345678;
 
-        var request = new AddCourseTypesModel
+        var command = new CreateProviderCourseTypeCommand()
         {
-            CourseTypes =
-            [
-                "Apprenticeship",
-                "ShortCourse"
-            ],
+            Ukprn = ukprn,
+            CourseTypes = new[] { CourseType.Apprenticeship, CourseType.ShortCourse },
             UserId = "TestUserId",
             UserDisplayName = "Test User"
         };
-
-        var command = new CreateProviderCourseTypeCommand(ukprn, request);
 
         providerCourseTypesRepository
             .Setup(x => x.GetProviderCourseTypesByUkprn(ukprn, It.IsAny<CancellationToken>()))
@@ -156,14 +144,13 @@ public class CreateProviderCourseTypeCommandValidatorTests
         // Arrange
         int ukprn = 12345678;
 
-        var request = new AddCourseTypesModel
+        var command = new CreateProviderCourseTypeCommand()
         {
-            CourseTypes = ["ShortCourse"],
+            Ukprn = ukprn,
+            CourseTypes = new[] { CourseType.ShortCourse },
             UserId = "TestUserId",
             UserDisplayName = "Test User"
         };
-
-        var command = new CreateProviderCourseTypeCommand(ukprn, request);
 
         var providerCourseTypes = new List<ProviderCourseType>
             {

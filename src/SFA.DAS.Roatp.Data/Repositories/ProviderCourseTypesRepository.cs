@@ -142,7 +142,7 @@ internal class ProviderCourseTypesRepository : IProviderCourseTypesRepository
             catch (Exception ex)
             {
                 await transaction.RollbackAsync(cancellationToken);
-                _logger.LogError(ex, "Failed to create provider course types for ukprn {Ukprn} by userId {UserId}", ukprn, userId);
+                _logger.LogError(ex, "Failed to create provider course types for ukprn {Ukprn}", ukprn);
                 throw new InvalidOperationException();
             }
         });

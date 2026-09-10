@@ -79,7 +79,13 @@ public class ProviderCourseTypesController(IMediator _mediator, ILogger<Provider
             return NotFound(FormatErrors(result.Errors));
         }
 
-        CreateProviderCourseTypeCommand command = new(ukprn, request);
+        CreateProviderCourseTypeCommand command = new()
+        {
+            Ukprn = ukprn,
+            CourseTypes = request.CourseTypes,
+            UserId = request.UserId,
+            UserDisplayName = request.UserDisplayName
+        };
 
         var response = await _mediator.Send(command);
 
