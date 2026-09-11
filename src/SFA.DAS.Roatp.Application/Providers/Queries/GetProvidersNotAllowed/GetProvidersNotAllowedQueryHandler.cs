@@ -9,7 +9,7 @@ using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.Providers.Queries.GetProvidersNotAllowed;
 
-public class GetProvidersNotAllowedQueryHandler(IStandardsReadRepository _standardsReadRepository, IProviderAllowedCoursesRepository _providerAllowedCoursesRepository, IProviderCourseTypesRepository _providerCourseTypesReadRepository) : IRequestHandler<GetProvidersNotAllowedQuery, RestrictedCourseDetailsModel>
+public class GetProvidersNotAllowedQueryHandler(IStandardsReadRepository _standardsReadRepository, IProviderAllowedCoursesRepository _providerAllowedCoursesRepository, IProvidersReadRepository _providersReadRepository) : IRequestHandler<GetProvidersNotAllowedQuery, RestrictedCourseDetailsModel>
 {
     public async Task<RestrictedCourseDetailsModel> Handle(GetProvidersNotAllowedQuery request, CancellationToken cancellationToken)
     {
@@ -20,7 +20,7 @@ public class GetProvidersNotAllowedQueryHandler(IStandardsReadRepository _standa
             return null;
         }
 
-        var providers = await BuildNotAllowedProviders(request.LarsCode, standard.CourseType, cancellationToken);
+        var providers = await BuildNotAllowedProviders(request.LarsCode, cancellationToken);
 
         return new RestrictedCourseDetailsModel
         {
@@ -38,17 +38,17 @@ public class GetProvidersNotAllowedQueryHandler(IStandardsReadRepository _standa
         };
     }
 
-    private async Task<IEnumerable<ProviderModel>> BuildNotAllowedProviders(string larsCode, CourseType courseType, CancellationToken cancellationToken)
+    private async Task<IEnumerable<ProviderModel>> BuildNotAllowedProviders(string larsCode, CancellationToken cancellationToken)
     {
-        var providers = await _providerCourseTypesReadRepository.GetAllProvidersByCourseType(courseType, cancellationToken);
+        var providers = await _providersReadRepository.GetAllProviders();
         var providerAllowedCourses = await _providerAllowedCoursesRepository.GetProviderAllowedCoursesByLarsCode(larsCode, cancellationToken);
 
         return providers
-            .Where(p => !providerAllowedCourses.Any(pac => pac.Ukprn == p.Provider.Ukprn && pac.LarsCode == larsCode))
+            .Where(p => !providerAllowedCourses.Any(pac => pac.Ukprn == p.Ukprn && pac.LarsCode == larsCode))
             .Select(p => new ProviderModel
             {
-                Ukprn = p.Provider.Ukprn,
-                ProviderName = p.Provider.LegalName
+                Ukprn = p.Ukprn,
+                ProviderName = p.LegalName
             });
     }
 }

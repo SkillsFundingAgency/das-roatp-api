@@ -13,8 +13,8 @@ using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
+using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.CreateProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
-using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.UpsertProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourses;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
@@ -41,11 +41,11 @@ public class ProviderAllowedCoursesControllerTests
     }
 
     [Test, MoqAutoData]
-    public async Task UpsertProviderAllowedCourse_ValidationPasses_ReturnsNoContentResult(
+    public async Task AddProviderAllowedCourse_ValidationPasses_ReturnsNoContentResult(
     [Frozen] Mock<IMediator> mediatorMock,
     [Frozen] Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock,
     [Greedy] ProviderAllowedCoursesController sut,
-    UpsertProviderAllowedCourseModel request,
+    CreateProviderAllowedCourseModel request,
     int ukprn,
     string larsCode)
     {
@@ -60,23 +60,23 @@ public class ProviderAllowedCoursesControllerTests
 
         mediatorMock
             .Setup(x => x.Send(
-                It.IsAny<UpsertProviderAllowedCourseCommand>(),
+                It.IsAny<CreateProviderAllowedCourseCommand>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidatedResponse<Unit>(Unit.Value));
 
         // Act
-        var result = await sut.UpsertProviderAllowedCourse(ukprn, larsCode, request);
+        var result = await sut.AddProviderAllowedCourse(ukprn, larsCode, request);
 
         // Assert
         Assert.That(result, Is.InstanceOf<NoContentResult>());
     }
 
     [Test, MoqAutoData]
-    public async Task UpsertProviderAllowedCourse_ControllerValidationFails_ReturnsNotFound(
+    public async Task AddProviderAllowedCourse_ControllerValidationFails_ReturnsNotFound(
     [Frozen] Mock<IMediator> mediatorMock,
     [Frozen] Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock,
     [Greedy] ProviderAllowedCoursesController sut,
-    UpsertProviderAllowedCourseModel request,
+    CreateProviderAllowedCourseModel request,
     int ukprn,
     string larsCode)
     {
@@ -95,18 +95,18 @@ public class ProviderAllowedCoursesControllerTests
             }));
 
         // Act
-        var result = await sut.UpsertProviderAllowedCourse(ukprn, larsCode, request);
+        var result = await sut.AddProviderAllowedCourse(ukprn, larsCode, request);
 
         // Assert
         result.Should().BeOfType<NotFoundObjectResult>();
     }
 
     [Test, MoqAutoData]
-    public async Task UpsertProviderAllowedCourse_ResponseIsInvalid_ReturnsBadRequest(
+    public async Task AddProviderAllowedCourse_ResponseIsInvalid_ReturnsBadRequest(
     [Frozen] Mock<IMediator> mediatorMock,
     [Frozen] Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock,
     [Greedy] ProviderAllowedCoursesController sut,
-    UpsertProviderAllowedCourseModel request,
+    CreateProviderAllowedCourseModel request,
     int ukprn,
     string larsCode)
     {
@@ -128,12 +128,12 @@ public class ProviderAllowedCoursesControllerTests
 
         mediatorMock
             .Setup(x => x.Send(
-                It.IsAny<UpsertProviderAllowedCourseCommand>(),
+                It.IsAny<CreateProviderAllowedCourseCommand>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(validatedResponse);
 
         // Act
-        var result = await sut.UpsertProviderAllowedCourse(ukprn, larsCode, request);
+        var result = await sut.AddProviderAllowedCourse(ukprn, larsCode, request);
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
