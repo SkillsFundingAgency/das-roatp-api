@@ -47,7 +47,7 @@ public class GetProviderRestrictedApprenticeshipsQueryHandler(IStandardsReadRepo
                 else
                 {
                     model.LastDateStarts = providerAllowedCourse.LastDateStarts;
-                    model.IsClosedToNewStarts = providerAllowedCourse.LastDateStarts < DateTime.UtcNow.Date;
+                    model.IsClosedToNewStarts = providerAllowedCourse.LastDateStarts <= DateTime.UtcNow.Date;
                 }
 
                 return model;

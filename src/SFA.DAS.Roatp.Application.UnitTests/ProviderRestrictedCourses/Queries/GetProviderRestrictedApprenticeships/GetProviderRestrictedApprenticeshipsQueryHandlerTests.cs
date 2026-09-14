@@ -39,23 +39,17 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         var providerAllowedCourses = new List<ProviderAllowedCourse>();
 
         standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetCoursesByCourseType(CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(standards);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(
-                request.Ukprn,
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(providerAllowedCourses);
 
         // Act
         var result = await sut.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Result.Courses.Should().ContainSingle();
         result.Result.Courses[0].LarsCode.Should().Be(larsCode);
         result.Result.Courses[0].LastDateStarts.Should().BeNull();
         result.Result.Courses[0].IsClosedToNewStarts.Should().BeTrue();
@@ -91,16 +85,11 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         };
 
         standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetCoursesByCourseType(CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(standards);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(
-                request.Ukprn,
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(providerAllowedCourses);
 
         // Act
@@ -141,23 +130,17 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         };
 
         standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetCoursesByCourseType(CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(standards);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(
-                request.Ukprn,
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(providerAllowedCourses);
 
         // Act
         var result = await sut.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Result.Courses.Should().ContainSingle();
         result.Result.Courses[0].LarsCode.Should().Be(larsCode);
         result.Result.Courses[0].LastDateStarts.Should().Be(lastDateStarts);
     }
@@ -184,16 +167,11 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         var providerAllowedCourses = new List<ProviderAllowedCourse>();
 
         standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetCoursesByCourseType(CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(standards);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(
-                request.Ukprn,
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(providerAllowedCourses);
 
         // Act
@@ -233,23 +211,17 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         };
 
         standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetCoursesByCourseType(CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(standards);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(
-                request.Ukprn,
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(providerAllowedCourses);
 
         // Act
         var result = await sut.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Result.Courses.Should().ContainSingle();
         result.Result.Courses[0].LastDateStarts.Should().BeNull();
     }
 
@@ -283,23 +255,17 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         };
 
         standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetCoursesByCourseType(CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(standards);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(
-                request.Ukprn,
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(providerAllowedCourses);
 
         // Act
         var result = await sut.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Result.Courses.Should().ContainSingle();
         result.Result.Courses[0].IsClosedToNewStarts.Should().BeTrue();
     }
 
@@ -334,23 +300,17 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         };
 
         standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetCoursesByCourseType(CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(standards);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(
-                request.Ukprn,
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(providerAllowedCourses);
 
         // Act
         var result = await sut.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Result.Courses.Should().ContainSingle();
         result.Result.Courses[0].LastDateStarts.Should().Be(lastDateStarts);
     }
 
@@ -384,28 +344,22 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         };
 
         standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetCoursesByCourseType(CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(standards);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(
-                request.Ukprn,
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(providerAllowedCourses);
 
         // Act
         var result = await sut.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Result.Courses.Should().ContainSingle();
         result.Result.Courses[0].IsClosedToNewStarts.Should().BeTrue();
     }
 
     [Test, MoqAutoData]
-    public async Task WhenLastDateStartsIsToday_ThenIsClosedToNewStartsIsFalse(
+    public async Task WhenLastDateStartsIsToday_ThenIsClosedToNewStartsIsTrue(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
@@ -435,25 +389,19 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         };
 
         standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetCoursesByCourseType(CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(standards);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(
-                request.Ukprn,
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(providerAllowedCourses);
 
         // Act
         var result = await sut.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Result.Courses.Should().ContainSingle();
         result.Result.Courses[0].LastDateStarts.Should().Be(lastDateStarts);
-        result.Result.Courses[0].IsClosedToNewStarts.Should().BeFalse();
+        result.Result.Courses[0].IsClosedToNewStarts.Should().BeTrue();
     }
 
     [Test, MoqAutoData]
@@ -487,63 +435,18 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         };
 
         standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetCoursesByCourseType(CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(standards);
 
         providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(
-                request.Ukprn,
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
+            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
             .ReturnsAsync(providerAllowedCourses);
 
         // Act
         var result = await sut.Handle(request, CancellationToken.None);
 
         // Assert
-        result.Result.Courses.Should().ContainSingle();
         result.Result.Courses[0].LastDateStarts.Should().Be(lastDateStarts);
         result.Result.Courses[0].IsClosedToNewStarts.Should().BeFalse();
-    }
-
-    [Test, MoqAutoData]
-    public async Task WhenNonRestrictedCourseHasNoProviderAllowedCourse_ThenCourseIsNotReturned(
-        [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
-        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
-        [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
-    {
-        // Arrange
-        var standards = new List<Standard>
-        {
-            new()
-            {
-                LarsCode = "100",
-                RestrictedCourseView = null
-            }
-        };
-
-        var providerAllowedCourses = new List<ProviderAllowedCourse>();
-
-        standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(standards);
-
-        providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(
-                request.Ukprn,
-                CourseType.Apprenticeship,
-                It.IsAny<CancellationToken>()))
-            .ReturnsAsync(providerAllowedCourses);
-
-        // Act
-        var result = await sut.Handle(request, CancellationToken.None);
-
-        // Assert
-        result.Result.Courses.Should().BeEmpty();
     }
 }

@@ -9,7 +9,7 @@ namespace SFA.DAS.Roatp.Application.ProviderRestrictedCourses.Queries.GetProvide
 
 public class GetProviderRestrictedApprenticeshipsQueryValidator : AbstractValidator<GetProviderRestrictedApprenticeshipsQuery>
 {
-    private const string ProviderNotRestricted = "Provider is not restricted for Apprenticeships";
+    public const string ProviderNotRestricted = "Provider is not restricted for Apprenticeships";
     public GetProviderRestrictedApprenticeshipsQueryValidator(IProviderCourseTypesRepository _providerCourseTypesRepository)
     {
         RuleFor(x => x)
