@@ -88,4 +88,32 @@ public class GetProviderRestrictedApprenticeshipsQueryValidatorTests
         result.ShouldHaveValidationErrorFor(x => x)
             .WithErrorMessage(GetProviderRestrictedApprenticeshipsQueryValidator.ProviderNotRestricted);
     }
+
+    [Test, MoqAutoData]
+    public async Task WhenProviderIsRestrictedForDifferentCourseType_ThenValidationShouldFail(
+    [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
+    [Greedy] GetProviderRestrictedApprenticeshipsQueryValidator sut,
+    GetProviderRestrictedApprenticeshipsQuery query)
+    {
+        // Arrange
+        var providerCourseTypes = new List<ProviderCourseType>
+    {
+        new()
+        {
+            CourseType = CourseType.ShortCourse,
+            IsRestrictedProvider = true
+        }
+    };
+
+        providerCourseTypesRepository
+            .Setup(r => r.GetProviderCourseTypesByUkprn(query.Ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(providerCourseTypes);
+
+        // Act
+        var result = await sut.TestValidateAsync(query);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x)
+            .WithErrorMessage(GetProviderRestrictedApprenticeshipsQueryValidator.ProviderNotRestricted);
+    }
 }
