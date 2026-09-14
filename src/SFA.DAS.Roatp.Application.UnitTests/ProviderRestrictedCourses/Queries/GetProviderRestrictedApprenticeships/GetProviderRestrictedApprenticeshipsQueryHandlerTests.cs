@@ -182,51 +182,6 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenRestrictedCourseAndExistsInProviderAllowedCourseWithDifferentUkprn_ThenCourseIsReturned(
-        [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
-        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
-        [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
-    {
-        // Arrange
-        const string larsCode = "100";
-
-        var standards = new List<Standard>
-        {
-            new()
-            {
-                LarsCode = larsCode,
-                RestrictedCourseView = new RestrictedCourseView()
-            }
-        };
-
-        var providerAllowedCourses = new List<ProviderAllowedCourse>
-        {
-            new()
-            {
-                Ukprn = request.Ukprn + 1,
-                LarsCode = larsCode,
-                LastDateStarts = null
-            }
-        };
-
-        standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(standards);
-
-        providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(providerAllowedCourses);
-
-        // Act
-        var result = await sut.Handle(request, CancellationToken.None);
-
-        // Assert
-        result.Result.Courses[0].LarsCode.Should().Be(larsCode);
-
-    }
-
-    [Test, MoqAutoData]
     public async Task WhenRestrictedCourseAndExistsInProviderAllowedCourseWithDifferentLarsCode_ThenCourseIsReturned(
     [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
     [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
@@ -268,6 +223,50 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
 
         // Assert
         result.Result.Courses[0].LarsCode.Should().Be(larsCode);
+    }
+
+    [Test, MoqAutoData]
+    public async Task WhenNonRestrictedCourseAndExistsInProviderAllowedCourseWithDifferentLarsCode_ThenCourseIsNotReturned(
+        [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
+        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
+        [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
+        GetProviderRestrictedApprenticeshipsQuery request)
+    {
+        // Arrange
+        const string larsCode = "100";
+
+        var standards = new List<Standard>
+        {
+            new()
+            {
+                LarsCode = larsCode,
+                RestrictedCourseView = null
+            }
+        };
+
+        var providerAllowedCourses = new List<ProviderAllowedCourse>
+        {
+            new()
+            {
+                Ukprn = request.Ukprn,
+                LarsCode = "200",
+                LastDateStarts = DateTime.UtcNow.Date.AddDays(1)
+            }
+        };
+
+        standardsReadRepository
+            .Setup(x => x.GetCoursesByCourseType(CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(standards);
+
+        providerAllowedCoursesRepository
+            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(providerAllowedCourses);
+
+        // Act
+        var result = await sut.Handle(request, CancellationToken.None);
+
+        // Assert
+        result.Result.Courses.Should().BeEmpty();
     }
 
     [Test, MoqAutoData]

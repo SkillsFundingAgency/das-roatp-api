@@ -97,13 +97,13 @@ public class GetProviderRestrictedApprenticeshipsQueryValidatorTests
     {
         // Arrange
         var providerCourseTypes = new List<ProviderCourseType>
-    {
-        new()
         {
-            CourseType = CourseType.ShortCourse,
-            IsRestrictedProvider = true
-        }
-    };
+            new()
+            {
+                CourseType = CourseType.ShortCourse,
+                IsRestrictedProvider = true
+            }
+        };
 
         providerCourseTypesRepository
             .Setup(r => r.GetProviderCourseTypesByUkprn(query.Ukprn, It.IsAny<CancellationToken>()))
