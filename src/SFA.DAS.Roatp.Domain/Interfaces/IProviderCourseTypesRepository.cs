@@ -12,4 +12,5 @@ public interface IProviderCourseTypesRepository
     Task<List<int>> GetAllProvidersWithShortCourses(CancellationToken cancellationToken = default);
     Task<List<ProviderCourseType>> GetAllProvidersByCourseType(CourseType courseType, CancellationToken cancellationToken = default);
     Task RestrictProvider(int ukprn, CourseType courseType, List<ProviderAllowedCourse> coursesToAdd, List<ProviderAllowedCourse> coursesToRemove, string userId, string userDisplayName, CancellationToken cancellationToken = default);
+    Task CreateProviderCourseType(IEnumerable<ProviderCourseType> providerCourseType, string userId, string userDisplayName, int ukprn, string userAction, CancellationToken cancellationToken);
 }

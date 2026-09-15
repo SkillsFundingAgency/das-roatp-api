@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Abstractions;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Data.Repositories;
 using SFA.DAS.Roatp.Data.UnitTests.Setup;
@@ -15,6 +16,7 @@ public class RestrictProviderTests
     public async Task WhenProviderIsNotRestricted_AndNoCoursesToAddOrRemove_ThenRestrictsProvider_AndCreatesOneAuditEntry()
     {
         using var context = RoatpDataContextFactory.CreateInMemoryContext();
+        var logger = NullLogger<ProviderCourseTypesRepository>.Instance;
 
         int ukprn = 12345678;
         string userId = "TestUserID";
@@ -24,7 +26,7 @@ public class RestrictProviderTests
         AddProvider(context, ukprn);
         AddProviderCourseType(context, ukprn, courseType);
 
-        ProviderCourseTypesRepository sut = new(context);
+        ProviderCourseTypesRepository sut = new(context, logger);
 
         using var activity = new Activity("test");
         activity.Start();
@@ -59,6 +61,7 @@ public class RestrictProviderTests
     public async Task WhenCoursesToAddAreProvided_ThenAddsCourses_AndCreatesTwoAuditEntries()
     {
         using var context = RoatpDataContextFactory.CreateInMemoryContext();
+        var logger = NullLogger<ProviderCourseTypesRepository>.Instance;
 
         int ukprn = 12345678;
         string userId = "TestUserID";
@@ -82,7 +85,7 @@ public class RestrictProviderTests
             }
         };
 
-        ProviderCourseTypesRepository sut = new(context);
+        ProviderCourseTypesRepository sut = new(context, logger);
 
         using var activity = new Activity("test");
         activity.Start();
@@ -133,6 +136,7 @@ public class RestrictProviderTests
     public async Task WhenCoursesToRemoveAreProvided_ThenRemovesCourses_AndCreatesTwoAuditEntries()
     {
         using var context = RoatpDataContextFactory.CreateInMemoryContext();
+        var logger = NullLogger<ProviderCourseTypesRepository>.Instance;
 
         int ukprn = 12345678;
         string userId = "TestUserID";
@@ -163,7 +167,7 @@ public class RestrictProviderTests
 
         context.ChangeTracker.Clear();
 
-        ProviderCourseTypesRepository sut = new(context);
+        ProviderCourseTypesRepository sut = new(context, logger);
 
         using var activity = new Activity("test");
         activity.Start();
