@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderRestrictedCourses.Queries.
 public class GetProviderRestrictedApprenticeshipsQueryValidatorTests
 {
     [Test, MoqAutoData]
-    public async Task WhenProviderIsRestrictedForApprenticeships_ThenValidationShouldPass(
+    public async Task WhenProviderIsRestrictedForApprenticeships_ThenValidationShouldFail(
         [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryValidator sut,
         GetProviderRestrictedApprenticeshipsQuery query)
@@ -39,11 +39,12 @@ public class GetProviderRestrictedApprenticeshipsQueryValidatorTests
         var result = await sut.TestValidateAsync(query);
 
         // Assert
-        result.ShouldNotHaveValidationErrorFor(x => x);
+        result.ShouldHaveValidationErrorFor(x => x)
+            .WithErrorMessage(GetProviderRestrictedApprenticeshipsQueryValidator.ProviderNotRestricted);
     }
 
     [Test, MoqAutoData]
-    public async Task WhenProviderIsNotRestrictedForApprenticeships_ThenValidationShouldFail(
+    public async Task WhenProviderIsNotRestrictedForApprenticeships_ThenValidationShouldPass(
         [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryValidator sut,
         GetProviderRestrictedApprenticeshipsQuery query)
@@ -66,12 +67,11 @@ public class GetProviderRestrictedApprenticeshipsQueryValidatorTests
         var result = await sut.TestValidateAsync(query);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x)
-            .WithErrorMessage(GetProviderRestrictedApprenticeshipsQueryValidator.ProviderNotRestricted);
+        result.ShouldNotHaveValidationErrorFor(x => x);
     }
 
     [Test, MoqAutoData]
-    public async Task WhenProviderHasNoCourseTypes_ThenValidationShouldFail(
+    public async Task WhenProviderHasNoCourseTypes_ThenValidationShouldPass(
         [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryValidator sut,
         GetProviderRestrictedApprenticeshipsQuery query)
@@ -85,12 +85,11 @@ public class GetProviderRestrictedApprenticeshipsQueryValidatorTests
         var result = await sut.TestValidateAsync(query);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x)
-            .WithErrorMessage(GetProviderRestrictedApprenticeshipsQueryValidator.ProviderNotRestricted);
+        result.ShouldNotHaveValidationErrorFor(x => x);
     }
 
     [Test, MoqAutoData]
-    public async Task WhenProviderIsRestrictedForDifferentCourseType_ThenValidationShouldFail(
+    public async Task WhenProviderIsRestrictedForDifferentCourseType_ThenValidationShouldPass(
     [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
     [Greedy] GetProviderRestrictedApprenticeshipsQueryValidator sut,
     GetProviderRestrictedApprenticeshipsQuery query)
@@ -113,7 +112,6 @@ public class GetProviderRestrictedApprenticeshipsQueryValidatorTests
         var result = await sut.TestValidateAsync(query);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x)
-            .WithErrorMessage(GetProviderRestrictedApprenticeshipsQueryValidator.ProviderNotRestricted);
+        result.ShouldNotHaveValidationErrorFor(x => x);
     }
 }
