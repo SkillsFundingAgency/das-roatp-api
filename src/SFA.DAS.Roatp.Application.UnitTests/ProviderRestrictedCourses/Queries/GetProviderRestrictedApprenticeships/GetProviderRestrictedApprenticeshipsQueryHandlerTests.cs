@@ -22,11 +22,10 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
+        GetProviderRestrictedApprenticeshipsQuery request,
+        string larsCode)
     {
         // Arrange
-        const string larsCode = "100";
-
         var standards = new List<Standard>
         {
             new()
@@ -60,11 +59,10 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
+        GetProviderRestrictedApprenticeshipsQuery request,
+        string larsCode)
     {
         // Arrange
-        const string larsCode = "100";
-
         var standards = new List<Standard>
         {
             new()
@@ -104,10 +102,10 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
+        GetProviderRestrictedApprenticeshipsQuery request,
+        string larsCode)
     {
         // Arrange
-        const string larsCode = "100";
         var lastDateStarts = DateTime.UtcNow.Date.AddDays(1);
 
         var standards = new List<Standard>
@@ -150,11 +148,10 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
+        GetProviderRestrictedApprenticeshipsQuery request,
+        string larsCode)
     {
         // Arrange
-        const string larsCode = "100";
-
         var standards = new List<Standard>
         {
             new()
@@ -186,11 +183,10 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
     [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
     [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
     [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-    GetProviderRestrictedApprenticeshipsQuery request)
+    GetProviderRestrictedApprenticeshipsQuery request,
+    string larsCode)
     {
         // Arrange
-        const string larsCode = "100";
-
         var standards = new List<Standard>
         {
             new()
@@ -230,11 +226,11 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
+        GetProviderRestrictedApprenticeshipsQuery request,
+        string larsCode,
+        string differentLarsCode)
     {
         // Arrange
-        const string larsCode = "100";
-
         var standards = new List<Standard>
         {
             new()
@@ -249,7 +245,7 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
             new()
             {
                 Ukprn = request.Ukprn,
-                LarsCode = "200",
+                LarsCode = differentLarsCode,
                 LastDateStarts = DateTime.UtcNow.Date.AddDays(1)
             }
         };
@@ -274,11 +270,10 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
+        GetProviderRestrictedApprenticeshipsQuery request,
+        string larsCode)
     {
         // Arrange
-        const string larsCode = "100";
-
         var standards = new List<Standard>
         {
             new()
@@ -318,11 +313,10 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
+        GetProviderRestrictedApprenticeshipsQuery request,
+        string larsCode)
     {
         // Arrange
-        const string larsCode = "100";
-
         var standards = new List<Standard>
         {
             new()
@@ -362,10 +356,10 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
+        GetProviderRestrictedApprenticeshipsQuery request,
+        string larsCode)
     {
         // Arrange
-        const string larsCode = "100";
         var lastDateStarts = DateTime.UtcNow.Date.AddDays(-1);
 
         var standards = new List<Standard>
@@ -407,11 +401,10 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
+        GetProviderRestrictedApprenticeshipsQuery request,
+        string larsCode)
     {
         // Arrange
-        const string larsCode = "100";
-
         var standards = new List<Standard>
         {
             new()
@@ -451,10 +444,10 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
+        GetProviderRestrictedApprenticeshipsQuery request,
+        string larsCode)
     {
         // Arrange
-        const string larsCode = "100";
         var lastDateStarts = DateTime.UtcNow.Date;
 
         var standards = new List<Standard>
@@ -497,10 +490,10 @@ public class GetProviderRestrictedApprenticeshipsQueryHandlerTests
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderRestrictedApprenticeshipsQuery request)
+        GetProviderRestrictedApprenticeshipsQuery request,
+        string larsCode)
     {
         // Arrange
-        const string larsCode = "100";
         var lastDateStarts = DateTime.UtcNow.Date.AddDays(1);
 
         var standards = new List<Standard>
