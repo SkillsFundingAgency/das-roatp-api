@@ -41,7 +41,7 @@ public class GetProviderNotRestrictedApprenticeshipsQueryValidatorTests
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x)
-            .WithErrorMessage(ProviderCourseTypeRestrictionValidator.CourseTypeRestricted);
+            .WithErrorMessage($"{ProviderCourseTypeRestrictionValidator.CourseTypeRestricted} {query.CourseType}");
     }
 
     [Test, MoqAutoData]

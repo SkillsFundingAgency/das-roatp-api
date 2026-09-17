@@ -40,7 +40,7 @@ public class ProviderCourseTypeRestrictionValidatorTests
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x)
-            .WithErrorMessage(ProviderCourseTypeRestrictionValidator.CourseTypeRestricted);
+            .WithErrorMessage($"{ProviderCourseTypeRestrictionValidator.CourseTypeRestricted} {request.CourseType}");
     }
 
     [Test, MoqAutoData]
@@ -88,7 +88,7 @@ public class ProviderCourseTypeRestrictionValidatorTests
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x)
-            .WithErrorMessage(ProviderCourseTypeRestrictionValidator.CourseTypeNotFound);
+            .WithErrorMessage($"{ProviderCourseTypeRestrictionValidator.CourseTypeNotFound} {request.CourseType}");
     }
 
     [Test, MoqAutoData]
@@ -118,6 +118,6 @@ public class ProviderCourseTypeRestrictionValidatorTests
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x)
-            .WithErrorMessage(ProviderCourseTypeRestrictionValidator.CourseTypeNotFound);
+            .WithErrorMessage($"{ProviderCourseTypeRestrictionValidator.CourseTypeNotFound} {request.CourseType}");
     }
 }

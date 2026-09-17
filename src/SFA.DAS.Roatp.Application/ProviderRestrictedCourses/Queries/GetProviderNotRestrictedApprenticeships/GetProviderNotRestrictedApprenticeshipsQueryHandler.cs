@@ -15,7 +15,6 @@ public class GetProviderNotRestrictedApprenticeshipsQueryHandler(IStandardsReadR
 
         var providerAllowedCourses = await _providerAllowedCoursesRepository.GetProviderAllowedCourses(request.Ukprn, request.CourseType, cancellationToken);
 
-
         var notRestrictedApprenticeships = standards
             .Where(s =>
                 (s.RestrictedCourseView != null &&

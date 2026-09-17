@@ -6,8 +6,8 @@ namespace SFA.DAS.Roatp.Application.Common;
 
 public class ProviderCourseTypeRestrictionValidator : AbstractValidator<IProviderCourseTypeRestriction>
 {
-    public const string CourseTypeNotFound = "Requested course type does not exist for provider";
-    public const string CourseTypeRestricted = "Provider is restricted for requested course type";
+    public const string CourseTypeNotFound = "Provider does not have course type";
+    public const string CourseTypeRestricted = "Provider is restricted for course type";
 
     public ProviderCourseTypeRestrictionValidator(IProviderCourseTypesRepository providerCourseTypesRepository)
     {
@@ -20,13 +20,13 @@ public class ProviderCourseTypeRestrictionValidator : AbstractValidator<IProvide
 
                 if (providerCourseType == null)
                 {
-                    context.AddFailure(CourseTypeNotFound);
+                    context.AddFailure($"{CourseTypeNotFound} {request.CourseType}");
                     return;
                 }
 
                 if (providerCourseType.IsRestrictedProvider)
                 {
-                    context.AddFailure(CourseTypeRestricted);
+                    context.AddFailure($"{CourseTypeRestricted} {request.CourseType}");
                 }
             });
     }

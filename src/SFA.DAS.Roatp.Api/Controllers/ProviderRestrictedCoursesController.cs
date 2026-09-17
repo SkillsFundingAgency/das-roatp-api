@@ -47,7 +47,7 @@ public class ProviderRestrictedCoursesController(IMediator _mediator, ILogger<Pr
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> GetNotRestrictedApprenticeships([FromRoute] int ukprn)
     {
-        _logger.LogInformation("Request received to get restricted apprenticeships for ukprn: {Ukprn}", ukprn);
+        _logger.LogInformation("Request received to get not restricted apprenticeships for ukprn: {Ukprn}", ukprn);
 
         var model = new UkprnValidatorModel { Ukprn = ukprn };
 
