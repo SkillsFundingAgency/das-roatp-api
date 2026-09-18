@@ -14,10 +14,10 @@ using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowe
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ProviderAllowedCoursesControllerTests;
 
-public class GetProviderAllowedCourseTests
+public class GetProviderAllowedCourseDetailsTests
 {
     [Test, AutoData]
-    public async Task WhenProviderAllowedCourseExists_ThenReturnsOk(GetProviderAllowedCourseQueryResult expectedResult)
+    public async Task WhenProviderAllowedCourseExists_ThenReturnsOk(GetProviderAllowedCourseDetailsQueryResult expectedResult)
     {
         // Arrange
         var ukprn = 12345678;
@@ -28,11 +28,11 @@ public class GetProviderAllowedCourseTests
             .ReturnsAsync(new ValidationResult());
         var mediatorMock = new Mock<IMediator>();
         mediatorMock
-            .Setup(m => m.Send(It.IsAny<GetProviderAllowedCourseQuery>(), It.IsAny<CancellationToken>()))
+            .Setup(m => m.Send(It.IsAny<GetProviderAllowedCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
         var sut = new ProviderAllowedCoursesController(mediatorMock.Object, Mock.Of<ILogger<ProviderAllowedCoursesController>>(), validatorMock.Object);
         // Act
-        var result = await sut.GetProviderAllowedCourse(ukprn, larsCode, CancellationToken.None);
+        var result = await sut.GetProviderAllowedCourseDetails(ukprn, larsCode, CancellationToken.None);
         // Assert
         var okResult = result as OkObjectResult;
         Assert.That(expectedResult, Is.EqualTo(okResult.Value));
@@ -50,11 +50,11 @@ public class GetProviderAllowedCourseTests
             .ReturnsAsync(new ValidationResult());
         var mediatorMock = new Mock<IMediator>();
         mediatorMock
-            .Setup(m => m.Send(It.IsAny<GetProviderAllowedCourseQuery>(), It.IsAny<CancellationToken>()))
-            .ReturnsAsync((GetProviderAllowedCourseQueryResult)null);
+            .Setup(m => m.Send(It.IsAny<GetProviderAllowedCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
+            .ReturnsAsync((GetProviderAllowedCourseDetailsQueryResult)null);
         var sut = new ProviderAllowedCoursesController(mediatorMock.Object, Mock.Of<ILogger<ProviderAllowedCoursesController>>(), validatorMock.Object);
         // Act
-        var result = await sut.GetProviderAllowedCourse(ukprn, larsCode, CancellationToken.None);
+        var result = await sut.GetProviderAllowedCourseDetails(ukprn, larsCode, CancellationToken.None);
         // Assert
         var noContentResult = result as NoContentResult;
         Assert.That(noContentResult, Is.Not.Null);
@@ -73,7 +73,7 @@ public class GetProviderAllowedCourseTests
 
         var sut = new ProviderAllowedCoursesController(Mock.Of<IMediator>(), Mock.Of<ILogger<ProviderAllowedCoursesController>>(), validatorMock.Object);
         // Act
-        var result = await sut.GetProviderAllowedCourse(ukprn, larsCode, CancellationToken.None);
+        var result = await sut.GetProviderAllowedCourseDetails(ukprn, larsCode, CancellationToken.None);
         // Assert
         var notFoundResult = result as NotFoundObjectResult;
         Assert.That(notFoundResult, Is.Not.Null);

@@ -108,8 +108,8 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
     [HttpGet("{larsCode}")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    [ProducesResponseType(typeof(GetProviderAllowedCourseQueryResult), StatusCodes.Status200OK)]
-    public async Task<IActionResult> GetProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, CancellationToken cancellationToken = default)
+    [ProducesResponseType(typeof(GetProviderAllowedCourseDetailsQueryResult), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProviderAllowedCourseDetails([FromRoute] int ukprn, [FromRoute] string larsCode, CancellationToken cancellationToken = default)
     {
         _logger.LogInformation("Request to get provider allowed course for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
         var model = new UkrpnAndLarsCodeModel
@@ -122,7 +122,7 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
         {
             return NotFound(FormatErrors(result.Errors));
         }
-        GetProviderAllowedCourseQuery query = new(ukprn, larsCode);
+        GetProviderAllowedCourseDetailsQuery query = new(ukprn, larsCode);
         var response = await _mediator.Send(query, cancellationToken);
         if (response == null)
         {

@@ -2,7 +2,7 @@
 
 namespace SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourse;
 
-public class GetProviderAllowedCourseQueryResult
+public class GetProviderAllowedCourseDetailsQueryResult
 {
     public DateTime? LastDateStarts { get; set; }
     public bool IsCourseRestricted { get; set; }

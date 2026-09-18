@@ -11,19 +11,19 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderAllowedCourses.Queries.GetProviderAllowedCourse;
 
-public class GetProviderAllowedCourseQueryHandlerTests
+public class GetProviderAllowedCourseDetailsQueryHandlerTests
 {
     [Test, MoqAutoData]
     public async Task WhenProviderAllowedCourseDoesNotExists_ThenReturnsNull(
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCourseRepositoryMock,
-        GetProviderAllowedCourseQuery query,
-        GetProviderAllowedCourseQueryHandler sut)
+        GetProviderAllowedCourseDetailsQuery query,
+        GetProviderAllowedCourseDetailsQueryHandler sut)
     {
         providerAllowedCourseRepositoryMock
             .Setup(x => x.GetProviderAllowedCourse(query.Ukprn, query.LarsCode, CancellationToken.None))
             .ReturnsAsync(() => null);
 
-        GetProviderAllowedCourseQueryResult actual = await sut.Handle(query, CancellationToken.None);
+        GetProviderAllowedCourseDetailsQueryResult actual = await sut.Handle(query, CancellationToken.None);
 
         Assert.That(actual, Is.Null);
     }
@@ -31,15 +31,15 @@ public class GetProviderAllowedCourseQueryHandlerTests
     [Test, RecursiveMoqAutoData]
     public async Task WhenProviderAllowedCourseExists_ThenSetsLastDateStarts(
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCourseRepositoryMock,
-        GetProviderAllowedCourseQuery query,
-        GetProviderAllowedCourseQueryHandler sut,
+        GetProviderAllowedCourseDetailsQuery query,
+        GetProviderAllowedCourseDetailsQueryHandler sut,
         ProviderAllowedCourse providerAllowedCourse)
     {
         providerAllowedCourseRepositoryMock
             .Setup(x => x.GetProviderAllowedCourse(query.Ukprn, query.LarsCode, CancellationToken.None))
             .ReturnsAsync(providerAllowedCourse);
 
-        GetProviderAllowedCourseQueryResult actual = await sut.Handle(query, CancellationToken.None);
+        GetProviderAllowedCourseDetailsQueryResult actual = await sut.Handle(query, CancellationToken.None);
 
         Assert.That(actual.LastDateStarts, Is.EqualTo(providerAllowedCourse.LastDateStarts));
     }
@@ -47,8 +47,8 @@ public class GetProviderAllowedCourseQueryHandlerTests
     [Test, RecursiveMoqAutoData]
     public async Task WhenProviderAllowedCourseExists_AndLastDateStartsIsMinimumDate_ThenSetLastDateStartsToNull(
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCourseRepositoryMock,
-        GetProviderAllowedCourseQuery query,
-        GetProviderAllowedCourseQueryHandler sut,
+        GetProviderAllowedCourseDetailsQuery query,
+        GetProviderAllowedCourseDetailsQueryHandler sut,
         ProviderAllowedCourse providerAllowedCourse)
     {
         providerAllowedCourse.LastDateStarts = DateConstants.StartRestrictedDate;
@@ -56,7 +56,7 @@ public class GetProviderAllowedCourseQueryHandlerTests
             .Setup(x => x.GetProviderAllowedCourse(query.Ukprn, query.LarsCode, CancellationToken.None))
             .ReturnsAsync(providerAllowedCourse);
 
-        GetProviderAllowedCourseQueryResult actual = await sut.Handle(query, CancellationToken.None);
+        GetProviderAllowedCourseDetailsQueryResult actual = await sut.Handle(query, CancellationToken.None);
 
         Assert.Multiple(() =>
         {
@@ -68,8 +68,8 @@ public class GetProviderAllowedCourseQueryHandlerTests
     [Test, RecursiveMoqAutoData]
     public async Task WhenProviderAllowedCourseExists_AndProviderCourseExists_ThenSetsIsActiveToTrue(
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCourseRepositoryMock,
-        GetProviderAllowedCourseQuery query,
-        GetProviderAllowedCourseQueryHandler sut,
+        GetProviderAllowedCourseDetailsQuery query,
+        GetProviderAllowedCourseDetailsQueryHandler sut,
         ProviderAllowedCourse providerAllowedCourse,
         Domain.Entities.ProviderCourse providerCourse)
     {
@@ -78,7 +78,7 @@ public class GetProviderAllowedCourseQueryHandlerTests
             .Setup(x => x.GetProviderAllowedCourse(query.Ukprn, query.LarsCode, CancellationToken.None))
             .ReturnsAsync(providerAllowedCourse);
 
-        GetProviderAllowedCourseQueryResult actual = await sut.Handle(query, CancellationToken.None);
+        GetProviderAllowedCourseDetailsQueryResult actual = await sut.Handle(query, CancellationToken.None);
 
         Assert.That(actual.IsActive, Is.True);
     }
@@ -86,8 +86,8 @@ public class GetProviderAllowedCourseQueryHandlerTests
     [Test, RecursiveMoqAutoData]
     public async Task WhenProviderAllowedCourseExists_AndProviderCourseDoesNotExists_ThenSetsIsActiveToFalse(
     [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCourseRepositoryMock,
-    GetProviderAllowedCourseQuery query,
-    GetProviderAllowedCourseQueryHandler sut,
+    GetProviderAllowedCourseDetailsQuery query,
+    GetProviderAllowedCourseDetailsQueryHandler sut,
     ProviderAllowedCourse providerAllowedCourse)
     {
         providerAllowedCourse.ProviderCourse = null;
@@ -95,7 +95,7 @@ public class GetProviderAllowedCourseQueryHandlerTests
             .Setup(x => x.GetProviderAllowedCourse(query.Ukprn, query.LarsCode, CancellationToken.None))
             .ReturnsAsync(providerAllowedCourse);
 
-        GetProviderAllowedCourseQueryResult actual = await sut.Handle(query, CancellationToken.None);
+        GetProviderAllowedCourseDetailsQueryResult actual = await sut.Handle(query, CancellationToken.None);
 
         Assert.That(actual.IsActive, Is.False);
     }
@@ -103,8 +103,8 @@ public class GetProviderAllowedCourseQueryHandlerTests
     [Test, RecursiveMoqAutoData]
     public async Task WhenProviderAllowedCourseExists_AndCourseIsRestricted_ThenSetsIsCourseRestrictedToTrue(
     [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCourseRepositoryMock,
-    GetProviderAllowedCourseQuery query,
-    GetProviderAllowedCourseQueryHandler sut,
+    GetProviderAllowedCourseDetailsQuery query,
+    GetProviderAllowedCourseDetailsQueryHandler sut,
     Standard standard,
     RestrictedCourseView restrictedCourseView,
     ProviderAllowedCourse providerAllowedCourse)
@@ -115,7 +115,7 @@ public class GetProviderAllowedCourseQueryHandlerTests
             .Setup(x => x.GetProviderAllowedCourse(query.Ukprn, query.LarsCode, CancellationToken.None))
             .ReturnsAsync(providerAllowedCourse);
 
-        GetProviderAllowedCourseQueryResult actual = await sut.Handle(query, CancellationToken.None);
+        GetProviderAllowedCourseDetailsQueryResult actual = await sut.Handle(query, CancellationToken.None);
 
         Assert.That(actual.IsCourseRestricted, Is.True);
     }
@@ -123,8 +123,8 @@ public class GetProviderAllowedCourseQueryHandlerTests
     [Test, RecursiveMoqAutoData]
     public async Task WhenProviderAllowedCourseExists_AndCourseIsNotRestricted_ThenSetsIsCourseRestrictedToFalse(
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCourseRepositoryMock,
-        GetProviderAllowedCourseQuery query,
-        GetProviderAllowedCourseQueryHandler sut,
+        GetProviderAllowedCourseDetailsQuery query,
+        GetProviderAllowedCourseDetailsQueryHandler sut,
         Standard standard,
         ProviderAllowedCourse providerAllowedCourse)
     {
@@ -133,7 +133,7 @@ public class GetProviderAllowedCourseQueryHandlerTests
         providerAllowedCourseRepositoryMock
             .Setup(x => x.GetProviderAllowedCourse(query.Ukprn, query.LarsCode, CancellationToken.None))
             .ReturnsAsync(providerAllowedCourse);
-        GetProviderAllowedCourseQueryResult actual = await sut.Handle(query, CancellationToken.None);
+        GetProviderAllowedCourseDetailsQueryResult actual = await sut.Handle(query, CancellationToken.None);
         Assert.That(actual.IsCourseRestricted, Is.False);
     }
 }
