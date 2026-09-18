@@ -39,7 +39,7 @@ public class ProviderCourseTypeRestrictionValidatorTests
         var result = await sut.TestValidateAsync(request);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x)
+        result.ShouldHaveValidationErrorFor(x => x.CourseType)
             .WithErrorMessage($"{ProviderCourseTypeRestrictionValidator.CourseTypeRestricted} {request.CourseType}");
     }
 
@@ -87,7 +87,7 @@ public class ProviderCourseTypeRestrictionValidatorTests
         var result = await sut.TestValidateAsync(request);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x)
+        result.ShouldHaveValidationErrorFor(x => x.CourseType)
             .WithErrorMessage($"{ProviderCourseTypeRestrictionValidator.CourseTypeNotFound} {request.CourseType}");
     }
 
@@ -117,7 +117,7 @@ public class ProviderCourseTypeRestrictionValidatorTests
         var result = await sut.TestValidateAsync(request);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x)
+        result.ShouldHaveValidationErrorFor(x => x.CourseType)
             .WithErrorMessage($"{ProviderCourseTypeRestrictionValidator.CourseTypeNotFound} {request.CourseType}");
     }
 }

@@ -20,13 +20,13 @@ public class ProviderCourseTypeRestrictionValidator : AbstractValidator<IProvide
 
                 if (providerCourseType == null)
                 {
-                    context.AddFailure($"{CourseTypeNotFound} {request.CourseType}");
+                    context.AddFailure(nameof(request.CourseType), $"{CourseTypeNotFound} {request.CourseType}");
                     return;
                 }
 
                 if (providerCourseType.IsRestrictedProvider)
                 {
-                    context.AddFailure($"{CourseTypeRestricted} {request.CourseType}");
+                    context.AddFailure(nameof(request.CourseType), $"{CourseTypeRestricted} {request.CourseType}");
                 }
             });
     }

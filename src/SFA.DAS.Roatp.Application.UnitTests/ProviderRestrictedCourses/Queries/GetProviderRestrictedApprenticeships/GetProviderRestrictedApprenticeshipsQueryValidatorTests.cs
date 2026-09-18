@@ -40,7 +40,7 @@ public class GetProviderRestrictedApprenticeshipsQueryValidatorTests
         var result = await sut.TestValidateAsync(query);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x)
+        result.ShouldHaveValidationErrorFor(x => x.CourseType)
             .WithErrorMessage($"{ProviderCourseTypeRestrictionValidator.CourseTypeRestricted} {query.CourseType}");
     }
 
