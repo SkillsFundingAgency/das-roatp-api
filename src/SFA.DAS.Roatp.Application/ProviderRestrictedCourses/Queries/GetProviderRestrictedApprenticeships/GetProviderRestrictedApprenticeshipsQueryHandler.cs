@@ -6,7 +6,6 @@ using MediatR;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.ProviderRestrictedCourses.Queries.GetProviderRestrictedApprenticeships;
 
@@ -14,9 +13,9 @@ public class GetProviderRestrictedApprenticeshipsQueryHandler(IStandardsReadRepo
 {
     public async Task<ValidatedResponse<GetProviderRestrictedApprenticeshipsQueryResult>> Handle(GetProviderRestrictedApprenticeshipsQuery request, CancellationToken cancellationToken)
     {
-        var standards = await _standardsReadRepository.GetCoursesByCourseType(CourseType.Apprenticeship, cancellationToken);
+        var standards = await _standardsReadRepository.GetCoursesByCourseType(request.CourseType, cancellationToken);
 
-        var providerAllowedCourses = await _providerAllowedCoursesRepository.GetProviderAllowedCourses(request.Ukprn, CourseType.Apprenticeship, cancellationToken);
+        var providerAllowedCourses = await _providerAllowedCoursesRepository.GetProviderAllowedCourses(request.Ukprn, request.CourseType, cancellationToken);
 
         var restrictedApprenticeships = standards
             .Where(s =>
