@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -110,5 +111,15 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
             }));
 
         await _roatpDataContext.SaveChangesAsync();
+    }
+
+    [ExcludeFromCodeCoverage]
+    public async Task<ProviderAllowedCourse> GetProviderAllowedCourse(int ukprn, string larsCode, CancellationToken cancellationToken)
+    {
+        return await _roatpDataContext.ProviderAllowedCourses
+            .Include(p => p.Standard.RestrictedCourseView)
+            .Include(p => p.ProviderCourse)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(pac => pac.Ukprn == ukprn && pac.LarsCode == larsCode, cancellationToken);
     }
 }
