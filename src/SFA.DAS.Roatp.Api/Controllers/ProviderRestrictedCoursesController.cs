@@ -10,6 +10,7 @@ using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.ProviderRestrictedCourses.Queries.GetProviderNotRestrictedApprenticeships;
 using SFA.DAS.Roatp.Application.ProviderRestrictedCourses.Queries.GetProviderRestrictedApprenticeships;
+using SFA.DAS.Roatp.Domain.Models;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
 
 namespace SFA.DAS.Roatp.Api.Controllers;
@@ -36,7 +37,12 @@ public class ProviderRestrictedCoursesController(IMediator _mediator, ILogger<Pr
             return NotFound(FormatErrors(validationResult.Errors));
         }
 
-        GetProviderRestrictedApprenticeshipsQuery query = new() { Ukprn = ukprn };
+        GetProviderRestrictedApprenticeshipsQuery query = new()
+        {
+            Ukprn = ukprn,
+            CourseType = CourseType.Apprenticeship
+        };
+
         var result = await _mediator.Send(query);
         return GetResponse(result);
     }
@@ -58,7 +64,12 @@ public class ProviderRestrictedCoursesController(IMediator _mediator, ILogger<Pr
             return NotFound(FormatErrors(validationResult.Errors));
         }
 
-        GetProviderNotRestrictedApprenticeshipsQuery query = new() { Ukprn = ukprn };
+        GetProviderNotRestrictedApprenticeshipsQuery query = new()
+        {
+            Ukprn = ukprn,
+            CourseType = CourseType.Apprenticeship
+        };
+
         var result = await _mediator.Send(query);
         return GetResponse(result);
     }

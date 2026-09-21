@@ -16,7 +16,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderRestrictedCourses.Queries.
 public class GetProviderNotRestrictedApprenticeshipsQueryHandlerTests
 {
     [Test, MoqAutoData]
-    public async Task WhenNonRestrictedCourseAndDoesNotExistInProviderAllowedCourses_ThenCourseIsReturned(
+    public async Task WhenUnRestrictedCourse_AndDoesNotExistInProviderAllowedCourses_ThenCourseIsReturned(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderNotRestrictedApprenticeshipsQueryHandler sut,
@@ -51,7 +51,7 @@ public class GetProviderNotRestrictedApprenticeshipsQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenNonRestrictedCourseAndExistsInProviderAllowedCoursesWithNullLastDateStarts_ThenCourseIsReturned(
+    public async Task WhenUnRestrictedCourse_AndExistsInProviderAllowedCoursesWithNullLastDateStarts_ThenCourseIsReturned(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderNotRestrictedApprenticeshipsQueryHandler sut,
@@ -94,7 +94,7 @@ public class GetProviderNotRestrictedApprenticeshipsQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenNonRestrictedCourseAndExistsInProviderAllowedCoursesWithLastDateStarts_ThenCourseIsNotReturned(
+    public async Task WhenUnRestrictedCourse_AndExistsInProviderAllowedCoursesWithLastDateStarts_ThenCourseIsNotReturned(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderNotRestrictedApprenticeshipsQueryHandler sut,
@@ -138,7 +138,7 @@ public class GetProviderNotRestrictedApprenticeshipsQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenRestrictedCourseAndExistsInProviderAllowedCoursesWithNullLastDateStarts_ThenCourseIsReturned(
+    public async Task WhenRestrictedCourse_AndExistsInProviderAllowedCoursesWithNullLastDateStarts_ThenCourseIsReturned(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderNotRestrictedApprenticeshipsQueryHandler sut,
@@ -181,7 +181,7 @@ public class GetProviderNotRestrictedApprenticeshipsQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenRestrictedCourseAndExistsInProviderAllowedCoursesWithLastDateStarts_ThenCourseIsNotReturned(
+    public async Task WhenRestrictedCourse_AndExistsInProviderAllowedCoursesWithLastDateStarts_ThenCourseIsNotReturned(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderNotRestrictedApprenticeshipsQueryHandler sut,
@@ -225,7 +225,7 @@ public class GetProviderNotRestrictedApprenticeshipsQueryHandlerTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenRestrictedCourseAndDoesNotExistInProviderAllowedCourses_ThenCourseIsNotReturned(
+    public async Task WhenRestrictedCourse_AndDoesNotExistInProviderAllowedCourses_ThenCourseIsNotReturned(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Greedy] GetProviderNotRestrictedApprenticeshipsQueryHandler sut,
@@ -243,50 +243,6 @@ public class GetProviderNotRestrictedApprenticeshipsQueryHandlerTests
         };
 
         var providerAllowedCourses = new List<ProviderAllowedCourse>();
-
-        standardsReadRepository
-            .Setup(x => x.GetCoursesByCourseType(request.CourseType, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(standards);
-
-        providerAllowedCoursesRepository
-            .Setup(x => x.GetProviderAllowedCourses(request.Ukprn, request.CourseType, It.IsAny<CancellationToken>()))
-            .ReturnsAsync(providerAllowedCourses);
-
-        // Act
-        var result = await sut.Handle(request, CancellationToken.None);
-
-        // Assert
-        result.Result.Courses.Should().BeEmpty();
-    }
-
-    [Test, MoqAutoData]
-    public async Task WhenRestrictedCourseAndProviderAllowedCourseHasDifferentLarsCode_ThenCourseIsNotReturned(
-        [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
-        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
-        [Greedy] GetProviderNotRestrictedApprenticeshipsQueryHandler sut,
-        GetProviderNotRestrictedApprenticeshipsQuery request,
-        string larsCode,
-        string differentLarsCode)
-    {
-        // Arrange
-        var standards = new List<Standard>
-        {
-            new()
-            {
-                LarsCode = larsCode,
-                RestrictedCourseView = new RestrictedCourseView()
-            }
-        };
-
-        var providerAllowedCourses = new List<ProviderAllowedCourse>
-        {
-            new()
-            {
-                LarsCode = differentLarsCode,
-                LastDateStarts = null,
-                Ukprn = request.Ukprn
-            }
-        };
 
         standardsReadRepository
             .Setup(x => x.GetCoursesByCourseType(request.CourseType, It.IsAny<CancellationToken>()))

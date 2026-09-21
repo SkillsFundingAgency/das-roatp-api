@@ -8,5 +8,5 @@ namespace SFA.DAS.Roatp.Application.ProviderRestrictedCourses.Queries.GetProvide
 public class GetProviderNotRestrictedApprenticeshipsQuery : IRequest<ValidatedResponse<GetProviderNotRestrictedApprenticeshipsQueryResult>>, IProviderCourseTypeRestriction
 {
     public int Ukprn { get; set; }
-    public CourseType CourseType { get; set; } = CourseType.Apprenticeship;
+    public CourseType CourseType { get; set; }
 }
