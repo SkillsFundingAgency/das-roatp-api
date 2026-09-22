@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using Moq;
@@ -135,5 +136,62 @@ public class GetProviderAllowedCourseDetailsQueryHandlerTests
             .ReturnsAsync(providerAllowedCourse);
         GetProviderAllowedCourseDetailsQueryResult actual = await sut.Handle(query, CancellationToken.None);
         Assert.That(actual.IsCourseRestricted, Is.False);
+    }
+
+    [Test, RecursiveMoqAutoData]
+    public async Task WhenProviderAllowedCourseExists_AndLastDateStartsIsSetToMinimumDate_ThenSetsIsClosedToNewStartsToTrue(
+        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCourseRepositoryMock,
+        GetProviderAllowedCourseDetailsQuery query,
+        GetProviderAllowedCourseDetailsQueryHandler sut,
+        Standard standard,
+        ProviderAllowedCourse providerAllowedCourse)
+    {
+        standard.RestrictedCourseView = null;
+        providerAllowedCourse.Standard = standard;
+        providerAllowedCourse.LastDateStarts = DateConstants.StartRestrictedDate;
+        providerAllowedCourseRepositoryMock
+            .Setup(x => x.GetProviderAllowedCourse(query.Ukprn, query.LarsCode, CancellationToken.None))
+            .ReturnsAsync(providerAllowedCourse);
+        GetProviderAllowedCourseDetailsQueryResult actual = await sut.Handle(query, CancellationToken.None);
+        Assert.That(actual.IsClosedToNewStarts, Is.True);
+    }
+
+    [Test, RecursiveMoqAutoData]
+    [RecursiveMoqInlineAutoData(null)]
+    public async Task WhenProviderAllowedCourseExists_AndLastDateStartsIsNull_ThenSetsIsClosedToNewStartsToFalse(
+        DateTime? lastDateStarts,
+        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCourseRepositoryMock,
+        GetProviderAllowedCourseDetailsQuery query,
+        GetProviderAllowedCourseDetailsQueryHandler sut,
+        Standard standard,
+        ProviderAllowedCourse providerAllowedCourse)
+    {
+        standard.RestrictedCourseView = null;
+        providerAllowedCourse.Standard = standard;
+        providerAllowedCourse.LastDateStarts = null;
+        providerAllowedCourseRepositoryMock
+            .Setup(x => x.GetProviderAllowedCourse(query.Ukprn, query.LarsCode, CancellationToken.None))
+            .ReturnsAsync(providerAllowedCourse);
+        GetProviderAllowedCourseDetailsQueryResult actual = await sut.Handle(query, CancellationToken.None);
+        Assert.That(actual.IsClosedToNewStarts, Is.False);
+    }
+
+    [RecursiveMoqInlineAutoData(null)]
+    public async Task WhenProviderAllowedCourseExists_AndLastDateStartsIsInPast_ThenSetsIsClosedToNewStartsToTrue(
+        DateTime? lastDateStarts,
+        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCourseRepositoryMock,
+        GetProviderAllowedCourseDetailsQuery query,
+        GetProviderAllowedCourseDetailsQueryHandler sut,
+        Standard standard,
+        ProviderAllowedCourse providerAllowedCourse)
+    {
+        standard.RestrictedCourseView = null;
+        providerAllowedCourse.Standard = standard;
+        providerAllowedCourse.LastDateStarts = DateTime.UtcNow.AddDays(-1);
+        providerAllowedCourseRepositoryMock
+            .Setup(x => x.GetProviderAllowedCourse(query.Ukprn, query.LarsCode, CancellationToken.None))
+            .ReturnsAsync(providerAllowedCourse);
+        GetProviderAllowedCourseDetailsQueryResult actual = await sut.Handle(query, CancellationToken.None);
+        Assert.That(actual.IsClosedToNewStarts, Is.True);
     }
 }

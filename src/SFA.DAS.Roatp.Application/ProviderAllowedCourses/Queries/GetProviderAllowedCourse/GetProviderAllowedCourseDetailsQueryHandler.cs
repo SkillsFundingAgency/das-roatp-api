@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using SFA.DAS.Roatp.Domain.Constants;
@@ -17,7 +18,7 @@ public class GetProviderAllowedCourseDetailsQueryHandler(IProviderAllowedCourses
         return new GetProviderAllowedCourseDetailsQueryResult
         {
             LastDateStarts = allowedCourse.LastDateStarts == DateConstants.StartRestrictedDate ? null : allowedCourse.LastDateStarts,
-            IsClosedToNewStarts = allowedCourse.LastDateStarts == DateConstants.StartRestrictedDate,
+            IsClosedToNewStarts = allowedCourse.LastDateStarts?.Date < DateTime.UtcNow.Date,
             IsCourseRestricted = allowedCourse.Standard.RestrictedCourseView != null,
             IsActive = allowedCourse.ProviderCourse != null
         };
