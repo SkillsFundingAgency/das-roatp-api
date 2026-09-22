@@ -6,21 +6,21 @@ using FluentValidation.TestHelper;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Common;
-using SFA.DAS.Roatp.Application.ProviderRestrictedCourses.Queries.GetProviderRestrictedApprenticeships;
+using SFA.DAS.Roatp.Application.ProviderRestrictedCourses.Queries.GetProviderNotRestrictedApprenticeships;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderRestrictedCourses.Queries.GetProviderRestrictedApprenticeships;
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderRestrictedCourses.Queries.GetProviderNotRestrictedApprenticeships;
 
-public class GetProviderRestrictedApprenticeshipsQueryValidatorTests
+public class GetProviderNotRestrictedApprenticeshipsQueryValidatorTests
 {
     [Test, MoqAutoData]
     public async Task WhenProviderIsRestrictedForApprenticeships_ThenValidationShouldFail(
         [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
-        [Greedy] GetProviderRestrictedApprenticeshipsQueryValidator sut,
-        GetProviderRestrictedApprenticeshipsQuery query)
+        [Greedy] GetProviderNotRestrictedApprenticeshipsQueryValidator sut,
+        GetProviderNotRestrictedApprenticeshipsQuery query)
     {
         // Arrange
         var providerCourseTypes = new List<ProviderCourseType>
@@ -47,8 +47,8 @@ public class GetProviderRestrictedApprenticeshipsQueryValidatorTests
     [Test, MoqAutoData]
     public async Task WhenProviderIsNotRestrictedForApprenticeships_ThenValidationShouldPass(
         [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
-        [Greedy] GetProviderRestrictedApprenticeshipsQueryValidator sut,
-        GetProviderRestrictedApprenticeshipsQuery query)
+        [Greedy] GetProviderNotRestrictedApprenticeshipsQueryValidator sut,
+        GetProviderNotRestrictedApprenticeshipsQuery query)
     {
         // Arrange
         var providerCourseTypes = new List<ProviderCourseType>

@@ -18,7 +18,7 @@ using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ProviderRestrictedCoursesControllerTests;
 
-public class ProviderRestrictedCoursesControllerGetTests
+public class GetRestrictedApprenticeshipsTests
 {
     [Test, MoqAutoData]
     public async Task WhenRequestIsValid_ThenReturnsOk(
@@ -80,7 +80,7 @@ public class ProviderRestrictedCoursesControllerGetTests
 
         var errors = new List<ValidationFailure>
         {
-            new(nameof(GetProviderRestrictedApprenticeshipsQuery.Ukprn),GetProviderRestrictedApprenticeshipsQueryValidator.ProviderNotRestricted)
+            new(nameof(GetProviderRestrictedApprenticeshipsQuery.Ukprn),ProviderCourseTypeRestrictionValidator.CourseTypeRestricted)
         };
 
         mediatorMock
