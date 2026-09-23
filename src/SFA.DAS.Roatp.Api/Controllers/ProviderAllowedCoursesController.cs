@@ -12,6 +12,7 @@ using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.CreateProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
+using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourses;
 using SFA.DAS.Roatp.Domain.Models;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
@@ -102,5 +103,31 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
         var response = await _mediator.Send(command);
 
         return GetNoContentResponse(response);
+    }
+
+    [HttpGet("{larsCode}")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(typeof(GetProviderAllowedCourseDetailsQueryResult), StatusCodes.Status200OK)]
+    public async Task<IActionResult> GetProviderAllowedCourseDetails([FromRoute] int ukprn, [FromRoute] string larsCode, CancellationToken cancellationToken = default)
+    {
+        _logger.LogInformation("Request to get provider allowed course for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
+        var model = new UkrpnAndLarsCodeModel
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode
+        };
+        var result = await _validator.ValidateAsync(model, cancellationToken);
+        if (!result.IsValid)
+        {
+            return NotFound(FormatErrors(result.Errors));
+        }
+        GetProviderAllowedCourseDetailsQuery query = new(ukprn, larsCode);
+        var response = await _mediator.Send(query, cancellationToken);
+        if (response == null)
+        {
+            return NoContent();
+        }
+        return Ok(response);
     }
 }
