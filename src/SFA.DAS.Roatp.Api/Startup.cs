@@ -55,6 +55,11 @@ public class Startup
             .AddApplicationInsightsTelemetry()
             .AddTelemetryNotFoundAsSuccessfulResponse();
 
+        if (Configuration.GetValue<bool>("EnableTelemetryUriRedaction"))
+        {
+            services.AddTelemetryUriRedaction("userid,userdisplayname");
+        }
+
         services.AddLogging(builder =>
         {
             builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
