@@ -11,6 +11,7 @@ using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.CreateProviderAllowedCourse;
+using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.DeleteProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourses;
@@ -129,5 +130,38 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
             return NoContent();
         }
         return Ok(response);
+    }
+
+    [HttpDelete("{larsCode}")]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromQuery] string userId, [FromQuery] string userDisplayName)
+    {
+        _logger.LogInformation("Request to delete provider allowedCourse for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
+
+        var model = new UkrpnAndLarsCodeModel
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode
+        };
+
+        var result = await _validator.ValidateAsync(model);
+
+        if (!result.IsValid)
+        {
+            return NotFound(FormatErrors(result.Errors));
+        }
+
+        DeleteProviderAllowedCourseCommand command = new()
+        {
+            Ukprn = ukprn,
+            LarsCode = larsCode.ToUpper().Trim(),
+            UserId = userId,
+            UserDisplayName = userDisplayName
+        };
+
+        await _mediator.Send(command);
+
+        return NoContent();
     }
 }
