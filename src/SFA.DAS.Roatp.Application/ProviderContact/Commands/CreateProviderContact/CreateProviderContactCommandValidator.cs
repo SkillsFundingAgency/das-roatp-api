@@ -27,7 +27,10 @@ public class CreateProviderContactCommandValidator : AbstractValidator<CreatePro
 
         RuleFor(c => c.PhoneNumber)
             .MaximumLength(50)
-            .WithMessage(PhoneNumberTooLong);
+            .WithMessage(PhoneNumberTooLong)
+            .Matches(Constants.RegularExpressions.ValidCharactersRegex)
+            .WithMessage(ValidationMessages.InvalidCharactersErrorMessage)
+            .When(c => !string.IsNullOrWhiteSpace(c.PhoneNumber) && c.PhoneNumber != string.Empty);
 
         RuleFor(c => c.EmailAddress)
             .NotEmpty()
