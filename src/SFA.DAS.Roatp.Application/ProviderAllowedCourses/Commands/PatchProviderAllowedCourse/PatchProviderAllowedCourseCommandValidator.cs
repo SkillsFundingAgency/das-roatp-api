@@ -15,6 +15,7 @@ public class PatchProviderAllowedCourseCommandValidator : AbstractValidator<Patc
     public PatchProviderAllowedCourseCommandValidator(IStandardsReadRepository standardsReadRepository, IProviderAllowedCoursesRepository providerAllowedCoursesRepository)
     {
         Include(new UserInfoValidator());
+
         RuleFor(pac => pac)
             .MustAsync(async (command, cancellation) =>
             {
@@ -22,6 +23,7 @@ public class PatchProviderAllowedCourseCommandValidator : AbstractValidator<Patc
                 return providerAllowedCourses.Any(p => p.Ukprn == command.Ukprn);
             })
             .WithMessage(NotExistsInProviderAllowedCourse);
+
         RuleFor(x => x.PatchDoc.Operations)
             .MustAsync(async (command, ops, cancellationToken) =>
             {

@@ -3,42 +3,43 @@ using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.Extensions.Logging;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider
+namespace SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider;
+
+public class PatchProviderCommandHandler : IRequestHandler<PatchProviderCommand, ValidatedResponse<Unit>>
 {
-    public class PatchProviderCommandHandler : IRequestHandler<PatchProviderCommand>
+    private readonly IProvidersWriteRepository _providersWriteRepository;
+    private readonly IProvidersReadRepository _providersReadRepository;
+    private readonly ILogger<PatchProviderCommandHandler> _logger;
+
+    public PatchProviderCommandHandler(IProvidersWriteRepository providersWriteRepository, IProvidersReadRepository providersReadRepository, ILogger<PatchProviderCommandHandler> logger)
     {
-        private readonly IProvidersWriteRepository _providersWriteRepository;
-        private readonly IProvidersReadRepository _providersReadRepository;
-        private readonly ILogger<PatchProviderCommandHandler> _logger;
+        _providersWriteRepository = providersWriteRepository;
+        _providersReadRepository = providersReadRepository;
+        _logger = logger;
+    }
 
-        public PatchProviderCommandHandler(IProvidersWriteRepository providersWriteRepository, IProvidersReadRepository providersReadRepository, ILogger<PatchProviderCommandHandler> logger)
+    public async Task<ValidatedResponse<Unit>> Handle(PatchProviderCommand command, CancellationToken cancellationToken)
+    {
+        var provider = await
+            _providersReadRepository.GetByUkprn(command.Ukprn);
+
+        if (provider == null)
         {
-            _providersWriteRepository = providersWriteRepository;
-            _providersReadRepository = providersReadRepository;
-            _logger = logger;
+            _logger.LogError("PatchProvider: Provider not found for ukprn: {ukprn}", command.Ukprn);
+            throw new InvalidOperationException($"PatchProvider: Provider not found for ukprn: {command.Ukprn}");
         }
 
-        public async Task Handle(PatchProviderCommand command, CancellationToken cancellationToken)
-        {
-            var provider = await
-                _providersReadRepository.GetByUkprn(command.Ukprn);
+        var patchedProvider = (Domain.Models.PatchProvider)provider;
 
-            if (provider == null)
-            {
-                _logger.LogError("PatchProvider: Provider not found for ukprn: {ukprn}", command.Ukprn);
-                throw new InvalidOperationException($"PatchProvider: Provider not found for ukprn: {command.Ukprn}");
-            }
+        command.Patch.ApplyTo(patchedProvider);
 
-            var patchedProvider = (Domain.Models.PatchProvider)provider;
+        provider.MarketingInfo = patchedProvider.MarketingInfo;
 
-            command.Patch.ApplyTo(patchedProvider);
-
-            provider.MarketingInfo = patchedProvider.MarketingInfo;
-
-            await _providersWriteRepository.Patch(provider, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderDescription);
-        }
+        await _providersWriteRepository.Patch(provider, command.UserId, command.UserDisplayName, AuditEventTypes.UpdateProviderDescription);
+        return new ValidatedResponse<Unit>(new Unit());
     }
 }
