@@ -123,10 +123,10 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
             .FirstOrDefaultAsync(pac => pac.Ukprn == ukprn && pac.LarsCode == larsCode, cancellationToken);
     }
 
-    public async Task DeleteProviderAllowedCourse(int ukprn, string larscode, string userId, string userDisplayName, string userAction)
+    public async Task DeleteProviderAllowedCourse(int ukprn, string larscode, string userId, string userDisplayName, string userAction, CancellationToken cancellationToken)
     {
         var providerAllowedCourse = await _roatpDataContext.ProviderAllowedCourses
-            .SingleOrDefaultAsync(x => x.LarsCode == larscode && x.Provider.Ukprn == ukprn);
+            .SingleOrDefaultAsync(x => x.LarsCode == larscode && x.Provider.Ukprn == ukprn, cancellationToken);
 
         if (providerAllowedCourse is null)
         {
@@ -145,6 +145,6 @@ internal class ProviderAllowedCoursesRepository(RoatpDataContext _roatpDataConte
         _roatpDataContext.Audits.Add(audit);
         _roatpDataContext.ProviderAllowedCourses.Remove(providerAllowedCourse);
 
-        await _roatpDataContext.SaveChangesAsync();
+        await _roatpDataContext.SaveChangesAsync(cancellationToken);
     }
 }
