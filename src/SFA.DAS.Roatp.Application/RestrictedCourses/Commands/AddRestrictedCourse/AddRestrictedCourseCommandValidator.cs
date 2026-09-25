@@ -18,11 +18,11 @@ public class AddRestrictedCourseCommandValidator : AbstractValidator<AddRestrict
         Include(new LarsCodeValidator(standardsReadRepository));
 
         RuleFor(x => x.LarsCode)
-                .MustAsync(async (larsCode, cancellation) =>
-                {
-                    List<RestrictedCourseView> restrictedCourses = await restrictedCourseViewRepository.GetRestrictedCourses(cancellation);
-                    return !restrictedCourses.Any(x => x.LarsCode == larsCode);
-                })
-                .WithMessage(LarsCodeAlreadyRestricted);
+            .MustAsync(async (larsCode, cancellation) =>
+            {
+                List<RestrictedCourseView> restrictedCourses = await restrictedCourseViewRepository.GetRestrictedCourses(cancellation);
+                return !restrictedCourses.Any(x => x.LarsCode == larsCode);
+            })
+            .WithMessage(LarsCodeAlreadyRestricted);
     }
 }

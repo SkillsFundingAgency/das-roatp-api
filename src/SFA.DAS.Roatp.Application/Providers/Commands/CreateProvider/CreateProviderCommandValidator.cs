@@ -2,32 +2,40 @@
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Domain.Interfaces;
 
-namespace SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider
+namespace SFA.DAS.Roatp.Application.Providers.Commands.CreateProvider;
+
+public class CreateProviderCommandValidator : AbstractValidator<CreateProviderCommand>
 {
-    public class CreateProviderCommandValidator : AbstractValidator<CreateProviderCommand>
+    public const string UkprnAlreadyPresent = "Ukprn already present";
+    public const string LegalNameRequired = "Legal name is required";
+
+    public CreateProviderCommandValidator(
+        IProvidersReadRepository providersReadRepository)
     {
-        public const string UkprnAlreadyPresent = "Ukprn already present";
-        public const string LegalNameRequired = "Legal name is required";
+        Include(new UserInfoValidator());
 
-        public CreateProviderCommandValidator(
-            IProvidersReadRepository providersReadRepository)
-        {
-            Include(new UserInfoValidator());
+        RuleFor(x => x.Ukprn)
+            .Cascade(CascadeMode.Stop)
+            .GreaterThan(10000000).WithMessage(UkprnValidator.InvalidUkprnErrorMessage)
+            .LessThan(99999999).WithMessage(UkprnValidator.InvalidUkprnErrorMessage)
+            .MustAsync(async (ukprn, cancellation) =>
+            {
+                var provider = await providersReadRepository.GetByUkprn(ukprn);
+                return provider == null;
+            })
+            .WithMessage(UkprnAlreadyPresent);
 
-            RuleFor(x => x.Ukprn)
-                .Cascade(CascadeMode.Stop)
-                .GreaterThan(10000000).WithMessage(UkprnValidator.InvalidUkprnErrorMessage)
-                .LessThan(99999999).WithMessage(UkprnValidator.InvalidUkprnErrorMessage)
-                .MustAsync(async (ukprn, cancellation) =>
-                {
-                    var provider = await providersReadRepository.GetByUkprn(ukprn);
-                    return provider == null;
-                })
-                .WithMessage(UkprnAlreadyPresent);
+        RuleFor((c) => c.LegalName)
+            .NotEmpty()
+            .WithMessage(LegalNameRequired)
+            .MaximumLength(1000)
+            .Matches(Constants.RegularExpressions.ValidCharactersRegex)
+            .WithMessage(ValidationMessages.InvalidCharactersErrorMessage);
 
-            RuleFor((c) => c.LegalName)
-                .NotEmpty()
-                .WithMessage(LegalNameRequired);
-        }
+        RuleFor((c) => c.TradingName)
+            .MaximumLength(1000)
+            .Matches(Constants.RegularExpressions.ValidCharactersRegex)
+            .When(c => !string.IsNullOrEmpty(c.TradingName), ApplyConditionTo.CurrentValidator)
+            .WithMessage(ValidationMessages.InvalidCharactersErrorMessage);
     }
 }
