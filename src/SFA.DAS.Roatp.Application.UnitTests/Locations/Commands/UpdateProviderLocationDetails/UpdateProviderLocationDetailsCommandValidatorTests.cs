@@ -63,7 +63,7 @@ public class UpdateProviderLocationDetailsCommandValidatorTests
             result.ShouldHaveValidationErrorFor(c => c.LocationName);
     }
 
-    [TestCase("(_.#*$&%~'?`+_@ -", true)]
+    [TestCase(TestHelper.Constants.AllowedSpecialCharacters, true)]
     [TestCase("<", false)]
     [TestCase(":", false)]
     [TestCase("=", false)]

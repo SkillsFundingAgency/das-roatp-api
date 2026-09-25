@@ -84,7 +84,7 @@ public class CreateProviderContactCommandValidatorTests
         result.ShouldHaveValidationErrorFor(c => c.PhoneNumber).WithErrorMessage(CreateProviderContactCommandValidator.PhoneNumberTooLong);
     }
 
-    [TestCase("(_.#*$&%~'?`+_@ -", true)]
+    [TestCase(TestHelper.Constants.AllowedSpecialCharacters, true)]
     [TestCase("<", false)]
     [TestCase(":", false)]
     [TestCase("=", false)]

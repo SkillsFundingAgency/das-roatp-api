@@ -135,7 +135,7 @@ public class PatchProviderCommandValidatorTests
         PatchProviderCommandValidator.PatchOperationContainsUnavailableOperationErrorMessage.Should().Be(result.Errors[0].ErrorMessage);
     }
 
-    [TestCase("(_.#*$&%~'?`+_@ -", true)]
+    [TestCase(TestHelper.Constants.AllowedSpecialCharacters, true)]
     [TestCase("<", false)]
     [TestCase(":", false)]
     [TestCase("=", false)]

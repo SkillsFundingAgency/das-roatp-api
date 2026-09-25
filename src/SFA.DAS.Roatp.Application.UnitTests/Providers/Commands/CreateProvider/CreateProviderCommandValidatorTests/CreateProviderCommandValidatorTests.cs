@@ -56,7 +56,7 @@ public class CreateProviderCommandValidatorTests
         }
     }
 
-    [TestCase("(_.#*$&%~'?`+_@ -", true)]
+    [TestCase(TestHelper.Constants.AllowedSpecialCharacters, true)]
     [TestCase("<", false)]
     [TestCase(":", false)]
     [TestCase("=", false)]

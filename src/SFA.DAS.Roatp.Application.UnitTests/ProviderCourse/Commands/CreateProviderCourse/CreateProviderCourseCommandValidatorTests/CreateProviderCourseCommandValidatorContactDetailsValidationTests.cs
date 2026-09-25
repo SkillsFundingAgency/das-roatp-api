@@ -69,7 +69,7 @@ public class CreateProviderCourseCommandValidatorContactDetailsValidationTests :
             result.ShouldHaveValidationErrorFor(c => c.ContactUsPhoneNumber).WithErrorMessage(ValidationMessages.PhoneNumberValidationMessages.PhoneNumberWrongLength);
     }
 
-    [TestCase("(_.#*$&%~'?`+_@ -", true)]
+    [TestCase(TestHelper.Constants.AllowedSpecialCharacters, true)]
     [TestCase("<", false)]
     [TestCase(":", false)]
     [TestCase("=", false)]
