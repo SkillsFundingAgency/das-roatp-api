@@ -40,7 +40,7 @@ public class DeleteProviderAllowedCourseTests
         activity.Start();
 
         // Act
-        await sut.DeleteProviderAllowedCourse(ukprn, larsCode, userId, userDisplayName, userAction);
+        await sut.DeleteProviderAllowedCourse(ukprn, larsCode, userId, userDisplayName, userAction, CancellationToken.None);
 
         // Assert
         context.ProviderAllowedCourses.Should().NotContain(x =>
@@ -73,7 +73,7 @@ public class DeleteProviderAllowedCourseTests
         var sut = new ProviderAllowedCoursesRepository(context);
 
         // Act
-        await sut.DeleteProviderAllowedCourse(ukprn, larsCode, userId, userDisplayName, userAction);
+        await sut.DeleteProviderAllowedCourse(ukprn, larsCode, userId, userDisplayName, userAction, CancellationToken.None);
 
         // Assert
         context.Audits.Should().BeEmpty();

@@ -20,7 +20,7 @@ public class DeleteProviderAllowedCourseCommandHandlerTests
     {
         // Arrange
         providerAllowedCoursesRepository
-            .Setup(x => x.DeleteProviderAllowedCourse(command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.DeleteProviderAllowedCourse))
+            .Setup(x => x.DeleteProviderAllowedCourse(command.Ukprn, command.LarsCode, command.UserId, command.UserDisplayName, AuditEventTypes.DeleteProviderAllowedCourse, CancellationToken.None))
             .Returns(Task.CompletedTask);
 
         // Act
@@ -33,7 +33,8 @@ public class DeleteProviderAllowedCourseCommandHandlerTests
                 command.LarsCode,
                 command.UserId,
                 command.UserDisplayName,
-                AuditEventTypes.DeleteProviderAllowedCourse),
+                AuditEventTypes.DeleteProviderAllowedCourse,
+                CancellationToken.None),
             Times.Once);
     }
 }
