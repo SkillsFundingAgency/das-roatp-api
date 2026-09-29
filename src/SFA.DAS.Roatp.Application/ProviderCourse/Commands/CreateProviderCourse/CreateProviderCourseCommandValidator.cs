@@ -42,13 +42,13 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
             .When(_ => true, ApplyConditionTo.CurrentValidator);
 
         WhenAsync(
-                async (command, _) => await IsStandardRegulated(command.LarsCode, standardsReadRepository),
-                () =>
-                {
-                    RuleFor(c => c.IsApprovedByRegulator)
-                        .Equal(true)
-                        .WithMessage(RegulatedStandardMustBeApprovedMessage);
-                })
+            async (command, _) => await IsStandardRegulated(command.LarsCode, standardsReadRepository),
+            () =>
+            {
+                RuleFor(c => c.IsApprovedByRegulator)
+                    .Equal(true)
+                    .WithMessage(RegulatedStandardMustBeApprovedMessage);
+            })
             .Otherwise(() =>
             {
                 RuleFor(c => c.IsApprovedByRegulator)
@@ -95,8 +95,11 @@ public class CreateProviderCourseCommandValidator : AbstractValidator<CreateProv
             .MustBeValidEmail();
 
         RuleFor(c => c.ContactUsPhoneNumber)
+            .Cascade(CascadeMode.Stop)
             .NotEmpty()
             .WithMessage(c => ValidationMessages.IsRequired(nameof(c.ContactUsPhoneNumber)))
+            .Matches(Constants.RegularExpressions.ValidCharactersRegex)
+            .WithMessage(ValidationMessages.InvalidCharactersErrorMessage)
             .MustBeValidPhoneNumber();
 
         RuleFor(c => c.StandardInfoUrl)

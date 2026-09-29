@@ -16,13 +16,13 @@ namespace SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider
         public const string PatchOperationContainsUnavailableOperationErrorMessage = "This patch operation contains an unexpected operation and will not continue";
 
         public static readonly IList<string> PatchFields = new ReadOnlyCollection<string>(
-                new List<string>
-                {
-                    "MarketingInfo",
-                });
+            [
+                "MarketingInfo",
+            ]);
 
         public PatchProviderCommandValidator(IProvidersReadRepository providersReadRepository)
         {
+            Include(new UserInfoValidator());
             Include(new UkprnValidator(providersReadRepository));
 
             RuleFor(c => c.Patch.Operations.Count).GreaterThan(0).WithMessage(NoPatchOperationsPresentErrorMessage);
@@ -38,6 +38,9 @@ namespace SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider
             RuleFor(c => c.MarketingInfo)
                 .NotEmpty()
                 .MaximumLength(750)
+                .Matches(Constants.RegularExpressions.ValidCharactersRegex)
+                .When(c => !string.IsNullOrWhiteSpace(c.MarketingInfo), ApplyConditionTo.CurrentValidator)
+                .WithMessage(ValidationMessages.InvalidCharactersErrorMessage)
                 .When(c => c.IsPresentMarketingInfo);
         }
     }

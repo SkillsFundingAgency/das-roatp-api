@@ -11,7 +11,7 @@ using SFA.DAS.Testing.AutoFixture;
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderContact.PostProviderContact;
 
 [TestFixture]
-public class PostProviderContactValidatorTests
+public class CreateProviderContactCommandValidatorTests
 {
     const string userDisplayName = "test";
     const string userId = "test";
@@ -82,6 +82,26 @@ public class PostProviderContactValidatorTests
         var sut = new CreateProviderContactCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
         var result = await sut.TestValidateAsync(command);
         result.ShouldHaveValidationErrorFor(c => c.PhoneNumber).WithErrorMessage(CreateProviderContactCommandValidator.PhoneNumberTooLong);
+    }
+
+    [TestCase(TestHelper.Constants.AllowedSpecialCharacters, true)]
+    [TestCase("<", false)]
+    [TestCase(":", false)]
+    [TestCase("=", false)]
+    public async Task ValidatePhoneNumber_AllowsSelectedSpecialCharacters(string phone, bool isValid)
+    {
+        var command = new CreateProviderContactCommand { Ukprn = ukprn, UserId = userId, UserDisplayName = userDisplayName };
+        command.PhoneNumber = phone;
+        var sut = new CreateProviderContactCommandValidator(Mock.Of<IProvidersReadRepository>(), Mock.Of<IProviderCoursesReadRepository>());
+        var result = await sut.TestValidateAsync(command);
+        if (isValid)
+        {
+            result.ShouldNotHaveValidationErrorFor(c => c.PhoneNumber);
+        }
+        else
+        {
+            result.ShouldHaveValidationErrorFor(c => c.PhoneNumber).WithErrorMessage(ValidationMessages.InvalidCharactersErrorMessage);
+        }
     }
 
     [Test]

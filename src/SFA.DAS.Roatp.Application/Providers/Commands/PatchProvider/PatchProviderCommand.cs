@@ -3,10 +3,11 @@ using System.Linq;
 using MediatR;
 using Microsoft.AspNetCore.JsonPatch;
 using SFA.DAS.Roatp.Application.Common;
+using SFA.DAS.Roatp.Application.Mediatr.Responses;
 
 namespace SFA.DAS.Roatp.Application.Providers.Commands.PatchProvider
 {
-    public class PatchProviderCommand : IRequest, IUkprn, IUserInfo
+    public class PatchProviderCommand : IRequest<ValidatedResponse<Unit>>, IUkprn, IUserInfo
     {
         private const string Replace = "replace";
         public const string MarketingInfoIdentifier = "MarketingInfo";
