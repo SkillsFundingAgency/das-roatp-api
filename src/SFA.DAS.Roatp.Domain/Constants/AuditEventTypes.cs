@@ -22,5 +22,6 @@
         public const string CreateProviderCourseType = "CreateProviderCourseType";
         public const string UpdateProviderAllowedCourse = "UpdateProviderAllowedCourse";
         public const string CreateProviderAllowedCourse = "CreateProviderAllowedCourse";
+        public const string DeleteProviderAllowedCourse = "DeleteProviderAllowedCourse";
     }
 }
