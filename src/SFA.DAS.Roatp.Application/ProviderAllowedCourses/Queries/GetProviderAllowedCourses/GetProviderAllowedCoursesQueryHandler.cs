@@ -1,14 +1,16 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
+using SFA.DAS.Roatp.Domain.Constants;
 using SFA.DAS.Roatp.Domain.Interfaces;
 using SFA.DAS.Roatp.Domain.Models;
 
 namespace SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourses;
 
-public class GetProviderAllowedCoursesQueryHandler(IProviderAllowedCoursesRepository _providerAllowedCoursesRepository, IProviderCourseTypesRepository _providerCourseTypesReadRepository, IStandardsReadRepository _standardsReadRepository, IProviderCoursesReadRepository _providerCoursesReadRepository) : IRequestHandler<GetProviderAllowedCoursesQuery, GetProviderAllowedCoursesQueryResult>
+public class GetProviderAllowedCoursesQueryHandler(IProviderAllowedCoursesRepository _providerAllowedCoursesRepository, IProviderCourseTypesRepository _providerCourseTypesReadRepository, IStandardsReadRepository _standardsReadRepository) : IRequestHandler<GetProviderAllowedCoursesQuery, GetProviderAllowedCoursesQueryResult>
 {
     public async Task<GetProviderAllowedCoursesQueryResult> Handle(GetProviderAllowedCoursesQuery request, CancellationToken cancellationToken)
     {
@@ -34,7 +36,7 @@ public class GetProviderAllowedCoursesQueryHandler(IProviderAllowedCoursesReposi
         {
             var courseTypeCourses = providerCourseType.IsRestrictedProvider
                 ? await GetRestrictedCourses(request.Ukprn, providerCourseType.CourseType, cancellationToken)
-                : await GetAvailableCourses(request.Ukprn, providerCourseType.CourseType);
+                : await GetAvailableCourses(request.Ukprn, providerCourseType.CourseType, cancellationToken);
 
             courses.AddRange(courseTypeCourses);
         }
@@ -49,23 +51,29 @@ public class GetProviderAllowedCoursesQueryHandler(IProviderAllowedCoursesReposi
         return allowedCourses.Select(c => (ProviderAllowedCourseModel)c);
     }
 
-    private async Task<IEnumerable<ProviderAllowedCourseModel>> GetAvailableCourses(int ukprn, CourseType courseType)
+    private async Task<IEnumerable<ProviderAllowedCourseModel>> GetAvailableCourses(int ukprn, CourseType courseType, CancellationToken cancellationToken)
     {
         var standards = await _standardsReadRepository.GetAllStandards();
 
-        var providerCourses = await _providerCoursesReadRepository.GetAllProviderCourses(ukprn);
+        var providerAllowedCourses = await _providerAllowedCoursesRepository.GetProviderAllowedCourses(ukprn, courseType, cancellationToken);
 
         return standards
             .Where(s => s.CourseType == courseType)
             .Where(s =>
                 s.RestrictedCourseView == null ||
-                providerCourses.Any(pc =>
-                    pc.Standard.LarsCode == s.LarsCode &&
-                    pc.ProviderAllowedCourse != null))
-            .Select(s => (
-                Standard: s,
-                ProviderCourse: providerCourses.FirstOrDefault(
-                    pc => pc.Standard.LarsCode == s.LarsCode)))
-            .Select(x => (ProviderAllowedCourseModel)x);
+                providerAllowedCourses.Any(pac => pac.LarsCode == s.LarsCode))
+            .Select(s => new
+            {
+                Standard = s,
+                ProviderAllowedCourse = providerAllowedCourses
+                    .FirstOrDefault(pac => pac.LarsCode == s.LarsCode)
+            })
+            .Select(x => new ProviderAllowedCourseModel(
+                x.Standard.LarsCode,
+                x.Standard.Title,
+                x.Standard.Level,
+                x.ProviderAllowedCourse == null || x.ProviderAllowedCourse.LastDateStarts == DateConstants.StartRestrictedDate ? null : x.ProviderAllowedCourse.LastDateStarts,
+                x.ProviderAllowedCourse != null && x.ProviderAllowedCourse.LastDateStarts < DateTime.UtcNow.Date
+            ));
     }
 }

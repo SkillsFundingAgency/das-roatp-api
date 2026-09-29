@@ -4,7 +4,7 @@ using SFA.DAS.Roatp.Domain.Entities;
 
 namespace SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourses;
 
-public record ProviderAllowedCourseModel(string LarsCode, string Title, int Level, DateTime? LastDateStarts, bool IsStartRestricted, bool IsActive)
+public record ProviderAllowedCourseModel(string LarsCode, string Title, int Level, DateTime? LastDateStarts, bool IsClosedToNewStarts)
 {
     public static implicit operator ProviderAllowedCourseModel(ProviderAllowedCourse providerAllowedCourse)
     {
@@ -13,21 +13,16 @@ public record ProviderAllowedCourseModel(string LarsCode, string Title, int Leve
             providerAllowedCourse.Standard.Title,
             providerAllowedCourse.Standard.Level,
             providerAllowedCourse.LastDateStarts == DateConstants.StartRestrictedDate ? null : providerAllowedCourse.LastDateStarts,
-            providerAllowedCourse.LastDateStarts == DateConstants.StartRestrictedDate,
-            providerAllowedCourse.ProviderCourse != null);
+            providerAllowedCourse.LastDateStarts < DateTime.UtcNow.Date);
     }
 
-    public static implicit operator ProviderAllowedCourseModel(
-        (Standard Standard, Domain.Entities.ProviderCourse ProviderCourse) source)
+    public static implicit operator ProviderAllowedCourseModel(Standard standard)
     {
-        var allowedCourse = source.ProviderCourse?.ProviderAllowedCourse;
-
         return new ProviderAllowedCourseModel(
-            source.Standard.LarsCode,
-            source.Standard.Title,
-            source.Standard.Level,
-            allowedCourse?.LastDateStarts == DateConstants.StartRestrictedDate ? null : allowedCourse?.LastDateStarts,
-            allowedCourse?.LastDateStarts == DateConstants.StartRestrictedDate,
-            source.ProviderCourse != null);
+            standard.LarsCode,
+            standard.Title,
+            standard.Level,
+            null,
+            false);
     }
 }
