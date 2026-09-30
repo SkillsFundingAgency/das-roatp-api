@@ -730,7 +730,7 @@ public class GetProviderAllowedCoursesQueryHandlerTests
     }
 
     [MoqInlineAutoData(-1, true)]
-    [MoqInlineAutoData(0, false)]
+    [MoqInlineAutoData(0, true)]
     [MoqInlineAutoData(1, false)]
     public async Task WhenProviderAllowedCourseHasLastDateStarts_ThenSetsIsClosedToNewStarts(
         int daysFromToday,

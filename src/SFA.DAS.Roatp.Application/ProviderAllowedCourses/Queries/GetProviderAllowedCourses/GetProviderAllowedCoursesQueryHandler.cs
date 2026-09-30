@@ -73,7 +73,7 @@ public class GetProviderAllowedCoursesQueryHandler(IProviderAllowedCoursesReposi
                 x.Standard.Title,
                 x.Standard.Level,
                 x.ProviderAllowedCourse == null || x.ProviderAllowedCourse.LastDateStarts == DateConstants.StartRestrictedDate ? null : x.ProviderAllowedCourse.LastDateStarts,
-                x.ProviderAllowedCourse != null && x.ProviderAllowedCourse.LastDateStarts < DateTime.UtcNow.Date
+                x.ProviderAllowedCourse != null && x.ProviderAllowedCourse.LastDateStarts <= DateTime.UtcNow.Date
             ));
     }
 }
