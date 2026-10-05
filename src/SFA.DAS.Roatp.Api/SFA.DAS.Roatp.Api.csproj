@@ -12,7 +12,7 @@
 	  <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="10.0.8" />
 	  <PackageReference Include="SFA.DAS.Api.Common" Version="17.1.165" />
 	  <PackageReference Include="SFA.DAS.Configuration.AzureTableStorage" Version="17.1.165" />
-	  <PackageReference Include="SFA.DAS.Telemetry" Version="17.1.95" />
+	  <PackageReference Include="SFA.DAS.Telemetry" Version="17.1.212" />
 	  <PackageReference Include="Swashbuckle.AspNetCore" Version="9.0.4" />
 	  <PackageReference Include="Swashbuckle.AspNetCore.Filters" Version="9.0.0" />
   </ItemGroup>

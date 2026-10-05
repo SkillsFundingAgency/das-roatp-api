@@ -92,8 +92,6 @@ public class Startup
 
         services.AddApiVersioning(opt =>
         {
-
-
             opt.ApiVersionReader = new HeaderApiVersionReader("X-Version");
             opt.AssumeDefaultVersionWhenUnspecified = false;
             opt.ReportApiVersions = true;
