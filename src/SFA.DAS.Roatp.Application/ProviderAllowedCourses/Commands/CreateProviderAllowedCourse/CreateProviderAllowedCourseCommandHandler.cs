@@ -18,7 +18,7 @@ public class CreateProviderAllowedCourseCommandHandler(IStandardsReadRepository 
             command.LastDateStarts = DateConstants.StartRestrictedDate;
         }
 
-        await _providerAllowedCoursesRepository.CreateProviderAllowedCourse(command.Ukprn, command.LarsCode, standard.CourseType, command.LastDateStarts, command.UserId, command.UserDisplayName);
+        await _providerAllowedCoursesRepository.CreateProviderAllowedCourse(command.Ukprn, command.LarsCode, standard.CourseType, command.LastDateStarts?.Date, command.UserId, command.UserDisplayName);
 
         return new ValidatedResponse<Unit>(Unit.Value);
     }
