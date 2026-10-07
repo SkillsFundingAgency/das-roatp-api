@@ -22,7 +22,7 @@ public class PatchProviderAllowedCourseCommandHandlerTests
         [Greedy] PatchProviderAllowedCourseCommandHandler sut)
     {
         // Arrange
-        var expectedLastDateStarts = DateTime.UtcNow;
+        var expectedLastDateStarts = DateTime.UtcNow.Date;
 
         var command = CreateCommand(expectedLastDateStarts);
 
