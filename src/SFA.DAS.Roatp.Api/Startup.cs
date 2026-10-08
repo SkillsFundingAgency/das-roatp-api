@@ -10,7 +10,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.ApplicationInsights;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Converters;
@@ -23,7 +22,8 @@ using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Extensions;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
-using SFA.DAS.Telemetry.Startup;
+using SFA.DAS.Telemetry;
+using SFA.DAS.Telemetry.Extensions;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -51,20 +51,7 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        services
-            .AddApplicationInsightsTelemetry()
-            .AddTelemetryNotFoundAsSuccessfulResponse();
-
-        if (Configuration.GetValue<bool>("EnableTelemetryUriRedaction"))
-        {
-            services.AddTelemetryUriRedaction("userid,userdisplayname");
-        }
-
-        services.AddLogging(builder =>
-        {
-            builder.AddFilter<ApplicationInsightsLoggerProvider>(string.Empty, LogLevel.Information);
-            builder.AddFilter<ApplicationInsightsLoggerProvider>("Microsoft", LogLevel.Information);
-        });
+        services.AddOpenTelemetry(() => new TelemetryOptions(true, true, "userid,userdisplayname"));
 
         if (!IsEnvironmentLocalOrDev)
         {
