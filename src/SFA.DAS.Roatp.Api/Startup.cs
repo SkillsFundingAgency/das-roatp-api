@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.Json.Serialization;
 using Asp.Versioning;
-using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -23,7 +22,8 @@ using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Extensions;
 using SFA.DAS.Roatp.Data;
 using SFA.DAS.Roatp.Data.Extensions;
-using SFA.DAS.Telemetry.Telemetry;
+using SFA.DAS.Telemetry;
+using SFA.DAS.Telemetry.Extensions;
 using Swashbuckle.AspNetCore.SwaggerGen;
 using Swashbuckle.AspNetCore.SwaggerUI;
 
@@ -51,12 +51,7 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        var opentelemetryServices = services.AddOpenTelemetry().UseAzureMonitor(options =>
-        {
-            options.ConnectionString = Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
-        });
-
-        opentelemetryServices.WithTracing(builder => builder.AddUriRedaction("userid,userdisplayname"));
+        services.AddOpenTelemetry(new TelemetryOptions(true, true, "userid,userdisplayname") { ApplicationInsightsConnectionString = Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"] });
 
         if (!IsEnvironmentLocalOrDev)
         {
