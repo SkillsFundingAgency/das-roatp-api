@@ -38,7 +38,8 @@ public class ProviderCourseExternalModelTests
             result.Should().BeEquivalentTo(source, options => options
                 .Excluding(c => c.LarsCode)
                 .Excluding(c => c.HasNationalDeliveryOption)
-                .Excluding(c => c.HasHundredPercentEmployerDeliveryOption));
+                .Excluding(c => c.HasHundredPercentEmployerDeliveryOption)
+                .Excluding(c => c.LastDateStarts));
             result.LarsCode.Should().Be(expected);
         }
     }

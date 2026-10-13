@@ -1,8 +1,11 @@
-﻿namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
+﻿using System;
+
+namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderCourse;
 
 public class ProviderCourseModel : ProviderCourseModelBase
 {
     public string LarsCode { get; set; }
+    public DateTime? LastDateStarts { get; set; }
 
     public static implicit operator ProviderCourseModel(Domain.Entities.ProviderCourse providerCourse)
     {
@@ -21,7 +24,8 @@ public class ProviderCourseModel : ProviderCourseModelBase
             IsRegulatedForProvider = providerCourse.Standard?.IsRegulatedForProvider ?? false,
             CourseType = providerCourse.Standard.CourseType,
             LearningType = providerCourse.Standard.LearningType,
-            HasOnlineDeliveryOption = providerCourse.HasOnlineDeliveryOption
+            HasOnlineDeliveryOption = providerCourse.HasOnlineDeliveryOption,
+            LastDateStarts = providerCourse.ProviderAllowedCourse?.LastDateStarts
         };
 
         return model;
