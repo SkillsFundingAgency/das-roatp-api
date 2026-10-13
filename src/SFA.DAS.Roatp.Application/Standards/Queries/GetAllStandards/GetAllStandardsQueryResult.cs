@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+using System;
+using System.Collections.Generic;
 using System.Linq;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Models;
@@ -30,6 +31,7 @@ public class StandardModel
     public LearningType LearningType { get; set; }
     public CourseType CourseType { get; set; }
     public bool IsActiveAvailable { get; set; }
+    public DateTime? LastDateStarts { get; set; }
 
     public static implicit operator StandardModel(Standard standard) =>
         new()
@@ -44,6 +46,7 @@ public class StandardModel
             Route = standard.Route,
             LearningType = standard.LearningType,
             CourseType = standard.CourseType,
-            IsActiveAvailable = standard.IsActiveAvailable
+            IsActiveAvailable = standard.IsActiveAvailable,
+            LastDateStarts = standard.LastDateStarts
         };
 }
