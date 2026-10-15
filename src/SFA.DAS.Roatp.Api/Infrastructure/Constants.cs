@@ -24,7 +24,8 @@ public static class Constants
         public const string Providers = nameof(Providers);
         public const string ProviderContact = "Provider Contact";
         public const string ProviderCourses = "Provider Courses";
-        public const string ProiderCourseLocations = "Provider Course Locations";
+        public const string ProviderCourseTypes = "Provider Course Types";
+        public const string ProviderCourseLocations = "Provider Course Locations";
         public const string ProviderLocations = "Provider Locations";
         public const string ProviderCoursesTimeLine = "Provider Courses Timeline";
         public const string ProviderAllowedCourses = "Provider Allowed Courses";

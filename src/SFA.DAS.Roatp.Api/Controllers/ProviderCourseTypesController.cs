@@ -19,7 +19,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
 [ApiVersion(ApiVersionNumber.One)]
-[Tags(EndpointTags.ProviderCourses)]
+[Tags(EndpointTags.ProviderCourseTypes)]
 [Route("/providers/{ukprn}/course-types", Name = RouteNames.GetProviderCourseTypes)]
 public class ProviderCourseTypesController(IMediator _mediator, ILogger<ProviderCourseTypesController> _logger, IValidator<IUkprn> _ukprnValidator) : ActionResponseControllerBase
 {
