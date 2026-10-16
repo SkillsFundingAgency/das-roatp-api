@@ -15,7 +15,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 [ApiController]
 [ApiVersion(ApiVersionNumber.One)]
 [Route("providers/{ukprn}/courses/{larsCode}/locations")]
-[Tags(EndpointTags.ProiderCourseLocations)]
+[Tags(EndpointTags.ProviderCourseLocations)]
 public class ProviderCourseLocationsEditController : ActionResponseControllerBase
 {
     private readonly IMediator _mediator;
