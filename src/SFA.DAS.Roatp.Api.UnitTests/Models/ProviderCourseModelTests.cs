@@ -76,6 +76,7 @@ public class ProviderCourseModelTests
         model.HasPortableFlexiJobOption.Should().Be(providerCourse.HasPortableFlexiJobOption);
         model.CourseType.Should().Be(providerCourse.Standard.CourseType);
         model.IsRegulatedForProvider.Should().Be(providerCourse.Standard.IsRegulatedForProvider);
+        model.LastDateStarts.Should().Be(providerCourse.ProviderAllowedCourse.LastDateStarts);
     }
 
     [Test]
