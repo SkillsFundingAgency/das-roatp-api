@@ -4,18 +4,16 @@ using SFA.DAS.Roatp.Application.ProviderCourseTypes.Queries.GetProviderCourseTyp
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Queries
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Queries;
+
+[TestFixture]
+public class ProviderCourseTypeModelTest
 {
-    [TestFixture]
-    public class ProviderCourseTypeModelTest
+    [Test, RecursiveMoqAutoData]
+    public void Operator_PopulatesModelFromEntity(ProviderCourseType courseType)
     {
-        [Test, RecursiveMoqAutoData]
-        public void Operator_PopulatesModelFromEntity(ProviderCourseType courseType)
-        {
-            var model = (ProviderCourseTypeModel)courseType;
-            model.CourseType.Should().Be(courseType.CourseType);
-            model.CourseTypeId.Should().Be((int)courseType.CourseType);
-            model.IsRestricted.Should().Be(courseType.IsRestrictedProvider);
-        }
+        var model = (ProviderCourseTypeModel)courseType;
+        model.CourseType.Should().Be(courseType.CourseType);
+        model.IsRestricted.Should().Be(courseType.IsRestrictedProvider);
     }
 }
