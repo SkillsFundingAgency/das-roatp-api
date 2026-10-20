@@ -24,12 +24,22 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 [ApiVersion(ApiVersionNumber.One)]
 [Tags(EndpointTags.ProviderAllowedCourses)]
 [Route("providers/{ukprn}/allowed-courses")]
-public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<ProviderAllowedCoursesController> _logger, IValidator<IUkprnAndLarsCodeValidator> _validator) : ActionResponseControllerBase
+public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<ProviderAllowedCoursesController> _logger, IValidator<IUkprnAndLarsCodeValidator> _validator, IValidator<IUkprn> _ukprnValidator) : ActionResponseControllerBase
 {
     [HttpGet]
     [ProducesResponseType(typeof(GetProviderAllowedCoursesQueryResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
     public async Task<IActionResult> GetAllowedCourses([FromRoute] int ukprn, [FromQuery] CourseType? courseType = null, CancellationToken cancellationToken = default)
     {
+        var model = new UkprnValidatorModel { Ukprn = ukprn };
+
+        var validationResult = await _ukprnValidator.ValidateAsync(model);
+
+        if (!validationResult.IsValid)
+        {
+            return NotFound(FormatErrors(validationResult.Errors));
+        }
+
         GetProviderAllowedCoursesQuery query = new(ukprn, courseType);
         GetProviderAllowedCoursesQueryResult result = await _mediator.Send(query, cancellationToken);
         return Ok(result);
