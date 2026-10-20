@@ -33,7 +33,7 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
     {
         var model = new UkprnValidatorModel { Ukprn = ukprn };
 
-        var validationResult = await _ukprnValidator.ValidateAsync(model);
+        var validationResult = await _ukprnValidator.ValidateAsync(model, cancellationToken);
 
         if (!validationResult.IsValid)
         {
