@@ -67,18 +67,6 @@ public class ProviderCourseTypesController(IMediator _mediator, ILogger<Provider
     {
         _logger.LogInformation("Request to add course types for Ukprn {Ukprn}", ukprn);
 
-        var model = new UkprnValidatorModel
-        {
-            Ukprn = ukprn,
-        };
-
-        var result = await _ukprnValidator.ValidateAsync(model);
-
-        if (!result.IsValid)
-        {
-            return NotFound(FormatErrors(result.Errors));
-        }
-
         CreateProviderCourseTypeCommand command = new()
         {
             Ukprn = ukprn,

@@ -133,31 +133,6 @@ public class ProviderCourseTypesControllerPostTests
     }
 
     [Test, MoqAutoData]
-    public async Task WhenInvalidUkprn_ThenReturnsNotFound(
-    [Frozen] Mock<IMediator> mediatorMock,
-    [Frozen] Mock<IValidator<IUkprn>> validatorMock,
-    [Greedy] ProviderCourseTypesController sut,
-    AddCourseTypesModel request,
-    int ukprn)
-    {
-        // Arrange
-        request.CourseTypes = [CourseType.Apprenticeship];
-
-        validatorMock
-            .Setup(v => v.ValidateAsync(It.Is<UkprnValidatorModel>(x => x.Ukprn == ukprn), It.IsAny<CancellationToken>()))
-            .ReturnsAsync(new ValidationResult(new[] { new ValidationFailure(nameof(IUkprn.Ukprn), "Invalid UKPRN") }));
-
-        // Act
-        var result = await sut.AddCourseTypes(ukprn, request);
-
-        // Assert
-        result.Should().BeOfType<NotFoundObjectResult>();
-
-        mediatorMock
-            .Verify(x => x.Send(It.IsAny<CreateProviderCourseTypeCommand>(), It.IsAny<CancellationToken>()), Times.Never);
-    }
-
-    [Test, MoqAutoData]
     public async Task WhenValidationFails_ThenReturnsBadRequest(
     [Frozen] Mock<IMediator> mediatorMock,
     [Frozen] Mock<IValidator<IUkprn>> validatorMock,
