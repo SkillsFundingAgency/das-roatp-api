@@ -5,7 +5,6 @@ namespace SFA.DAS.Roatp.Application.ProviderCourseTypes.Queries.GetProviderCours
 
 public class ProviderCourseTypeModel
 {
-    public int CourseTypeId { get; set; }
     public CourseType CourseType { get; set; }
     public bool IsRestricted { get; set; }
     public int? RestrictedCount { get; set; }
@@ -14,7 +13,6 @@ public class ProviderCourseTypeModel
     public static implicit operator ProviderCourseTypeModel(ProviderCourseType source) =>
         new()
         {
-            CourseTypeId = (int)source.CourseType,
             CourseType = source.CourseType,
             IsRestricted = source.IsRestrictedProvider,
         };
