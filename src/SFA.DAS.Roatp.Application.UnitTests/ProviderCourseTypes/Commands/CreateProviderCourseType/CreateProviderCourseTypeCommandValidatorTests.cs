@@ -15,6 +15,33 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Commands.Creat
 
 public class CreateProviderCourseTypeCommandValidatorTests
 {
+    [Test]
+    [MoqInlineAutoData(0)]
+    [MoqInlineAutoData(1)]
+    [MoqInlineAutoData(20012001)]
+    [MoqInlineAutoData(200120019)]
+    public async Task ValidatesUkprn_DoesNotMatchFormat_ReturnsInvalid(
+        int ukprn,
+        [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
+        [Greedy] CreateProviderCourseTypeCommandValidator sut)
+    {
+        // Arrange
+        var command = new CreateProviderCourseTypeCommand()
+        {
+            Ukprn = ukprn,
+            CourseTypes = [],
+            UserId = "TestUserId",
+            UserDisplayName = "Test User"
+        };
+        providerCourseTypesRepository
+            .Setup(x => x.GetProviderCourseTypesByUkprn(ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<ProviderCourseType>());
+        // Act
+        var result = await sut.TestValidateAsync(command);
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Ukprn);
+    }
+
     [Test, MoqAutoData]
     public async Task WhenCourseTypesIsEmpty_ThenValidationShouldFail(
         [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,

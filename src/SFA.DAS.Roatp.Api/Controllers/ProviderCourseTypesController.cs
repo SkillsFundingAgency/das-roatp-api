@@ -1,14 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using Asp.Versioning;
-using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Api.Models;
-using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.ProviderCourseTypes.Commands.CreateProviderCourseType;
 using SFA.DAS.Roatp.Application.ProviderCourseTypes.Commands.RestrictProvider;
 using SFA.DAS.Roatp.Application.ProviderCourseTypes.Queries.GetProviderCourseTypes;
@@ -21,7 +19,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 [ApiVersion(ApiVersionNumber.One)]
 [Tags(EndpointTags.ProviderCourseTypes)]
 [Route("/providers/{ukprn}/course-types", Name = RouteNames.GetProviderCourseTypes)]
-public class ProviderCourseTypesController(IMediator _mediator, ILogger<ProviderCourseTypesController> _logger, IValidator<IUkprn> _ukprnValidator) : ActionResponseControllerBase
+public class ProviderCourseTypesController(IMediator _mediator, ILogger<ProviderCourseTypesController> _logger) : ActionResponseControllerBase
 {
     [HttpGet]
     [Produces("application/json")]
