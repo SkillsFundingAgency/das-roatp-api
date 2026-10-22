@@ -23,6 +23,7 @@ public class GetProviderAllowedCourseDetailsTests
         var ukprn = 12345678;
         var larsCode = "12345";
         Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock = new();
+        Mock<IValidator<IUkprn>> ukprnValidatorMock = new();
         validatorMock
             .Setup(v => v.ValidateAsync(It.IsAny<IUkprnAndLarsCodeValidator>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
@@ -30,7 +31,7 @@ public class GetProviderAllowedCourseDetailsTests
         mediatorMock
             .Setup(m => m.Send(It.IsAny<GetProviderAllowedCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(expectedResult);
-        var sut = new ProviderAllowedCoursesController(mediatorMock.Object, Mock.Of<ILogger<ProviderAllowedCoursesController>>(), validatorMock.Object);
+        var sut = new ProviderAllowedCoursesController(mediatorMock.Object, Mock.Of<ILogger<ProviderAllowedCoursesController>>(), validatorMock.Object, ukprnValidatorMock.Object);
         // Act
         var result = await sut.GetProviderAllowedCourseDetails(ukprn, larsCode, CancellationToken.None);
         // Assert
@@ -45,6 +46,7 @@ public class GetProviderAllowedCourseDetailsTests
         var ukprn = 12345678;
         var larsCode = "12345";
         Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock = new();
+        Mock<IValidator<IUkprn>> ukprnValidatorMock = new();
         validatorMock
             .Setup(v => v.ValidateAsync(It.IsAny<IUkprnAndLarsCodeValidator>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult());
@@ -52,7 +54,7 @@ public class GetProviderAllowedCourseDetailsTests
         mediatorMock
             .Setup(m => m.Send(It.IsAny<GetProviderAllowedCourseDetailsQuery>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync((GetProviderAllowedCourseDetailsQueryResult)null);
-        var sut = new ProviderAllowedCoursesController(mediatorMock.Object, Mock.Of<ILogger<ProviderAllowedCoursesController>>(), validatorMock.Object);
+        var sut = new ProviderAllowedCoursesController(mediatorMock.Object, Mock.Of<ILogger<ProviderAllowedCoursesController>>(), validatorMock.Object, ukprnValidatorMock.Object);
         // Act
         var result = await sut.GetProviderAllowedCourseDetails(ukprn, larsCode, CancellationToken.None);
         // Assert
@@ -67,11 +69,11 @@ public class GetProviderAllowedCourseDetailsTests
         var ukprn = 12345678;
         var larsCode = "12345";
         Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock = new();
+        Mock<IValidator<IUkprn>> ukprnValidatorMock = new();
         validatorMock
             .Setup(v => v.ValidateAsync(It.IsAny<IUkprnAndLarsCodeValidator>(), It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidationResult([new ValidationFailure("Ukprn", "Ukprn is required")]));
-
-        var sut = new ProviderAllowedCoursesController(Mock.Of<IMediator>(), Mock.Of<ILogger<ProviderAllowedCoursesController>>(), validatorMock.Object);
+        var sut = new ProviderAllowedCoursesController(Mock.Of<IMediator>(), Mock.Of<ILogger<ProviderAllowedCoursesController>>(), validatorMock.Object, ukprnValidatorMock.Object);
         // Act
         var result = await sut.GetProviderAllowedCourseDetails(ukprn, larsCode, CancellationToken.None);
         // Assert
