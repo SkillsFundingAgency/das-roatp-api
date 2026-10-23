@@ -15,6 +15,11 @@ public class CreateProviderCourseTypeCommandValidator : AbstractValidator<Create
     public CreateProviderCourseTypeCommandValidator(IProviderCourseTypesRepository providerCourseTypesRepository)
     {
         Include(new UserInfoValidator());
+        RuleFor(x => x.Ukprn)
+            .Cascade(CascadeMode.Stop)
+            .NotEmpty()
+            .GreaterThan(10000000).WithMessage(UkprnValidator.InvalidUkprnErrorMessage)
+            .LessThan(19999999).WithMessage(UkprnValidator.InvalidUkprnErrorMessage);
         RuleFor(c => c.CourseTypes)
             .NotEmpty()
             .WithMessage(CourseTypesNotProvided);

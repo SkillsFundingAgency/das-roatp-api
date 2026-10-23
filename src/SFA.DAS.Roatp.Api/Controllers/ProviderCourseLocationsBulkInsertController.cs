@@ -12,7 +12,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 
 [ApiController]
 [ApiVersion(ApiVersionNumber.One)]
-[Tags(EndpointTags.ProiderCourseLocations)]
+[Tags(EndpointTags.ProviderCourseLocations)]
 [Route("/providers/{ukprn}/courses/{larsCode}/locations/bulk-insert-regions")]
 public class ProviderCourseLocationsBulkInsertController : ActionResponseControllerBase
 {
