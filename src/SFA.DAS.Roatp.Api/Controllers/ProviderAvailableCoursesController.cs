@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
+using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAvailableCourse;
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAvailableCourses;
 using SFA.DAS.Roatp.Domain.Models;
 using static SFA.DAS.Roatp.Api.Infrastructure.Constants;
@@ -27,5 +28,16 @@ public class ProviderAvailableCoursesController(IMediator _mediator) : ActionRes
         GetProviderAvailableCoursesQuery query = new(ukprn, courseType);
         ValidatedResponse<GetProviderAvailableCoursesQueryResult> result = await _mediator.Send(query, cancellationToken);
         return GetResponse(result);
+    }
+
+    [HttpGet]
+    [Route("available-courses/{larsCode}")]
+    [ProducesResponseType(typeof(GetProviderAvailableCourseQueryResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> GetAvailableCourse([FromRoute] int ukprn, [FromRoute] CourseType courseType, [FromRoute] string larsCode, CancellationToken cancellationToken)
+    {
+        GetProviderAvailableCourseQuery query = new(ukprn, courseType, larsCode);
+        GetProviderAvailableCourseQueryResult result = await _mediator.Send(query, cancellationToken);
+        return result is null ? NotFound() : Ok(result);
     }
 }
