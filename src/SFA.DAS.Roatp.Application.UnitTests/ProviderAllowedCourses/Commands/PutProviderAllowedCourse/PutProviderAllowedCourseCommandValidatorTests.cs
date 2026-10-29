@@ -4,24 +4,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
 using FluentValidation.TestHelper;
-using Microsoft.AspNetCore.JsonPatch;
 using Moq;
 using NUnit.Framework;
-using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
+using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PutProviderAllowedCourse;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
-using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
-namespace SFA.DAS.Roatp.Application.UnitTests.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderAllowedCourses.Commands.PutProviderAllowedCourse;
 
-public class PatchProviderAllowedCourseCommandValidatorTests
+public class PutProviderAllowedCourseCommandValidatorTests
 {
     [Test, MoqAutoData]
     public async Task WhenDoesNotExistInProviderAllowedCourse_ThenValidationShouldFail(
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
-        [Greedy] PatchProviderAllowedCourseCommandValidator sut)
+        [Greedy] PutProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
         var lastDateStarts = DateTime.UtcNow;
@@ -42,14 +40,14 @@ public class PatchProviderAllowedCourseCommandValidatorTests
 
         // Assert
         result.ShouldHaveValidationErrorFor(x => x)
-            .WithErrorMessage(PatchProviderAllowedCourseCommandValidator.NotExistsInProviderAllowedCourse);
+            .WithErrorMessage(PutProviderAllowedCourseCommandValidator.NotExistsInProviderAllowedCourse);
     }
 
     [Test, MoqAutoData]
     public async Task WhenLastDateStartsIsAfterStandardDate_ThenValidationShouldFail(
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
-        [Greedy] PatchProviderAllowedCourseCommandValidator sut)
+        [Greedy] PutProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
         var standardLastDateStarts = DateTime.UtcNow.AddMonths(-1);
@@ -83,15 +81,15 @@ public class PatchProviderAllowedCourseCommandValidatorTests
         var result = await sut.TestValidateAsync(command);
 
         // Assert
-        result.ShouldHaveValidationErrorFor(x => x.PatchDoc.Operations)
-            .WithErrorMessage(PatchProviderAllowedCourseCommandValidator.InvalidLastDateStarts);
+        result.ShouldHaveValidationErrorFor(x => x.LastDateStarts)
+            .WithErrorMessage(PutProviderAllowedCourseCommandValidator.InvalidLastDateStarts);
     }
 
     [Test, MoqAutoData]
     public async Task WhenLastDateStartsIsBeforeStandardDate_AndExistsInProviderAllowedCourse_ThenValidationShouldPass(
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
-        [Greedy] PatchProviderAllowedCourseCommandValidator sut)
+        [Greedy] PutProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
         var standardLastDateStarts = DateTime.UtcNow;
@@ -132,7 +130,7 @@ public class PatchProviderAllowedCourseCommandValidatorTests
     public async Task WhenLastDateStartsIsNull_ThenValidationShouldPass(
         [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
-        [Greedy] PatchProviderAllowedCourseCommandValidator sut)
+        [Greedy] PutProviderAllowedCourseCommandValidator sut)
     {
         // Arrange
         var command = CreateCommand(null);
@@ -166,19 +164,15 @@ public class PatchProviderAllowedCourseCommandValidatorTests
         result.ShouldNotHaveValidationErrorFor(x => x);
     }
 
-    private static PatchProviderAllowedCourseCommand CreateCommand(DateTime? lastDateStarts)
+    private static PutProviderAllowedCourseCommand CreateCommand(DateTime? lastDateStarts)
     {
-        var patchDoc = new JsonPatchDocument<PatchProviderAllowedCourseModel>();
-
-        patchDoc.Replace(x => x.LastDateStarts, lastDateStarts);
-
-        return new PatchProviderAllowedCourseCommand
+        return new PutProviderAllowedCourseCommand
         {
             Ukprn = 12345678,
             LarsCode = "12345",
             UserId = "TestUserId",
             UserDisplayName = "TestUser",
-            PatchDoc = patchDoc
+            LastDateStarts = lastDateStarts
         };
     }
 }
