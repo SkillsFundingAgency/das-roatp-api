@@ -37,7 +37,9 @@ public class GetProviderAvailableCourseQueryHandler(IMediator _mediator, IStanda
                 Sector = standard.Route,
                 IsRegulatedForProvider = standard.IsRegulatedForProvider,
                 ApprovalBody = standard.ApprovalBody,
-                LastDateStarts = standard.LastDateStarts
+                LastDateStarts = standard.LastDateStarts,
+                IfateReferenceNumber = standard.IfateReferenceNumber,
+                LearningType = standard.LearningType
             };
     }
 }

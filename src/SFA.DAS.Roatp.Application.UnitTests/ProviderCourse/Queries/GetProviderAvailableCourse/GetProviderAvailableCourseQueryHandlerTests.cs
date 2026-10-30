@@ -13,6 +13,7 @@ using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAvailableCours
 using SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAvailableCourses;
 using SFA.DAS.Roatp.Domain.Entities;
 using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourse.Queries.GetProviderAvailableCourse;
@@ -136,7 +137,9 @@ public class GetProviderAvailableCourseQueryHandlerTests
                 Route = route,
                 IsRegulatedForProvider = true,
                 ApprovalBody = approvalBody,
-                LastDateStarts = lastDateStarts
+                LastDateStarts = lastDateStarts,
+                IfateReferenceNumber = "Test1",
+                LearningType = LearningType.Apprenticeship
             });
 
         mediator
@@ -162,7 +165,9 @@ public class GetProviderAvailableCourseQueryHandlerTests
             Sector = route,
             IsRegulatedForProvider = true,
             ApprovalBody = approvalBody,
-            LastDateStarts = lastDateStarts
+            LastDateStarts = lastDateStarts,
+            IfateReferenceNumber = "Test1",
+            LearningType = LearningType.Apprenticeship
         });
     }
 }
