@@ -121,23 +121,27 @@ public class GetProviderAvailableCourseQueryHandlerTests
     [Test, MoqAutoData]
     public async Task WhenLarsCodeDoesExistInAvailableCourses_ThenCourseDetailsIsReturned(
         [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
+        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
         [Frozen] Mock<IMediator> mediator,
         [Greedy] GetProviderAvailableCourseQueryHandler sut,
         GetProviderAvailableCourseQuery request,
         string title,
-        string route,
         string approvalBody)
     {
-        var lastDateStarts = System.DateTime.UtcNow.Date.AddDays(1);
+        var allowedCourses = new ProviderAllowedCourse()
+        {
+            LarsCode = request.LarsCode,
+            Ukprn = request.Ukprn,
+            LastDateStarts = System.DateTime.UtcNow.Date.AddDays(1)
+        };
 
         standardsReadRepository
             .Setup(x => x.GetStandard(request.LarsCode))
             .ReturnsAsync(new Standard
             {
-                Route = route,
+                Route = "Test Route",
                 IsRegulatedForProvider = true,
                 ApprovalBody = approvalBody,
-                LastDateStarts = lastDateStarts,
                 IfateReferenceNumber = "Test1",
                 LearningType = LearningType.Apprenticeship
             });
@@ -155,6 +159,10 @@ public class GetProviderAvailableCourseQueryHandlerTests
                     }
                 }));
 
+        providerAllowedCoursesRepository
+            .Setup(x => x.GetProviderAllowedCourse(request.Ukprn, request.LarsCode, CancellationToken.None))
+            .ReturnsAsync(allowedCourses);
+
         var result = await sut.Handle(request, CancellationToken.None);
 
         result.Should().BeEquivalentTo(new GetProviderAvailableCourseQueryResult
@@ -162,10 +170,10 @@ public class GetProviderAvailableCourseQueryHandlerTests
             LarsCode = request.LarsCode,
             Level = 4,
             Title = title,
-            Sector = route,
+            Sector = "Test Route",
             IsRegulatedForProvider = true,
             ApprovalBody = approvalBody,
-            LastDateStarts = lastDateStarts,
+            LastDateStarts = allowedCourses.LastDateStarts,
             IfateReferenceNumber = "Test1",
             LearningType = LearningType.Apprenticeship
         });

@@ -9,7 +9,7 @@ using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.ProviderCourse.Queries.GetProviderAvailableCourse;
 
-public class GetProviderAvailableCourseQueryHandler(IMediator _mediator, IStandardsReadRepository _standardsReadRepository) : IRequestHandler<GetProviderAvailableCourseQuery, GetProviderAvailableCourseQueryResult>
+public class GetProviderAvailableCourseQueryHandler(IMediator _mediator, IStandardsReadRepository _standardsReadRepository, IProviderAllowedCoursesRepository _providerAllowedCoursesRepository) : IRequestHandler<GetProviderAvailableCourseQuery, GetProviderAvailableCourseQueryResult>
 {
     public async Task<GetProviderAvailableCourseQueryResult> Handle(GetProviderAvailableCourseQuery request, CancellationToken cancellationToken)
     {
@@ -27,6 +27,8 @@ public class GetProviderAvailableCourseQueryHandler(IMediator _mediator, IStanda
 
         if (course == null) return null;
 
+        var providerAllowedCourse = await _providerAllowedCoursesRepository.GetProviderAllowedCourse(request.Ukprn, request.LarsCode, cancellationToken);
+
         return
             new GetProviderAvailableCourseQueryResult()
             {
@@ -36,7 +38,7 @@ public class GetProviderAvailableCourseQueryHandler(IMediator _mediator, IStanda
                 Sector = standard.Route,
                 IsRegulatedForProvider = standard.IsRegulatedForProvider,
                 ApprovalBody = standard.ApprovalBody,
-                LastDateStarts = standard.LastDateStarts,
+                LastDateStarts = providerAllowedCourse?.LastDateStarts,
                 IfateReferenceNumber = standard.IfateReferenceNumber,
                 LearningType = standard.LearningType
             };
