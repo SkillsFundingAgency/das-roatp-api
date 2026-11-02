@@ -15,18 +15,17 @@ public class GetProviderAvailableCourseQueryHandler(IMediator _mediator, IStanda
     {
         Standard standard = await _standardsReadRepository.GetStandard(request.LarsCode);
 
-        if (standard == null)
-            return null;
+        if (standard == null) return null;
 
         GetProviderAvailableCoursesQuery query = new(request.Ukprn, request.CourseType);
+
         ValidatedResponse<GetProviderAvailableCoursesQueryResult> result = await _mediator.Send(query, cancellationToken);
-        if (!result.IsValidResponse)
-            return null;
+
+        if (!result.IsValidResponse) return null;
 
         var course = result.Result.AvailableCourses.FirstOrDefault(c => c.LarsCode == request.LarsCode);
 
-        if (course == null)
-            return null;
+        if (course == null) return null;
 
         return
             new GetProviderAvailableCourseQueryResult()
