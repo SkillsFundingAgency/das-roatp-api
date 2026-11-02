@@ -178,4 +178,48 @@ public class GetProviderAvailableCourseQueryHandlerTests
             LearningType = LearningType.Apprenticeship
         });
     }
+
+    [Test, MoqAutoData]
+    public async Task WhenNoRecordInProviderAllowedCourse_ReturnsLastDateStartsAsNull(
+        [Frozen] Mock<IStandardsReadRepository> standardsReadRepository,
+        [Frozen] Mock<IProviderAllowedCoursesRepository> providerAllowedCoursesRepository,
+        [Frozen] Mock<IMediator> mediator,
+        [Greedy] GetProviderAvailableCourseQueryHandler sut,
+        GetProviderAvailableCourseQuery request,
+        string title,
+        string approvalBody)
+    {
+
+        standardsReadRepository
+            .Setup(x => x.GetStandard(request.LarsCode))
+            .ReturnsAsync(new Standard
+            {
+                Route = "Test Route",
+                IsRegulatedForProvider = true,
+                ApprovalBody = approvalBody,
+                IfateReferenceNumber = "Test1",
+                LearningType = LearningType.Apprenticeship
+            });
+
+        mediator
+            .Setup(x => x.Send(
+                It.IsAny<GetProviderAvailableCoursesQuery>(),
+                CancellationToken.None))
+            .ReturnsAsync(new ValidatedResponse<GetProviderAvailableCoursesQueryResult>(
+                new GetProviderAvailableCoursesQueryResult
+                {
+                    AvailableCourses = new List<CourseBasicModel>
+                    {
+                        new(request.LarsCode, 4, title)
+                    }
+                }));
+
+        providerAllowedCoursesRepository
+            .Setup(x => x.GetProviderAllowedCourse(request.Ukprn, request.LarsCode, CancellationToken.None))
+            .ReturnsAsync(new ProviderAllowedCourse());
+
+        var result = await sut.Handle(request, CancellationToken.None);
+
+        result.LastDateStarts.Should().BeNull();
+    }
 }
