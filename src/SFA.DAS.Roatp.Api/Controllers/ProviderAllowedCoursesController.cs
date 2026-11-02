@@ -4,7 +4,6 @@ using Asp.Versioning;
 using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
@@ -12,7 +11,7 @@ using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.CreateProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.DeleteProviderAllowedCourse;
-using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
+using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PutProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourse;
 using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Queries.GetProviderAllowedCourses;
 using SFA.DAS.Roatp.Domain.Models;
@@ -81,13 +80,13 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
         return GetNoContentResponse(response);
     }
 
-    [HttpPatch("{larsCode}")]
+    [HttpPut("{larsCode}")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
-    public async Task<IActionResult> PatchProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] JsonPatchDocument<PatchProviderAllowedCourseModel> request, [FromQuery] string userId, [FromQuery] string userDisplayName)
+    public async Task<IActionResult> PutProviderAllowedCourse([FromRoute] int ukprn, [FromRoute] string larsCode, [FromBody] PutProviderAllowedCourseModel request)
     {
-        _logger.LogInformation("Request to patch provider allowedCourse for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
+        _logger.LogInformation("Request to put provider allowedCourse for Ukprn {Ukprn} and LarsCode {LarsCode}", ukprn, larsCode);
 
         var model = new UkrpnAndLarsCodeModel
         {
@@ -102,13 +101,13 @@ public class ProviderAllowedCoursesController(IMediator _mediator, ILogger<Provi
             return NotFound(FormatErrors(result.Errors));
         }
 
-        PatchProviderAllowedCourseCommand command = new()
+        PutProviderAllowedCourseCommand command = new()
         {
             Ukprn = ukprn,
             LarsCode = larsCode.ToUpper().Trim(),
-            UserId = userId,
-            UserDisplayName = userDisplayName,
-            PatchDoc = request
+            UserId = request.UserId,
+            UserDisplayName = request.UserDisplayName,
+            LastDateStarts = request.LastDateStarts
         };
 
         var response = await _mediator.Send(command);

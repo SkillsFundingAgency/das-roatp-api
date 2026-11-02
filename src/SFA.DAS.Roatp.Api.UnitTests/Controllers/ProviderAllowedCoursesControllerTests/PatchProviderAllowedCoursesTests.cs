@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture.NUnit4;
@@ -6,14 +7,13 @@ using FluentAssertions;
 using FluentValidation;
 using FluentValidation.Results;
 using MediatR;
-using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Api.Controllers;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.Mediatr.Responses;
-using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PatchProviderAllowedCourse;
+using SFA.DAS.Roatp.Application.ProviderAllowedCourses.Commands.PutProviderAllowedCourse;
 using SFA.DAS.Roatp.Domain.Models;
 using SFA.DAS.Testing.AutoFixture;
 
@@ -22,19 +22,16 @@ namespace SFA.DAS.Roatp.Api.UnitTests.Controllers.ProviderAllowedCoursesControll
 public class PatchProviderAllowedCoursesTests
 {
     [Test, MoqAutoData]
-    public async Task PatchProviderAllowedCourse_ValidationPasses_ReturnsNoContentResult(
+    public async Task PatchProviderAllowedCourse_UkprnAndLarsCodeAreValid_ThenUpdatesLastDateStarts_AndReturnsNoContentResult(
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock,
         [Greedy] ProviderAllowedCoursesController sut,
-        PatchProviderAllowedCourseModel request,
+        PutProviderAllowedCourseModel request,
         int ukprn,
         string larsCode,
-        string userId,
-        string userDisplayName)
+        DateTime lastDateStarts)
     {
-        // Arrange
-        var patchDoc = CreatePatchDoc(request);
-
+        request.LastDateStarts = lastDateStarts;
         validatorMock
             .Setup(v => v.ValidateAsync(
                 It.Is<IUkprnAndLarsCodeValidator>(x =>
@@ -45,31 +42,26 @@ public class PatchProviderAllowedCoursesTests
 
         mediatorMock
             .Setup(x => x.Send(
-                It.IsAny<PatchProviderAllowedCourseCommand>(),
+                It.IsAny<PutProviderAllowedCourseCommand>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(new ValidatedResponse<Unit>(Unit.Value));
 
         // Act
-        var result = await sut.PatchProviderAllowedCourse(ukprn, larsCode, patchDoc, userId, userDisplayName);
+        var result = await sut.PutProviderAllowedCourse(ukprn, larsCode, request);
 
         // Assert
         Assert.That(result, Is.InstanceOf<NoContentResult>());
     }
 
     [Test, MoqAutoData]
-    public async Task PatchProviderAllowedCourse_ControllerValidationFails_ReturnsNotFound(
-        [Frozen] Mock<IMediator> mediatorMock,
+    public async Task PatchProviderAllowedCourse_UkprnAndLarsCodeCombinationIsInvalid_ReturnsNotFound(
         [Frozen] Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock,
         [Greedy] ProviderAllowedCoursesController sut,
-        PatchProviderAllowedCourseModel request,
+        PutProviderAllowedCourseModel request,
         int ukprn,
-        string larsCode,
-        string userId,
-        string userDisplayName)
+        string larsCode)
     {
         // Arrange
-        var patchDoc = CreatePatchDoc(request);
-
         validatorMock
             .Setup(v => v.ValidateAsync(
                 It.Is<IUkprnAndLarsCodeValidator>(x =>
@@ -84,26 +76,22 @@ public class PatchProviderAllowedCoursesTests
             }));
 
         // Act
-        var result = await sut.PatchProviderAllowedCourse(ukprn, larsCode, patchDoc, userId, userDisplayName);
+        var result = await sut.PutProviderAllowedCourse(ukprn, larsCode, request);
 
         // Assert
         result.Should().BeOfType<NotFoundObjectResult>();
     }
 
     [Test, MoqAutoData]
-    public async Task PatchProviderAllowedCourse_ResponseIsInvalid_ReturnsBadRequest(
+    public async Task PutProviderAllowedCourse_CommandValidationFails_ReturnsBadRequest(
         [Frozen] Mock<IMediator> mediatorMock,
         [Frozen] Mock<IValidator<IUkprnAndLarsCodeValidator>> validatorMock,
         [Greedy] ProviderAllowedCoursesController sut,
-        PatchProviderAllowedCourseModel request,
+        PutProviderAllowedCourseModel request,
         int ukprn,
-        string larsCode,
-        string userId,
-        string userDisplayName)
+        string larsCode)
     {
         // Arrange
-        var patchDoc = CreatePatchDoc(request);
-
         validatorMock
             .Setup(v => v.ValidateAsync(
                 It.Is<IUkprnAndLarsCodeValidator>(x =>
@@ -121,24 +109,14 @@ public class PatchProviderAllowedCoursesTests
 
         mediatorMock
             .Setup(x => x.Send(
-                It.IsAny<PatchProviderAllowedCourseCommand>(),
+                It.IsAny<PutProviderAllowedCourseCommand>(),
                 It.IsAny<CancellationToken>()))
             .ReturnsAsync(validatedResponse);
 
         // Act
-        var result = await sut.PatchProviderAllowedCourse(ukprn, larsCode, patchDoc, userId, userDisplayName);
+        var result = await sut.PutProviderAllowedCourse(ukprn, larsCode, request);
 
         // Assert
         result.Should().BeOfType<BadRequestObjectResult>();
-    }
-
-    private static JsonPatchDocument<PatchProviderAllowedCourseModel> CreatePatchDoc(
-        PatchProviderAllowedCourseModel request)
-    {
-        var patchDoc = new JsonPatchDocument<PatchProviderAllowedCourseModel>();
-
-        patchDoc.Replace(x => x.LastDateStarts, request.LastDateStarts);
-
-        return patchDoc;
     }
 }
