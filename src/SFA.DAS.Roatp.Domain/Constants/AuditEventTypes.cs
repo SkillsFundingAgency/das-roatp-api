@@ -20,6 +20,7 @@
         public const string CreateProviderContact = "CreateProviderContact";
         public const string CreateRestrictedCourse = "CreatedRestrictedCourse";
         public const string CreateProviderCourseType = "CreateProviderCourseType";
+        public const string UpdateProviderCourseType = "UpdateProviderCourseType";
         public const string UpdateProviderAllowedCourse = "UpdateProviderAllowedCourse";
         public const string CreateProviderAllowedCourse = "CreateProviderAllowedCourse";
         public const string DeleteProviderAllowedCourse = "DeleteProviderAllowedCourse";
