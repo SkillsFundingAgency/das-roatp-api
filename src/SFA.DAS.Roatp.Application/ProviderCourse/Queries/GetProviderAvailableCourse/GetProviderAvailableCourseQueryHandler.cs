@@ -40,7 +40,9 @@ public class GetProviderAvailableCourseQueryHandler(IMediator _mediator, IStanda
                 ApprovalBody = standard.ApprovalBody,
                 LastDateStarts = providerAllowedCourse?.LastDateStarts,
                 IfateReferenceNumber = standard.IfateReferenceNumber,
-                LearningType = standard.LearningType
+                LearningType = standard.LearningType,
+                Duration = standard.Duration,
+                DurationUnits = standard.DurationUnits
             };
     }
 }
