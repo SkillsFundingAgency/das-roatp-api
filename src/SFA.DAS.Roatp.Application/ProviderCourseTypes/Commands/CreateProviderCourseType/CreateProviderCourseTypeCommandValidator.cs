@@ -12,6 +12,8 @@ public class CreateProviderCourseTypeCommandValidator : AbstractValidator<Create
     public const string CourseTypesExist = "Course types already exist for the provider";
     public const string CourseTypesNotProvided = "At least one course type must be provided";
     public const string CourseTypesDuplicated = "Course type has been duplicated";
+    public const string CourseTypeInvalid = "Course type is not a valid value";
+
     public CreateProviderCourseTypeCommandValidator(IProviderCourseTypesRepository providerCourseTypesRepository)
     {
         Include(new UserInfoValidator());
@@ -23,6 +25,9 @@ public class CreateProviderCourseTypeCommandValidator : AbstractValidator<Create
         RuleFor(c => c.CourseTypes)
             .NotEmpty()
             .WithMessage(CourseTypesNotProvided);
+        RuleForEach(c => c.CourseTypes)
+            .IsInEnum()
+            .WithMessage(CourseTypeInvalid);
         RuleFor(c => c.CourseTypes)
             .Must(courseTypes => courseTypes.Distinct().Count() == courseTypes.Count())
             .WithMessage(CourseTypesDuplicated);

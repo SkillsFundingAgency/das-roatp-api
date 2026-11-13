@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using SFA.DAS.Roatp.Api.Infrastructure;
 using SFA.DAS.Roatp.Api.Models;
 using SFA.DAS.Roatp.Application.ProviderCourseTypes.Commands.CreateProviderCourseType;
+using SFA.DAS.Roatp.Application.ProviderCourseTypes.Commands.PutProviderCourseTypes;
 using SFA.DAS.Roatp.Application.ProviderCourseTypes.Commands.RestrictProvider;
 using SFA.DAS.Roatp.Application.ProviderCourseTypes.Queries.GetProviderCourseTypes;
 using SFA.DAS.Roatp.Domain.Models;
@@ -18,7 +19,7 @@ namespace SFA.DAS.Roatp.Api.Controllers;
 [ApiController]
 [ApiVersion(ApiVersionNumber.One)]
 [Tags(EndpointTags.ProviderCourseTypes)]
-[Route("/providers/{ukprn}/course-types", Name = RouteNames.GetProviderCourseTypes)]
+[Route("/providers/{ukprn}/course-types")]
 public class ProviderCourseTypesController(IMediator _mediator, ILogger<ProviderCourseTypesController> _logger) : ActionResponseControllerBase
 {
     [HttpGet]
@@ -38,6 +39,7 @@ public class ProviderCourseTypesController(IMediator _mediator, ILogger<Provider
     }
 
     [HttpPost("{courseType}/restrict")]
+    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> RestrictProvider([FromRoute] int ukprn, [FromRoute] CourseType courseType, [FromBody] RestrictProviderModel request)
@@ -58,6 +60,7 @@ public class ProviderCourseTypesController(IMediator _mediator, ILogger<Provider
     }
 
     [HttpPost]
+    [Produces("application/json")]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -66,6 +69,27 @@ public class ProviderCourseTypesController(IMediator _mediator, ILogger<Provider
         _logger.LogInformation("Request to add course types for Ukprn {Ukprn}", ukprn);
 
         CreateProviderCourseTypeCommand command = new()
+        {
+            Ukprn = ukprn,
+            CourseTypes = request.CourseTypes,
+            UserId = request.UserId,
+            UserDisplayName = request.UserDisplayName
+        };
+
+        var response = await _mediator.Send(command);
+
+        return GetNoContentResponse(response);
+    }
+
+    [HttpPut]
+    [Produces("application/json")]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> PutCourseTypes([FromRoute] int ukprn, [FromBody] AddCourseTypesModel request)
+    {
+        _logger.LogInformation("Request to put course types for Ukprn {Ukprn}", ukprn);
+
+        PutProviderCourseTypesCommand command = new()
         {
             Ukprn = ukprn,
             CourseTypes = request.CourseTypes,
