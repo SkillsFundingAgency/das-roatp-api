@@ -147,4 +147,71 @@ internal class ProviderCourseTypesRepository : IProviderCourseTypesRepository
             }
         });
     }
+
+    public async Task SyncProviderCourseTypes(int ukprn, IEnumerable<CourseType> requestedCourseTypes, string userId, string userDisplayName, string userAction, CancellationToken cancellationToken)
+    {
+        var strategy = _roatpDataContext.Database.CreateExecutionStrategy();
+
+        await strategy.ExecuteAsync(async () =>
+        {
+            await using var transaction = await _roatpDataContext.Database.BeginTransactionAsync(cancellationToken);
+            try
+            {
+                var existingCourseTypes = await _roatpDataContext.ProviderCoursesTypes
+                    .Where(p => p.Ukprn == ukprn)
+                    .ToListAsync(cancellationToken);
+
+                var requested = requestedCourseTypes.ToHashSet();
+
+                var courseTypesToAdd = requested
+                    .Where(courseType => existingCourseTypes.All(existing => existing.CourseType != courseType))
+                    .Select(courseType => new ProviderCourseType
+                    {
+                        Ukprn = ukprn,
+                        CourseType = courseType
+                    })
+                    .ToList();
+
+                var courseTypesToRemove = existingCourseTypes
+                    .Where(existing => !requested.Contains(existing.CourseType))
+                    .ToList();
+
+                if (courseTypesToAdd.Count > 0)
+                {
+                    await _roatpDataContext.ProviderCoursesTypes.AddRangeAsync(courseTypesToAdd, cancellationToken);
+                }
+
+                if (courseTypesToRemove.Count > 0)
+                {
+                    _roatpDataContext.ProviderCoursesTypes.RemoveRange(courseTypesToRemove);
+                }
+
+                if (courseTypesToAdd.Count > 0 || courseTypesToRemove.Count > 0)
+                {
+                    var updatedState = existingCourseTypes
+                        .Except(courseTypesToRemove)
+                        .Concat(courseTypesToAdd)
+                        .ToList();
+
+                    _roatpDataContext.Audits.Add(new Audit(
+                        nameof(ProviderCourseType),
+                        ukprn.ToString(),
+                        userId,
+                        userDisplayName,
+                        userAction,
+                        existingCourseTypes,
+                        updatedState));
+                }
+
+                await _roatpDataContext.SaveChangesAsync(cancellationToken);
+                await transaction.CommitAsync(cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                await transaction.RollbackAsync(cancellationToken);
+                _logger.LogError(ex, "Failed to sync provider course types for ukprn {Ukprn}", ukprn);
+                throw new InvalidOperationException();
+            }
+        });
+    }
 }
