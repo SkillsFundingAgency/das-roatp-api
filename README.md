@@ -124,4 +124,4 @@ You will need following on your local:
 - Publish the database project `SFA.DAS.RoATP.Database` to your local SQL Server instance.
 - Seed following tables via manual scripts or by running respective jobs 
 1) __Standard__: run job `ReloadStandardsCacheFunction`
-2) __ProviderRegistrationDetail__: run jobs in this order `ReloadProviderRegistrationDetailsFunction`, `LoadAllProviderAddressesFunction`
+2) __ProviderRegistrationDetail__: run job `ReloadProviderRegistrationDetailsFunction`
