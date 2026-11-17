@@ -1,0 +1,183 @@
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
+using AutoFixture.NUnit4;
+using FluentValidation.TestHelper;
+using Moq;
+using NUnit.Framework;
+using SFA.DAS.Roatp.Application.ProviderCourseTypes.Commands.PutProviderCourseTypes;
+using SFA.DAS.Roatp.Domain.Entities;
+using SFA.DAS.Roatp.Domain.Interfaces;
+using SFA.DAS.Roatp.Domain.Models;
+using SFA.DAS.Testing.AutoFixture;
+
+namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Commands.PutProviderCourseTypes;
+
+public class PutProviderCourseTypesCommandValidatorTests
+{
+    [Test]
+    [MoqInlineAutoData(0)]
+    [MoqInlineAutoData(1)]
+    [MoqInlineAutoData(20012001)]
+    [MoqInlineAutoData(200120019)]
+    public async Task ValidatesUkprn_DoesNotMatchFormat_ReturnsInvalid(
+        int ukprn,
+        [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
+        [Greedy] PutProviderCourseTypesCommandValidator sut)
+    {
+        // Arrange
+        var command = new PutProviderCourseTypesCommand
+        {
+            Ukprn = ukprn,
+            CourseTypes = [CourseType.Apprenticeship],
+            UserId = "TestUserId",
+            UserDisplayName = "Test User"
+        };
+        providerCourseTypesRepository
+            .Setup(x => x.GetProviderCourseTypesByUkprn(ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
+
+        // Act
+        var result = await sut.TestValidateAsync(command);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Ukprn);
+    }
+
+    [Test, MoqAutoData]
+    public async Task WhenCourseTypesIsEmpty_ThenValidationShouldFail(
+        [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
+        [Greedy] PutProviderCourseTypesCommandValidator sut)
+    {
+        // Arrange
+        const int ukprn = 12345678;
+        var command = new PutProviderCourseTypesCommand
+        {
+            Ukprn = ukprn,
+            CourseTypes = [],
+            UserId = "TestUserId",
+            UserDisplayName = "Test User"
+        };
+
+        providerCourseTypesRepository
+            .Setup(x => x.GetProviderCourseTypesByUkprn(ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync([new ProviderCourseType { Ukprn = ukprn, CourseType = CourseType.Apprenticeship }]);
+
+        // Act
+        var result = await sut.TestValidateAsync(command);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.CourseTypes)
+            .WithErrorMessage(PutProviderCourseTypesCommandValidator.CourseTypesNotProvided);
+    }
+
+    [Test, MoqAutoData]
+    public async Task WhenCourseTypeIsDuplicated_ThenValidationShouldFail(
+        [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
+        [Greedy] PutProviderCourseTypesCommandValidator sut)
+    {
+        // Arrange
+        const int ukprn = 12345678;
+        var command = new PutProviderCourseTypesCommand
+        {
+            Ukprn = ukprn,
+            CourseTypes = [CourseType.Apprenticeship, CourseType.Apprenticeship],
+            UserId = "TestUserId",
+            UserDisplayName = "Test User"
+        };
+
+        providerCourseTypesRepository
+            .Setup(x => x.GetProviderCourseTypesByUkprn(ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync([new ProviderCourseType { Ukprn = ukprn, CourseType = CourseType.Apprenticeship }]);
+
+        // Act
+        var result = await sut.TestValidateAsync(command);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.CourseTypes)
+            .WithErrorMessage(PutProviderCourseTypesCommandValidator.CourseTypesDuplicated);
+    }
+
+    [Test, MoqAutoData]
+    public async Task WhenCourseTypeIsNotAValidEnumValue_ThenValidationShouldFail(
+        [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
+        [Greedy] PutProviderCourseTypesCommandValidator sut)
+    {
+        // Arrange
+        const int ukprn = 12345678;
+        var command = new PutProviderCourseTypesCommand
+        {
+            Ukprn = ukprn,
+            CourseTypes = [(CourseType)999],
+            UserId = "TestUserId",
+            UserDisplayName = "Test User"
+        };
+
+        providerCourseTypesRepository
+            .Setup(x => x.GetProviderCourseTypesByUkprn(ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync([new ProviderCourseType { Ukprn = ukprn, CourseType = CourseType.Apprenticeship }]);
+
+        // Act
+        var result = await sut.TestValidateAsync(command);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor("CourseTypes[0]")
+            .WithErrorMessage(PutProviderCourseTypesCommandValidator.CourseTypeInvalid);
+    }
+
+    [Test, MoqAutoData]
+    public async Task WhenNoProviderCourseTypesExist_ThenValidationShouldFail(
+        [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
+        [Greedy] PutProviderCourseTypesCommandValidator sut)
+    {
+        // Arrange
+        const int ukprn = 12345678;
+        var command = new PutProviderCourseTypesCommand
+        {
+            Ukprn = ukprn,
+            CourseTypes = [CourseType.Apprenticeship],
+            UserId = "TestUserId",
+            UserDisplayName = "Test User"
+        };
+
+        providerCourseTypesRepository
+            .Setup(x => x.GetProviderCourseTypesByUkprn(ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
+
+        // Act
+        var result = await sut.TestValidateAsync(command);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(x => x.Ukprn)
+            .WithErrorMessage(PutProviderCourseTypesCommandValidator.ProviderCourseTypesNotFound);
+    }
+
+    [Test, MoqAutoData]
+    public async Task WhenCourseTypesAreValidAndProviderCourseTypesExist_ThenValidationShouldPass(
+        [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
+        [Greedy] PutProviderCourseTypesCommandValidator sut)
+    {
+        // Arrange
+        const int ukprn = 12345678;
+        var command = new PutProviderCourseTypesCommand
+        {
+            Ukprn = ukprn,
+            CourseTypes = [CourseType.Apprenticeship, CourseType.ShortCourse],
+            UserId = "TestUserId",
+            UserDisplayName = "Test User"
+        };
+
+        providerCourseTypesRepository
+            .Setup(x => x.GetProviderCourseTypesByUkprn(ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync(new List<ProviderCourseType>
+            {
+                new() { Ukprn = ukprn, CourseType = CourseType.Apprenticeship }
+            });
+
+        // Act
+        var result = await sut.TestValidateAsync(command);
+
+        // Assert
+        result.ShouldNotHaveAnyValidationErrors();
+    }
+}

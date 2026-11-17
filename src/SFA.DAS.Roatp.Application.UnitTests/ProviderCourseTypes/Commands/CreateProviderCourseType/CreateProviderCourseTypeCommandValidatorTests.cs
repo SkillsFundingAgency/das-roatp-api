@@ -99,6 +99,34 @@ public class CreateProviderCourseTypeCommandValidatorTests
     }
 
     [Test, MoqAutoData]
+    public async Task WhenCourseTypeIsNotAValidEnumValue_ThenValidationShouldFail(
+        [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
+        [Greedy] CreateProviderCourseTypeCommandValidator sut)
+    {
+        // Arrange
+        int ukprn = 12345678;
+
+        var command = new CreateProviderCourseTypeCommand()
+        {
+            Ukprn = ukprn,
+            CourseTypes = [(CourseType)999],
+            UserId = "TestUserId",
+            UserDisplayName = "Test User"
+        };
+
+        providerCourseTypesRepository
+            .Setup(x => x.GetProviderCourseTypesByUkprn(ukprn, It.IsAny<CancellationToken>()))
+            .ReturnsAsync([]);
+
+        // Act
+        var result = await sut.TestValidateAsync(command);
+
+        // Assert
+        result.ShouldHaveValidationErrorFor("CourseTypes[0]")
+            .WithErrorMessage(CreateProviderCourseTypeCommandValidator.CourseTypeInvalid);
+    }
+
+    [Test, MoqAutoData]
     public async Task WhenCourseTypeAlreadyExistsForProvider_ThenValidationShouldFail(
         [Frozen] Mock<IProviderCourseTypesRepository> providerCourseTypesRepository,
         [Greedy] CreateProviderCourseTypeCommandValidator sut)
