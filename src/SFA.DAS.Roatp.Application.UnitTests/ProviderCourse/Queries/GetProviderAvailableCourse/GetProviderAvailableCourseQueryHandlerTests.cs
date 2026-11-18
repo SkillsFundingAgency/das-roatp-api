@@ -143,7 +143,9 @@ public class GetProviderAvailableCourseQueryHandlerTests
                 IsRegulatedForProvider = true,
                 ApprovalBody = approvalBody,
                 IfateReferenceNumber = "Test1",
-                LearningType = LearningType.Apprenticeship
+                LearningType = LearningType.Apprenticeship,
+                Duration = 30,
+                DurationUnits = DurationUnits.Hours
             });
 
         mediator
@@ -175,7 +177,9 @@ public class GetProviderAvailableCourseQueryHandlerTests
             ApprovalBody = approvalBody,
             LastDateStarts = allowedCourses.LastDateStarts,
             IfateReferenceNumber = "Test1",
-            LearningType = LearningType.Apprenticeship
+            LearningType = LearningType.Apprenticeship,
+            Duration = 30,
+            DurationUnits = DurationUnits.Hours
         });
     }
 
