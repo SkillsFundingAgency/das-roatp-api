@@ -37,6 +37,7 @@ internal class ProviderCoursesReadRepository : IProviderCoursesReadRepository
             .ProviderCourses
             .Include(c => c.Standard)
             .Include(c => c.Locations)
+            .Include(c => c.ProviderAllowedCourse)
             .AsNoTracking()
             .Where(c => c.Provider.Ukprn == ukprn && c.LarsCode == larsCode)
             .SingleOrDefaultAsync();
