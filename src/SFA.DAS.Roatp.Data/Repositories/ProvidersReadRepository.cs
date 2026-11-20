@@ -101,7 +101,6 @@ internal class ProvidersReadRepository : IProvidersReadRepository
             StandardName = (string)reader["StandardName"],
             CourseType = Enum.Parse<CourseType>((string)reader["courseType"]),
             LearningType = Enum.Parse<LearningType>((string)reader["learningType"]),
-            IsActiveAvailable = Convert.ToBoolean(reader["IsActiveAvailable"]),
             QarPeriod = (string)reader["QarPeriod"],
             ReviewPeriod = (string)reader["reviewPeriod"]
         };

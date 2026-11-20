@@ -89,7 +89,6 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
             StandardName = first.StandardName,
             CourseType = first.CourseType,
             LearningType = first.LearningType,
-            IsActiveAvailable = first.IsActiveAvailable,
             QarPeriod = first.QarPeriod,
             ReviewPeriod = first.ReviewPeriod,
             Providers = new List<ProviderData>()
