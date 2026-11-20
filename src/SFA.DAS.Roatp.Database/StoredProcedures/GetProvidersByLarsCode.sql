@@ -91,6 +91,8 @@ SELECT pc1.[Id]
       ,st1.[IfateReferenceNumber]
       ,st1.[Title], [Level]
       ,pc1.[HasOnlineDeliveryOption]
+      ,pc1.[CreatedDate]
+      ,pac.[LastDateStarts]
       ,st1.[CourseType]
       ,st1.[LearningType]
       ,st1.[IsActiveAvailable]
@@ -180,6 +182,8 @@ AS
                             ,ab2.Ukprn ) - (@pageSize * (@page-1)) "providers.ordering"  -- and ordered within the page of results
         ,ab2.Ukprn "providers.ukprn"
         ,ab2.LegalName "providers.providername"
+        ,ab2.CreatedDate "providers.providerCourseAddedDate"
+        ,ab2.LastDateStarts "providers.lastDateStarts"
         -- List of locations
         ,COUNT(*) "providers.locationsCount"
         ,STRING_AGG(LocationType,',') WITHIN GROUP (ORDER BY LocationOrdering, Distance) "providers.locations.locationType"
@@ -204,6 +208,8 @@ AS
         SELECT Ukprn
             ,LegalName
             ,LarsCode
+            ,CreatedDate
+            ,LastDateStarts
             ,LocationType
             ,AtEmployer
             ,BlockRelease
@@ -234,6 +240,8 @@ AS
             SELECT pac.[Ukprn]
                   ,pac.[LegalName]
                   ,pac.[LarsCode]
+                  ,pac.[CreatedDate]
+                  ,pac.[LastDateStarts]
                   ,[LocationType]
                   -- Is at Employer ?
                   ,CASE [LocationType]
@@ -278,6 +286,8 @@ AS
             SELECT pac.[Ukprn]
                   ,pac.[LegalName]
                   ,pac.[LarsCode]
+                  ,pac.[CreatedDate]
+                  ,pac.[LastDateStarts]
                   ,3 [LocationType]  -- online
                   -- Is at Employer ?
                   ,0 AtEmployer
@@ -356,7 +366,7 @@ AS
     AND (@anylocationfilters = 0 OR @onlineoption = 1 OR Max_LocationOrdering >= 0)
     -- Do not include Online if provider does not have other locations that matched.
     AND NOT (@anylocationfilters > 0 AND @onlineoption = 0 AND LocationRows = 1 AND LocationType = 3)
-    GROUP BY ab2.Ukprn ,ab2.LarsCode, ab2.LegalName
+    GROUP BY ab2.Ukprn ,ab2.LarsCode, ab2.LegalName, ab2.CreatedDate, ab2.LastDateStarts
     , qp1.[Leavers], qp1.[AchievementRate]
     , pes.ReviewCount, pes.Stars, pes.Rating
     , pas.ReviewCount, pas.Stars, pas.Rating
@@ -382,6 +392,8 @@ SELECT
     ,"providers.ordering"
     ,"providers.ukprn"
     ,"providers.providername"
+    ,"providers.providerCourseAddedDate"
+    ,"providers.lastDateStarts"
     ,"providers.locationsCount"
     ,"providers.locations.locationType"
     ,"providers.locations.courseDistances"

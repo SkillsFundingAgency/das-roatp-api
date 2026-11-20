@@ -113,6 +113,8 @@ public class GetProvidersForLarsCodeQueryHandler : IRequestHandler<GetProvidersF
                 ApprenticeReviews = item.ApprenticeReviews,
                 ApprenticeStars = item.ApprenticeStars,
                 ApprenticeRating = item.ApprenticeRating,
+                ProviderCourseAddedDate = item.ProviderCourseAddedDate,
+                LastDateStarts = item.LastDateStarts,
                 Locations = new List<ProviderLocationModel>()
             };
 
