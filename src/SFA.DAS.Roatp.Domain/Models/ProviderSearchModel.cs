@@ -22,4 +22,6 @@ public class ProviderSearchModel : ProviderSearchResultSummary
     public string ApprenticeStars { get; set; }
     public ProviderRating ApprenticeRating { get; set; }
     public Guid? ShortlistId { get; set; }
+    public DateTime ProviderCourseAddedDate { get; set; }
+    public DateTime? LastDateStarts { get; set; }
 }

@@ -10,7 +10,6 @@ public class ProviderSearchResultSummary
     public string StandardName { get; set; }
     public CourseType CourseType { get; set; }
     public LearningType LearningType { get; set; }
-    public bool IsActiveAvailable { get; set; }
     public string QarPeriod { get; set; }
     public string ReviewPeriod { get; set; }
 }
