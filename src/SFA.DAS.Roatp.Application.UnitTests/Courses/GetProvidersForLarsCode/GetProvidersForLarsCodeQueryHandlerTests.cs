@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -45,14 +46,54 @@ public class GetProvidersForLarsCodeQueryHandlerTests
 
         GetProvidersForLarsCodeQuery query = new GetProvidersForLarsCodeQuery(larsCode, request);
 
+        var knownProviderCourseAddedDate = new DateTime(2024, 6, 15, 0, 0, 0, DateTimeKind.Utc);
+        var knownLastDateStarts = new DateTime(2025, 1, 31, 0, 0, 0, DateTimeKind.Utc);
+
         foreach (var detail in pagedProviderDetails)
         {
+            if (detail.Ukprn == 0)
+            {
+                detail.Ukprn = 10001234;
+            }
+
             detail.LocationsCount = 0;
             detail.LocationTypes = "0";
             detail.CourseDistances = "0";
             detail.AtEmployers = "0";
             detail.DayReleases = "0";
             detail.BlockReleases = "0";
+            detail.ProviderCourseAddedDate = knownProviderCourseAddedDate;
+            detail.LastDateStarts = null;
+        }
+
+        pagedProviderDetails[0].LastDateStarts = knownLastDateStarts;
+
+        if (pagedProviderDetails.Count < 2)
+        {
+            pagedProviderDetails.Add(new ProviderSearchModel
+            {
+                Page = pagedProviderDetails[0].Page,
+                PageSize = pagedProviderDetails[0].PageSize,
+                TotalPages = pagedProviderDetails[0].TotalPages,
+                TotalCount = pagedProviderDetails[0].TotalCount,
+                LarsCode = pagedProviderDetails[0].LarsCode,
+                StandardName = pagedProviderDetails[0].StandardName,
+                CourseType = pagedProviderDetails[0].CourseType,
+                LearningType = pagedProviderDetails[0].LearningType,
+                QarPeriod = pagedProviderDetails[0].QarPeriod,
+                ReviewPeriod = pagedProviderDetails[0].ReviewPeriod,
+                Ordering = pagedProviderDetails[0].Ordering + 1,
+                Ukprn = pagedProviderDetails[0].Ukprn + 1,
+                ProviderName = pagedProviderDetails[0].ProviderName,
+                LocationsCount = 0,
+                LocationTypes = "0",
+                CourseDistances = "0",
+                AtEmployers = "0",
+                DayReleases = "0",
+                BlockReleases = "0",
+                ProviderCourseAddedDate = knownProviderCourseAddedDate,
+                LastDateStarts = null
+            });
         }
 
         var qar = string.Empty;
@@ -117,6 +158,11 @@ public class GetProvidersForLarsCodeQueryHandlerTests
         var response = await sut.Handle(query, cancellationToken);
         var result = response.Result;
         result.Should().NotBeNull();
+        result.Providers.Should().HaveCount(pagedProviderDetails.Count);
+        result.Providers[0].ProviderCourseAddedDate.Should().Be(knownProviderCourseAddedDate);
+        result.Providers[0].LastDateStarts.Should().Be(knownLastDateStarts);
+        result.Providers[1].ProviderCourseAddedDate.Should().Be(knownProviderCourseAddedDate);
+        result.Providers[1].LastDateStarts.Should().BeNull();
         providersReadRepositoryMock.Verify(x => x.GetProvidersByLarsCode(
                 larsCode, (ProviderOrderBy)query.OrderBy!,
                 It.Is<GetProvidersFromLarsCodeOptionalParameters>(
