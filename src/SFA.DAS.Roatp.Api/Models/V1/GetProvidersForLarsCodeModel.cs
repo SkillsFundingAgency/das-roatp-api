@@ -44,7 +44,9 @@ namespace SFA.DAS.Roatp.Api.Models.V1
                     EmployerRating = p.EmployerRating,
                     ApprenticeReviews = p.ApprenticeReviews,
                     ApprenticeStars = p.ApprenticeStars,
-                    ApprenticeRating = p.ApprenticeRating
+                    ApprenticeRating = p.ApprenticeRating,
+                    ProviderCourseAddedDate = p.ProviderCourseAddedDate,
+                    LastDateStarts = p.LastDateStarts
                 }).ToList()
             };
         }
