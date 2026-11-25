@@ -33,6 +33,7 @@ public sealed class GetCourseProviderDetailsQueryResultTests
             Assert.That(sut.Level, Is.EqualTo(source.Level));
             Assert.That(sut.LarsCode.ToString(), Is.EqualTo(source.LarsCode));
             Assert.That(sut.IFateReferenceNumber, Is.EqualTo(source.IFateReferenceNumber));
+            Assert.That(sut.LastDateStarts, Is.EqualTo(source.LastDateStarts));
             Assert.That(sut.QAR.Period, Is.EqualTo(source.Period));
             Assert.That(sut.QAR.Leavers, Is.EqualTo(source.Leavers));
             Assert.That(sut.QAR.AchievementRate, Is.EqualTo(source.AchievementRate));

@@ -13,7 +13,7 @@ public sealed class GetCourseProviderDetailsQueryResult
     public string CourseName { get; set; }
     public CourseType CourseType { get; set; }
     public LearningType LearningType { get; set; }
-    public bool IsActiveAvailable { get; set; }
+    public DateTime? LastDateStarts { get; set; }
     public int Level { get; set; }
     public string LarsCode { get; set; }
     public string IFateReferenceNumber { get; set; }
@@ -48,7 +48,7 @@ public sealed class GetCourseProviderDetailsQueryResult
             CourseName = source.CourseName,
             CourseType = source.CourseType,
             LearningType = source.LearningType,
-            IsActiveAvailable = source.IsActiveAvailable,
+            LastDateStarts = source.LastDateStarts,
             Level = source.Level,
             LarsCode = source.LarsCode,
             IFateReferenceNumber = source.IFateReferenceNumber,
