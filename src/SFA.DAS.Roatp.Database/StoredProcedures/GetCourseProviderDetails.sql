@@ -128,7 +128,7 @@ BEGIN
 		,stq.IfateReferenceNumber AS 'IFateReferenceNumber'
 		,stq.CourseType
 		,stq.LearningType
-,CASE WHEN pac.[LastDateStarts] = CONVERT(datetime, '19000101') THEN NULL ELSE pac.[LastDateStarts] END AS 'LastDateStarts'
+        ,CASE WHEN pac.[LastDateStarts] = CONVERT(datetime, '19000101') THEN NULL ELSE pac.[LastDateStarts] END AS 'LastDateStarts'
 		-- Achievement Rates
 		,@QARPeriod AS 'Period'
 		,ISNULL(qp1.[Leavers],'-') AS 'Leavers'
