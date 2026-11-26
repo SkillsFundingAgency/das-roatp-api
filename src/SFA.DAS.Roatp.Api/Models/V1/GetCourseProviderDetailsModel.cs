@@ -15,6 +15,7 @@ public sealed class GetCourseProviderDetailsModel
     public int Level { get; set; }
     public int LarsCode { get; set; }
     public string IFateReferenceNumber { get; set; }
+    public DateTime? LastDateStarts { get; set; }
     public QarModel QAR { get; set; }
     public ReviewModel Reviews { get; set; }
     public IEnumerable<LocationModel> Locations { get; set; } = [];
@@ -50,6 +51,7 @@ public sealed class GetCourseProviderDetailsModel
             Level = source.Level,
             LarsCode = int.TryParse(source.LarsCode, out var l) ? l : 0,
             IFateReferenceNumber = source.IFateReferenceNumber,
+            LastDateStarts = source.LastDateStarts,
             QAR = new QarModel()
             {
                 Period = source.QAR.Period,

@@ -49,9 +49,9 @@ BEGIN
 	-- the Standards and national QAR by Standard
 	WITH StandardsAndQAR AS
 	(
-		SELECT Larscode, Title, [Level], [IsRegulatedForProvider], st1.[IfateReferenceNumber], ISNULL(qar1.[Leavers],'-') [Leavers], ISNULL(qar1.[AchievementRate],'-') [AchievementRate], [CourseType], [LearningType], [IsActiveAvailable]
+		SELECT Larscode, Title, [Level], [IsRegulatedForProvider], st1.[IfateReferenceNumber], ISNULL(qar1.[Leavers],'-') [Leavers], ISNULL(qar1.[AchievementRate],'-') [AchievementRate], [CourseType], [LearningType]
 		FROM (
-			SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [IsRegulatedForProvider], s1.[CourseType], [LearningType], [IsActiveAvailable]
+			SELECT [LarsCode], [IfateReferenceNumber], [Title], [Level], [IsRegulatedForProvider], s1.[CourseType], [LearningType]
 			FROM [dbo].[Standard] s1
 			-- ensure course type is (still) available for the provider and course
 			JOIN [dbo].[ProviderCourseType] pct on pct.Ukprn = @Ukprn AND pct.CourseType = s1.CourseType
@@ -128,7 +128,7 @@ BEGIN
 		,stq.IfateReferenceNumber AS 'IFateReferenceNumber'
 		,stq.CourseType
 		,stq.LearningType
-		,stq.IsActiveAvailable
+        ,CASE WHEN pac.[LastDateStarts] = CONVERT(datetime, '19000101') THEN NULL ELSE pac.[LastDateStarts] END AS 'LastDateStarts'
 		-- Achievement Rates
 		,@QARPeriod AS 'Period'
 		,ISNULL(qp1.[Leavers],'-') AS 'Leavers'
@@ -306,6 +306,7 @@ BEGIN
 	LEFT JOIN ProviderQARs qp1 on qp1.[Ukprn] = ab2.[Ukprn] AND qp1.[IfateReferenceNumber] = stq.[IfateReferenceNumber]
 	LEFT JOIN EmployerStars pes on pes.[Ukprn] = ab2.[Ukprn] 
 	LEFT JOIN ApprenticeStars pas on pas.[Ukprn] = ab2.[Ukprn] 
+	LEFT JOIN [dbo].[ProviderAllowedCourse] pac on pac.[Ukprn] = ab2.[Ukprn] AND pac.[LarsCode] = ab2.LarsCode
 	LEFT JOIN [dbo].[Shortlist] sht on sht.[Ukprn] = ab2.[Ukprn] AND sht.[Larscode] = ab2.LarsCode AND sht.[UserId] = @UserId
 		AND ISNULL(LTRIM(RTRIM(sht.[LocationDescription])), '') = ISNULL(LTRIM(RTRIM(@LocationName)), '')
 	-- regulated check

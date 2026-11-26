@@ -38,7 +38,7 @@ public sealed class CourseProviderDetailsModel
     public bool DayRelease { get; set; }
     public CourseType CourseType { get; set; }
     public LearningType LearningType { get; set; }
-    public bool IsActiveAvailable { get; set; }
+    public DateTime? LastDateStarts { get; set; }
     public int LocationType { get; set; }
     public string CourseLocation { get; set; }
     public string AddressLine1 { get; set; }

@@ -73,7 +73,8 @@ public sealed class CourseProviderDetailsReadRepository : ICourseProviderDetails
                     IFateReferenceNumber = GetReaderStringValue(nameof(CourseProviderDetailsModel.IFateReferenceNumber), reader),
                     CourseType = Enum.Parse<CourseType>(GetReaderStringValue(nameof(CourseProviderDetailsModel.CourseType), reader)),
                     LearningType = Enum.Parse<LearningType>(GetReaderStringValue(nameof(CourseProviderDetailsModel.LearningType), reader)),
-                    IsActiveAvailable = reader.GetBoolean(nameof(CourseProviderDetailsModel.IsActiveAvailable)),
+                    LastDateStarts = reader[nameof(CourseProviderDetailsModel.LastDateStarts)] == DBNull.Value
+                        ? null : reader.GetDateTime(nameof(CourseProviderDetailsModel.LastDateStarts)),
 
                     Period = GetReaderStringValue(nameof(CourseProviderDetailsModel.Period), reader),
                     Leavers = GetReaderStringValue(nameof(CourseProviderDetailsModel.Leavers), reader),
