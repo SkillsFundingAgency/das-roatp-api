@@ -1,11 +1,8 @@
 ﻿using System.Threading.Tasks;
 using FluentAssertions;
-using Moq;
 using NUnit.Framework;
 using SFA.DAS.Roatp.Application.Common;
 using SFA.DAS.Roatp.Application.ProviderCourseTypes.Queries.GetProviderCourseTypes;
-using SFA.DAS.Roatp.Domain.Entities;
-using SFA.DAS.Roatp.Domain.Interfaces;
 
 namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Queries
 {
@@ -18,9 +15,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Queries
         public async Task Validate_AcceptsEightDigitNumbersOnly(int ukprn, bool expectedResult)
         {
             var query = new GetProviderCourseTypesQuery(ukprn);
-            var repoMock = new Mock<IProvidersReadRepository>();
-            repoMock.Setup(x => x.GetByUkprn(It.IsAny<int>())).ReturnsAsync(new Provider());
-            var sut = new GetProviderCourseTypesQueryValidator(repoMock.Object);
+            var sut = new GetProviderCourseTypesQueryValidator();
 
             var result = await sut.ValidateAsync(query);
 
@@ -34,8 +29,7 @@ namespace SFA.DAS.Roatp.Application.UnitTests.ProviderCourseTypes.Queries
             string expectedErrorMessage = UkprnValidator.InvalidUkprnErrorMessage;
 
             var query = new GetProviderCourseTypesQuery(ukprn);
-            var repoMock = new Mock<IProvidersReadRepository>();
-            var sut = new GetProviderCourseTypesQueryValidator(repoMock.Object);
+            var sut = new GetProviderCourseTypesQueryValidator();
 
             var result = await sut.ValidateAsync(query);
 
